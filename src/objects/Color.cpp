@@ -5,7 +5,8 @@
 #include "Color.h"
 
 /*!
- * Parses color from Tiled's own color format, which is #rrggbbaa in hex format. Example: "#ffaa07ff"
+ * Parses color from Tiled's own color format, which is #aarrggbb in hex format or optionally #rrggbb.
+ * Example: "#ffaa07ff" and "#aa07ff". In cases where alpha is not a value, it is set to 255.
  * @param color Color in "#rrggbbaa" hex format.
  */
 tson::Color::Color(const std::string &color)
@@ -15,18 +16,30 @@ tson::Color::Color(const std::string &color)
 
 /*!
  * Create a new color in rgba (red, green, blue, alpha) format
- * @param r Red
- * @param g Green
- * @param b Blue
- * @param a Alpha
+ * @param red Red
+ * @param green Green
+ * @param blue Blue
+ * @param alpha Alpha
  */
-
-tson::Color::Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+tson::Color::Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
 {
-    m_red = r;
-    m_green = g;
-    m_blue = b;
-    m_alpha = a;
+    m_red = red;
+    m_green = green;
+    m_blue = blue;
+    m_alpha = alpha;
+}
+
+bool tson::Color::operator==(const tson::Color &rhs) const
+{
+    return m_red == rhs.m_red &&
+           m_green == rhs.m_green &&
+           m_blue == rhs.m_blue &&
+           m_alpha == rhs.m_alpha;
+}
+
+bool tson::Color::operator!=(const tson::Color &rhs) const
+{
+    return !(rhs == *this);
 }
 
 /*!
@@ -74,14 +87,15 @@ void tson::Color::parseHexString(const std::string &color)
 {
     if(color.size() == 9)
     {
-        std::string r = color.substr(1, 2);
-        std::string g = color.substr(3, 2);
-        std::string b = color.substr(5, 2);
-        std::string a = color.substr(7, 2);
-        size_t red = std::stoi(r);
-        size_t green = std::stoi(g);
-        size_t blue = std::stoi(b);
-        size_t alpha = std::stoi(a);
-
+        m_alpha = std::stoi(color.substr(1, 2), nullptr, 16);
+        m_red = std::stoi(color.substr(3, 2), nullptr, 16);
+        m_green = std::stoi(color.substr(5, 2), nullptr, 16);
+        m_blue = std::stoi(color.substr(7, 2), nullptr, 16);
+    }
+    else if(color.size() == 7)
+    {
+        m_red = std::stoi(color.substr(1, 2), nullptr, 16);
+        m_green = std::stoi(color.substr(3, 2), nullptr, 16);
+        m_blue = std::stoi(color.substr(5, 2), nullptr, 16);
     }
 }

@@ -8,33 +8,33 @@
 		<Option virtualFolders="CMake Files\;CMake Files\tests\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/robin/Projects/cpp/git/tileson/cmake-build-debug"/>
+				<Option working_dir="/home/robin/Projects/c++/git/tileson/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/robin/Projects/cpp/git/tileson/cmake-build-debug"/>
+				<Option working_dir="/home/robin/Projects/c++/git/tileson/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="tileson">
-				<Option output="/home/robin/Projects/cpp/git/tileson/cmake-build-debug/libtileson.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/robin/Projects/cpp/git/tileson/cmake-build-debug"/>
+				<Option output="/home/robin/Projects/c++/git/tileson/cmake-build-debug/libtileson.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/robin/Projects/c++/git/tileson/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/robin/Projects/cpp/git/tileson/external_libs"/>
+					<Add directory="/home/robin/Projects/c++/git/tileson/external_libs"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0/x86_64-pc-linux-gnu"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0/backward"/>
@@ -44,20 +44,20 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 tileson"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 tileson"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="tileson/fast">
-				<Option output="/home/robin/Projects/cpp/git/tileson/cmake-build-debug/libtileson.a" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/robin/Projects/cpp/git/tileson/cmake-build-debug"/>
+				<Option output="/home/robin/Projects/c++/git/tileson/cmake-build-debug/libtileson.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/robin/Projects/c++/git/tileson/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="2"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/robin/Projects/cpp/git/tileson/external_libs"/>
+					<Add directory="/home/robin/Projects/c++/git/tileson/external_libs"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0/x86_64-pc-linux-gnu"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0/backward"/>
@@ -67,32 +67,32 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 tileson/fast"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 tileson/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/robin/Projects/cpp/git/tileson/cmake-build-debug"/>
+				<Option working_dir="/home/robin/Projects/c++/git/tileson/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="tileson_tests">
-				<Option output="/home/robin/Projects/cpp/git/tileson/cmake-build-debug/tests/tileson_tests" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/robin/Projects/cpp/git/tileson/cmake-build-debug/tests"/>
+				<Option output="/home/robin/Projects/c++/git/tileson/cmake-build-debug/tests/tileson_tests" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/robin/Projects/c++/git/tileson/cmake-build-debug/tests"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/robin/Projects/cpp/git/tileson/external_libs"/>
-					<Add directory="/home/robin/Projects/cpp/git/tileson/tests/../external_libs"/>
-					<Add directory="/home/robin/Projects/cpp/git/tileson/tests/../src"/>
+					<Add directory="/home/robin/Projects/c++/git/tileson/external_libs"/>
+					<Add directory="/home/robin/Projects/c++/git/tileson/tests/../external_libs"/>
+					<Add directory="/home/robin/Projects/c++/git/tileson/tests/../src"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0/x86_64-pc-linux-gnu"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0/backward"/>
@@ -102,22 +102,22 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/tests/Makefile&quot;  VERBOSE=1 tileson_tests"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/tests/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/tests/Makefile&quot;  VERBOSE=1 tileson_tests"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/tests/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="tileson_tests/fast">
-				<Option output="/home/robin/Projects/cpp/git/tileson/cmake-build-debug/tests/tileson_tests" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/robin/Projects/cpp/git/tileson/cmake-build-debug/tests"/>
+				<Option output="/home/robin/Projects/c++/git/tileson/cmake-build-debug/tests/tileson_tests" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/robin/Projects/c++/git/tileson/cmake-build-debug/tests"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/home/robin/Projects/cpp/git/tileson/external_libs"/>
-					<Add directory="/home/robin/Projects/cpp/git/tileson/tests/../external_libs"/>
-					<Add directory="/home/robin/Projects/cpp/git/tileson/tests/../src"/>
+					<Add directory="/home/robin/Projects/c++/git/tileson/external_libs"/>
+					<Add directory="/home/robin/Projects/c++/git/tileson/tests/../external_libs"/>
+					<Add directory="/home/robin/Projects/c++/git/tileson/tests/../src"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0/x86_64-pc-linux-gnu"/>
 					<Add directory="/usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0/../../../../include/c++/9.1.0/backward"/>
@@ -127,35 +127,53 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/tests/Makefile&quot;  VERBOSE=1 tileson_tests/fast"/>
-					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/tests/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j8 -f &quot;/home/robin/Projects/cpp/git/tileson/cmake-build-debug/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/tests/Makefile&quot;  VERBOSE=1 tileson_tests/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/tests/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/tests/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/home/robin/Projects/c++/git/tileson/cmake-build-debug/tests/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/robin/Projects/cpp/git/tileson/src/TilesonParser.cpp">
+		<Unit filename="/home/robin/Projects/c++/git/tileson/src/Tileson.cpp">
 			<Option target="tileson"/>
 		</Unit>
-		<Unit filename="/home/robin/Projects/cpp/git/tileson/src/TilesonParser.h">
+		<Unit filename="/home/robin/Projects/c++/git/tileson/src/Tileson.h">
 			<Option target="tileson"/>
 		</Unit>
-		<Unit filename="/home/robin/Projects/cpp/git/tileson/src/objects/Color.cpp">
+		<Unit filename="/home/robin/Projects/c++/git/tileson/src/TilesonParser.cpp">
 			<Option target="tileson"/>
 		</Unit>
-		<Unit filename="/home/robin/Projects/cpp/git/tileson/src/objects/Color.h">
+		<Unit filename="/home/robin/Projects/c++/git/tileson/src/TilesonParser.h">
 			<Option target="tileson"/>
 		</Unit>
-		<Unit filename="/home/robin/Projects/cpp/git/tileson/tests/tests_main.cpp">
+		<Unit filename="/home/robin/Projects/c++/git/tileson/src/objects/Color.cpp">
+			<Option target="tileson"/>
+		</Unit>
+		<Unit filename="/home/robin/Projects/c++/git/tileson/src/objects/Color.h">
+			<Option target="tileson"/>
+		</Unit>
+		<Unit filename="/home/robin/Projects/c++/git/tileson/src/objects/Vector2.hpp">
+			<Option target="tileson"/>
+		</Unit>
+		<Unit filename="/home/robin/Projects/c++/git/tileson/src/tiled/Map.cpp">
+			<Option target="tileson"/>
+		</Unit>
+		<Unit filename="/home/robin/Projects/c++/git/tileson/src/tiled/Map.h">
+			<Option target="tileson"/>
+		</Unit>
+		<Unit filename="/home/robin/Projects/c++/git/tileson/tests/tests_main.cpp">
 			<Option target="tileson_tests"/>
 		</Unit>
-		<Unit filename="/home/robin/Projects/cpp/git/tileson/tests/tests_objects.cpp">
+		<Unit filename="/home/robin/Projects/c++/git/tileson/tests/tests_objects.cpp">
 			<Option target="tileson_tests"/>
 		</Unit>
-		<Unit filename="/home/robin/Projects/cpp/git/tileson/CMakeLists.txt">
+		<Unit filename="/home/robin/Projects/c++/git/tileson/tests/tests_tiled.cpp">
+			<Option target="tileson_tests"/>
+		</Unit>
+		<Unit filename="/home/robin/Projects/c++/git/tileson/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
-		<Unit filename="/home/robin/Projects/cpp/git/tileson/tests/CMakeLists.txt">
+		<Unit filename="/home/robin/Projects/c++/git/tileson/tests/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\tests\"/>
 		</Unit>
 	</Project>

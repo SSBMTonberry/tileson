@@ -23,8 +23,6 @@ namespace tson
             ParserStatus getStatus() const;
 
         private:
-            nlohmann::json m_json;
-
             ParserStatus m_status = ParserStatus::Undefined;
     };
 }
