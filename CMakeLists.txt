@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.14)
 project(tileson)
 
 set(CMAKE_CXX_STANDARD 17)
-set(PROJECT_VERSION_MAJOR 0)
-set(PROJECT_VERSION_MINOR 1)
-set(PROJECT_VERSION_PATCH 0)
+set(TILESON_PROJECT_VERSION_MAJOR 0)
+set(TILESON_PROJECT_VERSION_MINOR 1)
+set(TILESON_PROJECT_VERSION_PATCH 0)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DTILESON_DEBUG")
 
@@ -54,7 +54,9 @@ else()
     set(MINGW 0)
 endif()
 
-set(SOURCE_FILES )
-add_library(pmgui STATIC ${SOURCE_FILES})
+include_directories(${PROJECT_SOURCE_DIR}/external_libs/)
+
+set(SOURCE_FILES src/TilesonParser.cpp src/TilesonParser.h src/objects/Color.cpp src/objects/Color.h)
+add_library(tileson STATIC ${SOURCE_FILES})
 
 add_subdirectory(tests)
