@@ -12,31 +12,28 @@ namespace tson
     {
 
         public:
-            Vector2(T x, T y);
-
-            Vector2() { m_x = m_y = 0; }
+            Vector2(T xPos, T yPos);
+            Vector2() { x = y = 0; }
 
             bool operator==(const Vector2 &rhs) const;
-
             bool operator!=(const Vector2 &rhs) const;
 
-        private:
-            T m_x;
-            T m_y;
+            T x;
+            T y;
     };
 
     template<typename T>
-    Vector2<T>::Vector2(T x, T y)
+    Vector2<T>::Vector2(T xPos, T yPos)
     {
-        m_x = x;
-        m_y = y;
+        x = xPos;
+        y = yPos;
     }
 
     template<typename T>
     bool Vector2<T>::operator==(const Vector2 &rhs) const
     {
-        return m_x == rhs.m_x &&
-               m_y == rhs.m_y;
+        return x == rhs.x &&
+               y == rhs.y;
     }
 
     template<typename T>

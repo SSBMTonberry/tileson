@@ -34,8 +34,9 @@ TEST_CASE( "Parse a tson::Map only containing info from Tiled's documentation - 
                        "}"_json;
 
     tson::Map map;
-    bool result = map.parse(j);
-
+    bool parseOk = map.parse(j);
+    bool hasCorrectValues = (map.getSize() == tson::Vector2i(4,4));
     //TODO: Check every field
-    REQUIRE( (result) );
+
+    REQUIRE( (parseOk && hasCorrectValues) );
 }
