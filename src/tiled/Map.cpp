@@ -22,19 +22,19 @@ bool tson::Map::parse(const nlohmann::json &json)
     if(json.count("backgroundcolor") > 0) m_backgroundColor = Color(json["backgroundcolor"].get<std::string>()); //Optional
     if(json.count("width") > 0 && json.count("height") > 0 )
         m_size = {json["width"].get<int>(), json["height"].get<int>()}; else allFound = false;
-    if(json.count("hexsidelength") > 0) m_hexsideLength = json["hexsidelength"].get<int>(); else allFound = false;
-    if(json.count("infinite") > 0) m_isInfinite = json["infinite"].get<bool>(); else allFound = false;
-    if(json.count("nextlayerid") > 0) m_nextLayerId = json["nextlayerid"].get<int>(); else allFound = false;
+    if(json.count("hexsidelength") > 0) m_hexsideLength = json["hexsidelength"].get<int>();         //Optional
+    if(json.count("infinite") > 0) m_isInfinite = json["infinite"].get<bool>();                     //Optional
+    if(json.count("nextlayerid") > 0) m_nextLayerId = json["nextlayerid"].get<int>();               //Optional
     if(json.count("nextobjectid") > 0) m_nextObjectId = json["nextobjectid"].get<int>(); else allFound = false;
     if(json.count("orientation") > 0) m_orientation = json["orientation"].get<std::string>(); else allFound = false;
-    if(json.count("renderorder") > 0) m_renderOrder = json["renderorder"].get<std::string>(); else allFound = false;
-    if(json.count("staggeraxis") > 0) m_staggerAxis = json["staggeraxis"].get<std::string>(); else allFound = false;
-    if(json.count("staggerindex") > 0) m_staggerIndex = json["staggerindex"].get<std::string>(); else allFound = false;
+    if(json.count("renderorder") > 0) m_renderOrder = json["renderorder"].get<std::string>();       //Optional
+    if(json.count("staggeraxis") > 0) m_staggerAxis = json["staggeraxis"].get<std::string>();       //Optional
+    if(json.count("staggerindex") > 0) m_staggerIndex = json["staggerindex"].get<std::string>();    //Optional
     if(json.count("tiledversion") > 0) m_tiledVersion = json["tiledversion"].get<std::string>(); else allFound = false;
     if(json.count("tilewidth") > 0 && json.count("tileheight") > 0 )
         m_tileSize = {json["tilewidth"].get<int>(), json["tileheight"].get<int>()}; else allFound = false;
-    if(json.count("type") > 0) m_type = json["type"].get<std::string>(); else allFound = false;
-    if(json.count("version") > 0) m_version = json["version"].get<std::string>(); else allFound = false;
+    if(json.count("type") > 0) m_type = json["type"].get<std::string>();                            //Optional
+    if(json.count("version") > 0) m_version = json["version"].get<int>(); else allFound = false;
 
     return allFound;
 }
@@ -104,7 +104,7 @@ const std::string &tson::Map::getType() const
     return m_type;
 }
 
-const std::string &tson::Map::getVersion() const
+int tson::Map::getVersion() const
 {
     return m_version;
 }

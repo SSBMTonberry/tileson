@@ -31,16 +31,16 @@ namespace tson
             const std::string &getTiledVersion() const;
             const Vector2i &getTileSize() const;
             const std::string &getType() const;
-            const std::string &getVersion() const;
+            int getVersion() const;
 
         protected:
             Color       m_backgroundColor;   /*! 'backgroundcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)*/;
             Vector2i    m_size;              /*! 'width' and 'height' of a Tiled map */
-            int         m_hexsideLength;     /*! 'hexsidelength': Length of the side of a hex tile in pixels */
-            bool        m_isInfinite;        /*! 'infinite': Whether the map has infinite dimensions*/
+            int         m_hexsideLength {};     /*! 'hexsidelength': Length of the side of a hex tile in pixels */
+            bool        m_isInfinite {};        /*! 'infinite': Whether the map has infinite dimensions*/
             //TODO: layers      |      array      | 	Array of Layers
-            int         m_nextLayerId;       /*! 'nextlayerid': Auto-increments for each layer */
-            int         m_nextObjectId;      /*! 'nextobjectid': Auto-increments for each placed object */
+            int         m_nextLayerId {};       /*! 'nextlayerid': Auto-increments for each layer */
+            int         m_nextObjectId {};      /*! 'nextobjectid': Auto-increments for each placed object */
             std::string m_orientation;       /*! 'orientation': orthogonal, isometric, staggered or hexagonal */
             //TODO: properties  |      array 	  |     A list of properties (name, value, type).
             std::string m_renderOrder;       /*! 'renderorder': Rendering direction (orthogonal maps only) */
@@ -50,7 +50,7 @@ namespace tson
             Vector2i    m_tileSize;          /*! 'tilewidth' and 'tileheight' of a map */
             //TODO: tilesets    |      array 	  |     Array of Tilesets
             std::string m_type;              /*! 'type': map (since 1.0) */
-            std::string m_version;           /*! 'version': The JSON format version*/
+            int m_version;           /*! 'version': The JSON format version*/
 
         /*
          * backgroundcolor 	string 	Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)
