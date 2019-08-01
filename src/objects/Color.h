@@ -18,7 +18,7 @@ namespace tson
             Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha);
 
             bool operator==(const Color &rhs) const;
-
+            bool operator==(const std::string &rhs) const;
             bool operator!=(const Color &rhs) const;
 
             [[nodiscard]] uint8_t getRed() const;

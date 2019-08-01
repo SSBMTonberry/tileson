@@ -42,6 +42,11 @@ bool tson::Color::operator!=(const tson::Color &rhs) const
     return !(rhs == *this);
 }
 
+bool tson::Color::operator==(const std::string &rhs) const {
+    Color other {rhs};
+    return *this == other;
+}
+
 /*!
  * @return The amount of red from 0 to 255
  */

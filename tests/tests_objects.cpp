@@ -24,3 +24,8 @@ TEST_CASE( "Parse a color from Tiled color and get as float- expect correct floa
     std::tuple<float, float, float, float> result = color.asFloat();
     REQUIRE( result == expected );
 }
+
+TEST_CASE( "Compare color and its related hex as sting - expect success", "[color][comparison][string]" ) {
+    tson::Color color {170, 7, 255, 255 };
+    REQUIRE( color == "#ffaa07ff" );
+}

@@ -50,7 +50,7 @@ namespace tson
             Vector2i    m_tileSize;          /*! 'tilewidth' and 'tileheight' of a map */
             //TODO: tilesets    |      array 	  |     Array of Tilesets
             std::string m_type;              /*! 'type': map (since 1.0) */
-            int m_version;           /*! 'version': The JSON format version*/
+            int m_version{};           /*! 'version': The JSON format version*/
 
         /*
          * backgroundcolor 	string 	Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)
