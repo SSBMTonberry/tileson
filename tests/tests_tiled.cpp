@@ -36,5 +36,6 @@ TEST_CASE( "Parse a tson::Map only containing info from Tiled's documentation - 
     tson::Map map;
     bool result = map.parse(j);
 
-    REQUIRE( true );
+    //TODO: Check every field
+    REQUIRE( (result) );
 }

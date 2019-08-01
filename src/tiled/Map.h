@@ -5,8 +5,8 @@
 #ifndef TILESON_MAP_H
 #define TILESON_MAP_H
 
-#include <objects/Color.h>
-#include <objects/Vector2.hpp>
+#include "../objects/Color.h"
+#include "../objects/Vector2.hpp"
 #include "json.hpp"
 
 namespace tson
@@ -17,6 +17,21 @@ namespace tson
             Map() = default;
             explicit Map(const nlohmann::json &json);
             bool parse(const nlohmann::json &json);
+
+            const Color &getBackgroundColor() const;
+            const Vector2i &getSize() const;
+            int getHexsideLength() const;
+            bool isInfinite() const;
+            int getNextLayerId() const;
+            int getNextObjectId() const;
+            const std::string &getOrientation() const;
+            const std::string &getRenderOrder() const;
+            const std::string &getStaggerAxis() const;
+            const std::string &getStaggerIndex() const;
+            const std::string &getTiledVersion() const;
+            const Vector2i &getTileSize() const;
+            const std::string &getType() const;
+            const std::string &getVersion() const;
 
         protected:
             Color       m_backgroundColor;   /*! 'backgroundcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)*/;

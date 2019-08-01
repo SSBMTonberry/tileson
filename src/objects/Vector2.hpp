@@ -10,14 +10,12 @@ namespace tson
     template<typename T>
     class Vector2
     {
-        Vector2(T x, T y);
-
-        Vector2()
-        {
-            m_x = m_y = 0;
-        }
 
         public:
+            Vector2(T x, T y);
+
+            Vector2() { m_x = m_y = 0; }
+
             bool operator==(const Vector2 &rhs) const;
 
             bool operator!=(const Vector2 &rhs) const;
@@ -30,7 +28,8 @@ namespace tson
     template<typename T>
     Vector2<T>::Vector2(T x, T y)
     {
-
+        m_x = x;
+        m_y = y;
     }
 
     template<typename T>
