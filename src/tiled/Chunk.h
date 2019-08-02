@@ -17,10 +17,10 @@ namespace tson
             explicit Chunk(const nlohmann::json &json);
             bool parse(const nlohmann::json &json);
 
-            const std::vector<int> &getData() const;
-            const std::string &getBase64Data() const;
-            const Vector2i &getSize() const;
-            const Vector2i &getPosition() const;
+            [[nodiscard]] const std::vector<int> &getData() const;
+            [[nodiscard]] const std::string &getBase64Data() const;
+            [[nodiscard]] const Vector2i &getSize() const;
+            [[nodiscard]] const Vector2i &getPosition() const;
 
         private:
             std::vector<int> m_data;        /*! 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded data. tilelayer only. */

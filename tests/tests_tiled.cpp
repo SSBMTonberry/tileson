@@ -6,9 +6,10 @@
 #include <tiled/Layer.h>
 #include <tiled/Chunk.h>
 #include <iostream>
+#include <tiled/Object.h>
 #include "../external_libs/catch.hpp"
 
-TEST_CASE( "Parse a tson::Map from Tiled's documentation - read simple values", "[tiled][map]" )
+TEST_CASE( "Parse a Map from Tiled's documentation - read simple values", "[tiled][map]" )
 {
 
     nlohmann::json j = "{\n"
@@ -98,7 +99,7 @@ TEST_CASE( "Parse a Layer from Tiled's documentation - read simple values", "[ti
     {
         nlohmann::json j = "{\n"
                            "  \"draworder\":\"topdown\",\n"
-                           "  \"height\":0,\n"
+                           "  \"height\":8,\n"
                            "  \"name\":\"people\",\n"
                            "  \"objects\":[ ],\n"
                            "  \"opacity\":1,\n"
@@ -110,7 +111,7 @@ TEST_CASE( "Parse a Layer from Tiled's documentation - read simple values", "[ti
                            "    }],\n"
                            "  \"type\":\"objectgroup\",\n"
                            "  \"visible\":true,\n"
-                           "  \"width\":0,\n"
+                           "  \"width\":4,\n"
                            "  \"x\":0,\n"
                            "  \"y\":0\n"
                            "}"_json;
@@ -123,7 +124,7 @@ TEST_CASE( "Parse a Layer from Tiled's documentation - read simple values", "[ti
                 layer.getOpacity() == 1 &&
                 layer.getType() == "objectgroup" &&
                 layer.isVisible() &&
-                layer.getSize() == tson::Vector2i(0, 0) &&
+                layer.getSize() == tson::Vector2i(4, 8) &&
                 layer.getX() == 0 &&
                 layer.getY() == 0
         );
@@ -139,7 +140,7 @@ TEST_CASE( "Parse a Chunk from Tiled's documentation - read simple values", "[ti
                        "  \"data\":[1, 2, 1, 2, 3, 1, 3, 1, 2, 2, 3, 3, 4, 4, 4, 1],\n"
                        "  \"height\":16,\n"
                        "  \"width\":16,\n"
-                       "  \"x\":0,\n"
+                       "  \"x\":4,\n"
                        "  \"y\":-16\n"
                        "}"_json;
 
@@ -148,8 +149,49 @@ TEST_CASE( "Parse a Chunk from Tiled's documentation - read simple values", "[ti
     bool hasCorrectValues = (
             chunk.getData().size() == 16 &&
             chunk.getSize() == tson::Vector2i(16, 16) &&
-            chunk.getPosition() == tson::Vector2i(0, -16)
+            chunk.getPosition() == tson::Vector2i(4, -16)
     );
 
     REQUIRE((parseOk && hasCorrectValues));
+}
+
+TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[tiled][chunk]" )
+{
+    SECTION("Object - regular")
+    {
+        nlohmann::json j = "{\n"
+                           "  \"gid\":5,\n"
+                           "  \"height\":0,\n"
+                           "  \"id\":1,\n"
+                           "  \"name\":\"villager\",\n"
+                           "  \"properties\":[\n"
+                           "    {\n"
+                           "      \"name\":\"hp\",\n"
+                           "      \"type\":\"int\",\n"
+                           "      \"value\":12\n"
+                           "    }],\n"
+                           "  \"rotation\":90,\n"
+                           "  \"type\":\"npc\",\n"
+                           "  \"visible\":true,\n"
+                           "  \"width\":0,\n"
+                           "  \"x\":32,\n"
+                           "  \"y\":32\n"
+                           "}"_json;
+
+        tson::Object obj;
+        bool parseOk = obj.parse(j);
+        bool hasCorrectValues = (
+                obj.getGid() == 5 &&
+                obj.getId() == 1 &&
+                obj.getName() == "villager" &&
+                obj.getRotation() == 90 &&
+                obj.getType() == "npc" &&
+                obj.isVisible() &&
+                obj.getSize() == tson::Vector2i(0, 0) &&
+                obj.getPosition() == tson::Vector2i(32, 32)
+                && obj.getObjectType() == tson::Object::Type::Object
+        );
+
+        REQUIRE((parseOk && hasCorrectValues));
+    }
 }
