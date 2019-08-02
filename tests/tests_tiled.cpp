@@ -194,4 +194,235 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
 
         REQUIRE((parseOk && hasCorrectValues));
     }
+
+    SECTION("Object - ellipse")
+    {
+        nlohmann::json j = "{\n"
+                           "  \"ellipse\":true,\n"
+                           "  \"height\":152,\n"
+                           "  \"id\":13,\n"
+                           "  \"name\":\"\",\n"
+                           "  \"rotation\":0,\n"
+                           "  \"type\":\"\",\n"
+                           "  \"visible\":true,\n"
+                           "  \"width\":248,\n"
+                           "  \"x\":560,\n"
+                           "  \"y\":808\n"
+                           "}"_json;
+
+        tson::Object obj;
+        bool parseOk = obj.parse(j);
+        bool hasCorrectValues = (
+                obj.isEllipse() &&
+                obj.getId() == 13 &&
+                obj.getName().empty() &&
+                obj.getRotation() == 0 &&
+                obj.getType().empty() &&
+                obj.isVisible() &&
+                obj.getSize() == tson::Vector2i(248, 152) &&
+                obj.getPosition() == tson::Vector2i(560, 808)
+                && obj.getObjectType() == tson::Object::Type::Ellipse
+        );
+
+        REQUIRE((parseOk && hasCorrectValues));
+    }
+
+    SECTION("Object - rectangle")
+    {
+        nlohmann::json j = "{\n"
+                           "  \"height\":184,\n"
+                           "  \"id\":14,\n"
+                           "  \"name\":\"\",\n"
+                           "  \"rotation\":0,\n"
+                           "  \"type\":\"\",\n"
+                           "  \"visible\":true,\n"
+                           "  \"width\":368,\n"
+                           "  \"x\":576,\n"
+                           "  \"y\":584\n"
+                           "}"_json;
+
+        tson::Object obj;
+        bool parseOk = obj.parse(j);
+        bool hasCorrectValues = (
+                obj.getId() == 14 &&
+                obj.getName().empty() &&
+                obj.getRotation() == 0 &&
+                obj.getType().empty() &&
+                obj.isVisible() &&
+                obj.getSize() == tson::Vector2i(368, 184) &&
+                obj.getPosition() == tson::Vector2i(576, 584)
+                && obj.getObjectType() == tson::Object::Type::Rectangle
+        );
+
+        REQUIRE((parseOk && hasCorrectValues));
+    }
+
+    SECTION("Object - point")
+    {
+        nlohmann::json j = "{\n"
+                           "  \"point\":true,\n"
+                           "  \"height\":0,\n"
+                           "  \"id\":20,\n"
+                           "  \"name\":\"\",\n"
+                           "  \"rotation\":0,\n"
+                           "  \"type\":\"\",\n"
+                           "  \"visible\":true,\n"
+                           "  \"width\":0,\n"
+                           "  \"x\":220,\n"
+                           "  \"y\":350\n"
+                           "}"_json;
+
+        tson::Object obj;
+        bool parseOk = obj.parse(j);
+        bool hasCorrectValues = (
+                obj.isPoint() &&
+                obj.getId() == 20 &&
+                obj.getName().empty() &&
+                obj.getRotation() == 0 &&
+                obj.getType().empty() &&
+                obj.isVisible() &&
+                obj.getSize() == tson::Vector2i(0, 0) &&
+                obj.getPosition() == tson::Vector2i(220, 350)
+                && obj.getObjectType() == tson::Object::Type::Point
+        );
+
+        REQUIRE((parseOk && hasCorrectValues));
+    }
+
+    SECTION("Object - polygon")
+    {
+        nlohmann::json j = "{\n"
+                           "  \"height\":0,\n"
+                           "  \"id\":15,\n"
+                           "  \"name\":\"\",\n"
+                           "  \"polygon\":[\n"
+                           "  {\n"
+                           "    \"x\":0,\n"
+                           "    \"y\":0\n"
+                           "  },\n"
+                           "  {\n"
+                           "    \"x\":152,\n"
+                           "    \"y\":88\n"
+                           "  },\n"
+                           "  {\n"
+                           "    \"x\":136,\n"
+                           "    \"y\":-128\n"
+                           "  },\n"
+                           "  {\n"
+                           "    \"x\":80,\n"
+                           "    \"y\":-280\n"
+                           "  },\n"
+                           "  {\n"
+                           "    \"x\":16,\n"
+                           "    \"y\":-288\n"
+                           "  }],\n"
+                           "  \"rotation\":0,\n"
+                           "  \"type\":\"\",\n"
+                           "  \"visible\":true,\n"
+                           "  \"width\":0,\n"
+                           "  \"x\":-176,\n"
+                           "  \"y\":432\n"
+                           "}"_json;
+
+        tson::Object obj;
+        bool parseOk = obj.parse(j);
+        bool hasCorrectValues = (
+                obj.getId() == 15 &&
+                obj.getName().empty() &&
+                obj.getRotation() == 0 &&
+                obj.getType().empty() &&
+                obj.isVisible() &&
+                obj.getSize() == tson::Vector2i(0, 0) &&
+                obj.getPosition() == tson::Vector2i(-176, 432)
+                && obj.getObjectType() == tson::Object::Type::Polygon
+        );
+    }
+    SECTION("Object - polyline")
+    {
+        nlohmann::json j = "{\n"
+                           "  \"height\":0,\n"
+                           "  \"id\":16,\n"
+                           "  \"name\":\"\",\n"
+                           "  \"polyline\":[\n"
+                           "  {\n"
+                           "    \"x\":0,\n"
+                           "    \"y\":0\n"
+                           "  },\n"
+                           "  {\n"
+                           "    \"x\":248,\n"
+                           "    \"y\":-32\n"
+                           "  },\n"
+                           "  {\n"
+                           "    \"x\":376,\n"
+                           "    \"y\":72\n"
+                           "  },\n"
+                           "  {\n"
+                           "    \"x\":544,\n"
+                           "    \"y\":288\n"
+                           "  },\n"
+                           "  {\n"
+                           "    \"x\":656,\n"
+                           "    \"y\":120\n"
+                           "  },\n"
+                           "  {\n"
+                           "    \"x\":512,\n"
+                           "    \"y\":0\n"
+                           "  }],\n"
+                           "  \"rotation\":0,\n"
+                           "  \"type\":\"\",\n"
+                           "  \"visible\":true,\n"
+                           "  \"width\":0,\n"
+                           "  \"x\":240,\n"
+                           "  \"y\":88\n"
+                           "}"_json;
+
+        tson::Object obj;
+        bool parseOk = obj.parse(j);
+        bool hasCorrectValues = (
+                obj.getId() == 16 &&
+                obj.getName().empty() &&
+                obj.getRotation() == 0 &&
+                obj.getType().empty() &&
+                obj.isVisible() &&
+                obj.getSize() == tson::Vector2i(0, 0) &&
+                obj.getPosition() == tson::Vector2i(240, 88)
+                && obj.getObjectType() == tson::Object::Type::Polyline
+        );
+
+        REQUIRE((parseOk && hasCorrectValues));
+    }
+    SECTION("Object - text")
+    {
+        nlohmann::json j = "{\n"
+                           "  \"height\":19,\n"
+                           "  \"id\":15,\n"
+                           "  \"name\":\"\",\n"
+                           "  \"text\":\n"
+                           "  {\n"
+                           "    \"text\":\"Hello World\",\n"
+                           "    \"wrap\":true\n"
+                           "  },\n"
+                           "  \"rotation\":0,\n"
+                           "  \"type\":\"\",\n"
+                           "  \"visible\":true,\n"
+                           "  \"width\":248,\n"
+                           "  \"x\":48,\n"
+                           "  \"y\":136\n"
+                           "}"_json;
+
+        tson::Object obj;
+        bool parseOk = obj.parse(j);
+        bool hasCorrectValues = (
+                obj.getId() == 15 &&
+                obj.getName().empty() &&
+                obj.getRotation() == 0 &&
+                obj.getType().empty() &&
+                obj.isVisible() &&
+                obj.getSize() == tson::Vector2i(248, 19) &&
+                obj.getPosition() == tson::Vector2i(48, 136)
+                && obj.getObjectType() == tson::Object::Type::Text
+        );
+
+        REQUIRE((parseOk && hasCorrectValues));
+    }
 }
