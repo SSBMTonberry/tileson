@@ -4,9 +4,12 @@
 
 #include <tiled/Map.h>
 #include <tiled/Layer.h>
+#include <tiled/Chunk.h>
+#include <iostream>
 #include "../external_libs/catch.hpp"
 
-TEST_CASE( "Parse a tson::Map only containing info from Tiled's documentation - read simple values", "[tiled][map]" ) {
+TEST_CASE( "Parse a tson::Map from Tiled's documentation - read simple values", "[tiled][map]" )
+{
 
     nlohmann::json j = "{\n"
                        "  \"backgroundcolor\":\"#656667\",\n"
@@ -51,7 +54,8 @@ TEST_CASE( "Parse a tson::Map only containing info from Tiled's documentation - 
     REQUIRE( (parseOk && hasCorrectValues) );
 }
 
-TEST_CASE( "Parse a Layer only containing info from Tiled's documentation - read simple values", "[tiled][layer]" ) {
+TEST_CASE( "Parse a Layer from Tiled's documentation - read simple values", "[tiled][layer]" )
+{
 
     SECTION("Layer - Tile Layer format")
     {
@@ -127,4 +131,25 @@ TEST_CASE( "Parse a Layer only containing info from Tiled's documentation - read
 
         REQUIRE((parseOk && hasCorrectValues));
     }
+}
+
+TEST_CASE( "Parse a Chunk from Tiled's documentation - read simple values", "[tiled][chunk]" )
+{
+    nlohmann::json j = "{\n"
+                       "  \"data\":[1, 2, 1, 2, 3, 1, 3, 1, 2, 2, 3, 3, 4, 4, 4, 1],\n"
+                       "  \"height\":16,\n"
+                       "  \"width\":16,\n"
+                       "  \"x\":0,\n"
+                       "  \"y\":-16\n"
+                       "}"_json;
+
+    tson::Chunk chunk;
+    bool parseOk = chunk.parse(j);
+    bool hasCorrectValues = (
+            chunk.getData().size() == 16 &&
+            chunk.getSize() == tson::Vector2i(16, 16) &&
+            chunk.getPosition() == tson::Vector2i(0, -16)
+    );
+
+    REQUIRE((parseOk && hasCorrectValues));
 }
