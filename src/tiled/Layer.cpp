@@ -29,7 +29,7 @@ bool tson::Layer::parse(const nlohmann::json &json)
     if(json.count("x") > 0) m_x = json["x"].get<int>(); else allFound = false;
     if(json.count("y") > 0) m_y = json["y"].get<int>(); else allFound = false;
 
-    //Handle DATA
+    //Handle DATA (Optional)
     if(json.count("data") > 0)
     {
         if(json["data"].is_array())
@@ -39,8 +39,6 @@ bool tson::Layer::parse(const nlohmann::json &json)
         else
             m_base64Data = json["data"].get<std::string>();
     }
-    else
-        allFound = false;
 
     return allFound;
 }
