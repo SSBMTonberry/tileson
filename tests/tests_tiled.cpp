@@ -7,6 +7,7 @@
 #include <tiled/Chunk.h>
 #include <iostream>
 #include <tiled/Object.h>
+#include <tiled/Tileset.h>
 #include "../external_libs/catch.hpp"
 
 TEST_CASE( "Parse a Map from Tiled's documentation - read simple values", "[tiled][map]" )
@@ -425,4 +426,43 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
 
         REQUIRE((parseOk && hasCorrectValues));
     }
+}
+
+TEST_CASE( "Parse a Tileset from Tiled's documentation - read simple values", "[tiled][chunk]" )
+{
+    nlohmann::json j = "{\n"
+                       " \"columns\":19,\n"
+                       " \"firstgid\":1,\n"
+                       " \"image\":\"..\\/image\\/fishbaddie_parts.png\",\n"
+                       " \"imageheight\":480,\n"
+                       " \"imagewidth\":640,\n"
+                       " \"margin\":3,\n"
+                       " \"name\":\"\",\n"
+                       " \"properties\":[\n"
+                       "   {\n"
+                       "     \"name\":\"myProperty1\",\n"
+                       "     \"type\":\"string\",\n"
+                       "     \"value\":\"myProperty1_value\"\n"
+                       "   }],\n"
+                       " \"spacing\":1,\n"
+                       " \"tilecount\":266,\n"
+                       " \"tileheight\":32,\n"
+                       " \"tilewidth\":32\n"
+                       "}"_json;
+
+    tson::Tileset tileset;
+    bool parseOk = tileset.parse(j);
+    bool hasCorrectValues = (
+        tileset.getColumns() == 19 &&
+        tileset.getFirstgid() == 1 &&
+        tileset.getImagePath() == fs::path("../image/fishbaddie_parts.png") &&
+        tileset.getImageSize() == tson::Vector2i(640, 480) &&
+        tileset.getMargin() == 3 &&
+        tileset.getName().empty() &&
+        tileset.getSpacing() == 1 &&
+        tileset.getTileCount() == 266 &&
+        tileset.getTileSize() == tson::Vector2i(32,32)
+    );
+
+    REQUIRE((parseOk && hasCorrectValues));
 }
