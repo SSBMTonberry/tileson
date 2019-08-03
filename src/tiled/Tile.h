@@ -57,18 +57,6 @@ namespace tson
             //TODO: properties 	    array 	            A list of properties (name, value, type)
             //TODO: terrain 	    array 	            Index of terrain for each corner of tile
             std::string             m_type;             /*! 'type': The type of the tile (optional) */
-
-            /*
-                animation 	    array 	        Array of Frames
-                id 	            int 	        Local ID of the tile
-                image 	        string 	        Image representing this tile (optional)
-                imageheight 	int 	        Height of the tile image in pixels
-                imagewidth 	    int 	        Width of the tile image in pixels
-                objectgroup 	Layer 	        Layer with type objectgroup (optional)
-                properties 	    array 	        A list of properties (name, value, type)
-                terrain 	    array 	        Index of terrain for each corner of tile
-                type 	        string 	        The type of the tile (optional)
-            */
     };
 }
 

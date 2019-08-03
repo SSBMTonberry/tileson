@@ -9,6 +9,7 @@
 #include <tiled/Object.h>
 #include <tiled/Tileset.h>
 #include <tiled/Tile.h>
+#include <tiled/Frame.h>
 #include "../external_libs/catch.hpp"
 
 TEST_CASE( "Parse a Map from Tiled's documentation - read simple values", "[tiled][map]" )
@@ -485,6 +486,23 @@ TEST_CASE( "Parse a Tile from Tiled's documentation - read simple values", "[til
     bool parseOk = tile.parse(j);
     bool hasCorrectValues = (
         tile.getId() == 11
+    );
+
+    REQUIRE((parseOk && hasCorrectValues));
+}
+
+TEST_CASE( "Parse a Frame", "[tiled][frame]" )
+{
+    nlohmann::json j = "{\n"
+                       "  \"duration\":100,\n"
+                       "  \"tileid\":6\n"
+                       "}"_json;
+
+    tson::Frame frame;
+    bool parseOk = frame.parse(j);
+    bool hasCorrectValues = (
+            frame.getDuration() == 100 &&
+            frame.getTileId() == 6
     );
 
     REQUIRE((parseOk && hasCorrectValues));
