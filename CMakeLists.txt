@@ -56,7 +56,7 @@ endif()
 
 include_directories(${PROJECT_SOURCE_DIR}/external_libs/)
 
-set(SOURCE_FILES src/TilesonParser.cpp src/TilesonParser.h src/objects/Color.cpp src/objects/Color.h src/objects/Vector2.hpp src/Tileson.cpp src/Tileson.h src/tiled/Map.cpp src/tiled/Map.h src/tiled/Layer.cpp src/tiled/Layer.h src/tiled/Chunk.cpp src/tiled/Chunk.h src/tiled/Object.cpp src/tiled/Object.h src/objects/Property.cpp src/objects/Property.h src/objects/PropertyCollection.cpp src/objects/PropertyCollection.h src/tiled/Tileset.cpp src/tiled/Tileset.h src/tiled/Tile.cpp src/tiled/Tile.h src/tiled/Frame.cpp src/tiled/Frame.h)
+set(SOURCE_FILES src/TilesonParser.cpp src/TilesonParser.h src/objects/Color.cpp src/objects/Color.h src/objects/Vector2.hpp src/Tileson.cpp src/Tileson.h src/tiled/Map.cpp src/tiled/Map.h src/tiled/Layer.cpp src/tiled/Layer.h src/tiled/Chunk.cpp src/tiled/Chunk.h src/tiled/Object.cpp src/tiled/Object.h src/objects/Property.cpp src/objects/Property.h src/objects/PropertyCollection.cpp src/objects/PropertyCollection.h src/tiled/Tileset.cpp src/tiled/Tileset.h src/tiled/Tile.cpp src/tiled/Tile.h src/tiled/Frame.cpp src/tiled/Frame.h src/tiled/Terrain.cpp src/tiled/Terrain.h)
 add_library(tileson STATIC ${SOURCE_FILES})
 
 add_subdirectory(tests)
