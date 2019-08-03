@@ -11,6 +11,8 @@
 #include <tiled/Tile.h>
 #include <tiled/Frame.h>
 #include <tiled/Terrain.h>
+#include <tiled/WangColor.h>
+#include <tiled/WangTile.h>
 #include "../external_libs/catch.hpp"
 
 TEST_CASE( "Parse a Map from Tiled's documentation - read simple values", "[tiled][map]" )
@@ -509,7 +511,7 @@ TEST_CASE( "Parse a Frame", "[tiled][frame]" )
     REQUIRE((parseOk && hasCorrectValues));
 }
 
-TEST_CASE( "Parse a Terrain from Tiled's documentation", "[tiled][frame]" )
+TEST_CASE( "Parse a Terrain from Tiled's documentation", "[tiled][terrain]" )
 {
     nlohmann::json j = "{\n"
                        "  \"name\":\"chasm\",\n"
@@ -524,4 +526,60 @@ TEST_CASE( "Parse a Terrain from Tiled's documentation", "[tiled][frame]" )
     );
 
     REQUIRE((parseOk && hasCorrectValues));
+}
+
+TEST_CASE( "Wang-tests - everything Wang - simple", "[tiled][wang]" )
+{
+    SECTION("WangSet")
+    {
+        //Needs to produce test data
+        REQUIRE(false);
+    }
+
+    SECTION("WangColor")
+    {
+        nlohmann::json j = "{\n"
+                           "  \"color\": \"#d31313\",\n"
+                           "  \"name\": \"Rails\",\n"
+                           "  \"probability\": 1,\n"
+                           "  \"tile\": 18\n"
+                           "}"_json;
+
+        tson::WangColor wangColor;
+        bool parseOk = wangColor.parse(j);
+        bool hasCorrectValues = (
+                wangColor.getColor() == tson::Color("#d31313") &&
+                wangColor.getName() == "Rails" &&
+                wangColor.getProbability() == 1 &&
+                wangColor.getTile() == 18
+        );
+
+        REQUIRE((parseOk && hasCorrectValues));
+    }
+
+    SECTION("WangTile")
+    {
+        nlohmann::json j = "{\n"
+                           "  \"dflip\": false,\n"
+                           "  \"hflip\": false,\n"
+                           "  \"tileid\": 0,\n"
+                           "  \"vflip\": false,\n"
+                           "  \"wangid\": [2, 0, 1, 0, 1, 0, 2, 0]\n"
+                           "}"_json;
+
+        tson::WangTile wangTile;
+        bool parseOk = wangTile.parse(j);
+        bool hasCorrectValues = (
+                false
+        );
+
+        REQUIRE((parseOk && hasCorrectValues));
+    }
+
+}
+
+TEST_CASE( "Object template test - simple", "[tiled][frame]" )
+{
+    //Needs to produce test data
+    REQUIRE(false);
 }
