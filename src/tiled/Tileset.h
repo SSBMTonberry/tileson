@@ -27,12 +27,12 @@
         namespace fs = std::experimental::filesystem;
     #else
         #include <filesystem>
-#include "../objects/Vector2.hpp"
-#include "../objects/Color.h"
-
-namespace fs = std::filesystem;
+        namespace fs = std::filesystem;
     #endif
 #endif
+
+#include "../objects/Vector2.hpp"
+#include "../objects/Color.h"
 
 
 namespace tson
@@ -44,17 +44,17 @@ namespace tson
             explicit Tileset(const nlohmann::json &json);
             bool parse(const nlohmann::json &json);
 
-            int getColumns() const;
-            int getFirstgid() const;
-            const fs::path &getImagePath() const;
-            const Vector2i &getImageSize() const;
-            int getMargin() const;
-            const std::string &getName() const;
-            int getSpacing() const;
-            int getTileCount() const;
-            const Vector2i &getTileSize() const;
-            const Color &getTransparentColor() const;
-            const std::string &getType() const;
+            [[nodiscard]] int getColumns() const;
+            [[nodiscard]] int getFirstgid() const;
+            [[nodiscard]] const fs::path &getImagePath() const;
+            [[nodiscard]] const Vector2i &getImageSize() const;
+            [[nodiscard]] int getMargin() const;
+            [[nodiscard]] const std::string &getName() const;
+            [[nodiscard]] int getSpacing() const;
+            [[nodiscard]] int getTileCount() const;
+            [[nodiscard]] const Vector2i &getTileSize() const;
+            [[nodiscard]] const Color &getTransparentColor() const;
+            [[nodiscard]] const std::string &getType() const;
 
         private:
             int                     m_columns {};          /*! 'columns': The number of tile columns in the tileset */

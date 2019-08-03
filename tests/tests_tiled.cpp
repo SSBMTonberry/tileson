@@ -8,6 +8,7 @@
 #include <iostream>
 #include <tiled/Object.h>
 #include <tiled/Tileset.h>
+#include <tiled/Tile.h>
 #include "../external_libs/catch.hpp"
 
 TEST_CASE( "Parse a Map from Tiled's documentation - read simple values", "[tiled][map]" )
@@ -156,7 +157,7 @@ TEST_CASE( "Parse a Chunk from Tiled's documentation - read simple values", "[ti
     REQUIRE((parseOk && hasCorrectValues));
 }
 
-TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[tiled][chunk]" )
+TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[tiled][object]" )
 {
     SECTION("Object - regular")
     {
@@ -428,7 +429,7 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
     }
 }
 
-TEST_CASE( "Parse a Tileset from Tiled's documentation - read simple values", "[tiled][chunk]" )
+TEST_CASE( "Parse a Tileset from Tiled's documentation - read simple values", "[tiled][tileset]" )
 {
     nlohmann::json j = "{\n"
                        " \"columns\":19,\n"
@@ -462,6 +463,28 @@ TEST_CASE( "Parse a Tileset from Tiled's documentation - read simple values", "[
         tileset.getSpacing() == 1 &&
         tileset.getTileCount() == 266 &&
         tileset.getTileSize() == tson::Vector2i(32,32)
+    );
+
+    REQUIRE((parseOk && hasCorrectValues));
+}
+
+TEST_CASE( "Parse a Tile from Tiled's documentation - read simple values", "[tiled][tile]" )
+{
+    nlohmann::json j = "{\n"
+                       "  \"id\":11,\n"
+                       "  \"properties\":[\n"
+                       "    {\n"
+                       "      \"name\":\"myProperty2\",\n"
+                       "      \"type\":\"string\",\n"
+                       "      \"value\":\"myProperty2_value\"\n"
+                       "    }],\n"
+                       "  \"terrain\":[0, 1, 0, 1]\n"
+                       "}"_json;
+
+    tson::Tile tile;
+    bool parseOk = tile.parse(j);
+    bool hasCorrectValues = (
+        tile.getId() == 11
     );
 
     REQUIRE((parseOk && hasCorrectValues));
