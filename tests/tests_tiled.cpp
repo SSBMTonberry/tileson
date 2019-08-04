@@ -726,5 +726,59 @@ TEST_CASE( "Wang-tests - everything Wang - simple", "[tiled][wang]" )
 
         REQUIRE((parseOk && hasCorrectValues));
     }
+}
 
+TEST_CASE( "Property-tests - Set properties from json", "[tiled][wang]" )
+{
+    nlohmann::json j = "[\n"
+                       "{\n"
+                       "    \"name\":\"color\",\n"
+                       "    \"type\":\"color\",\n"
+                       "    \"value\":\"#ff268176\"\n"
+                       "}, \n"
+                       "{\n"
+                       "    \"name\":\"file_ref\",\n"
+                       "    \"type\":\"file\",\n"
+                       "    \"value\":\"..\\/demo-tileset.png\"\n"
+                       "}, \n"
+                       "{\n"
+                       "    \"name\":\"hp\",\n"
+                       "    \"type\":\"int\",\n"
+                       "    \"value\":4\n"
+                       "}, \n"
+                       "{\n"
+                       "    \"name\":\"is_player\",\n"
+                       "    \"type\":\"bool\",\n"
+                       "    \"value\":true\n"
+                       "}, \n"
+                       "{\n"
+                       "    \"name\":\"jump_force\",\n"
+                       "    \"type\":\"float\",\n"
+                       "    \"value\":10\n"
+                       "}, \n"
+                       "{\n"
+                       "    \"name\":\"name\",\n"
+                       "    \"type\":\"string\",\n"
+                       "    \"value\":\"Mario\"\n"
+                       "}]"_json;
+
+    tson::PropertyCollection properties;
+    for(const auto &item : j)
+    {
+        properties.add(item);
+    }
+
+    bool hasCorrectValues = (
+        properties.getProperties().size() == 6 &&
+        properties.getValue<tson::Color>("color") == tson::Color("#ff268176") &&
+        properties.getProperty("color")->getType() == tson::Property::Type::Color &&
+        properties.getValue<fs::path>("file_ref") == fs::path("../demo-tileset.png") &&
+        properties.getProperty("file_ref")->getType() == tson::Property::Type::File &&
+        properties.getValue<int>("hp") == 4 && properties.getProperty("hp")->getType() == tson::Property::Type::Int &&
+        properties.getValue<bool>("is_player") && properties.getProperty("is_player")->getType() == tson::Property::Type::Boolean &&
+        properties.getValue<float>("jump_force") == 10 && properties.getProperty("jump_force")->getType() == tson::Property::Type::Float &&
+        properties.getValue<std::string>("name") == "Mario" && properties.getProperty("name")->getType() == tson::Property::Type::String
+    );
+
+    REQUIRE(hasCorrectValues);
 }

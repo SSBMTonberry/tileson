@@ -15,15 +15,17 @@ tson::Property *tson::PropertyCollection::add(const tson::Property &property)
     return &m_properties[property.getName()];
 }
 
-tson::Property *tson::PropertyCollection::add(const std::string &name)
+tson::Property *tson::PropertyCollection::add(const nlohmann::json &json)
 {
-    m_properties[name] = tson::Property(name);
+    tson::Property property = tson::Property(json);
+    std::string name = property.getName();
+    m_properties[name] = std::move(property);
     return &m_properties[name];
 }
 
-tson::Property *tson::PropertyCollection::add(const std::string &name, const std::any &value)
+tson::Property *tson::PropertyCollection::add(const std::string &name, const std::any &value, tson::Property::Type type)
 {
-    m_properties[name] = {name, value};
+    m_properties[name] = {name, value, type};
     return &m_properties[name];
 }
 

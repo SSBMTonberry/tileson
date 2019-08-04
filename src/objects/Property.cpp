@@ -4,6 +4,7 @@
 
 #include "Property.h"
 
+
 tson::Property::Property() : m_name {"unnamed"}
 {
 
@@ -12,7 +13,8 @@ tson::Property::Property() : m_name {"unnamed"}
 tson::Property::Property(const nlohmann::json &json)
 {
     setTypeByString(json["type"].get<std::string>());
-    setValueByType(json);
+    setValueByType(json["value"]);
+    m_name = json["name"].get<std::string>();
 }
 
 tson::Property::Property(std::string name, std::any value, Type type) : m_name { move(name) }, m_value { move(value) }, m_type {type}
@@ -101,5 +103,35 @@ void tson::Property::setTypeByString(const std::string &str)
 
 void tson::Property::setValueByType(const nlohmann::json &json)
 {
-    #error finish this! Make a switch()
+    switch(m_type)
+    {
+        case Type::Color:
+            m_value = tson::Color(json.get<std::string>());
+            break;
+
+        case Type::File:
+            m_value = fs::path(json.get<std::string>());
+            break;
+
+        case Type::Int:
+            m_value = json.get<int>();
+            break;
+
+        case Type::Boolean:
+            m_value = json.get<bool>();
+            break;
+
+        case Type::Float:
+            m_value = json.get<float>();
+            break;
+
+        case Type::String:
+            setStrValue(json.get<std::string>());
+            break;
+
+        default:
+            setStrValue(json.get<std::string>());
+            break;
+
+    }
 }

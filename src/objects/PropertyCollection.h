@@ -6,6 +6,7 @@
 #define TILESON_PROPERTYCOLLECTION_H
 
 #include "Property.h"
+#include <json.hpp>
 #include <map>
 
 namespace tson
@@ -18,8 +19,8 @@ namespace tson
             explicit PropertyCollection(std::string id);
 
             tson::Property * add(const tson::Property &property);
-            tson::Property * add(const std::string &name);
-            tson::Property * add(const std::string &name, const std::any &value);
+            tson::Property * add(const nlohmann::json &json);
+            tson::Property * add(const std::string &name, const std::any &value, tson::Property::Type type);
 
             void remove(const std::string &name);
 
@@ -31,7 +32,7 @@ namespace tson
             std::map<std::string, Property> &getProperties();
             template <typename T>
             T getValue(const std::string &name);
-            const std::string &getId() const;
+            [[nodiscard]] const std::string &getId() const;
 
         protected:
             std::string m_id;

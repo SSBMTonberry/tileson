@@ -5,26 +5,52 @@
 #ifndef TILESON_PROPERTY_H
 #define TILESON_PROPERTY_H
 
+#if MSVC
+    #include <filesystem>
+    namespace fs = std::filesystem;
+#elif MINGW
+#if __MINGW64_VERSION_MAJOR > 6
+        #include <filesystem>
+        namespace fs = std::filesystem;
+    #else
+        #include <experimental/filesystem>
+        namespace fs = std::experimental::filesystem;
+    #endif
+#elif APPLE
+#include <experimental/filesystem>
+    namespace fs = std::experimental::filesystem;
+#else
+    #if __GNUC__ < 8 //GCC major version less than 8
+#include <experimental/filesystem>
+        namespace fs = std::experimental::filesystem;
+    #else
+        #include <filesystem>
+namespace fs = std::filesystem;
+    #endif
+#endif
+
 #include <any>
 #include <string>
 #include <json.hpp>
+#include "Color.h"
 
 namespace tson
 {
     class Property
     {
-        enum class Type : uint8_t
-        {
-            Undefined = 0,
-            Color = 1, /*! color */
-            File = 2, /*! file */
-            Int = 3, /*! int */
-            Boolean = 4, /*! bool */
-            Float = 5, /*! float */
-            String = 6 /*! string */
-        };
-
         public:
+
+            enum class Type : uint8_t
+            {
+                Undefined = 0,
+                Color = 1, /*! color */
+                File = 2, /*! file */
+                Int = 3, /*! int */
+                Boolean = 4, /*! bool */
+                Float = 5, /*! float */
+                String = 6 /*! string */
+            };
+
             Property();
             Property(const nlohmann::json &json);
             Property(std::string name, std::any value, Type type);
