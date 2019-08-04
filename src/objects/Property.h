@@ -7,30 +7,45 @@
 
 #include <any>
 #include <string>
+#include <json.hpp>
+
 namespace tson
 {
     class Property
     {
+        enum class Type : uint8_t
+        {
+            Undefined = 0,
+            Color = 1, /*! color */
+            File = 2, /*! file */
+            Int = 3, /*! int */
+            Boolean = 4, /*! bool */
+            Float = 5, /*! float */
+            String = 6 /*! string */
+        };
+
         public:
             Property();
-            explicit Property(std::string name);
-            Property(std::string name, std::any value);
+            Property(const nlohmann::json &json);
+            Property(std::string name, std::any value, Type type);
 
             void setValue(const std::any &value);
             void setStrValue(const std::string &value);
             void setName(const std::string &name);
 
-            const std::type_info& getValueType() const;
+            [[nodiscard]] const std::type_info& getValueType() const;
             std::string getValueTypeInfo();
-            const std::any &getValue() const;
+            [[nodiscard]]const std::any &getValue() const;
             template <typename T>
             T getValue() const;
-            const std::string &getName() const;
-
+            [[nodiscard]] const std::string &getName() const;
+            [[nodiscard]] Type getType() const;
 
         protected:
-            void initialize();
+            void setTypeByString(const std::string &str);
+            void setValueByType(const nlohmann::json &json);
 
+            Type m_type = Type::Undefined;
             std::string m_name;
             std::any m_value; //Using std::any to assign any type
     };
