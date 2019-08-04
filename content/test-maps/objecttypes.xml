@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objecttypes>
+ <objecttype name="Coin" color="#ffeb06">
+  <property name="value" type="float" default="2.99"/>
+ </objecttype>
+ <objecttype name="Enemy" color="#a0a0a4">
+  <property name="hp" type="int" default="1"/>
+  <property name="name" type="string" default=""/>
+ </objecttype>
+ <objecttype name="Spike" color="#55ffff">
+  <property name="damage" type="float" default="4"/>
+ </objecttype>
+</objecttypes>

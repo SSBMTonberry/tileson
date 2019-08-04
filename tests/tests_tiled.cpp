@@ -13,6 +13,7 @@
 #include <tiled/Terrain.h>
 #include <tiled/WangColor.h>
 #include <tiled/WangTile.h>
+#include <tiled/WangSet.h>
 #include "../external_libs/catch.hpp"
 
 TEST_CASE( "Parse a Map from Tiled's documentation - read simple values", "[tiled][map]" )
@@ -532,8 +533,134 @@ TEST_CASE( "Wang-tests - everything Wang - simple", "[tiled][wang]" )
 {
     SECTION("WangSet")
     {
-        //Needs to produce test data
-        REQUIRE(false);
+        nlohmann::json j = "{\n"
+                           "    \"cornercolors\":[],\n"
+                           "    \"edgecolors\":[\n"
+                           "        {\n"
+                           "            \"color\":\"#ff0000\",\n"
+                           "            \"name\":\"Red\",\n"
+                           "            \"probability\":1,\n"
+                           "            \"tile\":-1\n"
+                           "        }, \n"
+                           "        {\n"
+                           "            \"color\":\"#00ff00\",\n"
+                           "            \"name\":\"Green\",\n"
+                           "            \"probability\":1,\n"
+                           "            \"tile\":-1\n"
+                           "        }, \n"
+                           "        {\n"
+                           "            \"color\":\"#0000ff\",\n"
+                           "            \"name\":\"Blue\",\n"
+                           "            \"probability\":1,\n"
+                           "            \"tile\":-1\n"
+                           "        }, \n"
+                           "        {\n"
+                           "            \"color\":\"#ff7700\",\n"
+                           "            \"name\":\"Orange\",\n"
+                           "            \"probability\":1,\n"
+                           "            \"tile\":-1\n"
+                           "        }],\n"
+                           "    \"name\":\"FirstWang\",\n"
+                           "    \"properties\":[\n"
+                           "        {\n"
+                           "            \"name\":\"floating_wang\",\n"
+                           "            \"type\":\"float\",\n"
+                           "            \"value\":14.6\n"
+                           "        }, \n"
+                           "        {\n"
+                           "            \"name\":\"is_wang\",\n"
+                           "            \"type\":\"bool\",\n"
+                           "            \"value\":true\n"
+                           "        }],\n"
+                           "    \"tile\":-1,\n"
+                           "    \"wangtiles\":[\n"
+                           "        {\n"
+                           "            \"dflip\":false,\n"
+                           "            \"hflip\":false,\n"
+                           "            \"tileid\":0,\n"
+                           "            \"vflip\":false,\n"
+                           "            \"wangid\":[3, 0, 1, 0, 1, 0, 3, 0]\n"
+                           "        }, \n"
+                           "        {\n"
+                           "            \"dflip\":false,\n"
+                           "            \"hflip\":false,\n"
+                           "            \"tileid\":1,\n"
+                           "            \"vflip\":false,\n"
+                           "            \"wangid\":[1, 0, 1, 0, 1, 0, 1, 0]\n"
+                           "        }, \n"
+                           "        {\n"
+                           "            \"dflip\":false,\n"
+                           "            \"hflip\":false,\n"
+                           "            \"tileid\":2,\n"
+                           "            \"vflip\":false,\n"
+                           "            \"wangid\":[3, 0, 3, 0, 1, 0, 1, 0]\n"
+                           "        }, \n"
+                           "        {\n"
+                           "            \"dflip\":false,\n"
+                           "            \"hflip\":false,\n"
+                           "            \"tileid\":3,\n"
+                           "            \"vflip\":false,\n"
+                           "            \"wangid\":[3, 0, 1, 0, 1, 0, 1, 0]\n"
+                           "        }, \n"
+                           "        {\n"
+                           "            \"dflip\":false,\n"
+                           "            \"hflip\":false,\n"
+                           "            \"tileid\":4,\n"
+                           "            \"vflip\":false,\n"
+                           "            \"wangid\":[2, 0, 2, 0, 1, 0, 1, 0]\n"
+                           "        }, \n"
+                           "        {\n"
+                           "            \"dflip\":false,\n"
+                           "            \"hflip\":false,\n"
+                           "            \"tileid\":8,\n"
+                           "            \"vflip\":false,\n"
+                           "            \"wangid\":[1, 0, 1, 0, 3, 0, 3, 0]\n"
+                           "        }, \n"
+                           "        {\n"
+                           "            \"dflip\":false,\n"
+                           "            \"hflip\":false,\n"
+                           "            \"tileid\":9,\n"
+                           "            \"vflip\":false,\n"
+                           "            \"wangid\":[2, 0, 1, 0, 1, 0, 1, 0]\n"
+                           "        }, \n"
+                           "        {\n"
+                           "            \"dflip\":false,\n"
+                           "            \"hflip\":false,\n"
+                           "            \"tileid\":10,\n"
+                           "            \"vflip\":false,\n"
+                           "            \"wangid\":[1, 0, 3, 0, 3, 0, 1, 0]\n"
+                           "        }, \n"
+                           "        {\n"
+                           "            \"dflip\":false,\n"
+                           "            \"hflip\":false,\n"
+                           "            \"tileid\":16,\n"
+                           "            \"vflip\":false,\n"
+                           "            \"wangid\":[3, 0, 3, 0, 3, 0, 3, 0]\n"
+                           "        }, \n"
+                           "        {\n"
+                           "            \"dflip\":false,\n"
+                           "            \"hflip\":false,\n"
+                           "            \"tileid\":17,\n"
+                           "            \"vflip\":false,\n"
+                           "            \"wangid\":[3, 0, 3, 0, 3, 0, 3, 0]\n"
+                           "        }, \n"
+                           "        {\n"
+                           "            \"dflip\":false,\n"
+                           "            \"hflip\":false,\n"
+                           "            \"tileid\":18,\n"
+                           "            \"vflip\":false,\n"
+                           "            \"wangid\":[3, 0, 3, 0, 1, 0, 1, 0]\n"
+                           "        }]\n"
+                           "}"_json;
+
+        tson::WangSet wangset;
+        bool parseOk = wangset.parse(j);
+        bool hasCorrectValues = (
+                wangset.getTile() == -1 &&
+                wangset.getName() == "FirstWang"
+        );
+
+        REQUIRE((parseOk && hasCorrectValues));
     }
 
     SECTION("WangColor")
@@ -570,7 +697,10 @@ TEST_CASE( "Wang-tests - everything Wang - simple", "[tiled][wang]" )
         tson::WangTile wangTile;
         bool parseOk = wangTile.parse(j);
         bool hasCorrectValues = (
-                false
+                !wangTile.hasDFlip() &&
+                !wangTile.hasHFlip() &&
+                !wangTile.hasVFlip() &&
+                wangTile.getTileid() == 0
         );
 
         REQUIRE((parseOk && hasCorrectValues));

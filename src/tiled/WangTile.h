@@ -16,7 +16,18 @@ namespace tson
             explicit WangTile(const nlohmann::json &json);
             bool parse(const nlohmann::json &json);
 
+            [[nodiscard]] bool hasDFlip() const;
+            [[nodiscard]] bool hasHFlip() const;
+            [[nodiscard]] int getTileid() const;
+            [[nodiscard]] bool hasVFlip() const;
+
         private:
+            bool        m_dflip{};     /*! 'dflip': */
+            bool        m_hflip{};     /*! 'hflip': */
+            int         m_tileid{};    /*! 'tileid': */
+            bool        m_vflip{};     /*! 'vflip': */
+            //TODO:     wangid 	array 	Array of Wang color indexes (uchar[8])
+
             /*
              * dflip 	bool 	Tile is flipped diagonally
                hflip 	bool 	Tile is flipped horizontally

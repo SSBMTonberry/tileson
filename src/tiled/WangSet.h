@@ -16,7 +16,15 @@ namespace tson
             explicit WangSet(const nlohmann::json &json);
             bool parse(const nlohmann::json &json);
 
+            [[nodiscard]] const std::string &getName() const;
+            [[nodiscard]] int getTile() const;
+
         private:
+            //TODO: cornercolors 	array 	      Array of Wang colors
+            //TODO: edgecolors 	    array 	      Array of Wang colors
+            std::string             m_name;       /*! 'name': Name of the Wang set */
+            int                     m_tile{};       /*! 'tile': Local ID of tile representing the Wang set */
+            //TODO: wangtiles 	    array 	      Array of Wang tiles
 
             /*
                cornercolors 	array 	      Array of Wang colors

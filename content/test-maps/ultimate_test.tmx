@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="left-down" width="32" height="16" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#3288c1" nextlayerid="9" nextobjectid="13">
+ <tileset firstgid="1" name="demo-tileset" tilewidth="16" tileheight="16" tilecount="48" columns="8">
+  <image source="../demo-tileset.png" width="128" height="96"/>
+  <terraintypes>
+   <terrain name="test_terrain" tile="0">
+    <properties>
+     <property name="description">Shameless text
+using several lines
+which can be useful
+for testing the parsarillo</property>
+     <property name="i_like_this" type="bool" value="true"/>
+    </properties>
+   </terrain>
+   <terrain name="test_terrain_2" tile="0"/>
+  </terraintypes>
+  <tile id="0">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="16">
+     <polygon points="0,0 16,-16 16,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="1">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="2">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 16,16 0,16"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="3">
+   <properties>
+    <property name="ouch" type="bool" value="true"/>
+   </properties>
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="4">
+   <properties>
+    <property name="contains" value="shroom"/>
+   </properties>
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="8">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 16,16 16,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="is_breakable" type="bool" value="true"/>
+   </properties>
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="10">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="16">
+     <polygon points="0,0 16,-16 0,-16"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="11">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="12">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="13">
+   <objectgroup draworder="index">
+    <object id="2" x="4" y="0" width="12" height="8"/>
+   </objectgroup>
+  </tile>
+  <tile id="14">
+   <objectgroup draworder="index">
+    <object id="2" x="0" y="0" width="16" height="8"/>
+   </objectgroup>
+  </tile>
+  <tile id="15">
+   <objectgroup draworder="index">
+    <object id="2" x="0" y="0" width="13" height="8"/>
+   </objectgroup>
+  </tile>
+  <tile id="16">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="16">
+     <polygon points="0,0 16,-8 16,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="17">
+   <objectgroup draworder="index">
+    <object id="2" x="16" y="0">
+     <polygon points="0,0 -16,8 -16,16 0,16"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="18">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 16,8 16,16 0,16"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="19">
+   <objectgroup draworder="index">
+    <object id="1" x="16" y="16">
+     <polygon points="0,0 -16,-8 -16,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="20">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="21">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="22">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="23">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="24">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0">
+     <polygon points="0,0 16,8 16,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="25">
+   <objectgroup draworder="index">
+    <object id="1" x="16" y="16">
+     <polygon points="0,0 -16,-8 -16,-16 0,-16"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="26">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="16">
+     <polygon points="0,0 16,-8 16,-16 0,-16"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="27">
+   <objectgroup draworder="index">
+    <object id="1" x="16" y="0">
+     <polygon points="0,0 -16,8 -16,0"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="28" terrain="1,1,1,1">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="29" terrain="1,1,1,1">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="30">
+   <properties>
+    <property name="color" type="color" value="#ff268176"/>
+    <property name="file_ref" type="file" value="../demo-tileset.png"/>
+    <property name="hp" type="int" value="4"/>
+    <property name="is_player" type="bool" value="true"/>
+    <property name="jump_force" type="float" value="10"/>
+    <property name="name" value="Mario"/>
+   </properties>
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="31">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="32" terrain="0,0,0,0">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="33" terrain="0,0,0,0">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="34" terrain="0,0,0,0">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="35">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+   <animation>
+    <frame tileid="35" duration="250"/>
+    <frame tileid="43" duration="250"/>
+   </animation>
+  </tile>
+  <tile id="36" terrain="1,1,1,1">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="37" terrain="1,1,1,1">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="38">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="39">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="40" terrain="0,0,0,0">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="41" terrain="0,0,0,0">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="42" terrain="0,0,0,0">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="43">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="44" terrain="1,1,1,1">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="45" terrain="1,1,1,1">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="46">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <tile id="47">
+   <objectgroup draworder="index">
+    <object id="1" x="0" y="0" width="16" height="16"/>
+   </objectgroup>
+  </tile>
+  <wangsets>
+   <wangset name="FirstWang" tile="-1">
+    <wangedgecolor name="Red" color="#ff0000" tile="-1" probability="1"/>
+    <wangedgecolor name="Green" color="#00ff00" tile="-1" probability="1"/>
+    <wangedgecolor name="Blue" color="#0000ff" tile="-1" probability="1"/>
+    <wangedgecolor name="Orange" color="#ff7700" tile="-1" probability="1"/>
+    <wangtile tileid="0" wangid="0x3010103"/>
+    <wangtile tileid="1" wangid="0x1010101"/>
+    <wangtile tileid="2" wangid="0x1010303"/>
+    <wangtile tileid="3" wangid="0x1010103"/>
+    <wangtile tileid="4" wangid="0x1010202"/>
+    <wangtile tileid="8" wangid="0x3030101"/>
+    <wangtile tileid="9" wangid="0x1010102"/>
+    <wangtile tileid="10" wangid="0x1030301"/>
+    <wangtile tileid="16" wangid="0x3030303"/>
+    <wangtile tileid="17" wangid="0x3030303"/>
+    <wangtile tileid="18" wangid="0x1010303"/>
+    <properties>
+     <property name="floating_wang" type="float" value="14.6"/>
+     <property name="is_wang" type="bool" value="true"/>
+    </properties>
+   </wangset>
+  </wangsets>
+ </tileset>
+ <imagelayer id="4" name="Background Image" locked="1" offsetx="0" offsety="-256">
+  <image source="../demo-background.png" width="512" height="512"/>
+  <properties>
+   <property name="repeat_bg" type="bool" value="true"/>
+   <property name="scroll_speed" type="float" value="1"/>
+  </properties>
+ </imagelayer>
+ <layer id="7" name="Wangio" width="32" height="16">
+  <data encoding="csv">
+4,4,2,4,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+9,2,2,2,11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup id="3" name="Object Layer">
+  <object id="1" name="coin" type="Coin" gid="21" x="144" y="48" width="16" height="16"/>
+  <object id="2" name="coin" type="Coin" gid="21" x="160" y="48" width="16" height="16"/>
+  <object id="3" name="coin" type="Coin" gid="21" x="176" y="48" width="16" height="16"/>
+  <object id="4" name="coin" type="Coin" gid="21" x="192" y="48" width="16" height="16"/>
+  <object id="5" name="coin" type="Coin" gid="21" x="208" y="48" width="16" height="16"/>
+  <object id="6" name="coin" type="Coin" gid="21" x="224" y="48" width="16" height="16"/>
+  <object id="7" name="coin" type="Coin" gid="21" x="240" y="48" width="16" height="16"/>
+  <object id="8" name="coin" type="Coin" gid="21" x="256" y="48" width="16" height="16"/>
+  <object id="9" name="spike" type="Spike" gid="4" x="192" y="128" width="16" height="16">
+   <properties>
+    <property name="damage" type="float" value="3"/>
+   </properties>
+  </object>
+  <object id="10" name="goomba" type="Enemy" gid="47" x="96" y="224" width="16" height="16">
+   <properties>
+    <property name="hp" type="int" value="2"/>
+    <property name="name" value="Charles"/>
+   </properties>
+  </object>
+  <object id="11" name="goomba" type="Enemy" gid="47" x="240" y="224" width="16" height="16">
+   <properties>
+    <property name="hp" type="int" value="4"/>
+    <property name="name" value="James"/>
+   </properties>
+  </object>
+  <object id="12" name="text" x="144" y="0" width="170" height="19">
+   <text wrap="1" color="#ffffff">Tileson - Demo Map</text>
+  </object>
+ </objectgroup>
+ <layer id="5" name="Main Layer" width="32" height="16">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,34,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,41,42,
+0,0,0,0,0,0,0,0,0,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,12,
+0,0,0,0,1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,2,2,3,0,0,0,0,0,0,0,0,10,10,5,10,10,5,10,10,0,0,0,0,0,0,0,0,0,
+0,0,0,1,2,2,2,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,9,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,17,18,2,2,2,2,2,3,0,0,0,0,0,0,0,0,0,0,
+14,15,15,15,16,0,0,0,0,0,17,18,19,18,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,39,0,
+0,0,0,0,0,0,0,0,17,18,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,32,0,
+0,0,0,31,0,0,0,0,25,26,2,2,2,2,27,28,0,0,0,0,0,0,36,36,36,36,29,30,0,0,40,0,
+0,0,14,15,16,0,0,0,0,0,25,26,27,28,0,0,0,0,0,0,0,0,0,0,0,0,37,38,0,0,40,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,37,38,0,0,40,0,
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,19,20,0,0,0,0,0,37,38,0,0,40,0,
+2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,19,20,0,0,0,37,38,0,0,40,0
+</data>
+ </layer>
+ <layer id="8" name="Terrain testing" width="32" height="16">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,45,45,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,43,42,33,37,29,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,41,43,43,43,38,45,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer id="6" name="Front Layer" width="32" height="16">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+6,7,7,7,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,6,7,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+</map>
