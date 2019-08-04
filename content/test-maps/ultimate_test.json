@@ -271,6 +271,24 @@
                  "width":170,
                  "x":144,
                  "y":0
+                }, 
+                {
+                 "id":13,
+                 "template":"useless_template_object.tx",
+                 "x":104,
+                 "y":34
+                }, 
+                {
+                 "id":14,
+                 "template":"useless_template_object.tx",
+                 "x":144,
+                 "y":96
+                }, 
+                {
+                 "id":15,
+                 "template":"useless_template_object.tx",
+                 "x":48,
+                 "y":32
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -315,7 +333,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":13,
+ "nextobjectid":16,
  "orientation":"orthogonal",
  "renderorder":"left-down",
  "tiledversion":"1.2.4",

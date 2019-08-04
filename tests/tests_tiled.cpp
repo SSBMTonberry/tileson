@@ -432,6 +432,27 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
 
         REQUIRE((parseOk && hasCorrectValues));
     }
+
+    SECTION("Object - template")
+    {
+        nlohmann::json j = "{\n"
+                           "    \"id\":13,\n"
+                           "    \"template\":\"useless_template_object.tx\",\n"
+                           "    \"x\":104,\n"
+                           "    \"y\":34\n"
+                           "}"_json;
+
+        tson::Object obj;
+        bool parseOk = obj.parse(j);
+        bool hasCorrectValues = (
+                obj.getId() == 13 &&
+                obj.getTemplate() == "useless_template_object.tx" &&
+                obj.getPosition() == tson::Vector2i(104, 34) &&
+                obj.getObjectType() == tson::Object::Type::Template
+        );
+
+        REQUIRE((parseOk && hasCorrectValues));
+    }
 }
 
 TEST_CASE( "Parse a Tileset from Tiled's documentation - read simple values", "[tiled][tileset]" )
@@ -706,10 +727,4 @@ TEST_CASE( "Wang-tests - everything Wang - simple", "[tiled][wang]" )
         REQUIRE((parseOk && hasCorrectValues));
     }
 
-}
-
-TEST_CASE( "Object template test - simple", "[tiled][frame]" )
-{
-    //Needs to produce test data
-    REQUIRE(false);
 }

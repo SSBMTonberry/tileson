@@ -22,7 +22,8 @@ namespace tson
                 Point = 4,
                 Polygon = 5,
                 Polyline = 6,
-                Text = 7
+                Text = 7,
+                Template = 8
             };
 
 
@@ -38,7 +39,7 @@ namespace tson
             [[nodiscard]] const std::string &getName() const;
             [[nodiscard]] bool isPoint() const;
             [[nodiscard]] float getRotation() const;
-            [[nodiscard]] const std::string &getATemplate() const;
+            [[nodiscard]] const std::string &getTemplate() const;
             [[nodiscard]] const std::string &getType() const;
             [[nodiscard]] bool isVisible() const;
             [[nodiscard]] const Vector2i &getPosition() const;

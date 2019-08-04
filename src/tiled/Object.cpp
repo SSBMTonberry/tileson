@@ -12,6 +12,7 @@ tson::Object::Object(const nlohmann::json &json)
 bool tson::Object::parse(const nlohmann::json &json)
 {
     bool allFound = true;
+
     if(json.count("ellipse") > 0) m_ellipse = json["ellipse"].get<bool>(); //Optional
     if(json.count("gid") > 0) m_gid = json["gid"].get<int>(); //Optional
     if(json.count("id") > 0) m_id = json["id"].get<int>(); else allFound = false;
@@ -28,6 +29,9 @@ bool tson::Object::parse(const nlohmann::json &json)
         m_position = {json["x"].get<int>(), json["y"].get<int>()}; else allFound = false;
 
     setObjectTypeByJson(json);
+
+    if(m_objectType == Type::Template)
+        allFound = true; //Just accept anything with this type
 
     return allFound;
 }
@@ -47,6 +51,8 @@ void tson::Object::setObjectTypeByJson(const nlohmann::json &json)
         m_objectType = Type::Text;
     else if(json.count("gid") > 0)
         m_objectType = Type::Object;
+    else if(json.count("template") > 0)
+        m_objectType = Type::Template;
     else
         m_objectType = Type::Rectangle;
 }
@@ -91,7 +97,7 @@ float tson::Object::getRotation() const
     return m_rotation;
 }
 
-const std::string &tson::Object::getATemplate() const
+const std::string &tson::Object::getTemplate() const
 {
     return m_template;
 }

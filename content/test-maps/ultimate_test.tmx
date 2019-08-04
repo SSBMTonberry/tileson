@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE map SYSTEM "http://mapeditor.org/dtd/1.0/map.dtd">
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="left-down" width="32" height="16" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#3288c1" nextlayerid="9" nextobjectid="13">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="left-down" width="32" height="16" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#3288c1" nextlayerid="9" nextobjectid="16">
  <tileset firstgid="1" name="demo-tileset" tilewidth="16" tileheight="16" tilecount="48" columns="8">
   <image source="../demo-tileset.png" width="128" height="96"/>
   <terraintypes>
@@ -365,6 +365,9 @@ for testing the parsarillo</property>
   <object id="12" name="text" x="144" y="0" width="170" height="19">
    <text wrap="1" color="#ffffff">Tileson - Demo Map</text>
   </object>
+  <object id="13" template="useless_template_object.tx" x="104" y="34"/>
+  <object id="14" template="useless_template_object.tx" x="144" y="96"/>
+  <object id="15" template="useless_template_object.tx" x="48" y="32"/>
  </objectgroup>
  <layer id="5" name="Main Layer" width="32" height="16">
   <data encoding="csv">
