@@ -8,6 +8,10 @@
 #include "json.hpp"
 #include "../objects/Vector2.hpp"
 #include "../objects/Color.h"
+#include "Chunk.h"
+#include "Object.h"
+#include "../objects/Property.h"
+#include "../objects/PropertyCollection.h"
 
 namespace tson
 {
@@ -36,27 +40,31 @@ namespace tson
             [[nodiscard]] int getY() const;
 
         private:
-            //TODO: chunks      array 	               Array of chunks (optional). tilelayer only.
-            std::string         m_compression;         /*! 'compression': zlib, gzip or empty (default). tilelayer only. */
-            std::vector<int>    m_data;                /*! 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded data. tilelayer only. */
-            std::string         m_base64Data;          /*! 'data' (when string):     Array of unsigned int (GIDs) or base64-encoded data. tilelayer only. */
-            std::string         m_drawOrder;           /*! 'draworder': topdown (default) or index. objectgroup only. */
-            std::string         m_encoding;            /*! 'encoding': csv (default) or base64. tilelayer only. */
-            int                 m_id{};                /*! 'id': Incremental id - unique across all layers */
-            std::string         m_image;               /*! 'image': Image used by this layer. imagelayer only. */
-            //TODO: layers      array 	               Array of layers. group on
-            std::string         m_name;                /*! 'name': Name assigned to this layer */
-            //TODO: objects     object                 Array of objects. objectgroup only.
-            tson::Vector2f      m_offset;              /*! 'offsetx' and 'offsety': Horizontal and Vertical layer offset in pixels (default: {0, 0}) */
-            float               m_opacity{};           /*! 'opacity': Value between 0 and 1 */
-            //TODO: properties  array 	               A list of properties (name, value, type).
-            tson::Vector2i      m_size;                /*! x = 'width': (Column count. Same as map width for fixed-size maps.)
-                                                           y = 'height': Row count. Same as map height for fixed-size maps. */
-            tson::Color         m_transparentcolor;    /*! 'transparentcolor': Hex-formatted color (#RRGGBB) (optional, imagelayer only */
-            std::string         m_type;                /*! 'type': tilelayer, objectgroup, imagelayer or group */
-            bool                m_visible{};           /*! 'visible': Whether layer is shown or hidden in editor */
-            int                 m_x{};                 /*! 'x': Horizontal layer offset in tiles. Always 0. */
-            int                 m_y{};                 /*! 'y': Vertical layer offset in tiles. Always 0. */
+            //TODO: Implement object arrays in parsing, improve tson::Property and create "advanced" unit test
+            std::vector<tson::Chunk>               m_chunks; 	       /*! 'chunks': Array of chunks (optional). tilelayer only. */
+            std::string                            m_compression;      /*! 'compression': zlib, gzip or empty (default). tilelayer only. */
+            std::vector<int>                       m_data;             /*! 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded
+                                                                        *   data. tilelayer only. */
+            std::string                            m_base64Data;       /*! 'data' (when string):     Array of unsigned int (GIDs) or base64-encoded
+                                                                        *   data. tilelayer only. */
+            std::string                            m_drawOrder;        /*! 'draworder': topdown (default) or index. objectgroup only. */
+            std::string                            m_encoding;         /*! 'encoding': csv (default) or base64. tilelayer only. */
+            int                                    m_id{};             /*! 'id': Incremental id - unique across all layers */
+            std::string                            m_image;            /*! 'image': Image used by this layer. imagelayer only. */
+            std::vector<tson::Layer>               m_layers; 	       /*! 'layers': Array of layers. group on */
+            std::string                            m_name;             /*! 'name': Name assigned to this layer */
+            std::vector<tson::Object>              m_objects;          /*! 'objects': Array of objects. objectgroup only. */
+            tson::Vector2f                         m_offset;           /*! 'offsetx' and 'offsety': Horizontal and Vertical layer offset in pixels
+                                                                        *  (default: {0, 0}) */
+            float                                  m_opacity{};        /*! 'opacity': Value between 0 and 1 */
+            std::vector<tson::PropertyCollection>  m_properties; 	   /*! 'properties': A list of properties (name, value, type). */
+            tson::Vector2i                         m_size;             /*! x = 'width': (Column count. Same as map width for fixed-size maps.)
+                                                                           y = 'height': Row count. Same as map height for fixed-size maps. */
+            tson::Color                            m_transparentcolor; /*! 'transparentcolor': Hex-formatted color (#RRGGBB) (optional, imagelayer only */
+            std::string                            m_type;             /*! 'type': tilelayer, objectgroup, imagelayer or group */
+            bool                                   m_visible{};        /*! 'visible': Whether layer is shown or hidden in editor */
+            int                                    m_x{};              /*! 'x': Horizontal layer offset in tiles. Always 0. */
+            int                                    m_y{};              /*! 'y': Vertical layer offset in tiles. Always 0. */
     };
 }
 

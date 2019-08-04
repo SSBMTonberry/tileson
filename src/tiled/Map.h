@@ -18,20 +18,20 @@ namespace tson
             explicit Map(const nlohmann::json &json);
             bool parse(const nlohmann::json &json);
 
-            const Color &getBackgroundColor() const;
-            const Vector2i &getSize() const;
-            int getHexsideLength() const;
-            bool isInfinite() const;
-            int getNextLayerId() const;
-            int getNextObjectId() const;
-            const std::string &getOrientation() const;
-            const std::string &getRenderOrder() const;
-            const std::string &getStaggerAxis() const;
-            const std::string &getStaggerIndex() const;
-            const std::string &getTiledVersion() const;
-            const Vector2i &getTileSize() const;
-            const std::string &getType() const;
-            int getVersion() const;
+            [[nodiscard]] const Color &getBackgroundColor() const;
+            [[nodiscard]] const Vector2i &getSize() const;
+            [[nodiscard]] int getHexsideLength() const;
+            [[nodiscard]] bool isInfinite() const;
+            [[nodiscard]] int getNextLayerId() const;
+            [[nodiscard]] int getNextObjectId() const;
+            [[nodiscard]] const std::string &getOrientation() const;
+            [[nodiscard]] const std::string &getRenderOrder() const;
+            [[nodiscard]] const std::string &getStaggerAxis() const;
+            [[nodiscard]] const std::string &getStaggerIndex() const;
+            [[nodiscard]] const std::string &getTiledVersion() const;
+            [[nodiscard]] const Vector2i &getTileSize() const;
+            [[nodiscard]] const std::string &getType() const;
+            [[nodiscard]] int getVersion() const;
 
         protected:
             Color       m_backgroundColor;   /*! 'backgroundcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)*/;

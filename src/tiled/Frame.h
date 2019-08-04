@@ -18,9 +18,9 @@ namespace tson
 
             bool parse(const nlohmann::json &json);
 
-            int getDuration() const;
+            [[nodiscard]] int getDuration() const;
 
-            int getTileId() const;
+            [[nodiscard]] int getTileId() const;
 
         private:
             int m_duration {};  /*! 'duration': Frame duration in milliseconds */
