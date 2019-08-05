@@ -6,6 +6,8 @@
 #define TILESON_WANGSET_H
 
 #include <json.hpp>
+#include "WangColor.h"
+#include "WangTile.h"
 
 namespace tson
 {
@@ -20,11 +22,13 @@ namespace tson
             [[nodiscard]] int getTile() const;
 
         private:
-            //TODO: cornercolors 	array 	      Array of Wang colors
-            //TODO: edgecolors 	    array 	      Array of Wang colors
             std::string             m_name;       /*! 'name': Name of the Wang set */
             int                     m_tile{};       /*! 'tile': Local ID of tile representing the Wang set */
-            //TODO: wangtiles 	    array 	      Array of Wang tiles
+
+            std::vector<tson::WangTile>  m_wangTiles;     /*! 'wangtiles': Array of Wang tiles */
+            std::vector<tson::WangColor> m_cornerColors;  /*! 'cornercolors': Array of Wang colors */
+            std::vector<tson::WangColor> m_edgeColors;    /*! 'edgecolors': Array of Wang colors */
+
 
             /*
                cornercolors 	array 	      Array of Wang colors

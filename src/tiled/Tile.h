@@ -8,6 +8,9 @@
 #include <json.hpp>
 #include "../objects/Vector2.hpp"
 #include "../objects/Color.h"
+#include "Frame.h"
+#include "../objects/PropertyCollection.h"
+#include "Layer.h"
 
 #if MSVC
 #include <filesystem>
@@ -49,14 +52,14 @@ namespace tson
 
 
         private:
-            //TODO: animation 	    array 	            Array of Frames
-            int                     m_id {};            /*! 'id': Local ID of the tile */
-            fs::path                m_image;            /*! 'image': Image representing this tile (optional)*/
-            tson::Vector2i          m_imageSize;        /*! x = 'imagewidth' and y = 'imageheight': in pixels */
-            //TODO: objectgroup 	Layer 	            Layer with type objectgroup (optional)
-            //TODO: properties 	    array 	            A list of properties (name, value, type)
-            //TODO: terrain 	    array 	            Index of terrain for each corner of tile
-            std::string             m_type;             /*! 'type': The type of the tile (optional) */
+            std::vector<tson::Frame>    m_animation; 	    /*! 'animation': Array of Frames */
+            int                         m_id {};            /*! 'id': Local ID of the tile */
+            fs::path                    m_image;            /*! 'image': Image representing this tile (optional)*/
+            tson::Vector2i              m_imageSize;        /*! x = 'imagewidth' and y = 'imageheight': in pixels */
+            tson::Layer                 m_objectgroup; 	 	/*! 'objectgroup': Layer with type objectgroup (optional) */
+            tson::PropertyCollection    m_properties; 	    /*! 'properties': A list of properties (name, value, type). */
+            std::vector<int>            m_terrain;          /*! 'terrain': Index of terrain for each corner of tile */
+            std::string                 m_type;             /*! 'type': The type of the tile (optional) */
     };
 }
 

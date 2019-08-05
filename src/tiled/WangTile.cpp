@@ -18,6 +18,9 @@ bool tson::WangTile::parse(const nlohmann::json &json)
     if(json.count("vflip") > 0) m_vflip = json["vflip"].get<bool>(); else allFound = false;
     if(json.count("tileid") > 0) m_tileid = json["tileid"].get<int>(); else allFound = false;
 
+    if(json.count("m_wangid") > 0 && json["m_wangid"].is_array())
+        std::for_each(json["m_wangid"].begin(), json["m_wangid"].end(), [&](const nlohmann::json &item) { m_wangId.emplace_back(item.get<int>()); });
+
     return allFound;
 }
 

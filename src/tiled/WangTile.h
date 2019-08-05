@@ -22,11 +22,11 @@ namespace tson
             [[nodiscard]] bool hasVFlip() const;
 
         private:
-            bool        m_dflip{};     /*! 'dflip': */
-            bool        m_hflip{};     /*! 'hflip': */
-            int         m_tileid{};    /*! 'tileid': */
-            bool        m_vflip{};     /*! 'vflip': */
-            //TODO:     wangid 	array 	Array of Wang color indexes (uchar[8])
+            bool                 m_dflip{};     /*! 'dflip': Tile is flipped diagonally */
+            bool                 m_hflip{};     /*! 'hflip': Tile is flipped horizontally */
+            int                  m_tileid{};    /*! 'tileid': Local ID of tile */
+            bool                 m_vflip{};     /*! 'vflip': Tile is flipped vertically */
+            std::vector<int>     m_wangId;      /*! 'wangid': Array of Wang color indexes (uchar[8])*/
 
             /*
              * dflip 	bool 	Tile is flipped diagonally

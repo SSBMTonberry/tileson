@@ -40,7 +40,7 @@ namespace tson
             [[nodiscard]] int getY() const;
 
         private:
-            //TODO: Implement object arrays in parsing, improve tson::Property and create "advanced" unit test
+
             std::vector<tson::Chunk>               m_chunks; 	       /*! 'chunks': Array of chunks (optional). tilelayer only. */
             std::string                            m_compression;      /*! 'compression': zlib, gzip or empty (default). tilelayer only. */
             std::vector<int>                       m_data;             /*! 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded

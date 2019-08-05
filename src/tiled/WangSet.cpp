@@ -16,6 +16,14 @@ bool tson::WangSet::parse(const nlohmann::json &json)
     if(json.count("tile") > 0) m_tile = json["tile"].get<int>(); else allFound = false;
     if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
 
+    //More advanced data
+    if(json.count("wangtiles") > 0 && json["wangtiles"].is_array())
+        std::for_each(json["wangtiles"].begin(), json["wangtiles"].end(), [&](const nlohmann::json &item) { m_wangTiles.emplace_back(item); });
+    if(json.count("cornercolors") > 0 && json["cornercolors"].is_array())
+        std::for_each(json["cornercolors"].begin(), json["cornercolors"].end(), [&](const nlohmann::json &item) { m_cornerColors.emplace_back(item.get<int>()); });
+    if(json.count("edgecolors") > 0 && json["edgecolors"].is_array())
+        std::for_each(json["edgecolors"].begin(), json["edgecolors"].end(), [&](const nlohmann::json &item) { m_edgeColors.emplace_back(item.get<int>()); });
+
     return allFound;
 }
 

@@ -21,12 +21,26 @@ bool tson::Tileset::parse(const nlohmann::json &json)
     if(json.count("spacing") > 0) m_spacing = json["spacing"].get<int>(); else allFound = false;
     if(json.count("tilecount") > 0) m_tileCount = json["tilecount"].get<int>(); else allFound = false;
     if(json.count("transparentcolor") > 0) m_transparentColor = tson::Color(json["transparentcolor"].get<std::string>()); //Optional
-    if(json.count("type") > 0) m_type = json["type"].get<std::string>(); //Optional
+    if(json.count("type") > 0) m_type = json["type"].get<std::string>(); 
+    if(json.count("grid") > 0) m_grid = tson::Grid(json["grid"]);
 
     if(json.count("imagewidth") > 0 && json.count("imageheight") > 0)
         m_imageSize = {json["imagewidth"].get<int>(), json["imageheight"].get<int>()}; else allFound = false;
     if(json.count("tilewidth") > 0 && json.count("tileheight") > 0)
         m_tileSize = {json["tilewidth"].get<int>(), json["tileheight"].get<int>()}; else allFound = false;
+    if(json.count("tileoffset") > 0)
+        m_tileOffset = {json["tileoffset"]["x"].get<int>(), json["tileoffset"]["y"].get<int>()}; else allFound = false;
+
+    //More advanced data
+    if(json.count("wangsets") > 0 && json["wangsets"].is_array())
+        std::for_each(json["wangsets"].begin(), json["wangsets"].end(), [&](const nlohmann::json &item) { m_wangsets.emplace_back(item); });
+    if(json.count("tiles") > 0 && json["tiles"].is_array())
+        std::for_each(json["tiles"].begin(), json["tiles"].end(), [&](const nlohmann::json &item) { m_tiles.emplace_back(item); });
+    if(json.count("terrains") > 0 && json["terrains"].is_array())
+        std::for_each(json["terrains"].begin(), json["terrains"].end(), [&](const nlohmann::json &item) { m_terrains.emplace_back(item); });
+
+    if(json.count("properties") > 0 && json["properties"].is_array())
+        std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
 
     return allFound;
 }
