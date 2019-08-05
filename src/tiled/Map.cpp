@@ -36,6 +36,14 @@ bool tson::Map::parse(const nlohmann::json &json)
     if(json.count("type") > 0) m_type = json["type"].get<std::string>();                            //Optional
     if(json.count("version") > 0) m_version = json["version"].get<int>(); else allFound = false;
 
+    //More advanced data
+    if(json.count("layers") > 0 && json["layers"].is_array())
+        std::for_each(json["layers"].begin(), json["layers"].end(), [&](const nlohmann::json &item) { m_layers.emplace_back(item); });
+    if(json.count("tilesets") > 0 && json["tilesets"].is_array())
+        std::for_each(json["tilesets"].begin(), json["tilesets"].end(), [&](const nlohmann::json &item) { m_tilesets.emplace_back(item); });
+    if(json.count("properties") > 0 && json["properties"].is_array())
+        std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+
     return allFound;
 }
 

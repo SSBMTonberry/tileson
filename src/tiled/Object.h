@@ -7,6 +7,7 @@
 
 #include <json.hpp>
 #include "../objects/Vector2.hpp"
+#include "../objects/PropertyCollection.h"
 
 namespace tson
 {
@@ -47,22 +48,22 @@ namespace tson
         private:
             void setObjectTypeByJson(const nlohmann::json &json);
 
-            Type            m_objectType = Type::Undefined;    /*! Says with object type this is */
-            bool            m_ellipse {};                      /*! 'ellipse': Used to mark an object as an ellipse */
-            int             m_gid {};                          /*! 'gid': GID, only if object comes from a Tilemap */
-            tson::Vector2i  m_size;                            /*! x = 'width' (Width in pixels), y = 'height' (Height in pixels). Ignored if using a gid.)*/
-            int             m_id{};                            /*! 'id': Incremental id - unique across all objects */
-            std::string     m_name;                            /*! 'name':  String assigned to name field in editor*/
-            bool            m_point {};                        /*! 'point': Used to mark an object as a point */
-            //TODO: polygon 	    array 	        A list of x,y coordinates in pixels
-            //TODO: polyline 	    array 	        A list of x,y coordinates in pixels
-            //TODO: properties 	    array 	        A list of properties (name, value, type)
-            float           m_rotation {};                     /*! 'rotation': Angle in degrees clockwise */
-            std::string     m_template;                        /*! 'template': Reference to a template file, in case object is a template instance */
-            //TODO: text 	        object 	        String key-value pairs
-            std::string     m_type;                            /*! 'type': String assigned to type field in editor */
-            bool            m_visible {};                      /*! 'visible': Whether object is shown in editor. */
-            tson::Vector2i  m_position;                        /*! 'x' and 'y': coordinate in pixels */
+            Type                              m_objectType = Type::Undefined;    /*! Says with object type this is */
+            bool                              m_ellipse {};                      /*! 'ellipse': Used to mark an object as an ellipse */
+            int                               m_gid {};                          /*! 'gid': GID, only if object comes from a Tilemap */
+            tson::Vector2i                    m_size;                            /*! x = 'width' (Width in pixels), y = 'height' (Height in pixels). Ignored if using a gid.)*/
+            int                               m_id{};                            /*! 'id': Incremental id - unique across all objects */
+            std::string                       m_name;                            /*! 'name':  String assigned to name field in editor*/
+            bool                              m_point {};                        /*! 'point': Used to mark an object as a point */
+            std::vector<tson::Vector2i>       m_polygon; 	                     /*! 'polygon': A list of x,y coordinates in pixels */
+            std::vector<tson::Vector2i>       m_polyline; 	                     /*! 'polyline': A list of x,y coordinates in pixels */
+            tson::PropertyCollection          m_properties; 	                 /*! 'properties': A list of properties (name, value, type). */
+            float                             m_rotation {};                     /*! 'rotation': Angle in degrees clockwise */
+            std::string                       m_template;                        /*! 'template': Reference to a template file, in case object is a template instance */
+            std::pair<std::string, bool>      m_text; 	                         /*! first: 'text' second: 'wrap' String key-value pairs */
+            std::string                       m_type;                            /*! 'type': String assigned to type field in editor */
+            bool                              m_visible {};                      /*! 'visible': Whether object is shown in editor. */
+            tson::Vector2i                    m_position;                        /*! 'x' and 'y': coordinate in pixels */
 
             /*!
              *  ellipse 	    bool 	        Used to mark an object as an ellipse

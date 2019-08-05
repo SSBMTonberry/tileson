@@ -28,10 +28,25 @@ bool tson::Object::parse(const nlohmann::json &json)
     if(json.count("x") > 0 && json.count("y") > 0)
         m_position = {json["x"].get<int>(), json["y"].get<int>()}; else allFound = false;
 
+    if(json.count("text") > 0)
+        m_text = {json["text"].get<std::string>(), json["wrap"].get<bool>()}; //Optional
+
     setObjectTypeByJson(json);
 
     if(m_objectType == Type::Template)
         allFound = true; //Just accept anything with this type
+
+    //More advanced data
+    if(json.count("polygon") > 0 && json["polygon"].is_array())
+        std::for_each(json["polygon"].begin(), json["polygon"].end(),
+                    [&](const nlohmann::json &item) { m_polygon.emplace_back(item["x"].get<int>(), item["y"].get<int>()); });
+
+    if(json.count("polyline") > 0 && json["polyline"].is_array())
+        std::for_each(json["polyline"].begin(), json["polyline"].end(),
+                      [&](const nlohmann::json &item) { m_polyline.emplace_back(item["x"].get<int>(), item["y"].get<int>()); });
+
+    if(json.count("properties") > 0 && json["properties"].is_array())
+        std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
 
     return allFound;
 }

@@ -57,7 +57,7 @@ namespace tson
             tson::Vector2f                         m_offset;           /*! 'offsetx' and 'offsety': Horizontal and Vertical layer offset in pixels
                                                                         *  (default: {0, 0}) */
             float                                  m_opacity{};        /*! 'opacity': Value between 0 and 1 */
-            std::vector<tson::PropertyCollection>  m_properties; 	   /*! 'properties': A list of properties (name, value, type). */
+            tson::PropertyCollection               m_properties; 	   /*! 'properties': A list of properties (name, value, type). */
             tson::Vector2i                         m_size;             /*! x = 'width': (Column count. Same as map width for fixed-size maps.)
                                                                            y = 'height': Row count. Same as map height for fixed-size maps. */
             tson::Color                            m_transparentcolor; /*! 'transparentcolor': Hex-formatted color (#RRGGBB) (optional, imagelayer only */

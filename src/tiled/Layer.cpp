@@ -40,6 +40,16 @@ bool tson::Layer::parse(const nlohmann::json &json)
             m_base64Data = json["data"].get<std::string>();
     }
 
+    //More advanced data
+    if(json.count("chunks") > 0 && json["chunks"].is_array())
+        std::for_each(json["chunks"].begin(), json["chunks"].end(), [&](const nlohmann::json &item) { m_chunks.emplace_back(item); });
+    if(json.count("layers") > 0 && json["layers"].is_array())
+        std::for_each(json["layers"].begin(), json["layers"].end(), [&](const nlohmann::json &item) { m_layers.emplace_back(item); });
+    if(json.count("objects") > 0 && json["objects"].is_array())
+        std::for_each(json["objects"].begin(), json["objects"].end(), [&](const nlohmann::json &item) { m_objects.emplace_back(item); });
+    if(json.count("properties") > 0 && json["properties"].is_array())
+        std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+
     return allFound;
 }
 
