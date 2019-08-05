@@ -8,6 +8,7 @@
 #include <json.hpp>
 #include "../objects/Vector2.hpp"
 #include "../objects/PropertyCollection.h"
+#include "Text.hpp"
 
 namespace tson
 {
@@ -60,32 +61,10 @@ namespace tson
             tson::PropertyCollection          m_properties; 	                 /*! 'properties': A list of properties (name, value, type). */
             float                             m_rotation {};                     /*! 'rotation': Angle in degrees clockwise */
             std::string                       m_template;                        /*! 'template': Reference to a template file, in case object is a template instance */
-            std::pair<std::string, bool>      m_text; 	                         /*! first: 'text' second: 'wrap' String key-value pairs */
+            tson::Text                        m_text; 	                         /*! first: 'text' second: 'wrap' */
             std::string                       m_type;                            /*! 'type': String assigned to type field in editor */
             bool                              m_visible {};                      /*! 'visible': Whether object is shown in editor. */
             tson::Vector2i                    m_position;                        /*! 'x' and 'y': coordinate in pixels */
-
-            /*!
-             *  ellipse 	    bool 	        Used to mark an object as an ellipse
-                gid 	        int 	        GID, only if object comes from a Tilemap
-                height 	        double 	        Height in pixels. Ignored if using a gid.
-                id 	            int 	        Incremental id - unique across all objects
-                name 	        string 	        String assigned to name field in editor
-                point 	        bool 	        Used to mark an object as a point
-                polygon 	    array 	        A list of x,y coordinates in pixels
-                polyline 	    array 	        A list of x,y coordinates in pixels
-                properties 	    array 	        A list of properties (name, value, type)
-                rotation 	    double 	        Angle in degrees clockwise
-                template 	    string 	        Reference to a template file, in case object is a template instance
-                text 	        object 	        String key-value pairs
-                type 	        string 	        String assigned to type field in editor
-                visible 	    bool 	        Whether object is shown in editor.
-                width 	        double 	        Width in pixels. Ignored if using a gid.
-                x 	            double 	        X coordinate in pixels
-                y 	            double 	        Y coordinate in pixels
-             *
-             *
-             * */
     };
 }
 
