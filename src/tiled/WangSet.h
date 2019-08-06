@@ -21,6 +21,10 @@ namespace tson
             [[nodiscard]] const std::string &getName() const;
             [[nodiscard]] int getTile() const;
 
+            [[nodiscard]] const std::vector<tson::WangTile> &getWangTiles() const;
+            [[nodiscard]] const std::vector<tson::WangColor> &getCornerColors() const;
+            [[nodiscard]] const std::vector<tson::WangColor> &getEdgeColors() const;
+
         private:
             std::string             m_name;       /*! 'name': Name of the Wang set */
             int                     m_tile{};       /*! 'tile': Local ID of tile representing the Wang set */

@@ -35,6 +35,10 @@ namespace tson
             [[nodiscard]] const std::string &getType() const;
             [[nodiscard]] int getVersion() const;
 
+            [[nodiscard]] const std::vector<tson::Layer> &getLayers() const;
+            [[nodiscard]] const PropertyCollection &getProperties() const;
+            [[nodiscard]] const std::vector<tson::Tileset> &getTilesets() const;
+
         protected:
             Color                                  m_backgroundColor;   /*! 'backgroundcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)*/;
             Vector2i                               m_size;              /*! 'width' and 'height' of a Tiled map */

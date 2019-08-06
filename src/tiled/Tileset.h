@@ -60,6 +60,14 @@ namespace tson
             [[nodiscard]] const Color &getTransparentColor() const;
             [[nodiscard]] const std::string &getType() const;
 
+            [[nodiscard]] const fs::path &getImage() const;
+            [[nodiscard]] const std::vector<tson::Tile> &getTiles() const;
+            [[nodiscard]] const std::vector<tson::WangSet> &getWangsets() const;
+            [[nodiscard]] const PropertyCollection &getProperties() const;
+            [[nodiscard]] const std::vector<tson::Terrain> &getTerrains() const;
+            [[nodiscard]] const Vector2i &getTileOffset() const;
+            [[nodiscard]] const Grid &getGrid() const;
+
         private:
             int                           m_columns {};       /*! 'columns': The number of tile columns in the tileset */
             int                           m_firstgid {};      /*! 'firstgid': GID corresponding to the first tile in the set */

@@ -50,6 +50,11 @@ namespace tson
             [[nodiscard]] const Vector2i &getImageSize() const;
             [[nodiscard]] const std::string &getType() const;
 
+            [[nodiscard]] const std::vector<tson::Frame> &getAnimation() const;
+            [[nodiscard]] const Layer &getObjectgroup() const;
+            [[nodiscard]] const PropertyCollection &getProperties() const;
+            [[nodiscard]] const std::vector<int> &getTerrain() const;
+
 
         private:
             std::vector<tson::Frame>    m_animation; 	    /*! 'animation': Array of Frames */

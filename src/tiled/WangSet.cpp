@@ -20,9 +20,9 @@ bool tson::WangSet::parse(const nlohmann::json &json)
     if(json.count("wangtiles") > 0 && json["wangtiles"].is_array())
         std::for_each(json["wangtiles"].begin(), json["wangtiles"].end(), [&](const nlohmann::json &item) { m_wangTiles.emplace_back(item); });
     if(json.count("cornercolors") > 0 && json["cornercolors"].is_array())
-        std::for_each(json["cornercolors"].begin(), json["cornercolors"].end(), [&](const nlohmann::json &item) { m_cornerColors.emplace_back(item.get<int>()); });
+        std::for_each(json["cornercolors"].begin(), json["cornercolors"].end(), [&](const nlohmann::json &item) { m_cornerColors.emplace_back(item); });
     if(json.count("edgecolors") > 0 && json["edgecolors"].is_array())
-        std::for_each(json["edgecolors"].begin(), json["edgecolors"].end(), [&](const nlohmann::json &item) { m_edgeColors.emplace_back(item.get<int>()); });
+        std::for_each(json["edgecolors"].begin(), json["edgecolors"].end(), [&](const nlohmann::json &item) { m_edgeColors.emplace_back(item); });
 
     return allFound;
 }
@@ -35,4 +35,19 @@ const std::string &tson::WangSet::getName() const
 int tson::WangSet::getTile() const
 {
     return m_tile;
+}
+
+const std::vector<tson::WangTile> &tson::WangSet::getWangTiles() const
+{
+    return m_wangTiles;
+}
+
+const std::vector<tson::WangColor> &tson::WangSet::getCornerColors() const
+{
+    return m_cornerColors;
+}
+
+const std::vector<tson::WangColor> &tson::WangSet::getEdgeColors() const
+{
+    return m_edgeColors;
 }

@@ -43,3 +43,8 @@ bool tson::WangTile::hasVFlip() const
 {
     return m_vflip;
 }
+
+const std::vector<int> &tson::WangTile::getWangId() const
+{
+    return m_wangId;
+}

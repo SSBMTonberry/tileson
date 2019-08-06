@@ -132,3 +132,23 @@ int tson::Layer::getY() const
 {
     return m_y;
 }
+
+const std::vector<tson::Chunk> &tson::Layer::getChunks() const
+{
+    return m_chunks;
+}
+
+const std::vector<tson::Layer> &tson::Layer::getLayers() const
+{
+    return m_layers;
+}
+
+const std::vector<tson::Object> &tson::Layer::getObjects() const
+{
+    return m_objects;
+}
+
+const tson::PropertyCollection &tson::Layer::getProperties() const
+{
+    return m_properties;
+}

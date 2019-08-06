@@ -53,3 +53,23 @@ const std::string &tson::Tile::getType() const
 {
     return m_type;
 }
+
+const std::vector<tson::Frame> &tson::Tile::getAnimation() const
+{
+    return m_animation;
+}
+
+const tson::Layer &tson::Tile::getObjectgroup() const
+{
+    return m_objectgroup;
+}
+
+const tson::PropertyCollection &tson::Tile::getProperties() const
+{
+    return m_properties;
+}
+
+const std::vector<int> &tson::Tile::getTerrain() const
+{
+    return m_terrain;
+}

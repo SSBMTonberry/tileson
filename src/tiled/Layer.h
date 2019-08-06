@@ -39,6 +39,11 @@ namespace tson
             [[nodiscard]] int getX() const;
             [[nodiscard]] int getY() const;
 
+            [[nodiscard]] const std::vector<tson::Chunk> &getChunks() const;
+            [[nodiscard]] const std::vector<tson::Layer> &getLayers() const;
+            [[nodiscard]] const std::vector<tson::Object> &getObjects() const;
+            [[nodiscard]] const PropertyCollection &getProperties() const;
+
         private:
 
             std::vector<tson::Chunk>               m_chunks; 	       /*! 'chunks': Array of chunks (optional). tilelayer only. */

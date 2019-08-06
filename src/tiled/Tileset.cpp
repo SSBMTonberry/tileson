@@ -29,7 +29,7 @@ bool tson::Tileset::parse(const nlohmann::json &json)
     if(json.count("tilewidth") > 0 && json.count("tileheight") > 0)
         m_tileSize = {json["tilewidth"].get<int>(), json["tileheight"].get<int>()}; else allFound = false;
     if(json.count("tileoffset") > 0)
-        m_tileOffset = {json["tileoffset"]["x"].get<int>(), json["tileoffset"]["y"].get<int>()}; else allFound = false;
+        m_tileOffset = {json["tileoffset"]["x"].get<int>(), json["tileoffset"]["y"].get<int>()};
 
     //More advanced data
     if(json.count("wangsets") > 0 && json["wangsets"].is_array())
@@ -98,4 +98,39 @@ const tson::Color &tson::Tileset::getTransparentColor() const
 const std::string &tson::Tileset::getType() const
 {
     return m_type;
+}
+
+const fs::path &tson::Tileset::getImage() const
+{
+    return m_image;
+}
+
+const std::vector<tson::Tile> &tson::Tileset::getTiles() const
+{
+    return m_tiles;
+}
+
+const std::vector<tson::WangSet> &tson::Tileset::getWangsets() const
+{
+    return m_wangsets;
+}
+
+const tson::PropertyCollection &tson::Tileset::getProperties() const
+{
+    return m_properties;
+}
+
+const std::vector<tson::Terrain> &tson::Tileset::getTerrains() const
+{
+    return m_terrains;
+}
+
+const tson::Vector2i &tson::Tileset::getTileOffset() const
+{
+    return m_tileOffset;
+}
+
+const tson::Grid &tson::Tileset::getGrid() const
+{
+    return m_grid;
 }

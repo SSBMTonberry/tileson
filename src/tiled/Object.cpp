@@ -29,7 +29,7 @@ bool tson::Object::parse(const nlohmann::json &json)
         m_position = {json["x"].get<int>(), json["y"].get<int>()}; else allFound = false;
 
     if(json.count("text") > 0)
-        m_text = {json["text"].get<std::string>(), json["wrap"].get<bool>()}; //Optional
+        m_text = {json["text"]["text"].get<std::string>(), json["text"]["wrap"].get<bool>()}; //Optional
 
     setObjectTypeByJson(json);
 
@@ -130,4 +130,29 @@ bool tson::Object::isVisible() const
 const tson::Vector2i &tson::Object::getPosition() const
 {
     return m_position;
+}
+
+const std::vector<tson::Vector2i> &tson::Object::getPolygon() const
+{
+    return m_polygon;
+}
+
+const std::vector<tson::Vector2i> &tson::Object::getPolyline() const
+{
+    return m_polyline;
+}
+
+const tson::PropertyCollection &tson::Object::getProperties() const
+{
+    return m_properties;
+}
+
+const std::string &tson::Object::getATemplate() const
+{
+    return m_template;
+}
+
+const tson::Text &tson::Object::getText() const
+{
+    return m_text;
 }
