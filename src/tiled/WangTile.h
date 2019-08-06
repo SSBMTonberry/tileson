@@ -21,7 +21,7 @@ namespace tson
             [[nodiscard]] int getTileid() const;
             [[nodiscard]] bool hasVFlip() const;
 
-            [[nodiscard]] const std::vector<int> &getWangId() const;
+            [[nodiscard]] const std::vector<int> &getWangIds() const;
 
         private:
             bool                 m_dflip{};     /*! 'dflip': Tile is flipped diagonally */

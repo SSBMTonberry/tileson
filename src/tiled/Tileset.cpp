@@ -115,7 +115,7 @@ const std::vector<tson::WangSet> &tson::Tileset::getWangsets() const
     return m_wangsets;
 }
 
-const tson::PropertyCollection &tson::Tileset::getProperties() const
+tson::PropertyCollection &tson::Tileset::getProperties()
 {
     return m_properties;
 }

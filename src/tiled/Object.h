@@ -46,9 +46,9 @@ namespace tson
             [[nodiscard]] bool isVisible() const;
             [[nodiscard]] const Vector2i &getPosition() const;
 
-            [[nodiscard]] const std::vector<tson::Vector2i> &getPolygon() const;
-            [[nodiscard]] const std::vector<tson::Vector2i> &getPolyline() const;
-            [[nodiscard]] const PropertyCollection &getProperties() const;
+            [[nodiscard]] const std::vector<tson::Vector2i> &getPolygons() const;
+            [[nodiscard]] const std::vector<tson::Vector2i> &getPolylines() const;
+            [[nodiscard]] PropertyCollection &getProperties();
             [[nodiscard]] const std::string &getATemplate() const;
             [[nodiscard]] const Text &getText() const;
 

@@ -16,7 +16,7 @@
 #include <tiled/WangSet.h>
 #include "../external_libs/catch.hpp"
 
-TEST_CASE( "Parse a Map from Tiled's documentation - read simple values", "[tiled][map]" )
+TEST_CASE( "Parse a Map from Tiled's documentation", "[tiled][map]" )
 {
 
     nlohmann::json j = "{\n"
@@ -55,8 +55,10 @@ TEST_CASE( "Parse a Map from Tiled's documentation - read simple values", "[tile
                                 map.getRenderOrder() == "right-down" &&
                                 map.getTileSize() == tson::Vector2i(32, 32) &&
                                 map.getVersion() == 1 &&
-                                map.getTiledVersion() == "1.0.3"
-
+                                map.getTiledVersion() == "1.0.3" &&
+                                map.getProperties().getSize() == 2 &&
+                                map.getProperties().getValue<std::string>("mapProperty1") == "string" &&
+                                map.getProperties().getProperty("mapProperty2")->getType() == tson::Property::Type::Undefined //The doc got some errors
                             );
 
     REQUIRE( (parseOk && hasCorrectValues) );
@@ -95,7 +97,11 @@ TEST_CASE( "Parse a Layer from Tiled's documentation - read simple values", "[ti
                 layer.getType() == "tilelayer" &&
                 layer.isVisible() &&
                 layer.getX() == 0 &&
-                layer.getY() == 0
+                layer.getY() == 0 &&
+                layer.getProperties().getSize() > 0 &&
+                layer.getProperties().getValue<int>("tileLayerProp") == 1 &&
+                layer.getProperties().getProperty("tileLayerProp")->getType() == tson::Property::Type::Int
+
         );
 
 
@@ -133,7 +139,10 @@ TEST_CASE( "Parse a Layer from Tiled's documentation - read simple values", "[ti
                 layer.isVisible() &&
                 layer.getSize() == tson::Vector2i(4, 8) &&
                 layer.getX() == 0 &&
-                layer.getY() == 0
+                layer.getY() == 0 &&
+                layer.getProperties().getValue<std::string>("layerProp1") == "someStringValue" &&
+                layer.getProperties().getProperty("layerProp1")->getType() == tson::Property::Type::String &&
+                layer.getObjects().empty()
         );
 
 
@@ -195,8 +204,10 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                 obj.getType() == "npc" &&
                 obj.isVisible() &&
                 obj.getSize() == tson::Vector2i(0, 0) &&
-                obj.getPosition() == tson::Vector2i(32, 32)
-                && obj.getObjectType() == tson::Object::Type::Object
+                obj.getPosition() == tson::Vector2i(32, 32) &&
+                obj.getObjectType() == tson::Object::Type::Object &&
+                obj.getProperties().getValue<int>("hp") == 12 &&
+                obj.getProperties().getProperty("hp")->getType() == tson::Property::Type::Int
         );
 
         REQUIRE((parseOk && hasCorrectValues));
@@ -340,8 +351,10 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                 obj.getType().empty() &&
                 obj.isVisible() &&
                 obj.getSize() == tson::Vector2i(0, 0) &&
-                obj.getPosition() == tson::Vector2i(-176, 432)
-                && obj.getObjectType() == tson::Object::Type::Polygon
+                obj.getPosition() == tson::Vector2i(-176, 432) &&
+                obj.getObjectType() == tson::Object::Type::Polygon &&
+                obj.getPolygons().size() == 5 &&
+                obj.getPolygons()[2] == tson::Vector2i(136, -128)
         );
     }
     SECTION("Object - polyline")
@@ -392,8 +405,10 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                 obj.getType().empty() &&
                 obj.isVisible() &&
                 obj.getSize() == tson::Vector2i(0, 0) &&
-                obj.getPosition() == tson::Vector2i(240, 88)
-                && obj.getObjectType() == tson::Object::Type::Polyline
+                obj.getPosition() == tson::Vector2i(240, 88) &&
+                obj.getObjectType() == tson::Object::Type::Polyline &&
+                obj.getPolylines().size() == 6 &&
+                obj.getPolylines()[4] == tson::Vector2i(656, 120)
         );
 
         REQUIRE((parseOk && hasCorrectValues));
@@ -426,8 +441,10 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                 obj.getType().empty() &&
                 obj.isVisible() &&
                 obj.getSize() == tson::Vector2i(248, 19) &&
-                obj.getPosition() == tson::Vector2i(48, 136)
-                && obj.getObjectType() == tson::Object::Type::Text
+                obj.getPosition() == tson::Vector2i(48, 136) &&
+                obj.getObjectType() == tson::Object::Type::Text &&
+                obj.getText().text == "Hello World" &&
+                obj.getText().wrap
         );
 
         REQUIRE((parseOk && hasCorrectValues));
@@ -488,7 +505,8 @@ TEST_CASE( "Parse a Tileset from Tiled's documentation - read simple values", "[
         tileset.getName().empty() &&
         tileset.getSpacing() == 1 &&
         tileset.getTileCount() == 266 &&
-        tileset.getTileSize() == tson::Vector2i(32,32)
+        tileset.getTileSize() == tson::Vector2i(32,32) &&
+        tileset.getProperties().getValue<std::string>("myProperty1") == "myProperty1_value"
     );
 
     REQUIRE((parseOk && hasCorrectValues));
@@ -510,7 +528,10 @@ TEST_CASE( "Parse a Tile from Tiled's documentation - read simple values", "[til
     tson::Tile tile;
     bool parseOk = tile.parse(j);
     bool hasCorrectValues = (
-        tile.getId() == 11
+        tile.getId() == 11 &&
+        tile.getTerrain().size() == 4 &&
+        tile.getTerrain()[2] == 0 &&
+        tile.getProperties().getValue<std::string>("myProperty2") == "myProperty2_value"
     );
 
     REQUIRE((parseOk && hasCorrectValues));
@@ -678,7 +699,12 @@ TEST_CASE( "Wang-tests - everything Wang - simple", "[tiled][wang]" )
         bool parseOk = wangset.parse(j);
         bool hasCorrectValues = (
                 wangset.getTile() == -1 &&
-                wangset.getName() == "FirstWang"
+                wangset.getName() == "FirstWang" &&
+                wangset.getCornerColors().empty() &&
+                wangset.getEdgeColors().size() == 4 &&
+                wangset.getWangTiles().size() == 11 &&
+                wangset.getProperties().getValue<float>("floating_wang") == 14.6f &&
+                wangset.getProperties().getValue<bool>("is_wang")
         );
 
         REQUIRE((parseOk && hasCorrectValues));
@@ -721,7 +747,9 @@ TEST_CASE( "Wang-tests - everything Wang - simple", "[tiled][wang]" )
                 !wangTile.hasDFlip() &&
                 !wangTile.hasHFlip() &&
                 !wangTile.hasVFlip() &&
-                wangTile.getTileid() == 0
+                wangTile.getTileid() == 0 &&
+                wangTile.getWangIds().size() == 8 &&
+                wangTile.getWangIds()[6] == 2
         );
 
         REQUIRE((parseOk && hasCorrectValues));

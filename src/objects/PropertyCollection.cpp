@@ -71,3 +71,8 @@ const std::string &tson::PropertyCollection::getId() const
 {
     return m_id;
 }
+
+size_t tson::PropertyCollection::getSize() const
+{
+    return m_properties.size();
+}

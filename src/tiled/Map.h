@@ -36,7 +36,7 @@ namespace tson
             [[nodiscard]] int getVersion() const;
 
             [[nodiscard]] const std::vector<tson::Layer> &getLayers() const;
-            [[nodiscard]] const PropertyCollection &getProperties() const;
+            [[nodiscard]] PropertyCollection &getProperties();
             [[nodiscard]] const std::vector<tson::Tileset> &getTilesets() const;
 
         protected:

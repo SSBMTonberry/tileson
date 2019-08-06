@@ -14,6 +14,8 @@ tson::Map tson::Tileson::parse(const fs::path &path)
         i >> json;
         return parseJson(json);
     }
+
+    return tson::Map {};
 }
 
 tson::Map tson::Tileson::parse(const void *data, size_t size)

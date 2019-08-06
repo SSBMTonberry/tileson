@@ -63,7 +63,7 @@ namespace tson
             [[nodiscard]] const fs::path &getImage() const;
             [[nodiscard]] const std::vector<tson::Tile> &getTiles() const;
             [[nodiscard]] const std::vector<tson::WangSet> &getWangsets() const;
-            [[nodiscard]] const PropertyCollection &getProperties() const;
+            [[nodiscard]] PropertyCollection &getProperties();
             [[nodiscard]] const std::vector<tson::Terrain> &getTerrains() const;
             [[nodiscard]] const Vector2i &getTileOffset() const;
             [[nodiscard]] const Grid &getGrid() const;

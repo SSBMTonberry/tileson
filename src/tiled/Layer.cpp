@@ -148,7 +148,7 @@ const std::vector<tson::Object> &tson::Layer::getObjects() const
     return m_objects;
 }
 
-const tson::PropertyCollection &tson::Layer::getProperties() const
+tson::PropertyCollection &tson::Layer::getProperties()
 {
     return m_properties;
 }

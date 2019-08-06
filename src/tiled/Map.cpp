@@ -122,7 +122,7 @@ const std::vector<tson::Layer> &tson::Map::getLayers() const
     return m_layers;
 }
 
-const tson::PropertyCollection &tson::Map::getProperties() const
+tson::PropertyCollection &tson::Map::getProperties()
 {
     return m_properties;
 }

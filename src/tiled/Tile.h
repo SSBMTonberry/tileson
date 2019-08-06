@@ -52,7 +52,7 @@ namespace tson
 
             [[nodiscard]] const std::vector<tson::Frame> &getAnimation() const;
             [[nodiscard]] const Layer &getObjectgroup() const;
-            [[nodiscard]] const PropertyCollection &getProperties() const;
+            [[nodiscard]] PropertyCollection &getProperties();
             [[nodiscard]] const std::vector<int> &getTerrain() const;
 
 

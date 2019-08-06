@@ -132,17 +132,17 @@ const tson::Vector2i &tson::Object::getPosition() const
     return m_position;
 }
 
-const std::vector<tson::Vector2i> &tson::Object::getPolygon() const
+const std::vector<tson::Vector2i> &tson::Object::getPolygons() const
 {
     return m_polygon;
 }
 
-const std::vector<tson::Vector2i> &tson::Object::getPolyline() const
+const std::vector<tson::Vector2i> &tson::Object::getPolylines() const
 {
     return m_polyline;
 }
 
-const tson::PropertyCollection &tson::Object::getProperties() const
+tson::PropertyCollection &tson::Object::getProperties()
 {
     return m_properties;
 }

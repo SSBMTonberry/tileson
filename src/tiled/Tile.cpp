@@ -64,7 +64,7 @@ const tson::Layer &tson::Tile::getObjectgroup() const
     return m_objectgroup;
 }
 
-const tson::PropertyCollection &tson::Tile::getProperties() const
+tson::PropertyCollection &tson::Tile::getProperties()
 {
     return m_properties;
 }

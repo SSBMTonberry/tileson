@@ -42,7 +42,7 @@ namespace tson
             [[nodiscard]] const std::vector<tson::Chunk> &getChunks() const;
             [[nodiscard]] const std::vector<tson::Layer> &getLayers() const;
             [[nodiscard]] const std::vector<tson::Object> &getObjects() const;
-            [[nodiscard]] const PropertyCollection &getProperties() const;
+            [[nodiscard]] PropertyCollection &getProperties();
 
         private:
 

@@ -23,6 +23,8 @@ bool tson::WangSet::parse(const nlohmann::json &json)
         std::for_each(json["cornercolors"].begin(), json["cornercolors"].end(), [&](const nlohmann::json &item) { m_cornerColors.emplace_back(item); });
     if(json.count("edgecolors") > 0 && json["edgecolors"].is_array())
         std::for_each(json["edgecolors"].begin(), json["edgecolors"].end(), [&](const nlohmann::json &item) { m_edgeColors.emplace_back(item); });
+    if(json.count("properties") > 0 && json["properties"].is_array())
+        std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
 
     return allFound;
 }
@@ -50,4 +52,9 @@ const std::vector<tson::WangColor> &tson::WangSet::getCornerColors() const
 const std::vector<tson::WangColor> &tson::WangSet::getEdgeColors() const
 {
     return m_edgeColors;
+}
+
+tson::PropertyCollection &tson::WangSet::getProperties()
+{
+    return m_properties;
 }
