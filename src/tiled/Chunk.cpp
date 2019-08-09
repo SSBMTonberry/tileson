@@ -4,11 +4,20 @@
 
 #include "Chunk.h"
 
+/*!
+ * Parses 'chunk' data from Tiled json and stores the values in this class
+ * @param json json-data
+ */
 tson::Chunk::Chunk(const nlohmann::json &json)
 {
     parse(json);
 }
 
+/*!
+ * Parses 'chunk' data from Tiled json and stores the values in this class
+ * @param json json-data
+ * @return true if all mandatory fields was found. false otherwise.
+ */
 bool tson::Chunk::parse(const nlohmann::json &json)
 {
     bool allFound = true;
@@ -32,21 +41,37 @@ bool tson::Chunk::parse(const nlohmann::json &json)
     return allFound;
 }
 
+/*!
+ * 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded data. tilelayer only.
+ * @return list of tile ids
+ */
 const std::vector<int> &tson::Chunk::getData() const
 {
     return m_data;
 }
 
+/*!
+ * 'data' (when string): Array of unsigned int (GIDs) or base64-encoded data.
+ * @return base64 string
+ */
 const std::string &tson::Chunk::getBase64Data() const
 {
     return m_base64Data;
 }
 
+/*!
+ * x='width' (in tiles) and y='height' (in tiles).
+ * @return Size (x and y), containing the values from the fields 'width' and 'height' in Tiled
+ */
 const tson::Vector2i &tson::Chunk::getSize() const
 {
     return m_size;
 }
 
+/*!
+ * 'x' and 'y' position in tiles
+ * @return Position in int
+ */
 const tson::Vector2i &tson::Chunk::getPosition() const
 {
     return m_position;

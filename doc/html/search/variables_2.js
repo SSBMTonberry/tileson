@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['wrap',['wrap',['../classtson_1_1Text.html#a73bb67581dff6050b6b6c324f5a82ee5',1,'tson::Text']]]
+  ['g',['g',['../classtson_1_1Color.html#aeeed87b44d02661bbe344a8d38f81b68',1,'tson::Color']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['y',['y',['../classtson_1_1Vector2.html#a1f6b2d60898e24699153f335fa6624d9',1,'tson::Vector2']]]
+  ['r',['r',['../classtson_1_1Color.html#af3fcb996a66d8c0301eca603d3710a95',1,'tson::Color']]]
 ];

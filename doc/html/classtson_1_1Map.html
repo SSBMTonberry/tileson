@@ -86,8 +86,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a8c71d531d004b3ff0cd35e968dd2a486"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88817e9c2e114c0370cc162092322b93"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a88817e9c2e114c0370cc162092322b93">parse</a> (const nlohmann::json &amp;json)</td></tr>
 <tr class="separator:a88817e9c2e114c0370cc162092322b93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a105d0d6768555b685affeaab88e24c31"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classtson_1_1Color.html">Color</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a105d0d6768555b685affeaab88e24c31">getBackgroundColor</a> () const</td></tr>
-<tr class="separator:a105d0d6768555b685affeaab88e24c31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace22e4fc62cc254dd59e49d99290e42d"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespacetson.html#ae0579e97e7ba7d84797f4a258fd9af7e">Colori</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#ace22e4fc62cc254dd59e49d99290e42d">getBackgroundColor</a> () const</td></tr>
+<tr class="separator:ace22e4fc62cc254dd59e49d99290e42d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07ed1a319af0a299f0171503b6f428ab"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespacetson.html#ad9b8bc05e1220a920f03acae32e72245">Vector2i</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a07ed1a319af0a299f0171503b6f428ab">getSize</a> () const</td></tr>
 <tr class="separator:a07ed1a319af0a299f0171503b6f428ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb4efe0e81877f3520eac658b2183da0"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#adb4efe0e81877f3520eac658b2183da0">getHexsideLength</a> () const</td></tr>
@@ -123,8 +123,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a51cdda80e135914f0325d9082231bb50"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1Color.html">Color</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a51cdda80e135914f0325d9082231bb50">m_backgroundColor</a></td></tr>
-<tr class="separator:a51cdda80e135914f0325d9082231bb50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace4fc508db67ef13d42cdf5fa940f659"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetson.html#ae0579e97e7ba7d84797f4a258fd9af7e">Colori</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#ace4fc508db67ef13d42cdf5fa940f659">m_backgroundColor</a></td></tr>
+<tr class="separator:ace4fc508db67ef13d42cdf5fa940f659"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2c8ac61e7f8d22bc8180a2820ae27cbe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetson.html#ad9b8bc05e1220a920f03acae32e72245">Vector2i</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a2c8ac61e7f8d22bc8180a2820ae27cbe">m_size</a></td></tr>
 <tr class="separator:a2c8ac61e7f8d22bc8180a2820ae27cbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3d7518d854d45ce78a46393882bdc6f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#aa3d7518d854d45ce78a46393882bdc6f">m_hexsideLength</a> {}</td></tr>
@@ -207,24 +207,32 @@ Protected Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Parses a json of a Tiled map. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td>A json object with the format of <a class="el" href="classtson_1_1Map.html">Map</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if all mandatory fields was found. false otherwise. </dd></dl>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a105d0d6768555b685affeaab88e24c31"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a105d0d6768555b685affeaab88e24c31">&#9670;&nbsp;</a></span>getBackgroundColor()</h2>
+<a id="ace22e4fc62cc254dd59e49d99290e42d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace22e4fc62cc254dd59e49d99290e42d">&#9670;&nbsp;</a></span>getBackgroundColor()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classtson_1_1Color.html">tson::Color</a> &amp; tson::Map::getBackgroundColor </td>
+          <td class="memname">const <a class="el" href="namespacetson.html#ae0579e97e7ba7d84797f4a258fd9af7e">tson::Colori</a> &amp; tson::Map::getBackgroundColor </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'backgroundcolor': <a class="el" href="classtson_1_1Color.html">Color</a> created from a hex-formatted color string (#RRGGBB or #AARRGGBB) (optional) </p><dl class="section return"><dt>Returns</dt><dd>string as color </dd></dl>
 
 </div>
 </div>
@@ -242,6 +250,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'hexsidelength': Length of the side of a hex tile in pixels </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -259,6 +268,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'layers': Array of layers. group on </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -276,6 +286,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'nextlayerid': Auto-increments for each layer </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -293,6 +304,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'nextobjectid': Auto-increments for each placed object </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -310,6 +322,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'orientation': orthogonal, isometric, staggered or hexagonal </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -327,6 +340,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'properties': A list of properties (name, value, type). </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -344,6 +358,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'renderorder': Rendering direction (orthogonal maps only) </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -361,6 +376,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'width' and 'height' of a Tiled map </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -378,6 +394,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'staggeraxis': x or y (staggered / hexagonal maps only) </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -395,6 +412,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'staggerindex': odd or even (staggered / hexagonal maps only) </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -412,6 +430,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'tiledversion': The Tiled version used to save the file </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -429,6 +448,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'tilesets': Array of Tilesets </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -446,6 +466,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'tilewidth': and 'tileheight' of a map </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -463,6 +484,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'type': map (since 1.0) </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -480,6 +502,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'version': The JSON format version </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -497,6 +520,7 @@ Protected Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'infinite': Whether the map has infinite dimensions </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -526,8 +550,8 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a51cdda80e135914f0325d9082231bb50"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a51cdda80e135914f0325d9082231bb50">&#9670;&nbsp;</a></span>m_backgroundColor</h2>
+<a id="ace4fc508db67ef13d42cdf5fa940f659"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace4fc508db67ef13d42cdf5fa940f659">&#9670;&nbsp;</a></span>m_backgroundColor</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -536,7 +560,7 @@ Protected Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classtson_1_1Color.html">Color</a> tson::Map::m_backgroundColor</td>
+          <td class="memname"><a class="el" href="namespacetson.html#ae0579e97e7ba7d84797f4a258fd9af7e">Colori</a> tson::Map::m_backgroundColor</td>
         </tr>
       </table>
   </td>

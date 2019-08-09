@@ -1,23 +1,4 @@
 var searchData=
 [
-  ['m_5fbackgroundcolor',['m_backgroundColor',['../classtson_1_1Map.html#a51cdda80e135914f0325d9082231bb50',1,'tson::Map']]],
-  ['m_5fhexsidelength',['m_hexsideLength',['../classtson_1_1Map.html#aa3d7518d854d45ce78a46393882bdc6f',1,'tson::Map']]],
-  ['m_5fid',['m_id',['../classtson_1_1PropertyCollection.html#a4a4f991ba691cbdb54e9e81a79ef2c61',1,'tson::PropertyCollection']]],
-  ['m_5fisinfinite',['m_isInfinite',['../classtson_1_1Map.html#ae1e7e07f25e2f7ad244453173bf80a66',1,'tson::Map']]],
-  ['m_5flayers',['m_layers',['../classtson_1_1Map.html#aa1bab8154820ca1b80630edb0e9468ad',1,'tson::Map']]],
-  ['m_5fname',['m_name',['../classtson_1_1Property.html#af1f97b6afdeed73db4f5d2a533be2e5f',1,'tson::Property']]],
-  ['m_5fnextlayerid',['m_nextLayerId',['../classtson_1_1Map.html#a97ceb328b6ba3f73079bfb1f760729e5',1,'tson::Map']]],
-  ['m_5fnextobjectid',['m_nextObjectId',['../classtson_1_1Map.html#a14b6465e651ee0e251de755ad6d89d1a',1,'tson::Map']]],
-  ['m_5forientation',['m_orientation',['../classtson_1_1Map.html#a4ef721845bd4737c2777c134caef1146',1,'tson::Map']]],
-  ['m_5fproperties',['m_properties',['../classtson_1_1PropertyCollection.html#aa24d8fa316c823910db6de42a6b90b5c',1,'tson::PropertyCollection::m_properties()'],['../classtson_1_1Map.html#a752a913fd3b8cd0c5cf6b28140ae8a19',1,'tson::Map::m_properties()']]],
-  ['m_5frenderorder',['m_renderOrder',['../classtson_1_1Map.html#a0cafc62a02199d14feaf037fbe4b6051',1,'tson::Map']]],
-  ['m_5fsize',['m_size',['../classtson_1_1Map.html#a2c8ac61e7f8d22bc8180a2820ae27cbe',1,'tson::Map']]],
-  ['m_5fstaggeraxis',['m_staggerAxis',['../classtson_1_1Map.html#a09d6628989c25f022c387bd5695c0ba7',1,'tson::Map']]],
-  ['m_5fstaggerindex',['m_staggerIndex',['../classtson_1_1Map.html#abe0173e3f4822dace7ac2d8fb59101df',1,'tson::Map']]],
-  ['m_5ftiledversion',['m_tiledVersion',['../classtson_1_1Map.html#a2c5f0baaa32e2127e38f8b7e6f574732',1,'tson::Map']]],
-  ['m_5ftilesets',['m_tilesets',['../classtson_1_1Map.html#a8d7f4cec29cd4ef6c6807e2e11fe8490',1,'tson::Map']]],
-  ['m_5ftilesize',['m_tileSize',['../classtson_1_1Map.html#a011eeb7565dd099d7df62db7bb4efc23',1,'tson::Map']]],
-  ['m_5ftype',['m_type',['../classtson_1_1Property.html#aafe3dea9b34ca4223443453a2d853691',1,'tson::Property::m_type()'],['../classtson_1_1Map.html#a12c02142580ab075820f4d706bf1a860',1,'tson::Map::m_type()']]],
-  ['m_5fvalue',['m_value',['../classtson_1_1Property.html#a7c4094c49c3b10e0698d3f96f6695c68',1,'tson::Property']]],
-  ['m_5fversion',['m_version',['../classtson_1_1Map.html#acbdd3893dfc2a8c2984f078593939c13',1,'tson::Map']]]
+  ['a',['a',['../classtson_1_1Color.html#a8dba28f6d32dc222a751d28e7066d5ee',1,'tson::Color']]]
 ];

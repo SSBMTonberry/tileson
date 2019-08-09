@@ -107,8 +107,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a72925a3b4e073219b49b5e322b3e190c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4998bb3f1d21c2a0e163dbc95f6dbefd"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespacetson.html#ad9b8bc05e1220a920f03acae32e72245">Vector2i</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#a4998bb3f1d21c2a0e163dbc95f6dbefd">getSize</a> () const</td></tr>
 <tr class="separator:a4998bb3f1d21c2a0e163dbc95f6dbefd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41678c9d77bc01b7e9a1bdfb2467d937"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classtson_1_1Color.html">Color</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#a41678c9d77bc01b7e9a1bdfb2467d937">getTransparentcolor</a> () const</td></tr>
-<tr class="separator:a41678c9d77bc01b7e9a1bdfb2467d937"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade88255f77ff5756a7ae3899693c7ffd"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespacetson.html#ae0579e97e7ba7d84797f4a258fd9af7e">Colori</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#ade88255f77ff5756a7ae3899693c7ffd">getTransparentcolor</a> () const</td></tr>
+<tr class="separator:ade88255f77ff5756a7ae3899693c7ffd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac595dd9195975ccb3dbca05b0d077c30"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#ac595dd9195975ccb3dbca05b0d077c30">getType</a> () const</td></tr>
 <tr class="separator:ac595dd9195975ccb3dbca05b0d077c30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f15627018a6cd843babcd177c910bce"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#a9f15627018a6cd843babcd177c910bce">isVisible</a> () const</td></tr>
@@ -175,6 +175,12 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Parses a Tiled layer from json </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -193,6 +199,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'data' (when string): Array of unsigned int (GIDs) or base64-encoded data. tilelayer only. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -210,6 +217,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'chunks': Array of chunks (optional). tilelayer only. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -227,6 +235,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'compression': zlib, gzip or empty (default). tilelayer only. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -244,6 +253,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded data. tilelayer only. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -261,6 +271,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'draworder': topdown (default) or index. objectgroup only. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -278,6 +289,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'encoding': csv (default) or base64. tilelayer only. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -295,6 +307,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'id': Incremental id - unique across all layers </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -312,6 +325,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'image': Image used by this layer. imagelayer only. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -329,6 +343,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'layers': Array of layers. group on </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -346,6 +361,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'name': Name assigned to this layer </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -363,6 +379,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'objects': Array of objects. objectgroup only. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -380,6 +397,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'offsetx' and 'offsety': Horizontal and Vertical layer offset in pixels (default: {0, 0}) </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -397,6 +415,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'opacity': Value between 0 and 1 </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -414,6 +433,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'properties': A list of properties (name, value, type). </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -431,23 +451,25 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>x = 'width': (Column count. Same as map width for fixed-size maps.) y = 'height': Row count. Same as map height for fixed-size maps. </p><dl class="section return"><dt>Returns</dt><dd>width and height as a single size </dd></dl>
 
 </div>
 </div>
-<a id="a41678c9d77bc01b7e9a1bdfb2467d937"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41678c9d77bc01b7e9a1bdfb2467d937">&#9670;&nbsp;</a></span>getTransparentcolor()</h2>
+<a id="ade88255f77ff5756a7ae3899693c7ffd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade88255f77ff5756a7ae3899693c7ffd">&#9670;&nbsp;</a></span>getTransparentcolor()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classtson_1_1Color.html">tson::Color</a> &amp; tson::Layer::getTransparentcolor </td>
+          <td class="memname">const <a class="el" href="namespacetson.html#ae0579e97e7ba7d84797f4a258fd9af7e">tson::Colori</a> &amp; tson::Layer::getTransparentcolor </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'transparentcolor': <a class="el" href="classtson_1_1Color.html">Color</a> created from a hex color (#RRGGBB) (optional, imagelayer only) </p><dl class="section return"><dt>Returns</dt><dd>color as color object with rgba channel. </dd></dl>
 
 </div>
 </div>
@@ -465,6 +487,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'type': tilelayer, objectgroup, imagelayer or group </p><dl class="section return"><dt>Returns</dt><dd>string with the object type </dd></dl>
 
 </div>
 </div>
@@ -482,6 +505,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'x': Horizontal layer offset in tiles. Always 0. </p><dl class="section return"><dt>Returns</dt><dd>x value (always 0 for layer) </dd></dl>
 
 </div>
 </div>
@@ -499,6 +523,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'y': Horizontal layer offset in tiles. Always 0. </p><dl class="section return"><dt>Returns</dt><dd>y value (always 0 for layer) </dd></dl>
 
 </div>
 </div>
@@ -516,6 +541,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'visible': Whether layer is shown or hidden in editor </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -534,6 +560,13 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Parses a Tiled layer from json </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if all mandatory fields was found. false otherwise. </dd></dl>
 
 </div>
 </div>

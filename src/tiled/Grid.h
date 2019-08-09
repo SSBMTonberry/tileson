@@ -19,6 +19,9 @@ namespace tson
 
             bool parse(const nlohmann::json &json);
 
+            [[nodiscard]] const std::string &getOrientation() const;
+            [[nodiscard]] const Vector2i &getSize() const;
+
         private:
             std::string m_orientation; /*! 'orientation': Orientation of the grid for the tiles in this tileset (orthogonal or isometric) */
             tson::Vector2i m_size; /*! 'width' and 'height': Size. */

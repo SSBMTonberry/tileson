@@ -85,6 +85,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a6fab3db871cef5a0cfe10e51ad70a7df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc4f4e4ff97bdb18410b43b41eef6b21"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Grid.html#abc4f4e4ff97bdb18410b43b41eef6b21">parse</a> (const nlohmann::json &amp;json)</td></tr>
 <tr class="separator:abc4f4e4ff97bdb18410b43b41eef6b21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc321890fe76f2fe81a39c5006285fda"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Grid.html#adc321890fe76f2fe81a39c5006285fda">getOrientation</a> () const</td></tr>
+<tr class="separator:adc321890fe76f2fe81a39c5006285fda"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d76dc0a69b034a1e28bf3141010e818"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespacetson.html#ad9b8bc05e1220a920f03acae32e72245">Vector2i</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Grid.html#a2d76dc0a69b034a1e28bf3141010e818">getSize</a> () const</td></tr>
+<tr class="separator:a2d76dc0a69b034a1e28bf3141010e818"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a9bdee44fd73ea5815bbe591e7d0e9d96"></a>
@@ -135,10 +139,52 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Parses Tiled grid data from json </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="adc321890fe76f2fe81a39c5006285fda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adc321890fe76f2fe81a39c5006285fda">&#9670;&nbsp;</a></span>getOrientation()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string &amp; tson::Grid::getOrientation </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>'orientation': Orientation of the grid for the tiles in this tileset (orthogonal or isometric) </p><dl class="section return"><dt>Returns</dt><dd>orientation as string </dd></dl>
+
+</div>
+</div>
+<a id="a2d76dc0a69b034a1e28bf3141010e818"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d76dc0a69b034a1e28bf3141010e818">&#9670;&nbsp;</a></span>getSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="namespacetson.html#ad9b8bc05e1220a920f03acae32e72245">tson::Vector2i</a> &amp; tson::Grid::getSize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>'width' and 'height': Size. </p><dl class="section return"><dt>Returns</dt><dd>size as int </dd></dl>
+
+</div>
+</div>
 <a id="abc4f4e4ff97bdb18410b43b41eef6b21"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abc4f4e4ff97bdb18410b43b41eef6b21">&#9670;&nbsp;</a></span>parse()</h2>
 
@@ -154,6 +200,13 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Parses Tiled grid data from json </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if all mandatory fields was found. false otherwise. </dd></dl>
 
 </div>
 </div>

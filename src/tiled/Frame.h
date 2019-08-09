@@ -19,7 +19,6 @@ namespace tson
             bool parse(const nlohmann::json &json);
 
             [[nodiscard]] int getDuration() const;
-
             [[nodiscard]] int getTileId() const;
 
         private:

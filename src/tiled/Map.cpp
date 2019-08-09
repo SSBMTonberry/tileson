@@ -6,6 +6,11 @@
 #include "../objects/Color.hpp"
 #include "../objects/Vector2.hpp"
 
+/*!
+ * Parses a json of a Tiled map.
+ * @param json A json object with the format of Map
+ * @return true if all mandatory fields was found. false otherwise.
+ */
 tson::Map::Map(const nlohmann::json &json)
 {
     parse(json);
@@ -47,86 +52,154 @@ bool tson::Map::parse(const nlohmann::json &json)
     return allFound;
 }
 
+/*!
+ * 'backgroundcolor': Color created from a hex-formatted color string (#RRGGBB or #AARRGGBB) (optional)
+ * @return string as color
+ */
 const tson::Colori &tson::Map::getBackgroundColor() const
 {
     return m_backgroundColor;
 }
 
+/*!
+ * 'width' and 'height' of a Tiled map
+ * @return
+ */
 const tson::Vector2<int> &tson::Map::getSize() const
 {
     return m_size;
 }
 
+/*!
+ * 'hexsidelength': Length of the side of a hex tile in pixels
+ * @return
+ */
 int tson::Map::getHexsideLength() const
 {
     return m_hexsideLength;
 }
 
+/*!
+ * 'infinite': Whether the map has infinite dimensions
+ * @return
+ */
 bool tson::Map::isInfinite() const
 {
     return m_isInfinite;
 }
 
+/*!
+ * 'nextlayerid': Auto-increments for each layer
+ * @return
+ */
 int tson::Map::getNextLayerId() const
 {
     return m_nextLayerId;
 }
 
+/*!
+ * 'nextobjectid': Auto-increments for each placed object
+ * @return
+ */
 int tson::Map::getNextObjectId() const
 {
     return m_nextObjectId;
 }
 
+/*!
+ * 'orientation': orthogonal, isometric, staggered or hexagonal
+ * @return
+ */
 const std::string &tson::Map::getOrientation() const
 {
     return m_orientation;
 }
 
+/*!
+ * 'renderorder': Rendering direction (orthogonal maps only)
+ * @return
+ */
 const std::string &tson::Map::getRenderOrder() const
 {
     return m_renderOrder;
 }
 
+/*!
+ * 'staggeraxis': x or y (staggered / hexagonal maps only)
+ * @return
+ */
 const std::string &tson::Map::getStaggerAxis() const
 {
     return m_staggerAxis;
 }
 
+/*!
+ * 'staggerindex': odd or even (staggered / hexagonal maps only)
+ * @return
+ */
 const std::string &tson::Map::getStaggerIndex() const
 {
     return m_staggerIndex;
 }
 
+/*!
+ * 'tiledversion': The Tiled version used to save the file
+ * @return
+ */
 const std::string &tson::Map::getTiledVersion() const
 {
     return m_tiledVersion;
 }
 
+/*!
+ * 'tilewidth': and 'tileheight' of a map
+ * @return
+ */
 const tson::Vector2<int> &tson::Map::getTileSize() const
 {
     return m_tileSize;
 }
 
+/*!
+ * 'type': map (since 1.0)
+ * @return
+ */
 const std::string &tson::Map::getType() const
 {
     return m_type;
 }
 
+/*!
+ * 'version': The JSON format version
+ * @return
+ */
 int tson::Map::getVersion() const
 {
     return m_version;
 }
 
+/*!
+ * 'layers': Array of layers. group on
+ * @return
+ */
 const std::vector<tson::Layer> &tson::Map::getLayers() const
 {
     return m_layers;
 }
 
+/*!
+ * 'properties': A list of properties (name, value, type).
+ * @return
+ */
 tson::PropertyCollection &tson::Map::getProperties()
 {
     return m_properties;
 }
 
+/*!
+ * 'tilesets': Array of Tilesets
+ * @return
+ */
 const std::vector<tson::Tileset> &tson::Map::getTilesets() const
 {
     return m_tilesets;

@@ -22,6 +22,12 @@ namespace tson
             T y;
     };
 
+    /*!
+     *
+     * @tparam T template type
+     * @param xPos x-position
+     * @param yPos y-position
+     */
     template<typename T>
     Vector2<T>::Vector2(T xPos, T yPos)
     {

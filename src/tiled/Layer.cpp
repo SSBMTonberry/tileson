@@ -4,11 +4,20 @@
 
 #include "Layer.h"
 
+/*!
+ * Parses a Tiled layer from json
+ * @param json
+ */
 tson::Layer::Layer(const nlohmann::json &json)
 {
     parse(json);
 }
 
+/*!
+ * Parses a Tiled layer from json
+ * @param json
+ * @return true if all mandatory fields was found. false otherwise.
+ */
 bool tson::Layer::parse(const nlohmann::json &json)
 {
     bool allFound = true;
@@ -53,101 +62,182 @@ bool tson::Layer::parse(const nlohmann::json &json)
     return allFound;
 }
 
+/*!
+ * 'compression': zlib, gzip or empty (default). tilelayer only.
+ * @return
+ */
 const std::string &tson::Layer::getCompression() const
 {
     return m_compression;
 }
 
+/*!
+ * 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded data. tilelayer only.
+ * @return
+ */
 const std::vector<int> &tson::Layer::getData() const
 {
     return m_data;
 }
 
+/*!
+ * 'data' (when string): Array of unsigned int (GIDs) or base64-encoded data. tilelayer only.
+ * @return
+ */
 const std::string &tson::Layer::getBase64Data() const
 {
     return m_base64Data;
 }
 
+/*!
+ * 'draworder': topdown (default) or index. objectgroup only.
+ * @return
+ */
 const std::string &tson::Layer::getDrawOrder() const
 {
     return m_drawOrder;
 }
 
+/*!
+ * 'encoding': csv (default) or base64. tilelayer only.
+ * @return
+ */
 const std::string &tson::Layer::getEncoding() const
 {
     return m_encoding;
 }
 
+/*!
+ * 'id': Incremental id - unique across all layers
+ * @return
+ */
 int tson::Layer::getId() const
 {
     return m_id;
 }
 
+/*!
+ * 'image': Image used by this layer. imagelayer only.
+ * @return
+ */
 const std::string &tson::Layer::getImage() const
 {
     return m_image;
 }
 
+/*!
+ * 'name': Name assigned to this layer
+ * @return
+ */
 const std::string &tson::Layer::getName() const
 {
     return m_name;
 }
 
+/*!
+ * 'offsetx' and 'offsety': Horizontal and Vertical layer offset in pixels (default: {0, 0})
+ * @return
+ */
 const tson::Vector2f &tson::Layer::getOffset() const
 {
     return m_offset;
 }
 
+/*!
+ * 'opacity': Value between 0 and 1
+ * @return
+ */
 float tson::Layer::getOpacity() const
 {
     return m_opacity;
 }
 
+/*!
+ * x = 'width': (Column count. Same as map width for fixed-size maps.)
+ * y = 'height': Row count. Same as map height for fixed-size maps.
+ * @return width and height as a single size
+ */
 const tson::Vector2i &tson::Layer::getSize() const
 {
     return m_size;
 }
 
+/*!
+ * 'transparentcolor': Color created from a hex color (#RRGGBB) (optional, imagelayer only)
+ * @return color as color object with rgba channel.
+ */
 const tson::Colori &tson::Layer::getTransparentcolor() const
 {
     return m_transparentcolor;
 }
 
+/*!
+ * 'type': tilelayer, objectgroup, imagelayer or group
+ * @return string with the object type
+ */
 const std::string &tson::Layer::getType() const
 {
     return m_type;
 }
 
+/*!
+ * 'visible': Whether layer is shown or hidden in editor
+ * @return
+ */
 bool tson::Layer::isVisible() const
 {
     return m_visible;
 }
 
+/*!
+ * 'x': Horizontal layer offset in tiles. Always 0.
+ * @return x value (always 0 for layer)
+ */
 int tson::Layer::getX() const
 {
     return m_x;
 }
 
+/*!
+ * 'y': Horizontal layer offset in tiles. Always 0.
+ * @return y value (always 0 for layer)
+ */
 int tson::Layer::getY() const
 {
     return m_y;
 }
 
+/*!
+ * 'chunks': Array of chunks (optional). tilelayer only.
+ * @return
+ */
 const std::vector<tson::Chunk> &tson::Layer::getChunks() const
 {
     return m_chunks;
 }
 
+/*!
+ * 'layers': Array of layers. group on
+ * @return
+ */
 const std::vector<tson::Layer> &tson::Layer::getLayers() const
 {
     return m_layers;
 }
 
+/*!
+ * 'objects': Array of objects. objectgroup only.
+ * @return
+ */
 const std::vector<tson::Object> &tson::Layer::getObjects() const
 {
     return m_objects;
 }
 
+/*!
+ * 'properties': A list of properties (name, value, type).
+ * @return
+ */
 tson::PropertyCollection &tson::Layer::getProperties()
 {
     return m_properties;

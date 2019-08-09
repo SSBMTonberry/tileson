@@ -143,6 +143,12 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Parses 'chunk' data from Tiled json and stores the values in this class </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td>json-data </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -161,6 +167,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'data' (when string): Array of unsigned int (GIDs) or base64-encoded data. </p><dl class="section return"><dt>Returns</dt><dd>base64 string </dd></dl>
 
 </div>
 </div>
@@ -178,6 +185,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded data. tilelayer only. </p><dl class="section return"><dt>Returns</dt><dd>list of tile ids </dd></dl>
 
 </div>
 </div>
@@ -195,6 +203,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'x' and 'y' position in tiles </p><dl class="section return"><dt>Returns</dt><dd>Position in int </dd></dl>
 
 </div>
 </div>
@@ -212,6 +221,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>x='width' (in tiles) and y='height' (in tiles). </p><dl class="section return"><dt>Returns</dt><dd>Size (x and y), containing the values from the fields 'width' and 'height' in Tiled </dd></dl>
 
 </div>
 </div>
@@ -230,6 +240,13 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Parses 'chunk' data from Tiled json and stores the values in this class </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td>json-data </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if all mandatory fields was found. false otherwise. </dd></dl>
 
 </div>
 </div>
