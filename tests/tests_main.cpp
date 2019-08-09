@@ -8,14 +8,29 @@
 
 #include "tson_files_mapper.h"
 
+bool mapIsAbsolutelyFine(tson::Map &map)
+{
+    return (map.getLayers().size() == 6 &&
+            !map.isInfinite() &&
+            map.getSize() == tson::Vector2i(32, 16) &&
+            map.getBackgroundColor() == tson::Colori("#3288c1") &&
+            map.getLayers()[0].getProperties().getSize() > 0 &&
+            map.getLayers()[2].getName() == "Object Layer" &&
+            map.getLayers()[2].getObjects().size() > 1 &&
+            map.getLayers()[2].getObjects()[0].getName() == "coin" &&
+            map.getLayers()[2].getObjects()[0].getProperties().getSize() > 0
+            );
+}
+
+
 TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" ) {
     tson::Tileson t;
     tson::Map map = t.parse({"../../content/test-maps/ultimate_test.json"});
-    REQUIRE( !map.getLayers().empty() );
+    REQUIRE( mapIsAbsolutelyFine(map) );
 }
 
 TEST_CASE( "Parse a whole map by memory", "[complete][parse][memory]" ) {
     tson::Tileson t;
     tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
-    REQUIRE( !map.getLayers().empty() );
+    REQUIRE( mapIsAbsolutelyFine(map) );
 }

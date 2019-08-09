@@ -211,7 +211,7 @@ int tson::Layer::getY() const
  * 'chunks': Array of chunks (optional). tilelayer only.
  * @return
  */
-const std::vector<tson::Chunk> &tson::Layer::getChunks() const
+std::vector<tson::Chunk> &tson::Layer::getChunks()
 {
     return m_chunks;
 }
@@ -220,7 +220,7 @@ const std::vector<tson::Chunk> &tson::Layer::getChunks() const
  * 'layers': Array of layers. group on
  * @return
  */
-const std::vector<tson::Layer> &tson::Layer::getLayers() const
+std::vector<tson::Layer> &tson::Layer::getLayers()
 {
     return m_layers;
 }
@@ -229,7 +229,7 @@ const std::vector<tson::Layer> &tson::Layer::getLayers() const
  * 'objects': Array of objects. objectgroup only.
  * @return
  */
-const std::vector<tson::Object> &tson::Layer::getObjects() const
+std::vector<tson::Object> &tson::Layer::getObjects()
 {
     return m_objects;
 }

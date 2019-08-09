@@ -182,7 +182,7 @@ int tson::Map::getVersion() const
  * 'layers': Array of layers. group on
  * @return
  */
-const std::vector<tson::Layer> &tson::Map::getLayers() const
+std::vector<tson::Layer> &tson::Map::getLayers()
 {
     return m_layers;
 }
@@ -200,7 +200,7 @@ tson::PropertyCollection &tson::Map::getProperties()
  * 'tilesets': Array of Tilesets
  * @return
  */
-const std::vector<tson::Tileset> &tson::Map::getTilesets() const
+std::vector<tson::Tileset> &tson::Map::getTilesets()
 {
     return m_tilesets;
 }

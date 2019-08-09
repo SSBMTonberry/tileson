@@ -35,9 +35,9 @@ namespace tson
             [[nodiscard]] const std::string &getType() const;
             [[nodiscard]] int getVersion() const;
 
-            [[nodiscard]] const std::vector<tson::Layer> &getLayers() const;
+            [[nodiscard]] std::vector<tson::Layer> &getLayers();
             [[nodiscard]] PropertyCollection &getProperties();
-            [[nodiscard]] const std::vector<tson::Tileset> &getTilesets() const;
+            [[nodiscard]] std::vector<tson::Tileset> &getTilesets();
 
         protected:
             Colori                                 m_backgroundColor;   /*! 'backgroundcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)*/;

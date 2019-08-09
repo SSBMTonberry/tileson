@@ -33,7 +33,7 @@ namespace tson
             template <typename T>
             T getValue(const std::string &name);
             [[nodiscard]] const std::string &getId() const;
-            size_t getSize() const;
+            [[nodiscard]] size_t getSize() const;
 
         protected:
             std::string m_id;

@@ -39,9 +39,9 @@ namespace tson
             [[nodiscard]] int getX() const;
             [[nodiscard]] int getY() const;
 
-            [[nodiscard]] const std::vector<tson::Chunk> &getChunks() const;
-            [[nodiscard]] const std::vector<tson::Layer> &getLayers() const;
-            [[nodiscard]] const std::vector<tson::Object> &getObjects() const;
+            [[nodiscard]] std::vector<tson::Chunk> &getChunks();
+            [[nodiscard]] std::vector<tson::Layer> &getLayers();
+            [[nodiscard]] std::vector<tson::Object> &getObjects();
             [[nodiscard]] PropertyCollection &getProperties();
 
         private:
