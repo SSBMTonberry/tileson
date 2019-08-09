@@ -29,14 +29,6 @@ namespace tson
             int                  m_tileid{};    /*! 'tileid': Local ID of tile */
             bool                 m_vflip{};     /*! 'vflip': Tile is flipped vertically */
             std::vector<int>     m_wangId;      /*! 'wangid': Array of Wang color indexes (uchar[8])*/
-
-            /*
-             * dflip 	bool 	Tile is flipped diagonally
-               hflip 	bool 	Tile is flipped horizontally
-               tileid 	int 	Local ID of tile
-               vflip 	bool 	Tile is flipped vertically
-               wangid 	array 	Array of Wang color indexes (uchar[8])
-             * */
     };
 }
 

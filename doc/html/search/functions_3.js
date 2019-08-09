@@ -1,7 +1,6 @@
 var searchData=
 [
   ['getanimation',['getAnimation',['../classtson_1_1Tile.html#a0fbebe0f57cb5bfe2d237744fdd0c4fd',1,'tson::Tile']]],
-  ['getatemplate',['getATemplate',['../classtson_1_1Object.html#a96e94593320a396347e2ccb0721c2fc0',1,'tson::Object']]],
   ['getbackgroundcolor',['getBackgroundColor',['../classtson_1_1Map.html#ace22e4fc62cc254dd59e49d99290e42d',1,'tson::Map']]],
   ['getbase64data',['getBase64Data',['../classtson_1_1Chunk.html#a2b1d0c783c14c0776e7aaafdb2e1c87e',1,'tson::Chunk::getBase64Data()'],['../classtson_1_1Layer.html#a127b8b53be6689337ccaae44662b4bd0',1,'tson::Layer::getBase64Data()']]],
   ['getchunks',['getChunks',['../classtson_1_1Layer.html#aa68548b0d4b491cf632416ab1a56b326',1,'tson::Layer']]],

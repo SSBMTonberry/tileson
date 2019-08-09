@@ -29,31 +29,55 @@ bool tson::WangSet::parse(const nlohmann::json &json)
     return allFound;
 }
 
+/*!
+ * 'name': Name of the Wang set
+ * @return
+ */
 const std::string &tson::WangSet::getName() const
 {
     return m_name;
 }
 
+/*!
+ * 'tile': Local ID of tile representing the Wang set
+ * @return
+ */
 int tson::WangSet::getTile() const
 {
     return m_tile;
 }
 
+/*!
+ * 'wangtiles': Array of Wang tiles
+ * @return
+ */
 const std::vector<tson::WangTile> &tson::WangSet::getWangTiles() const
 {
     return m_wangTiles;
 }
 
+/*!
+ * 'cornercolors': Array of Wang colors
+ * @return
+ */
 const std::vector<tson::WangColor> &tson::WangSet::getCornerColors() const
 {
     return m_cornerColors;
 }
 
+/*!
+ * 'edgecolors': Array of Wang colors
+ * @return
+ */
 const std::vector<tson::WangColor> &tson::WangSet::getEdgeColors() const
 {
     return m_edgeColors;
 }
 
+/*!
+ * 'properties': A list of properties (name, value, type).
+ * @return
+ */
 tson::PropertyCollection &tson::WangSet::getProperties()
 {
     return m_properties;

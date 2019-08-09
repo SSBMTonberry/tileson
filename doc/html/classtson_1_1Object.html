@@ -134,8 +134,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7748b51bd933bf1d03487769edcaf9a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3fed079c2129007b0b4f70c67737d1c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1PropertyCollection.html">PropertyCollection</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Object.html#ae3fed079c2129007b0b4f70c67737d1c">getProperties</a> ()</td></tr>
 <tr class="separator:ae3fed079c2129007b0b4f70c67737d1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96e94593320a396347e2ccb0721c2fc0"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Object.html#a96e94593320a396347e2ccb0721c2fc0">getATemplate</a> () const</td></tr>
-<tr class="separator:a96e94593320a396347e2ccb0721c2fc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3d7c49ed26289d3438adfca3f0c21c5"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classtson_1_1Text.html">Text</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Object.html#ad3d7c49ed26289d3438adfca3f0c21c5">getText</a> () const</td></tr>
 <tr class="separator:ad3d7c49ed26289d3438adfca3f0c21c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -222,27 +220,16 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Parses a json Tiled object </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a96e94593320a396347e2ccb0721c2fc0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96e94593320a396347e2ccb0721c2fc0">&#9670;&nbsp;</a></span>getATemplate()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::string &amp; tson::Object::getATemplate </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a3a94cae8eb98fe2682eef9b511a2b445"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3a94cae8eb98fe2682eef9b511a2b445">&#9670;&nbsp;</a></span>getGid()</h2>
 
@@ -257,6 +244,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'gid': GID, only if object comes from a Tilemap </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -274,6 +262,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'id': Incremental id - unique across all objects </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -291,6 +280,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'name': String assigned to name field in editor </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -308,6 +298,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Gets what type of object this is. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -325,6 +316,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'polygon': A list of x,y coordinates in pixels. If this is a Polygon type, this function will return the points used to create it </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -342,6 +334,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'polyline': A list of x,y coordinates in pixels If this is a Polyline type, this function will return the points used to create it </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -359,6 +352,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'x' and 'y': coordinate in pixels </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -376,6 +370,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'properties': A list of properties (name, value, type). </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -393,6 +388,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'rotation': Angle in degrees clockwise </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -410,6 +406,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>x = 'width' (Width in pixels), y = 'height' (Height in pixels). Ignored if using a gid.) </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -427,6 +424,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'template': Reference to a template file, in case object is a template instance </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -444,6 +442,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'type': String assigned to type field in editor </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -461,6 +460,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'type': String assigned to type field in editor </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -478,6 +478,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'ellipse': Used to mark an object as an ellipse </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -495,6 +496,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'point': Used to mark an object as a point </p><dl class="section return"><dt>Returns</dt><dd>true if the object is of type point </dd></dl>
 
 </div>
 </div>
@@ -512,6 +514,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>'visible': Whether object is shown in editor. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -530,6 +533,13 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Parses a json Tiled object and autoamtically determines the object type based on the data presented. Call <a class="el" href="classtson_1_1Object.html#a2c23b6f274e2925a8227cf8b57bac6ca">getObjectType()</a> to see what object type it is. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">json</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if all mandatory fields was found. false otherwise. </dd></dl>
 
 </div>
 </div>

@@ -24,11 +24,19 @@ bool tson::Terrain::parse(const nlohmann::json &json)
     return allFound;
 }
 
+/*!
+ * 'name': Name of terrain
+ * @return
+ */
 const std::string &tson::Terrain::getName() const
 {
     return m_name;
 }
 
+/*!
+ * 'tile': Local ID of tile representing terrain
+ * @return
+ */
 int tson::Terrain::getTile() const
 {
     return m_tile;

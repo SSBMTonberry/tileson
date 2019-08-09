@@ -13,6 +13,11 @@ namespace tson
     {
         public:
             Text() = default;
+            /*!
+             *
+             * @param _text Text
+             * @param _wrap If the text is marked as wrapped
+             */
             Text(std::string _text, bool _wrap) : text {std::move(_text)}, wrap {_wrap} {};
             //Just make it simple
             std::string text;

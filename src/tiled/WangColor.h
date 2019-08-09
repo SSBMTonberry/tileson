@@ -23,8 +23,8 @@ namespace tson
             [[nodiscard]] int getTile() const;
 
         private:
-            tson::Colori       m_color;            /*! 'color': Hex-formatted color (#RRGGBB or #AARRGGBB) */
-            std::string       m_name;             /*! 'name': Name of the Wang color */
+            tson::Colori      m_color;              /*! 'color': Hex-formatted color (#RRGGBB or #AARRGGBB) */
+            std::string       m_name;               /*! 'name': Name of the Wang color */
             float             m_probability{};      /*! 'probability': Probability used when randomizing */
             int               m_tile{};             /*! 'tile': Local ID of tile representing the Wang color */
     };

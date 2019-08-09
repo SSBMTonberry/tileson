@@ -49,7 +49,6 @@ namespace tson
             [[nodiscard]] const std::vector<tson::Vector2i> &getPolygons() const;
             [[nodiscard]] const std::vector<tson::Vector2i> &getPolylines() const;
             [[nodiscard]] PropertyCollection &getProperties();
-            [[nodiscard]] const std::string &getATemplate() const;
             [[nodiscard]] const Text &getText() const;
 
         private:

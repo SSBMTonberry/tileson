@@ -24,26 +24,46 @@ bool tson::WangTile::parse(const nlohmann::json &json)
     return allFound;
 }
 
+/*!
+ * 'dflip': Tile is flipped diagonally
+ * @return
+ */
 bool tson::WangTile::hasDFlip() const
 {
     return m_dflip;
 }
 
+/*!
+ * 'hflip': Tile is flipped horizontally
+ * @return
+ */
 bool tson::WangTile::hasHFlip() const
 {
     return m_hflip;
 }
 
+/*!
+ * 'tileid': Local ID of tile
+ * @return
+ */
 int tson::WangTile::getTileid() const
 {
     return m_tileid;
 }
 
+/*!
+ * 'vflip': Tile is flipped vertically
+ * @return
+ */
 bool tson::WangTile::hasVFlip() const
 {
     return m_vflip;
 }
 
+/*!
+ * 'wangid': Array of Wang color indexes (uchar[8])
+ * @return
+ */
 const std::vector<int> &tson::WangTile::getWangIds() const
 {
     return m_wangId;

@@ -34,41 +34,73 @@ bool tson::Tile::parse(const nlohmann::json &json)
     return allFound;
 }
 
+/*!
+ * 'id': Local ID of the tile
+ * @return
+ */
 int tson::Tile::getId() const
 {
     return m_id;
 }
 
+/*!
+ * 'image': Image representing this tile (optional)
+ * @return
+ */
 const fs::path &tson::Tile::getImage() const
 {
     return m_image;
 }
 
+/*!
+ * x = 'imagewidth' and y = 'imageheight': in pixels
+ * @return
+ */
 const tson::Vector2i &tson::Tile::getImageSize() const
 {
     return m_imageSize;
 }
 
+/*!
+ * 'type': The type of the tile (optional)
+ * @return
+ */
 const std::string &tson::Tile::getType() const
 {
     return m_type;
 }
 
+/*!
+ * 'animation': Array of Frames
+ * @return
+ */
 const std::vector<tson::Frame> &tson::Tile::getAnimation() const
 {
     return m_animation;
 }
 
+/*!
+ * 'objectgroup': Layer with type objectgroup (optional)
+ * @return
+ */
 const tson::Layer &tson::Tile::getObjectgroup() const
 {
     return m_objectgroup;
 }
 
+/*!
+ * 'properties': A list of properties (name, value, type).
+ * @return
+ */
 tson::PropertyCollection &tson::Tile::getProperties()
 {
     return m_properties;
 }
 
+/*!
+ * 'terrain': Index of terrain for each corner of tile
+ * @return
+ */
 const std::vector<int> &tson::Tile::getTerrain() const
 {
     return m_terrain;

@@ -45,91 +45,164 @@ bool tson::Tileset::parse(const nlohmann::json &json)
     return allFound;
 }
 
+/*!
+ * 'columns': The number of tile columns in the tileset
+ * @return
+ */
 int tson::Tileset::getColumns() const
 {
     return m_columns;
 }
 
+/*!
+ * 'firstgid': GID corresponding to the first tile in the set
+ * @return
+ */
 int tson::Tileset::getFirstgid() const
 {
     return m_firstgid;
 }
 
+/*!
+ * 'image': Image used for tiles in this set
+ * @return
+ */
 const fs::path &tson::Tileset::getImagePath() const
 {
     return m_image;
 }
 
+/*!
+ * x = 'imagewidth' and y = 'imageheight': in pixels
+ * @return
+ */
 const tson::Vector2i &tson::Tileset::getImageSize() const
 {
     return m_imageSize;
 }
 
+/*!
+ * 'margin': Buffer between image edge and first tile (pixels)
+ * @return
+ */
 int tson::Tileset::getMargin() const
 {
     return m_margin;
 }
 
+/*!
+ * 'name': Name given to this tileset
+ * @return
+ */
 const std::string &tson::Tileset::getName() const
 {
     return m_name;
 }
 
+/*!
+ * 'spacing': Spacing between adjacent tiles in image (pixels)
+ * @return
+ */
 int tson::Tileset::getSpacing() const
 {
     return m_spacing;
 }
 
+/*!
+ * 'tilecount': The number of tiles in this tileset
+ * @return
+ */
 int tson::Tileset::getTileCount() const
 {
     return m_tileCount;
 }
 
+/*!
+ * x = 'tilewidth' and y = 'tileheight': Maximum size of tiles in this set
+ * @return
+ */
 const tson::Vector2i &tson::Tileset::getTileSize() const
 {
     return m_tileSize;
 }
 
+/*!
+ * 'transparentcolor': Color object created by hex-formatted color (#RRGGBB) (optional)
+ * @return
+ */
 const tson::Colori &tson::Tileset::getTransparentColor() const
 {
     return m_transparentColor;
 }
 
+/*!
+ * 'type': tileset (for tileset files, since 1.0)
+ * @return
+ */
 const std::string &tson::Tileset::getType() const
 {
     return m_type;
 }
 
+/*!
+ * 'image': Image used for tiles in this set
+ * @return
+ */
 const fs::path &tson::Tileset::getImage() const
 {
     return m_image;
 }
 
+/*!
+ * 'tiles': Array of Tiles (optional)
+ * @return
+ */
 const std::vector<tson::Tile> &tson::Tileset::getTiles() const
 {
     return m_tiles;
 }
 
+/*!
+ * 'wangsets':Array of Wang sets (since Tiled 1.1.5)
+ * @return
+ */
 const std::vector<tson::WangSet> &tson::Tileset::getWangsets() const
 {
     return m_wangsets;
 }
 
+/*!
+ * 'properties': A list of properties (name, value, type).
+ * @return
+ */
 tson::PropertyCollection &tson::Tileset::getProperties()
 {
     return m_properties;
 }
 
+/*!
+ * 'terrains': Array of Terrains (optional)
+ * @return
+ */
 const std::vector<tson::Terrain> &tson::Tileset::getTerrains() const
 {
     return m_terrains;
 }
 
+/*!
+ * 'x' and 'y': See <tileoffset> (optional)
+ * @return
+ */
 const tson::Vector2i &tson::Tileset::getTileOffset() const
 {
     return m_tileOffset;
 }
 
+/*!
+ * 'grid': This element is only used in case of isometric orientation, and determines
+ * how tile overlays for terrain and collision information are rendered.
+ * @return
+ */
 const tson::Grid &tson::Tileset::getGrid() const
 {
     return m_grid;

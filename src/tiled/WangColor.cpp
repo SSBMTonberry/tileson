@@ -21,21 +21,37 @@ bool tson::WangColor::parse(const nlohmann::json &json)
     return allFound;
 }
 
+/*!
+ * 'color': Color object created from hex-formatted string (#RRGGBB or #AARRGGBB)
+ * @return
+ */
 const tson::Colori &tson::WangColor::getColor() const
 {
     return m_color;
 }
 
+/*!
+ * 'name': Name of the Wang color
+ * @return
+ */
 const std::string &tson::WangColor::getName() const
 {
     return m_name;
 }
 
+/*!
+ * 'probability': Probability used when randomizing
+ * @return
+ */
 float tson::WangColor::getProbability() const
 {
     return m_probability;
 }
 
+/*!
+ * 'tile': Local ID of tile representing the Wang color
+ * @return
+ */
 int tson::WangColor::getTile() const
 {
     return m_tile;

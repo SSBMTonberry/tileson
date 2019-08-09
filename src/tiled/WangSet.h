@@ -29,21 +29,13 @@ namespace tson
             PropertyCollection &getProperties();
 
         private:
-            std::string             m_name;       /*! 'name': Name of the Wang set */
-            int                     m_tile{};       /*! 'tile': Local ID of tile representing the Wang set */
-
+            std::string                  m_name;          /*! 'name': Name of the Wang set */
+            int                          m_tile{};        /*! 'tile': Local ID of tile representing the Wang set */
             std::vector<tson::WangTile>  m_wangTiles;     /*! 'wangtiles': Array of Wang tiles */
             std::vector<tson::WangColor> m_cornerColors;  /*! 'cornercolors': Array of Wang colors */
             std::vector<tson::WangColor> m_edgeColors;    /*! 'edgecolors': Array of Wang colors */
+            tson::PropertyCollection     m_properties; 	  /*! 'properties': A list of properties (name, value, type). */
 
-            tson::PropertyCollection    m_properties; 	    /*! 'properties': A list of properties (name, value, type). */
-            /*
-               cornercolors 	array 	      Array of Wang colors
-               edgecolors 	    array 	      Array of Wang colors
-               name 	        string 	      Name of the Wang set
-               tile 	        int 	      Local ID of tile representing the Wang set
-               wangtiles 	    array 	      Array of Wang tiles
-             */
     };
 }
 

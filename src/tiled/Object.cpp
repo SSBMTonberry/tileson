@@ -4,11 +4,21 @@
 
 #include "Object.h"
 
+/*!
+ * Parses a json Tiled object
+ * @param json
+ */
 tson::Object::Object(const nlohmann::json &json)
 {
     parse(json);
 }
 
+/*!
+ * Parses a json Tiled object and autoamtically determines the object type based on the data presented.
+ * Call getObjectType() to see what object type it is.
+ * @param json
+ * @return true if all mandatory fields was found. false otherwise.
+ */
 bool tson::Object::parse(const nlohmann::json &json)
 {
     bool allFound = true;
@@ -51,6 +61,11 @@ bool tson::Object::parse(const nlohmann::json &json)
     return allFound;
 }
 
+
+/*!
+ * Sets an object type based on json data.
+ * @param json
+ */
 void tson::Object::setObjectTypeByJson(const nlohmann::json &json)
 {
     m_objectType = Type::Undefined;
@@ -72,86 +87,148 @@ void tson::Object::setObjectTypeByJson(const nlohmann::json &json)
         m_objectType = Type::Rectangle;
 }
 
+/*!
+ * Gets what type of object this is.
+ * @return
+ */
+
 tson::Object::Type tson::Object::getObjectType() const
 {
     return m_objectType;
 }
 
+/*!
+ * 'ellipse': Used to mark an object as an ellipse
+ * @return
+ */
 bool tson::Object::isEllipse() const
 {
     return m_ellipse;
 }
 
+/*!
+ * 'gid': GID, only if object comes from a Tilemap
+ * @return
+ */
 int tson::Object::getGid() const
 {
     return m_gid;
 }
 
+/*!
+ * x = 'width' (Width in pixels), y = 'height' (Height in pixels). Ignored if using a gid.)
+ * @return
+ */
 const tson::Vector2i &tson::Object::getSize() const
 {
     return m_size;
 }
 
+/*!
+ * 'id': Incremental id - unique across all objects
+ * @return
+ */
 int tson::Object::getId() const
 {
     return m_id;
 }
 
+/*!
+ * 'name': String assigned to name field in editor
+ * @return
+ */
 const std::string &tson::Object::getName() const
 {
     return m_name;
 }
 
+/*!
+ * 'point': Used to mark an object as a point
+ * @return true if the object is of type point
+ */
 bool tson::Object::isPoint() const
 {
     return m_point;
 }
 
+/*!
+ * 'rotation': Angle in degrees clockwise
+ * @return
+ */
 float tson::Object::getRotation() const
 {
     return m_rotation;
 }
 
+/*!
+ * 'template': Reference to a template file, in case object is a template instance
+ * @return
+ */
 const std::string &tson::Object::getTemplate() const
 {
     return m_template;
 }
 
+/*!
+ * 'type': String assigned to type field in editor
+ * @return
+ */
 const std::string &tson::Object::getType() const
 {
     return m_type;
 }
 
+/*!
+ * 'visible': Whether object is shown in editor.
+ * @return
+ */
 bool tson::Object::isVisible() const
 {
     return m_visible;
 }
 
+/*!
+ * 'x' and 'y': coordinate in pixels
+ * @return
+ */
 const tson::Vector2i &tson::Object::getPosition() const
 {
     return m_position;
 }
 
+/*!
+ * 'polygon': A list of x,y coordinates in pixels.
+ * If this is a Polygon type, this function will return the points used to create it
+ * @return
+ */
 const std::vector<tson::Vector2i> &tson::Object::getPolygons() const
 {
     return m_polygon;
 }
 
+/*!
+ * 'polyline': A list of x,y coordinates in pixels
+ * If this is a Polyline type, this function will return the points used to create it
+ * @return
+ */
 const std::vector<tson::Vector2i> &tson::Object::getPolylines() const
 {
     return m_polyline;
 }
 
+/*!
+ * 'properties': A list of properties (name, value, type).
+ * @return
+ */
 tson::PropertyCollection &tson::Object::getProperties()
 {
     return m_properties;
 }
 
-const std::string &tson::Object::getATemplate() const
-{
-    return m_template;
-}
-
+/*!
+ * 'type': String assigned to type field in editor
+ * @return
+ */
 const tson::Text &tson::Object::getText() const
 {
     return m_text;
