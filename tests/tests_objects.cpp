@@ -4,11 +4,16 @@
 
 #include "../external_libs/catch.hpp"
 #include "../src/objects/Color.hpp"
-#include <tuple>
 
 TEST_CASE( "Parse a color from Tiled color string with alpha - expect valid color", "[color][argb]" ) {
     tson::Colori color {"#ffaa07ff"};
     tson::Colori expected {170, 7, 255, 255 };
+    REQUIRE( color == expected );
+}
+
+TEST_CASE( "Parse a FLOAT color from Tiled color string with alpha - expect valid color", "[color][argb]" ) {
+    tson::Colorf color {"#ffaa07ff"};
+    tson::Colorf expected = tson::Colori(170, 7, 255, 255).asFloat();
     REQUIRE( color == expected );
 }
 

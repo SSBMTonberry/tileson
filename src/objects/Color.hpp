@@ -17,6 +17,11 @@ namespace tson
     {
 
         public:
+            /*!
+             * Parses color from Tiled's own color format, which is #aarrggbb in hex format or optionally #rrggbb.
+             * @param color Color in "#rrggbbaa" hex format.
+             * @example "#ffaa07ff" and "#aa07ff". In cases where alpha is not a value, it is set to 255.
+            */
             explicit Color(const std::string &color)
             {
                 parseHexString(color);
@@ -47,10 +52,10 @@ namespace tson
                 {
                     if (color.size() == 9)
                     {
-                        r = (float) std::stoi(color.substr(1, 2), nullptr, 16) / 255;
-                        g = (float) std::stoi(color.substr(3, 2), nullptr, 16) / 255;
-                        b = (float) std::stoi(color.substr(5, 2), nullptr, 16) / 255;
-                        a = (float) std::stoi(color.substr(7, 2), nullptr, 16) / 255;
+                        a = (float) std::stoi(color.substr(1, 2), nullptr, 16) / 255;
+                        r = (float) std::stoi(color.substr(3, 2), nullptr, 16) / 255;
+                        g = (float) std::stoi(color.substr(5, 2), nullptr, 16) / 255;
+                        b = (float) std::stoi(color.substr(7, 2), nullptr, 16) / 255;
                     }
                     else if (color.size() == 7)
                     {
@@ -64,10 +69,10 @@ namespace tson
                 {
                     if (color.size() == 9)
                     {
-                        r = std::stoi(color.substr(1, 2), nullptr, 16);
-                        g = std::stoi(color.substr(3, 2), nullptr, 16);
-                        b = std::stoi(color.substr(5, 2), nullptr, 16);
-                        a = std::stoi(color.substr(7, 2), nullptr, 16);
+                        a = std::stoi(color.substr(1, 2), nullptr, 16);
+                        r = std::stoi(color.substr(3, 2), nullptr, 16);
+                        g = std::stoi(color.substr(5, 2), nullptr, 16);
+                        b = std::stoi(color.substr(7, 2), nullptr, 16);
                     }
                     else if (color.size() == 7)
                     {
@@ -115,7 +120,7 @@ namespace tson
     }
 
     /*!
-     *
+     * Create a new color in rgba (red, green, blue, alpha) format
      * @tparam T the template type for each channel. Usually uint8_t (8-bit int) or float.
      * @param red Red channel
      * @param green Green channel
