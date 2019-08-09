@@ -32,7 +32,7 @@
 #endif
 
 #include "../objects/Vector2.hpp"
-#include "../objects/Color.h"
+#include "../objects/Color.hpp"
 #include "../objects/PropertyCollection.h"
 #include "WangSet.h"
 #include "Tile.h"
@@ -57,7 +57,7 @@ namespace tson
             [[nodiscard]] int getSpacing() const;
             [[nodiscard]] int getTileCount() const;
             [[nodiscard]] const Vector2i &getTileSize() const;
-            [[nodiscard]] const Color &getTransparentColor() const;
+            [[nodiscard]] const Colori &getTransparentColor() const;
             [[nodiscard]] const std::string &getType() const;
 
             [[nodiscard]] const fs::path &getImage() const;
@@ -78,7 +78,7 @@ namespace tson
             int                           m_spacing {};       /*! 'spacing': Spacing between adjacent tiles in image (pixels)*/
             int                           m_tileCount {};     /*! 'tilecount': The number of tiles in this tileset */
             tson::Vector2i                m_tileSize;         /*! x = 'tilewidth' and y = 'tileheight': Maximum size of tiles in this set */
-            tson::Color                   m_transparentColor; /*! 'transparentcolor': Hex-formatted color (#RRGGBB) (optional) */
+            tson::Colori                  m_transparentColor; /*! 'transparentcolor': Hex-formatted color (#RRGGBB) (optional) */
             std::string                   m_type;             /*! 'type': tileset (for tileset files, since 1.0) */
 
             std::vector<tson::Tile>       m_tiles;            /*! 'tiles': Array of Tiles (optional) */

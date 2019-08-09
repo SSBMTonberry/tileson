@@ -5,6 +5,7 @@
 #ifndef TILESON_COLOR_H
 #define TILESON_COLOR_H
 
+#if 0
 #include <cstdint>
 #include <tuple>
 
@@ -35,5 +36,7 @@ namespace tson
             uint8_t m_alpha = 255;
     };
 }
+
+#endif
 
 #endif //TILESON_COLOR_H

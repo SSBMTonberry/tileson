@@ -23,7 +23,7 @@ bool tson::Layer::parse(const nlohmann::json &json)
     if(json.count("opacity") > 0) m_opacity = json["opacity"].get<float>(); else allFound = false;
     if(json.count("width") > 0 && json.count("height") > 0)
         m_size = {json["width"].get<int>(), json["height"].get<int>()}; else allFound = false;
-    if(json.count("transparentcolor") > 0) m_transparentcolor = tson::Color(json["transparentcolor"].get<std::string>()); //Optional
+    if(json.count("transparentcolor") > 0) m_transparentcolor = tson::Colori(json["transparentcolor"].get<std::string>()); //Optional
     if(json.count("type") > 0) m_type = json["type"].get<std::string>(); else allFound = false;
     if(json.count("visible") > 0) m_visible = json["visible"].get<bool>(); else allFound = false;
     if(json.count("x") > 0) m_x = json["x"].get<int>(); else allFound = false;
@@ -108,7 +108,7 @@ const tson::Vector2i &tson::Layer::getSize() const
     return m_size;
 }
 
-const tson::Color &tson::Layer::getTransparentcolor() const
+const tson::Colori &tson::Layer::getTransparentcolor() const
 {
     return m_transparentcolor;
 }

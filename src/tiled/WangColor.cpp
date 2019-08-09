@@ -13,7 +13,7 @@ bool tson::WangColor::parse(const nlohmann::json &json)
 {
     bool allFound = true;
 
-    if(json.count("color") > 0) m_color = tson::Color(json["color"].get<std::string>()); else allFound = false;
+    if(json.count("color") > 0) m_color = tson::Colori(json["color"].get<std::string>()); else allFound = false;
     if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
     if(json.count("probability") > 0) m_probability = json["probability"].get<float>(); else allFound = false;
     if(json.count("tile") > 0) m_tile = json["tile"].get<int>(); else allFound = false;
@@ -21,7 +21,7 @@ bool tson::WangColor::parse(const nlohmann::json &json)
     return allFound;
 }
 
-const tson::Color &tson::WangColor::getColor() const
+const tson::Colori &tson::WangColor::getColor() const
 {
     return m_color;
 }

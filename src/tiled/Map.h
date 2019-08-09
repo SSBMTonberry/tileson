@@ -5,7 +5,7 @@
 #ifndef TILESON_MAP_H
 #define TILESON_MAP_H
 
-#include "../objects/Color.h"
+#include "../objects/Color.hpp"
 #include "../objects/Vector2.hpp"
 #include "json.hpp"
 #include "Layer.h"
@@ -20,7 +20,7 @@ namespace tson
             explicit Map(const nlohmann::json &json);
             bool parse(const nlohmann::json &json);
 
-            [[nodiscard]] const Color &getBackgroundColor() const;
+            [[nodiscard]] const Colori &getBackgroundColor() const;
             [[nodiscard]] const Vector2i &getSize() const;
             [[nodiscard]] int getHexsideLength() const;
             [[nodiscard]] bool isInfinite() const;
@@ -40,7 +40,7 @@ namespace tson
             [[nodiscard]] const std::vector<tson::Tileset> &getTilesets() const;
 
         protected:
-            Color                                  m_backgroundColor;   /*! 'backgroundcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)*/;
+            Colori                                 m_backgroundColor;   /*! 'backgroundcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)*/;
             Vector2i                               m_size;              /*! 'width' and 'height' of a Tiled map */
             int                                    m_hexsideLength {};  /*! 'hexsidelength': Length of the side of a hex tile in pixels */
             bool                                   m_isInfinite {};     /*! 'infinite': Whether the map has infinite dimensions*/

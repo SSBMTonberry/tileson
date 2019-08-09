@@ -720,9 +720,10 @@ TEST_CASE( "Wang-tests - everything Wang - simple", "[tiled][wang]" )
                            "}"_json;
 
         tson::WangColor wangColor;
+        tson::Color colorMatch = tson::Colori("#d31313");
         bool parseOk = wangColor.parse(j);
         bool hasCorrectValues = (
-                wangColor.getColor() == tson::Color("#d31313") &&
+                wangColor.getColor() == colorMatch &&
                 wangColor.getName() == "Rails" &&
                 wangColor.getProbability() == 1 &&
                 wangColor.getTile() == 18
@@ -798,7 +799,7 @@ TEST_CASE( "Property-tests - Set properties from json", "[tiled][wang]" )
 
     bool hasCorrectValues = (
         properties.getProperties().size() == 6 &&
-        properties.getValue<tson::Color>("color") == tson::Color("#ff268176") &&
+        properties.getValue<tson::Colori>("color") == tson::Colori("#ff268176") &&
         properties.getProperty("color")->getType() == tson::Property::Type::Color &&
         properties.getValue<fs::path>("file_ref") == fs::path("../demo-tileset.png") &&
         properties.getProperty("file_ref")->getType() == tson::Property::Type::File &&

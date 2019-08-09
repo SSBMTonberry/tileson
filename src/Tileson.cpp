@@ -5,6 +5,11 @@
 
 #include "Tileson.h"
 
+/*!
+ * Parses Tiled json data by file
+ * @param path path to file
+ * @return parsed data as Map
+ */
 tson::Map tson::Tileson::parse(const fs::path &path)
 {
     if(fs::exists(path) && fs::is_regular_file(path))
@@ -18,6 +23,12 @@ tson::Map tson::Tileson::parse(const fs::path &path)
     return tson::Map {};
 }
 
+/*!
+ * Parses Tiled json data by memory
+ * @param data The data to parse
+ * @param size The size of the data to parse
+ * @return parsed data as Map
+ */
 tson::Map tson::Tileson::parse(const void *data, size_t size)
 {
     std::istringstream i;
@@ -28,6 +39,11 @@ tson::Map tson::Tileson::parse(const void *data, size_t size)
     return parseJson(json);
 }
 
+/*!
+ * Common parsing functionality for doing the json parsing
+ * @param json Tiled json to parse
+ * @return parsed data as Map
+ */
 tson::Map tson::Tileson::parseJson(const nlohmann::json &json)
 {
     tson::Map map;
@@ -36,5 +52,3 @@ tson::Map tson::Tileson::parseJson(const nlohmann::json &json)
 
     return tson::Map {};
 }
-
-

@@ -32,7 +32,7 @@ namespace fs = std::filesystem;
 #include <any>
 #include <string>
 #include <json.hpp>
-#include "Color.h"
+#include "Color.hpp"
 
 namespace tson
 {

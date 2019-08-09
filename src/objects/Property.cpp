@@ -106,7 +106,7 @@ void tson::Property::setValueByType(const nlohmann::json &json)
     switch(m_type)
     {
         case Type::Color:
-            m_value = tson::Color(json.get<std::string>());
+            m_value = Colori(json.get<std::string>());
             break;
 
         case Type::File:

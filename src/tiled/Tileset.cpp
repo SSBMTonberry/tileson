@@ -20,7 +20,7 @@ bool tson::Tileset::parse(const nlohmann::json &json)
     if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
     if(json.count("spacing") > 0) m_spacing = json["spacing"].get<int>(); else allFound = false;
     if(json.count("tilecount") > 0) m_tileCount = json["tilecount"].get<int>(); else allFound = false;
-    if(json.count("transparentcolor") > 0) m_transparentColor = tson::Color(json["transparentcolor"].get<std::string>()); //Optional
+    if(json.count("transparentcolor") > 0) m_transparentColor = tson::Colori(json["transparentcolor"].get<std::string>()); //Optional
     if(json.count("type") > 0) m_type = json["type"].get<std::string>(); 
     if(json.count("grid") > 0) m_grid = tson::Grid(json["grid"]);
 
@@ -90,7 +90,7 @@ const tson::Vector2i &tson::Tileset::getTileSize() const
     return m_tileSize;
 }
 
-const tson::Color &tson::Tileset::getTransparentColor() const
+const tson::Colori &tson::Tileset::getTransparentColor() const
 {
     return m_transparentColor;
 }

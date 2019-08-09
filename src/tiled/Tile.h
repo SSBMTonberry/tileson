@@ -7,7 +7,7 @@
 
 #include <json.hpp>
 #include "../objects/Vector2.hpp"
-#include "../objects/Color.h"
+#include "../objects/Color.hpp"
 #include "Frame.h"
 #include "../objects/PropertyCollection.h"
 #include "Layer.h"

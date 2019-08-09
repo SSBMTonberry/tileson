@@ -4,10 +4,12 @@
 
 #include "Color.h"
 
+#if 0
+
 /*!
  * Parses color from Tiled's own color format, which is #aarrggbb in hex format or optionally #rrggbb.
- * Example: "#ffaa07ff" and "#aa07ff". In cases where alpha is not a value, it is set to 255.
  * @param color Color in "#rrggbbaa" hex format.
+ * @example "#ffaa07ff" and "#aa07ff". In cases where alpha is not a value, it is set to 255.
  */
 tson::Color::Color(const std::string &color)
 {
@@ -104,3 +106,5 @@ void tson::Color::parseHexString(const std::string &color)
         m_blue = std::stoi(color.substr(5, 2), nullptr, 16);
     }
 }
+
+#endif

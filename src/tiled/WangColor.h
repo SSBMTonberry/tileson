@@ -6,7 +6,7 @@
 #define TILESON_WANGCOLOR_H
 
 #include <json.hpp>
-#include "../objects/Color.h"
+#include "../objects/Color.hpp"
 
 namespace tson
 {
@@ -17,13 +17,13 @@ namespace tson
             explicit WangColor(const nlohmann::json &json);
             bool parse(const nlohmann::json &json);
 
-            [[nodiscard]] const Color &getColor() const;
+            [[nodiscard]] const Colori &getColor() const;
             [[nodiscard]] const std::string &getName() const;
             [[nodiscard]] float getProbability() const;
             [[nodiscard]] int getTile() const;
 
         private:
-            tson::Color       m_color;            /*! 'color': Hex-formatted color (#RRGGBB or #AARRGGBB) */
+            tson::Colori       m_color;            /*! 'color': Hex-formatted color (#RRGGBB or #AARRGGBB) */
             std::string       m_name;             /*! 'name': Name of the Wang color */
             float             m_probability{};      /*! 'probability': Probability used when randomizing */
             int               m_tile{};             /*! 'tile': Local ID of tile representing the Wang color */

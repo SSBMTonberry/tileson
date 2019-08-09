@@ -3,7 +3,7 @@
 //
 
 #include "Map.h"
-#include "../objects/Color.h"
+#include "../objects/Color.hpp"
 #include "../objects/Vector2.hpp"
 
 tson::Map::Map(const nlohmann::json &json)
@@ -19,7 +19,7 @@ tson::Map::Map(const nlohmann::json &json)
 bool tson::Map::parse(const nlohmann::json &json)
 {
     bool allFound = true;
-    if(json.count("backgroundcolor") > 0) m_backgroundColor = Color(json["backgroundcolor"].get<std::string>()); //Optional
+    if(json.count("backgroundcolor") > 0) m_backgroundColor = Colori(json["backgroundcolor"].get<std::string>()); //Optional
     if(json.count("width") > 0 && json.count("height") > 0 )
         m_size = {json["width"].get<int>(), json["height"].get<int>()}; else allFound = false;
     if(json.count("hexsidelength") > 0) m_hexsideLength = json["hexsidelength"].get<int>();         //Optional
@@ -47,7 +47,7 @@ bool tson::Map::parse(const nlohmann::json &json)
     return allFound;
 }
 
-const tson::Color &tson::Map::getBackgroundColor() const
+const tson::Colori &tson::Map::getBackgroundColor() const
 {
     return m_backgroundColor;
 }

@@ -7,7 +7,7 @@
 
 #include "json.hpp"
 #include "../objects/Vector2.hpp"
-#include "../objects/Color.h"
+#include "../objects/Color.hpp"
 #include "Chunk.h"
 #include "Object.h"
 #include "../objects/Property.h"
@@ -33,7 +33,7 @@ namespace tson
             [[nodiscard]] const Vector2f &getOffset() const;
             [[nodiscard]] float getOpacity() const;
             [[nodiscard]] const Vector2i &getSize() const;
-            [[nodiscard]] const Color &getTransparentcolor() const;
+            [[nodiscard]] const Colori &getTransparentcolor() const;
             [[nodiscard]] const std::string &getType() const;
             [[nodiscard]] bool isVisible() const;
             [[nodiscard]] int getX() const;
@@ -65,7 +65,7 @@ namespace tson
             tson::PropertyCollection               m_properties; 	   /*! 'properties': A list of properties (name, value, type). */
             tson::Vector2i                         m_size;             /*! x = 'width': (Column count. Same as map width for fixed-size maps.)
                                                                            y = 'height': Row count. Same as map height for fixed-size maps. */
-            tson::Color                            m_transparentcolor; /*! 'transparentcolor': Hex-formatted color (#RRGGBB) (optional, imagelayer only */
+            tson::Colori                           m_transparentcolor; /*! 'transparentcolor': Hex-formatted color (#RRGGBB) (optional, imagelayer only */
             std::string                            m_type;             /*! 'type': tilelayer, objectgroup, imagelayer or group */
             bool                                   m_visible{};        /*! 'visible': Whether layer is shown or hidden in editor */
             int                                    m_x{};              /*! 'x': Horizontal layer offset in tiles. Always 0. */
