@@ -21,6 +21,9 @@ bool tson::Terrain::parse(const nlohmann::json &json)
     if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
     if(json.count("tile") > 0) m_tile = json["tile"].get<int>(); else allFound = false;
 
+    if(json.count("properties") > 0 && json["properties"].is_array())
+        std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+
     return allFound;
 }
 
@@ -40,4 +43,25 @@ const std::string &tson::Terrain::getName() const
 int tson::Terrain::getTile() const
 {
     return m_tile;
+}
+
+/*!
+ * 'properties': A list of properties (name, value, type). *Missing from the official Tiled documentation...*
+ * @return
+ */
+tson::PropertyCollection &tson::Terrain::getProperties()
+{
+    return m_properties;
+}
+
+/*!
+ * Shortcut for getting a property object. Alternative to getProperties().getProperty("<name>");
+ * @param name Name of the property
+ * @return
+ */
+tson::Property *tson::Terrain::getProp(const std::string &name)
+{
+    if(m_properties.hasProperty(name))
+        return m_properties.getProperty(name);
+    return nullptr;
 }

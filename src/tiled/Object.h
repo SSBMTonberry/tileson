@@ -51,6 +51,10 @@ namespace tson
             [[nodiscard]] PropertyCollection &getProperties();
             [[nodiscard]] const Text &getText() const;
 
+            template <typename T>
+            T get(const std::string &name);
+            tson::Property * getProp(const std::string &name);
+
         private:
             void setObjectTypeByJson(const nlohmann::json &json);
 
@@ -71,6 +75,18 @@ namespace tson
             bool                              m_visible {};                      /*! 'visible': Whether object is shown in editor. */
             tson::Vector2i                    m_position;                        /*! 'x' and 'y': coordinate in pixels */
     };
+
+    /*!
+     * A shortcut for getting a property. Alternative to getProperties().getValue<T>("<name>")
+     * @tparam T The template value
+     * @param name Name of the property
+     * @return The actual value, if it exists. Otherwise: The default value of the type.
+     */
+    template<typename T>
+    T tson::Object::get(const std::string &name)
+    {
+        return m_properties.getValue<T>(name);
+    }
 }
 
 #endif //TILESON_OBJECT_H

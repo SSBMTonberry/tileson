@@ -207,3 +207,45 @@ const tson::Grid &tson::Tileset::getGrid() const
 {
     return m_grid;
 }
+
+/*!
+ * Gets a tile by ID (Tiled ID + 1)
+ * @param id The ID of the tile stored in Tiled map + 1. Example: If ID was stored in Tiled map as 0, the corresponding value in Tileson is 1.
+ * This is to make sure the IDs of tiles matches their references in containers.
+ * @return A pointer to the Tile if found. nullptr otherwise.
+ */
+tson::Tile *tson::Tileset::getTile(int id)
+{
+    auto result = std::find_if(m_tiles.begin(), m_tiles.end(), [&](const tson::Tile & item) { return item.getId() == id;});
+    if(result == m_tiles.end())
+        return nullptr;
+
+    return &result.operator*();
+}
+
+/*!
+ * Get an existing Terrain object by name
+ * @param name
+ * @return A pointer to the Terrain if found. nullptr otherwise.
+ */
+tson::Terrain *tson::Tileset::getTerrain(const std::string &name)
+{
+    auto result = std::find_if(m_terrains.begin(), m_terrains.end(), [&](const tson::Terrain & item) { return item.getName() == name;});
+    if(result == m_terrains.end())
+        return nullptr;
+
+    return &result.operator*();
+}
+
+/*!
+ * Shortcut for getting a property object. Alternative to getProperties().getProperty("<name>");
+ * @param name Name of the property
+ * @return
+ */
+tson::Property *tson::Tileset::getProp(const std::string &name)
+{
+    if(m_properties.hasProperty(name))
+        return m_properties.getProperty(name);
+
+    return nullptr;
+}

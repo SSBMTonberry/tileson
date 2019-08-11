@@ -205,3 +205,35 @@ std::vector<tson::Tileset> &tson::Map::getTilesets()
     return m_tilesets;
 }
 
+tson::Layer *tson::Map::getLayer(const std::string &name)
+{
+    auto result = std::find_if(m_layers.begin(), m_layers.end(), [&](const tson::Layer &item) { return item.getName() == name; });
+    if(result == m_layers.end())
+        return nullptr;
+
+    return &result.operator*();
+}
+
+tson::Tileset *tson::Map::getTileset(const std::string &name)
+{
+    auto result = std::find_if(m_tilesets.begin(), m_tilesets.end(), [&](const tson::Tileset &item) {return item.getName() == name; });
+    if(result == m_tilesets.end())
+        return nullptr;
+
+    return &result.operator*();
+}
+
+/*!
+ * Shortcut for getting a property object. Alternative to getProperties().getProperty("<name>");
+ * @param name Name of the property
+ * @return
+ */
+tson::Property *tson::Map::getProp(const std::string &name)
+{
+    if(m_properties.hasProperty(name))
+        return m_properties.getProperty(name);
+    return nullptr;
+}
+
+
+

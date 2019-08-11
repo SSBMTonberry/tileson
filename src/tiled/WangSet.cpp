@@ -82,3 +82,16 @@ tson::PropertyCollection &tson::WangSet::getProperties()
 {
     return m_properties;
 }
+
+/*!
+ * Shortcut for getting a property object. Alternative to getProperties().getProperty("<name>");
+ * @param name Name of the property
+ * @return
+ */
+tson::Property *tson::WangSet::getProp(const std::string &name)
+{
+    if(m_properties.hasProperty(name))
+        return m_properties.getProperty(name);
+
+    return nullptr;
+}

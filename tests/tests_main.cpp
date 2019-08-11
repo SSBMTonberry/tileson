@@ -18,7 +18,16 @@ bool mapIsAbsolutelyFine(tson::Map &map)
             map.getLayers()[2].getName() == "Object Layer" &&
             map.getLayers()[2].getObjects().size() > 1 &&
             map.getLayers()[2].getObjects()[0].getName() == "coin" &&
-            map.getLayers()[2].getObjects()[0].getProperties().getSize() > 0
+            map.getLayers()[2].getObjects()[0].getProperties().getSize() > 0 &&
+            map.getLayer("Main Layer") != nullptr &&
+            map.getLayer("Background Image")->get<float>("scroll_speed") == 1.f &&
+            map.getLayer("Background Image")->getProp("repeat_bg")->getType() == tson::Property::Type::Boolean &&
+            map.getTileset("demo-tileset") != nullptr &&
+            map.getTileset("demo-tileset")->getTile(36) != nullptr &&
+            map.getTileset("demo-tileset")->getTile(36)->getAnimation().size() == 2 &&
+            map.getTileset("demo-tileset")->getTerrain("test_terrain")->getProperties().getSize() == 2 &&
+            map.getTileset("demo-tileset")->getTerrain("test_terrain")->getProp("i_like_this")->getType() == tson::Property::Type::Boolean &&
+            !map.getTileset("demo-tileset")->getTerrain("test_terrain")->get<std::string>("description").empty()
             );
 }
 

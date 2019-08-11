@@ -44,6 +44,10 @@ namespace tson
             [[nodiscard]] std::vector<tson::Object> &getObjects();
             [[nodiscard]] PropertyCollection &getProperties();
 
+            template <typename T>
+            T get(const std::string &name);
+            tson::Property * getProp(const std::string &name);
+
         private:
 
             std::vector<tson::Chunk>               m_chunks; 	       /*! 'chunks': Array of chunks (optional). tilelayer only. */
@@ -71,6 +75,18 @@ namespace tson
             int                                    m_x{};              /*! 'x': Horizontal layer offset in tiles. Always 0. */
             int                                    m_y{};              /*! 'y': Vertical layer offset in tiles. Always 0. */
     };
+
+    /*!
+     * A shortcut for getting a property. Alternative to getProperties().getValue<T>("<name>")
+     * @tparam T The template value
+     * @param name Name of the property
+     * @return The actual value, if it exists. Otherwise: The default value of the type.
+     */
+    template<typename T>
+    T Layer::get(const std::string &name)
+    {
+        return m_properties.getValue<T>(name);
+    }
 }
 
 #endif //TILESON_LAYER_H

@@ -68,6 +68,13 @@ namespace tson
             [[nodiscard]] const Vector2i &getTileOffset() const;
             [[nodiscard]] const Grid &getGrid() const;
 
+            tson::Tile * getTile(int id);
+            tson::Terrain * getTerrain(const std::string &name);
+
+            template <typename T>
+            T get(const std::string &name);
+            tson::Property * getProp(const std::string &name);
+
         private:
             int                           m_columns {};       /*! 'columns': The number of tile columns in the tileset */
             int                           m_firstgid {};      /*! 'firstgid': GID corresponding to the first tile in the set */
@@ -90,6 +97,18 @@ namespace tson
             tson::Grid                    m_grid;             /*! 'grid': This element is only used in case of isometric orientation, and determines
                                                                    how tile overlays for terrain and collision information are rendered. */
     };
+
+    /*!
+     * A shortcut for getting a property. Alternative to getProperties().getValue<T>("<name>")
+     * @tparam T The template value
+     * @param name Name of the property
+     * @return The actual value, if it exists. Otherwise: The default value of the type.
+     */
+    template<typename T>
+    T tson::Tileset::get(const std::string &name)
+    {
+        return m_properties.getValue<T>(name);
+    }
 }
 
 #endif //TILESON_TILESET_H

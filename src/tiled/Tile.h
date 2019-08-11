@@ -55,6 +55,9 @@ namespace tson
             [[nodiscard]] PropertyCollection &getProperties();
             [[nodiscard]] const std::vector<int> &getTerrain() const;
 
+            template <typename T>
+            T get(const std::string &name);
+            tson::Property * getProp(const std::string &name);
 
         private:
             std::vector<tson::Frame>    m_animation; 	    /*! 'animation': Array of Frames */
@@ -66,6 +69,18 @@ namespace tson
             std::vector<int>            m_terrain;          /*! 'terrain': Index of terrain for each corner of tile */
             std::string                 m_type;             /*! 'type': The type of the tile (optional) */
     };
+
+    /*!
+     * A shortcut for getting a property. Alternative to getProperties().getValue<T>("<name>")
+     * @tparam T The template value
+     * @param name Name of the property
+     * @return The actual value, if it exists. Otherwise: The default value of the type.
+     */
+    template<typename T>
+    T tson::Tile::get(const std::string &name)
+    {
+        return m_properties.getValue<T>(name);
+    }
 }
 
 #endif //TILESON_TILE_H

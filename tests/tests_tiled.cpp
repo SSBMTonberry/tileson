@@ -58,7 +58,9 @@ TEST_CASE( "Parse a Map from Tiled's documentation", "[tiled][map]" )
                                 map.getTiledVersion() == "1.0.3" &&
                                 map.getProperties().getSize() == 2 &&
                                 map.getProperties().getValue<std::string>("mapProperty1") == "string" &&
-                                map.getProperties().getProperty("mapProperty2")->getType() == tson::Property::Type::Undefined //The doc got some errors
+                                map.getProperties().getProperty("mapProperty2")->getType() == tson::Property::Type::Undefined && //The doc got some errors
+                                map.get<std::string>("mapProperty1") == "string" &&
+                                map.getProp("mapProperty1")->getType() == tson::Property::Type::Undefined
                             );
 
     REQUIRE( (parseOk && hasCorrectValues) );
@@ -207,7 +209,9 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                 obj.getPosition() == tson::Vector2i(32, 32) &&
                 obj.getObjectType() == tson::Object::Type::Object &&
                 obj.getProperties().getValue<int>("hp") == 12 &&
-                obj.getProperties().getProperty("hp")->getType() == tson::Property::Type::Int
+                obj.getProperties().getProperty("hp")->getType() == tson::Property::Type::Int &&
+                obj.get<int>("hp") == 12 &&
+                obj.getProp("hp")->getType() == tson::Property::Type::Int
         );
 
         REQUIRE((parseOk && hasCorrectValues));
@@ -528,10 +532,13 @@ TEST_CASE( "Parse a Tile from Tiled's documentation - read simple values", "[til
     tson::Tile tile;
     bool parseOk = tile.parse(j);
     bool hasCorrectValues = (
-        tile.getId() == 11 &&
+        tile.getId() == 12 &&
         tile.getTerrain().size() == 4 &&
         tile.getTerrain()[2] == 0 &&
-        tile.getProperties().getValue<std::string>("myProperty2") == "myProperty2_value"
+        tile.getProperties().getValue<std::string>("myProperty2") == "myProperty2_value" &&
+        tile.get<std::string>("myProperty2") == "myProperty2_value" &&
+        tile.getProp("myProperty2") != nullptr &&
+        tile.getProp("dummy") == nullptr
     );
 
     REQUIRE((parseOk && hasCorrectValues));
@@ -704,7 +711,9 @@ TEST_CASE( "Wang-tests - everything Wang - simple", "[tiled][wang]" )
                 wangset.getEdgeColors().size() == 4 &&
                 wangset.getWangTiles().size() == 11 &&
                 wangset.getProperties().getValue<float>("floating_wang") == 14.6f &&
-                wangset.getProperties().getValue<bool>("is_wang")
+                wangset.getProperties().getValue<bool>("is_wang") &&
+                wangset.get<float>("floating_wang") == 14.6f &&
+                wangset.getProp("is_wang")->getValue<bool>()
         );
 
         REQUIRE((parseOk && hasCorrectValues));

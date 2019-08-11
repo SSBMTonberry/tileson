@@ -28,6 +28,10 @@ namespace tson
 
             PropertyCollection &getProperties();
 
+            template <typename T>
+            T get(const std::string &name);
+            tson::Property * getProp(const std::string &name);
+
         private:
             std::string                  m_name;          /*! 'name': Name of the Wang set */
             int                          m_tile{};        /*! 'tile': Local ID of tile representing the Wang set */
@@ -37,6 +41,18 @@ namespace tson
             tson::PropertyCollection     m_properties; 	  /*! 'properties': A list of properties (name, value, type). */
 
     };
+
+    /*!
+     * A shortcut for getting a property. Alternative to getProperties().getValue<T>("<name>")
+     * @tparam T The template value
+     * @param name Name of the property
+     * @return The actual value, if it exists. Otherwise: The default value of the type.
+     */
+    template<typename T>
+    T tson::WangSet::get(const std::string &name)
+    {
+        return m_properties.getValue<T>(name);
+    }
 }
 
 #endif //TILESON_WANGSET_H

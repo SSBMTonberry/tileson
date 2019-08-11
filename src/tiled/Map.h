@@ -39,6 +39,13 @@ namespace tson
             [[nodiscard]] PropertyCollection &getProperties();
             [[nodiscard]] std::vector<tson::Tileset> &getTilesets();
 
+            Layer * getLayer(const std::string &name);
+            Tileset * getTileset(const std::string &name);
+
+            template <typename T>
+            T get(const std::string &name);
+            tson::Property * getProp(const std::string &name);
+
         protected:
             Colori                                 m_backgroundColor;   /*! 'backgroundcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)*/;
             Vector2i                               m_size;              /*! 'width' and 'height' of a Tiled map */
@@ -57,29 +64,19 @@ namespace tson
             std::vector<tson::Tileset>             m_tilesets;          /*! 'tilesets': Array of Tilesets */
             std::string                            m_type;              /*! 'type': map (since 1.0) */
             int                                    m_version{};         /*! 'version': The JSON format version*/
-
-        /*
-         * backgroundcolor 	string 	Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)
-           height        	int 	Number of tile rows
-           hexsidelength    int 	Length of the side of a hex tile in pixels
-           infinite      	bool 	Whether the map has infinite dimensions
-           layers        	array 	Array of Layers
-           nextlayerid      int 	Auto-increments for each layer
-           nextobjectid     int 	Auto-increments for each placed object
-           orientation      string 	orthogonal, isometric, staggered or hexagonal
-           properties       array 	A list of properties (name, value, type).
-           renderorder      string 	Rendering direction (orthogonal maps only)
-           staggeraxis      string 	x or y (staggered / hexagonal maps only)
-           staggerindex     string 	odd or even (staggered / hexagonal maps only)
-           tiledversion     string 	The Tiled version used to save the file
-           tileheight       int 	Map grid height
-           tilesets      	array 	Array of Tilesets
-           tilewidth        int 	Map grid width
-           type      	    string 	map (since 1.0)
-           version       	number 	The JSON format version
-           width         	int 	Number of tile columns
-         */
     };
+
+    /*!
+     * A shortcut for getting a property. Alternative to getProperties().getValue<T>("<name>")
+     * @tparam T The template value
+     * @param name Name of the property
+     * @return The actual value, if it exists. Otherwise: The default value of the type.
+     */
+    template<typename T>
+    T tson::Map::get(const std::string &name)
+    {
+        return m_properties.getValue<T>(name);
+    }
 }
 
 #endif //TILESON_MAP_H

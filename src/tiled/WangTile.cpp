@@ -9,6 +9,11 @@ tson::WangTile::WangTile(const nlohmann::json &json)
     parse(json);
 }
 
+/*!
+ * Parses a wang tile from Tiled json.
+ * @param json A Tiled json file
+ * @return true if all mandatory fields were found. False otherwise.
+ */
 bool tson::WangTile::parse(const nlohmann::json &json)
 {
     bool allFound = true;

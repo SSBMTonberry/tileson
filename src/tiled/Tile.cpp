@@ -10,12 +10,17 @@ tson::Tile::Tile(const nlohmann::json &json)
     parse(json);
 }
 
+/*!
+ * Parses a tile from a Tiled json. id on tile is store as id + 1 to match the references in data containers.
+ * @param json
+ * @return
+ */
 bool tson::Tile::parse(const nlohmann::json &json)
 {
     bool allFound = true;
 
     if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); //Optional
-    if(json.count("id") > 0) m_id = json["id"].get<int>(); else allFound = false;
+    if(json.count("id") > 0) m_id = json["id"].get<int>() + 1; else allFound = false;
     if(json.count("type") > 0) m_type = json["type"].get<std::string>(); //Optional
     if(json.count("objectgroup") > 0) m_objectgroup = tson::Layer(json["objectgroup"]); //Optional
 
@@ -104,4 +109,17 @@ tson::PropertyCollection &tson::Tile::getProperties()
 const std::vector<int> &tson::Tile::getTerrain() const
 {
     return m_terrain;
+}
+
+/*!
+ * Shortcut for getting a property object. Alternative to getProperties().getProperty("<name>");
+ * @param name Name of the property
+ * @return
+ */
+tson::Property *tson::Tile::getProp(const std::string &name)
+{
+    if(m_properties.hasProperty(name))
+        return m_properties.getProperty(name);
+
+    return nullptr;
 }
