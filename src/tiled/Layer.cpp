@@ -33,7 +33,7 @@ bool tson::Layer::parse(const nlohmann::json &json)
     if(json.count("width") > 0 && json.count("height") > 0)
         m_size = {json["width"].get<int>(), json["height"].get<int>()}; else allFound = false;
     if(json.count("transparentcolor") > 0) m_transparentcolor = tson::Colori(json["transparentcolor"].get<std::string>()); //Optional
-    if(json.count("type") > 0) m_type = json["type"].get<std::string>(); else allFound = false;
+    if(json.count("type") > 0) m_typeStr = json["type"].get<std::string>(); else allFound = false;
     if(json.count("visible") > 0) m_visible = json["visible"].get<bool>(); else allFound = false;
     if(json.count("x") > 0) m_x = json["x"].get<int>(); else allFound = false;
     if(json.count("y") > 0) m_y = json["y"].get<int>(); else allFound = false;
@@ -59,7 +59,22 @@ bool tson::Layer::parse(const nlohmann::json &json)
     if(json.count("properties") > 0 && json["properties"].is_array())
         std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
 
+    setTypeByString();
+
     return allFound;
+}
+
+/*!
+ * Set type by string
+ * tilelayer, objectgroup, imagelayer or group
+ */
+void tson::Layer::setTypeByString()
+{
+    if(m_typeStr == "tilelayer") m_type = Type::TileLayer;
+    else if(m_typeStr == "objectgroup") m_type = Type::ObjectGroup;
+    else if(m_typeStr == "imagelayer") m_type = Type::ImageLayer;
+    else if(m_typeStr == "group") m_type = Type::Group;
+    else m_type = Type::Undefined;
 }
 
 /*!
@@ -175,9 +190,9 @@ const tson::Colori &tson::Layer::getTransparentcolor() const
  * 'type': tilelayer, objectgroup, imagelayer or group
  * @return string with the object type
  */
-const std::string &tson::Layer::getType() const
+const std::string &tson::Layer::getTypeStr() const
 {
-    return m_type;
+    return m_typeStr;
 }
 
 /*!
@@ -255,4 +270,11 @@ tson::Property *tson::Layer::getProp(const std::string &name)
     return nullptr;
 }
 
-
+/*!
+ * Get layer type
+ * @return Layer type as enum
+ */
+tson::Layer::Type tson::Layer::getType() const
+{
+    return m_type;
+}

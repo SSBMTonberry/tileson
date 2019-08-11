@@ -20,8 +20,11 @@ bool mapIsAbsolutelyFine(tson::Map &map)
             map.getLayers()[2].getObjects()[0].getName() == "coin" &&
             map.getLayers()[2].getObjects()[0].getProperties().getSize() > 0 &&
             map.getLayer("Main Layer") != nullptr &&
+            map.getLayer("Main Layer")->getType() == tson::Layer::Type::TileLayer &&
+            map.getLayer("Background Image")->getType() == tson::Layer::Type::ImageLayer &&
             map.getLayer("Background Image")->get<float>("scroll_speed") == 1.f &&
             map.getLayer("Background Image")->getProp("repeat_bg")->getType() == tson::Property::Type::Boolean &&
+            map.getLayer("Object Layer")->getType() == tson::Layer::Type::ObjectGroup &&
             map.getTileset("demo-tileset") != nullptr &&
             map.getTileset("demo-tileset")->getTile(36) != nullptr &&
             map.getTileset("demo-tileset")->getTile(36)->getAnimation().size() == 2 &&

@@ -18,6 +18,16 @@ namespace tson
     class Layer
     {
         public:
+            //'type': tilelayer, objectgroup, imagelayer or group
+            enum class Type : uint8_t
+            {
+                Undefined = 0,
+                TileLayer = 1,
+                ObjectGroup = 2,
+                ImageLayer = 3,
+                Group = 4
+            };
+
             Layer() = default;
             explicit Layer(const nlohmann::json &json);
             bool parse(const nlohmann::json &json);
@@ -34,7 +44,10 @@ namespace tson
             [[nodiscard]] float getOpacity() const;
             [[nodiscard]] const Vector2i &getSize() const;
             [[nodiscard]] const Colori &getTransparentcolor() const;
-            [[nodiscard]] const std::string &getType() const;
+
+            Type getType() const;
+
+            [[nodiscard]] const std::string &getTypeStr() const;
             [[nodiscard]] bool isVisible() const;
             [[nodiscard]] int getX() const;
             [[nodiscard]] int getY() const;
@@ -49,6 +62,7 @@ namespace tson
             tson::Property * getProp(const std::string &name);
 
         private:
+            void setTypeByString();
 
             std::vector<tson::Chunk>               m_chunks; 	       /*! 'chunks': Array of chunks (optional). tilelayer only. */
             std::string                            m_compression;      /*! 'compression': zlib, gzip or empty (default). tilelayer only. */
@@ -70,7 +84,8 @@ namespace tson
             tson::Vector2i                         m_size;             /*! x = 'width': (Column count. Same as map width for fixed-size maps.)
                                                                            y = 'height': Row count. Same as map height for fixed-size maps. */
             tson::Colori                           m_transparentcolor; /*! 'transparentcolor': Hex-formatted color (#RRGGBB) (optional, imagelayer only */
-            std::string                            m_type;             /*! 'type': tilelayer, objectgroup, imagelayer or group */
+            std::string                            m_typeStr;          /*! 'type': tilelayer, objectgroup, imagelayer or group */
+            Layer::Type                            m_type;             /*! Layer type as enum*/
             bool                                   m_visible{};        /*! 'visible': Whether layer is shown or hidden in editor */
             int                                    m_x{};              /*! 'x': Horizontal layer offset in tiles. Always 0. */
             int                                    m_y{};              /*! 'y': Vertical layer offset in tiles. Always 0. */

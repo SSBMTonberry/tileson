@@ -96,7 +96,7 @@ TEST_CASE( "Parse a Layer from Tiled's documentation - read simple values", "[ti
                 layer.getSize() == tson::Vector2i(4, 4) &&
                 layer.getName() == "ground" &&
                 layer.getOpacity() == 1 &&
-                layer.getType() == "tilelayer" &&
+                        layer.getTypeStr() == "tilelayer" &&
                 layer.isVisible() &&
                 layer.getX() == 0 &&
                 layer.getY() == 0 &&
@@ -137,7 +137,7 @@ TEST_CASE( "Parse a Layer from Tiled's documentation - read simple values", "[ti
                 layer.getDrawOrder() == "topdown" &&
                 layer.getName() == "people" &&
                 layer.getOpacity() == 1 &&
-                layer.getType() == "objectgroup" &&
+                        layer.getTypeStr() == "objectgroup" &&
                 layer.isVisible() &&
                 layer.getSize() == tson::Vector2i(4, 8) &&
                 layer.getX() == 0 &&
