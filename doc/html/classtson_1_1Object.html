@@ -136,6 +136,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae3fed079c2129007b0b4f70c67737d1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3d7c49ed26289d3438adfca3f0c21c5"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classtson_1_1Text.html">Text</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Object.html#ad3d7c49ed26289d3438adfca3f0c21c5">getText</a> () const</td></tr>
 <tr class="separator:ad3d7c49ed26289d3438adfca3f0c21c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24082e07c3b08bed0ca4c23321a895f1"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a24082e07c3b08bed0ca4c23321a895f1"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtson_1_1Object.html#a24082e07c3b08bed0ca4c23321a895f1">get</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:a24082e07c3b08bed0ca4c23321a895f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d34c740f45c97a19014f5ffe334ea63"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1Property.html">tson::Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Object.html#a4d34c740f45c97a19014f5ffe334ea63">getProp</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:a4d34c740f45c97a19014f5ffe334ea63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a57a5d95ed19603db6cf16a8f965b9e06"></a>
@@ -230,6 +235,39 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a24082e07c3b08bed0ca4c23321a895f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24082e07c3b08bed0ca4c23321a895f1">&#9670;&nbsp;</a></span>get()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">T tson::Object::get </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>A shortcut for getting a property. Alternative to <a class="el" href="classtson_1_1Object.html#ae3fed079c2129007b0b4f70c67737d1c">getProperties()</a>.getValue&lt;T&gt;("&lt;name&gt;") </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The template value </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Name of the property </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The actual value, if it exists. Otherwise: The default value of the type. </dd></dl>
+
+</div>
+</div>
 <a id="a3a94cae8eb98fe2682eef9b511a2b445"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3a94cae8eb98fe2682eef9b511a2b445">&#9670;&nbsp;</a></span>getGid()</h2>
 
@@ -353,6 +391,31 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>'x' and 'y': coordinate in pixels </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="a4d34c740f45c97a19014f5ffe334ea63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d34c740f45c97a19014f5ffe334ea63">&#9670;&nbsp;</a></span>getProp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtson_1_1Property.html">tson::Property</a> * tson::Object::getProp </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Shortcut for getting a property object. Alternative to <a class="el" href="classtson_1_1Object.html#ae3fed079c2129007b0b4f70c67737d1c">getProperties()</a>.getProperty("&lt;name&gt;"); </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Name of the property </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>

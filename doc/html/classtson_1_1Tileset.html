@@ -121,6 +121,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5151c7d3df08f24abf6a70e379224845"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a22bdf3892baf5c6bbcb4ee2af61c5f"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classtson_1_1Grid.html">Grid</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Tileset.html#a4a22bdf3892baf5c6bbcb4ee2af61c5f">getGrid</a> () const</td></tr>
 <tr class="separator:a4a22bdf3892baf5c6bbcb4ee2af61c5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51703de921b7414030e97783bd9ddf52"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1Tile.html">tson::Tile</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Tileset.html#a51703de921b7414030e97783bd9ddf52">getTile</a> (int id)</td></tr>
+<tr class="separator:a51703de921b7414030e97783bd9ddf52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedae2e6b80172d117e83c67d5e9c3b50"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1Terrain.html">tson::Terrain</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Tileset.html#aedae2e6b80172d117e83c67d5e9c3b50">getTerrain</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:aedae2e6b80172d117e83c67d5e9c3b50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b23b3518bb160d1b3b23e7fe13b6694"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a6b23b3518bb160d1b3b23e7fe13b6694"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtson_1_1Tileset.html#a6b23b3518bb160d1b3b23e7fe13b6694">get</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:a6b23b3518bb160d1b3b23e7fe13b6694"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a872b1f62069b4399abfc72cc6242a28a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1Property.html">tson::Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Tileset.html#a872b1f62069b4399abfc72cc6242a28a">getProp</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:a872b1f62069b4399abfc72cc6242a28a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="adfeeb332e1214f9efe57311ae6ee74e5"></a>
@@ -175,6 +184,39 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a6b23b3518bb160d1b3b23e7fe13b6694"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b23b3518bb160d1b3b23e7fe13b6694">&#9670;&nbsp;</a></span>get()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">T tson::Tileset::get </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>A shortcut for getting a property. Alternative to <a class="el" href="classtson_1_1Tileset.html#abfc08d09ed4a82a546e2231c0214d43a">getProperties()</a>.getValue&lt;T&gt;("&lt;name&gt;") </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The template value </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Name of the property </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The actual value, if it exists. Otherwise: The default value of the type. </dd></dl>
+
+</div>
+</div>
 <a id="acad0f7d788025b59052b230799ffc6bb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acad0f7d788025b59052b230799ffc6bb">&#9670;&nbsp;</a></span>getColumns()</h2>
 
@@ -319,6 +361,31 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a872b1f62069b4399abfc72cc6242a28a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a872b1f62069b4399abfc72cc6242a28a">&#9670;&nbsp;</a></span>getProp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtson_1_1Property.html">tson::Property</a> * tson::Tileset::getProp </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Shortcut for getting a property object. Alternative to <a class="el" href="classtson_1_1Tileset.html#abfc08d09ed4a82a546e2231c0214d43a">getProperties()</a>.getProperty("&lt;name&gt;"); </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Name of the property </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
 <a id="abfc08d09ed4a82a546e2231c0214d43a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abfc08d09ed4a82a546e2231c0214d43a">&#9670;&nbsp;</a></span>getProperties()</h2>
 
@@ -355,6 +422,31 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aedae2e6b80172d117e83c67d5e9c3b50"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aedae2e6b80172d117e83c67d5e9c3b50">&#9670;&nbsp;</a></span>getTerrain()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtson_1_1Terrain.html">tson::Terrain</a> * tson::Tileset::getTerrain </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get an existing <a class="el" href="classtson_1_1Terrain.html">Terrain</a> object by name </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the <a class="el" href="classtson_1_1Terrain.html">Terrain</a> if found. nullptr otherwise. </dd></dl>
+
+</div>
+</div>
 <a id="a07b0c7e494c272cf45eb09b5bf5f1118"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a07b0c7e494c272cf45eb09b5bf5f1118">&#9670;&nbsp;</a></span>getTerrains()</h2>
 
@@ -370,6 +462,31 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>'terrains': Array of Terrains (optional) </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="a51703de921b7414030e97783bd9ddf52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51703de921b7414030e97783bd9ddf52">&#9670;&nbsp;</a></span>getTile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtson_1_1Tile.html">tson::Tile</a> * tson::Tileset::getTile </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets a tile by ID (Tiled ID + 1) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>The ID of the tile stored in Tiled map + 1. Example: If ID was stored in Tiled map as 0, the corresponding value in <a class="el" href="classtson_1_1Tileson.html">Tileson</a> is 1. This is to make sure the IDs of tiles matches their references in containers. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the <a class="el" href="classtson_1_1Tile.html">Tile</a> if found. nullptr otherwise. </dd></dl>
 
 </div>
 </div>

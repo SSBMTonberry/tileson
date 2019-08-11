@@ -91,6 +91,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa0ddf83e1520b25d35903efccfa21d30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae27b8eaa565c18b492cada9720192d6a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Terrain.html#ae27b8eaa565c18b492cada9720192d6a">getTile</a> () const</td></tr>
 <tr class="separator:ae27b8eaa565c18b492cada9720192d6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a077d2fa73879e9741b9c5808ceb4bb65"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1PropertyCollection.html">PropertyCollection</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Terrain.html#a077d2fa73879e9741b9c5808ceb4bb65">getProperties</a> ()</td></tr>
+<tr class="separator:a077d2fa73879e9741b9c5808ceb4bb65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70d2af588b1989c221e26e8c7b85913f"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a70d2af588b1989c221e26e8c7b85913f"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtson_1_1Terrain.html#a70d2af588b1989c221e26e8c7b85913f">get</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:a70d2af588b1989c221e26e8c7b85913f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1948c3362417a4ae4edb00d51679d615"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1Property.html">tson::Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Terrain.html#a1948c3362417a4ae4edb00d51679d615">getProp</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:a1948c3362417a4ae4edb00d51679d615"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a7c8e6376dd169f808da21b8f55476553"></a>
@@ -173,6 +180,39 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a70d2af588b1989c221e26e8c7b85913f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70d2af588b1989c221e26e8c7b85913f">&#9670;&nbsp;</a></span>get()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">T tson::Terrain::get </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>A shortcut for getting a property. Alternative to <a class="el" href="classtson_1_1Terrain.html#a077d2fa73879e9741b9c5808ceb4bb65">getProperties()</a>.getValue&lt;T&gt;("&lt;name&gt;") </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The template value </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Name of the property </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The actual value, if it exists. Otherwise: The default value of the type. </dd></dl>
+
+</div>
+</div>
 <a id="aa0ddf83e1520b25d35903efccfa21d30"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa0ddf83e1520b25d35903efccfa21d30">&#9670;&nbsp;</a></span>getName()</h2>
 
@@ -188,6 +228,49 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>'name': Name of terrain </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="a1948c3362417a4ae4edb00d51679d615"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1948c3362417a4ae4edb00d51679d615">&#9670;&nbsp;</a></span>getProp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtson_1_1Property.html">tson::Property</a> * tson::Terrain::getProp </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Shortcut for getting a property object. Alternative to <a class="el" href="classtson_1_1Terrain.html#a077d2fa73879e9741b9c5808ceb4bb65">getProperties()</a>.getProperty("&lt;name&gt;"); </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Name of the property </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="a077d2fa73879e9741b9c5808ceb4bb65"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a077d2fa73879e9741b9c5808ceb4bb65">&#9670;&nbsp;</a></span>getProperties()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtson_1_1PropertyCollection.html">tson::PropertyCollection</a> &amp; tson::Terrain::getProperties </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>'properties': A list of properties (name, value, type). <em>Missing from the official Tiled documentation...</em> </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
