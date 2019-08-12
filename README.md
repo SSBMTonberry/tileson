@@ -35,15 +35,35 @@ int main()
     tson::Colori newBg = bgColorFloat.asInt();
 
     //You can loop through every container of objects
-    for(auto &item : map.getLayers())
+    for(auto &layer : map.getLayers())
     {
-        //Do something
+        if(layer.getType() == tson::Layer::Type::ObjectGroup)
+        {
+            for(auto &obj : layer.getObjects())
+            {
+                //Just iterate through all the objects
+            }
+            //Or use these queries:
+
+            //Gets the first object it find with the name specified
+            tson::Object *player = layer.firstObj("player");
+
+            //Gets all objects with a matching name
+            std::vector<tson::Object> enemies = layer.getObjectsByName("goomba");
+
+            //Gets all objects of a specific type
+            std::vector<tson::Object> objects = layer.getObjectsByType(tson::Object::Type::Object);
+
+            //Gets an unique object by its name.
+            tson::Object *uniqueObj = layer.getObj(2);
+        }
     }
 
-    //Or get a specific object if you know its name (or id)
+    //Get a specific object if you know its name (or id)
     tson::Layer *layer = map.getLayer("Main Layer");
     tson::Tileset *tileset = map.getTileset("demo-tileset");
-    tson::Tile *tile = tileset->getTile(1); //Tileson tile-IDs starts with 1, to be synced with data lists.
+    tson::Tile *tile = tileset->getTile(1); //Tileson tile-IDs starts with 1, to be consistent with IDs in data lists.
+
 
     //If an object supports properties, you can easily get a property value by calling get<T>() or the property itself with getProp()
     int myInt = layer->get<int>("my_int");

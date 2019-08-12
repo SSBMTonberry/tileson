@@ -25,12 +25,17 @@ bool mapIsAbsolutelyFine(tson::Map &map)
             map.getLayer("Background Image")->get<float>("scroll_speed") == 1.f &&
             map.getLayer("Background Image")->getProp("repeat_bg")->getType() == tson::Property::Type::Boolean &&
             map.getLayer("Object Layer")->getType() == tson::Layer::Type::ObjectGroup &&
+            map.getLayer("Object Layer")->firstObj("coin") != nullptr &&
+            map.getLayer("Object Layer")->getObjectsByName("goomba").size() == 2 &&
+            map.getLayer("Object Layer")->getObjectsByType(tson::Object::Type::Object).size() > 0 &&
+            map.getLayer("Object Layer")->getObj(2)->getName() == "coin" &&
             map.getTileset("demo-tileset") != nullptr &&
             map.getTileset("demo-tileset")->getTile(36) != nullptr &&
             map.getTileset("demo-tileset")->getTile(36)->getAnimation().size() == 2 &&
             map.getTileset("demo-tileset")->getTerrain("test_terrain")->getProperties().getSize() == 2 &&
             map.getTileset("demo-tileset")->getTerrain("test_terrain")->getProp("i_like_this")->getType() == tson::Property::Type::Boolean &&
             !map.getTileset("demo-tileset")->getTerrain("test_terrain")->get<std::string>("description").empty()
+
             );
 }
 
@@ -70,15 +75,35 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
     tson::Colori newBg = bgColorFloat.asInt();
 
     //You can loop through every container of objects
-    for(auto &item : map.getLayers())
+    for(auto &layer : map.getLayers())
     {
-        //Do something
+        if(layer.getType() == tson::Layer::Type::ObjectGroup)
+        {
+            for(auto &obj : layer.getObjects())
+            {
+                //Just iterate through all the objects
+            }
+            //Or use these queries:
+
+            //Gets the first object it find with the name specified
+            tson::Object *player = layer.firstObj("player");
+
+            //Gets all objects with a matching name
+            std::vector<tson::Object> enemies = layer.getObjectsByName("goomba");
+
+            //Gets all objects of a specific type
+            std::vector<tson::Object> objects = layer.getObjectsByType(tson::Object::Type::Object);
+
+            //Gets an unique object by its name.
+            tson::Object *uniqueObj = layer.getObj(2);
+        }
     }
 
     //Or get a specific object if you know its name (or id)
     tson::Layer *layer = map.getLayer("Main Layer");
     tson::Tileset *tileset = map.getTileset("demo-tileset");
-    tson::Tile *tile = tileset->getTile(1); //Tileson tile-IDs starts with 1, to be synced with data lists.
+    tson::Tile *tile = tileset->getTile(1); //Tileson tile-IDs starts with 1, to be consistent with IDs in data lists.
+
 
     //If an object supports properties, you can easily get a property value by calling get<T>() or the property itself with getProp()
     int myInt = layer->get<int>("my_int");

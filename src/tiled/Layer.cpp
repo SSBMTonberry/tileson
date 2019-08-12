@@ -65,6 +65,70 @@ bool tson::Layer::parse(const nlohmann::json &json)
 }
 
 /*!
+ * Copies all objects with a name that equals the parameter
+ * @param name Name of the objects to return
+ * @return All objects with a matching name
+ */
+std::vector<tson::Object> tson::Layer::getObjectsByName(const std::string &name)
+{
+    std::vector<tson::Object> found;
+
+    std::copy_if(m_objects.begin(), m_objects.end(), std::back_inserter(found), [&](const tson::Object &item)
+                                                                        {
+                                                                            return item.getName() == name;
+                                                                        });
+
+    return found;
+}
+
+
+
+/*!
+ * Copies all objects with a type that equals the parameter
+ * @param type Type of the objects to return
+ * @return All objects with a matching type
+ */
+std::vector<tson::Object> tson::Layer::getObjectsByType(tson::Object::Type type)
+{
+    std::vector<tson::Object> found;
+
+    std::copy_if(m_objects.begin(), m_objects.end(), std::back_inserter(found), [&](const tson::Object &item)
+    {
+        return item.getObjectType() == type;
+    });
+
+    return found;
+}
+
+/*!
+ * Returns the first object with the given name
+ * @param name Name of the object to find.
+ * @return A pointer to the object if found. nullptr otherwise.
+ */
+tson::Object *tson::Layer::firstObj(const std::string &name)
+{
+    auto result = std::find_if(m_objects.begin(), m_objects.end(), [&](const tson::Object &obj){return obj.getName() == name; });
+    if(result == m_objects.end())
+        return nullptr;
+
+    return &result.operator*();
+}
+
+/*!
+ * Get an object by ID
+ * @param id Unique ID of the object
+ * @return A pointer to the object if found. nullptr otherwise.
+ */
+tson::Object *tson::Layer::getObj(int id)
+{
+    auto result = std::find_if(m_objects.begin(), m_objects.end(), [&](const tson::Object &obj){return obj.getId() == id; });
+    if(result == m_objects.end())
+        return nullptr;
+
+    return &result.operator*();
+}
+
+/*!
  * Set type by string
  * tilelayer, objectgroup, imagelayer or group
  */

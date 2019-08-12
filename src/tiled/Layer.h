@@ -57,6 +57,11 @@ namespace tson
             [[nodiscard]] std::vector<tson::Object> &getObjects();
             [[nodiscard]] PropertyCollection &getProperties();
 
+            tson::Object *getObj(int id);
+            tson::Object *firstObj(const std::string &name);
+            std::vector<tson::Object> getObjectsByName(const std::string &name);
+            std::vector<tson::Object> getObjectsByType(tson::Object::Type type);
+
             template <typename T>
             T get(const std::string &name);
             tson::Property * getProp(const std::string &name);
