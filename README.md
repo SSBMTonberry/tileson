@@ -11,6 +11,7 @@ Parsing a Tiled json
 ```c++
 #include "Tileson.h"
 
+//Tileson uses an alias fs for std::filesystem.
 int main()
     tson::Tileson parser;
     tson::Map map = parser.parse(fs::path("./path/to/map.json"));
@@ -41,10 +42,17 @@ int main()
 
     //Or get a specific object if you know its name (or id)
     tson::Layer *layer = map.getLayer("Main Layer");
+    tson::Tileset *tileset = map.getTileset("demo-tileset");
+    tson::Tile *tile = tileset->getTile(1); //Tileson tile-IDs starts with 1, to be synced with data lists.
 
     //If an object supports properties, you can easily get a property value by calling get<T>() or the property itself with getProp()
     int myInt = layer->get<int>("my_int");
-    Property *prop = layer->getProp("my_property");
+    float myFloat = layer->get<float>("my_float");
+    bool myBool = layer->get<bool>("my_bool");
+    std::string myString = layer->get<std::string>("my_string");
+    tson::Colori myColor = layer->get<tson::Colori>("my_color");
+    fs::path file = layer->get<fs::path>("my_file");
+    tson::Property *prop = layer->getProp("my_property");
 
     return 0;
 }

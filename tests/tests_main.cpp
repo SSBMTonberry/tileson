@@ -46,3 +46,48 @@ TEST_CASE( "Parse a whole map by memory", "[complete][parse][memory]" ) {
     tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
     REQUIRE( mapIsAbsolutelyFine(map) );
 }
+
+TEST_CASE( "Go through demo code - get success", "[demo]" ) {
+    tson::Tileson t;
+    tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
+
+    //Get color as an rgba color object
+    tson::Colori bgColor = map.getBackgroundColor(); //RGBA with 0-255 on each channel
+
+    //This color can be compared with Tiled hex string
+    if(bgColor == "#ffaa07")
+        printf("Cool!");
+
+    //Or you can compare them with other colors
+    tson::Colori otherColor {128, 87, 65, 255};
+    if(bgColor == otherColor)
+        printf("This works, too!");
+
+    //You can also get the color as float, transforming values if they are already in their int form, from max 255 to 1.f
+    tson::Colorf bgColorFloat = bgColor.asFloat();
+
+    //Or the other way around
+    tson::Colori newBg = bgColorFloat.asInt();
+
+    //You can loop through every container of objects
+    for(auto &item : map.getLayers())
+    {
+        //Do something
+    }
+
+    //Or get a specific object if you know its name (or id)
+    tson::Layer *layer = map.getLayer("Main Layer");
+    tson::Tileset *tileset = map.getTileset("demo-tileset");
+    tson::Tile *tile = tileset->getTile(1); //Tileson tile-IDs starts with 1, to be synced with data lists.
+
+    //If an object supports properties, you can easily get a property value by calling get<T>() or the property itself with getProp()
+    int myInt = layer->get<int>("my_int");
+    float myFloat = layer->get<float>("my_float");
+    bool myBool = layer->get<bool>("my_bool");
+    std::string myString = layer->get<std::string>("my_string");
+    tson::Colori myColor = layer->get<tson::Colori>("my_color");
+    fs::path file = layer->get<fs::path>("my_file");
+    tson::Property *prop = layer->getProp("my_property");
+
+    REQUIRE( true );
+}
