@@ -29,8 +29,11 @@ var searchData=
   ['getname',['getName',['../classtson_1_1Property.html#a9dda5b011cdfd6229e68deaf4ad793f4',1,'tson::Property::getName()'],['../classtson_1_1Layer.html#a32db2db6de49b6daf221ae06a3b3f7e1',1,'tson::Layer::getName()'],['../classtson_1_1Object.html#a34304ec8a32264ea727a316dafe161bf',1,'tson::Object::getName()'],['../classtson_1_1Terrain.html#aa0ddf83e1520b25d35903efccfa21d30',1,'tson::Terrain::getName()'],['../classtson_1_1Tileset.html#ae453d71cb55722d32b8695babde5ae0e',1,'tson::Tileset::getName()'],['../classtson_1_1WangColor.html#a57f390028710740c74d474743e83b657',1,'tson::WangColor::getName()'],['../classtson_1_1WangSet.html#aa002fb1015dbff989c2b6d873b5a237c',1,'tson::WangSet::getName()']]],
   ['getnextlayerid',['getNextLayerId',['../classtson_1_1Map.html#ad5a19a6df769e3e95c61ff770b1a2475',1,'tson::Map']]],
   ['getnextobjectid',['getNextObjectId',['../classtson_1_1Map.html#a956db7db0c35b459487659edf9d747ac',1,'tson::Map']]],
+  ['getobj',['getObj',['../classtson_1_1Layer.html#a2d3b4f227b5f1ac37f1f41ad511b0d44',1,'tson::Layer']]],
   ['getobjectgroup',['getObjectgroup',['../classtson_1_1Tile.html#aae08d0fcdec7760bc64c1b660953572c',1,'tson::Tile']]],
   ['getobjects',['getObjects',['../classtson_1_1Layer.html#acc7f2d5e9a4a4d1bd16b02ce8ad61783',1,'tson::Layer']]],
+  ['getobjectsbyname',['getObjectsByName',['../classtson_1_1Layer.html#af4ce4349ec4cd19e903ce3078712cc48',1,'tson::Layer']]],
+  ['getobjectsbytype',['getObjectsByType',['../classtson_1_1Layer.html#ad57f3f3251df8e549588ee60acfcc761',1,'tson::Layer']]],
   ['getobjecttype',['getObjectType',['../classtson_1_1Object.html#a2c23b6f274e2925a8227cf8b57bac6ca',1,'tson::Object']]],
   ['getoffset',['getOffset',['../classtson_1_1Layer.html#a8f0d856ccfe72514e73fa08981469135',1,'tson::Layer']]],
   ['getopacity',['getOpacity',['../classtson_1_1Layer.html#a72925a3b4e073219b49b5e322b3e190c',1,'tson::Layer']]],
@@ -62,7 +65,8 @@ var searchData=
   ['gettilesets',['getTilesets',['../classtson_1_1Map.html#a6d31956672b6d52acc4ffac140f8248a',1,'tson::Map']]],
   ['gettilesize',['getTileSize',['../classtson_1_1Map.html#a4d10866b65f3ad1ae7fd79f0806f8b77',1,'tson::Map::getTileSize()'],['../classtson_1_1Tileset.html#a7f5a43cc664fb619e3c607c31b4f3da0',1,'tson::Tileset::getTileSize()']]],
   ['gettransparentcolor',['getTransparentcolor',['../classtson_1_1Layer.html#ade88255f77ff5756a7ae3899693c7ffd',1,'tson::Layer::getTransparentcolor()'],['../classtson_1_1Tileset.html#ad8ccd22b9417bdbca393cac57993ef2d',1,'tson::Tileset::getTransparentColor()']]],
-  ['gettype',['getType',['../classtson_1_1Property.html#a7c604fe80687e12fcd6648f8cb451e16',1,'tson::Property::getType()'],['../classtson_1_1Layer.html#ac595dd9195975ccb3dbca05b0d077c30',1,'tson::Layer::getType()'],['../classtson_1_1Map.html#a30c467f1ccad3ce8cc2d0139fa75d0d8',1,'tson::Map::getType()'],['../classtson_1_1Object.html#a57a0d7e77f6cbe037770392ac72e7a25',1,'tson::Object::getType()'],['../classtson_1_1Tile.html#a63eda3535e990263dd58c97a7cbabe4b',1,'tson::Tile::getType()'],['../classtson_1_1Tileset.html#a075988a9b8787e925d42b255019dd6ae',1,'tson::Tileset::getType()']]],
+  ['gettype',['getType',['../classtson_1_1Property.html#a7c604fe80687e12fcd6648f8cb451e16',1,'tson::Property::getType()'],['../classtson_1_1Layer.html#a3ba5fd324a2a28c09773b11252a7c6b6',1,'tson::Layer::getType()'],['../classtson_1_1Map.html#a30c467f1ccad3ce8cc2d0139fa75d0d8',1,'tson::Map::getType()'],['../classtson_1_1Object.html#a57a0d7e77f6cbe037770392ac72e7a25',1,'tson::Object::getType()'],['../classtson_1_1Tile.html#a63eda3535e990263dd58c97a7cbabe4b',1,'tson::Tile::getType()'],['../classtson_1_1Tileset.html#a075988a9b8787e925d42b255019dd6ae',1,'tson::Tileset::getType()']]],
+  ['gettypestr',['getTypeStr',['../classtson_1_1Layer.html#aa67545069934024f7383c8c59026ce38',1,'tson::Layer']]],
   ['getvalue',['getValue',['../classtson_1_1Property.html#a91e1d6d644f1089026a02a5bbe2eeaf2',1,'tson::Property::getValue() const'],['../classtson_1_1Property.html#af5edbee1fe8e95b6428474890476f8a0',1,'tson::Property::getValue() const'],['../classtson_1_1PropertyCollection.html#a472bfac4acd23991bc4ee85f5905a200',1,'tson::PropertyCollection::getValue()']]],
   ['getvaluetype',['getValueType',['../classtson_1_1Property.html#abf5f675eb76d2e7bfedfd2adecbeb387',1,'tson::Property']]],
   ['getvaluetypeinfo',['getValueTypeInfo',['../classtson_1_1Property.html#a919f4be1d231c7388e99edffd0d10cca',1,'tson::Property']]],
@@ -74,5 +78,6 @@ var searchData=
   ['gety',['getY',['../classtson_1_1Layer.html#af68877b9894e9ee9a4fecaa0081737e4',1,'tson::Layer']]],
   ['grid',['Grid',['../classtson_1_1Grid.html',1,'tson::Grid'],['../classtson_1_1Grid.html#a9bdee44fd73ea5815bbe591e7d0e9d96',1,'tson::Grid::Grid()=default'],['../classtson_1_1Grid.html#a6fab3db871cef5a0cfe10e51ad70a7df',1,'tson::Grid::Grid(const nlohmann::json &amp;json)']]],
   ['grid_2ecpp',['Grid.cpp',['../Grid_8cpp.html',1,'']]],
-  ['grid_2eh',['Grid.h',['../Grid_8h.html',1,'']]]
+  ['grid_2eh',['Grid.h',['../Grid_8h.html',1,'']]],
+  ['group',['Group',['../classtson_1_1Layer.html#a91f3be29328960e463a90930a06e8507a03937134cedab9078be39a77ee3a48a0',1,'tson::Layer']]]
 ];

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['template',['Template',['../classtson_1_1Object.html#a57a5d95ed19603db6cf16a8f965b9e06a278c491bdd8a53618c149c4ac790da34',1,'tson::Object']]],
-  ['text',['Text',['../classtson_1_1Object.html#a57a5d95ed19603db6cf16a8f965b9e06a9dffbf69ffba8bc38bc4e01abf4b1675',1,'tson::Object']]]
+  ['string',['String',['../classtson_1_1Property.html#a54c4487e68d2821029bec8ea14785479a27118326006d3829667a400ad23d5d98',1,'tson::Property']]]
 ];

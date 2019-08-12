@@ -68,6 +68,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classtson_1_1Layer-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -77,6 +78,19 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="Layer_8h_source.html">Layer.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a91f3be29328960e463a90930a06e8507"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#a91f3be29328960e463a90930a06e8507">Type</a> : uint8_t { <br />
+&#160;&#160;<a class="el" href="classtson_1_1Layer.html#a91f3be29328960e463a90930a06e8507aec0fc0100c4fc1ce4eea230c3dc10360">Type::Undefined</a> = 0, 
+<a class="el" href="classtson_1_1Layer.html#a91f3be29328960e463a90930a06e8507a7e18e515be43f6e6b19b591782303669">Type::TileLayer</a> = 1, 
+<a class="el" href="classtson_1_1Layer.html#a91f3be29328960e463a90930a06e8507a03d81c8b3dfdf88091a261d6a92f75a6">Type::ObjectGroup</a> = 2, 
+<a class="el" href="classtson_1_1Layer.html#a91f3be29328960e463a90930a06e8507a4f1851a3abdf8696a00a4e22d5ec178c">Type::ImageLayer</a> = 3, 
+<br />
+&#160;&#160;<a class="el" href="classtson_1_1Layer.html#a91f3be29328960e463a90930a06e8507a03937134cedab9078be39a77ee3a48a0">Type::Group</a> = 4
+<br />
+ }</td></tr>
+<tr class="separator:a91f3be29328960e463a90930a06e8507"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ac744d2ba56eb9e2e11063db895c7318b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#ac744d2ba56eb9e2e11063db895c7318b">Layer</a> ()=default</td></tr>
@@ -109,8 +123,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4998bb3f1d21c2a0e163dbc95f6dbefd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ade88255f77ff5756a7ae3899693c7ffd"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="namespacetson.html#ae0579e97e7ba7d84797f4a258fd9af7e">Colori</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#ade88255f77ff5756a7ae3899693c7ffd">getTransparentcolor</a> () const</td></tr>
 <tr class="separator:ade88255f77ff5756a7ae3899693c7ffd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac595dd9195975ccb3dbca05b0d077c30"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#ac595dd9195975ccb3dbca05b0d077c30">getType</a> () const</td></tr>
-<tr class="separator:ac595dd9195975ccb3dbca05b0d077c30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ba5fd324a2a28c09773b11252a7c6b6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1Layer.html#a91f3be29328960e463a90930a06e8507">Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#a3ba5fd324a2a28c09773b11252a7c6b6">getType</a> () const</td></tr>
+<tr class="separator:a3ba5fd324a2a28c09773b11252a7c6b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa67545069934024f7383c8c59026ce38"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#aa67545069934024f7383c8c59026ce38">getTypeStr</a> () const</td></tr>
+<tr class="separator:aa67545069934024f7383c8c59026ce38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f15627018a6cd843babcd177c910bce"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#a9f15627018a6cd843babcd177c910bce">isVisible</a> () const</td></tr>
 <tr class="separator:a9f15627018a6cd843babcd177c910bce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aebf4eec1d654fb9c79bfefccb435fa20"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#aebf4eec1d654fb9c79bfefccb435fa20">getX</a> () const</td></tr>
@@ -125,12 +141,50 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:acc7f2d5e9a4a4d1bd16b02ce8ad61783"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a12978038cdfa9cbeb50f016eb321e305"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1PropertyCollection.html">PropertyCollection</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#a12978038cdfa9cbeb50f016eb321e305">getProperties</a> ()</td></tr>
 <tr class="separator:a12978038cdfa9cbeb50f016eb321e305"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d3b4f227b5f1ac37f1f41ad511b0d44"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1Object.html">tson::Object</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#a2d3b4f227b5f1ac37f1f41ad511b0d44">getObj</a> (int id)</td></tr>
+<tr class="separator:a2d3b4f227b5f1ac37f1f41ad511b0d44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b635e2b5a9aec6921990b4946689475"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1Object.html">tson::Object</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#a1b635e2b5a9aec6921990b4946689475">firstObj</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:a1b635e2b5a9aec6921990b4946689475"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4ce4349ec4cd19e903ce3078712cc48"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtson_1_1Object.html">tson::Object</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#af4ce4349ec4cd19e903ce3078712cc48">getObjectsByName</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:af4ce4349ec4cd19e903ce3078712cc48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad57f3f3251df8e549588ee60acfcc761"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtson_1_1Object.html">tson::Object</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#ad57f3f3251df8e549588ee60acfcc761">getObjectsByType</a> (<a class="el" href="classtson_1_1Object.html#a57a5d95ed19603db6cf16a8f965b9e06">tson::Object::Type</a> type)</td></tr>
+<tr class="separator:ad57f3f3251df8e549588ee60acfcc761"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d629dd00219fa52ac138107a72c0631"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a4d629dd00219fa52ac138107a72c0631"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#a4d629dd00219fa52ac138107a72c0631">get</a> (const std::string &amp;name)</td></tr>
 <tr class="separator:a4d629dd00219fa52ac138107a72c0631"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a940b26d0a913c34bd4232a284a4779af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1Property.html">tson::Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#a940b26d0a913c34bd4232a284a4779af">getProp</a> (const std::string &amp;name)</td></tr>
 <tr class="separator:a940b26d0a913c34bd4232a284a4779af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="a91f3be29328960e463a90930a06e8507"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a91f3be29328960e463a90930a06e8507">&#9670;&nbsp;</a></span>Type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="classtson_1_1Layer.html#a91f3be29328960e463a90930a06e8507">tson::Layer::Type</a> : uint8_t</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a91f3be29328960e463a90930a06e8507aec0fc0100c4fc1ce4eea230c3dc10360"></a>Undefined&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a91f3be29328960e463a90930a06e8507a7e18e515be43f6e6b19b591782303669"></a>TileLayer&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a91f3be29328960e463a90930a06e8507a03d81c8b3dfdf88091a261d6a92f75a6"></a>ObjectGroup&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a91f3be29328960e463a90930a06e8507a4f1851a3abdf8696a00a4e22d5ec178c"></a>ImageLayer&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a91f3be29328960e463a90930a06e8507a03937134cedab9078be39a77ee3a48a0"></a>Group&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac744d2ba56eb9e2e11063db895c7318b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac744d2ba56eb9e2e11063db895c7318b">&#9670;&nbsp;</a></span>Layer() <span class="overload">[1/2]</span></h2>
@@ -190,6 +244,31 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a1b635e2b5a9aec6921990b4946689475"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b635e2b5a9aec6921990b4946689475">&#9670;&nbsp;</a></span>firstObj()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtson_1_1Object.html">tson::Object</a> * tson::Layer::firstObj </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Returns the first object with the given name </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Name of the object to find. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the object if found. nullptr otherwise. </dd></dl>
+
+</div>
+</div>
 <a id="a4d629dd00219fa52ac138107a72c0631"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4d629dd00219fa52ac138107a72c0631">&#9670;&nbsp;</a></span>get()</h2>
 
@@ -403,6 +482,31 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="a2d3b4f227b5f1ac37f1f41ad511b0d44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d3b4f227b5f1ac37f1f41ad511b0d44">&#9670;&nbsp;</a></span>getObj()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtson_1_1Object.html">tson::Object</a> * tson::Layer::getObj </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get an object by ID </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>Unique ID of the object </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the object if found. nullptr otherwise. </dd></dl>
+
+</div>
+</div>
 <a id="acc7f2d5e9a4a4d1bd16b02ce8ad61783"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acc7f2d5e9a4a4d1bd16b02ce8ad61783">&#9670;&nbsp;</a></span>getObjects()</h2>
 
@@ -418,6 +522,56 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 <p>'objects': Array of objects. objectgroup only. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="af4ce4349ec4cd19e903ce3078712cc48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4ce4349ec4cd19e903ce3078712cc48">&#9670;&nbsp;</a></span>getObjectsByName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; <a class="el" href="classtson_1_1Object.html">tson::Object</a> &gt; tson::Layer::getObjectsByName </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Copies all objects with a name that equals the parameter </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Name of the objects to return </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>All objects with a matching name </dd></dl>
+
+</div>
+</div>
+<a id="ad57f3f3251df8e549588ee60acfcc761"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad57f3f3251df8e549588ee60acfcc761">&#9670;&nbsp;</a></span>getObjectsByType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; <a class="el" href="classtson_1_1Object.html">tson::Object</a> &gt; tson::Layer::getObjectsByType </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtson_1_1Object.html#a57a5d95ed19603db6cf16a8f965b9e06">tson::Object::Type</a>&#160;</td>
+          <td class="paramname"><em>type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Copies all objects with a type that equals the parameter </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td>Type of the objects to return </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>All objects with a matching type </dd></dl>
 
 </div>
 </div>
@@ -536,14 +690,32 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a id="ac595dd9195975ccb3dbca05b0d077c30"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac595dd9195975ccb3dbca05b0d077c30">&#9670;&nbsp;</a></span>getType()</h2>
+<a id="a3ba5fd324a2a28c09773b11252a7c6b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ba5fd324a2a28c09773b11252a7c6b6">&#9670;&nbsp;</a></span>getType()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const std::string &amp; tson::Layer::getType </td>
+          <td class="memname"><a class="el" href="classtson_1_1Layer.html#a91f3be29328960e463a90930a06e8507">tson::Layer::Type</a> tson::Layer::getType </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get layer type </p><dl class="section return"><dt>Returns</dt><dd><a class="el" href="classtson_1_1Layer.html">Layer</a> type as enum </dd></dl>
+
+</div>
+</div>
+<a id="aa67545069934024f7383c8c59026ce38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa67545069934024f7383c8c59026ce38">&#9670;&nbsp;</a></span>getTypeStr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string &amp; tson::Layer::getTypeStr </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -634,8 +806,8 @@ template&lt;typename T &gt; </div>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>/home/robin/Projects/cpp/git/tileson/src/tiled/<a class="el" href="Layer_8h_source.html">Layer.h</a></li>
-<li>/home/robin/Projects/cpp/git/tileson/src/tiled/<a class="el" href="Layer_8cpp.html">Layer.cpp</a></li>
+<li>/home/robin/Projects/c++/git/tileson/src/tiled/<a class="el" href="Layer_8h_source.html">Layer.h</a></li>
+<li>/home/robin/Projects/c++/git/tileson/src/tiled/<a class="el" href="Layer_8cpp.html">Layer.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
