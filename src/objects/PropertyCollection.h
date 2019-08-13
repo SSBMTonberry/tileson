@@ -30,6 +30,7 @@ namespace tson
             bool hasProperty(const std::string &name);
             tson::Property * getProperty(const std::string &name);
             std::map<std::string, Property> &getProperties();
+            std::vector<Property*> get();
             template <typename T>
             T getValue(const std::string &name);
             [[nodiscard]] const std::string &getId() const;

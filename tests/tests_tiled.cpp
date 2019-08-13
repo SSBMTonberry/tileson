@@ -57,6 +57,7 @@ TEST_CASE( "Parse a Map from Tiled's documentation", "[tiled][map]" )
                                 map.getVersion() == 1 &&
                                 map.getTiledVersion() == "1.0.3" &&
                                 map.getProperties().getSize() == 2 &&
+                                map.getProperties().get()[0]->getName() == "mapProperty1" &&
                                 map.getProperties().getValue<std::string>("mapProperty1") == "string" &&
                                 map.getProperties().getProperty("mapProperty2")->getType() == tson::Property::Type::Undefined && //The doc got some errors
                                 map.get<std::string>("mapProperty1") == "string" &&

@@ -66,6 +66,20 @@ std::map<std::string, tson::Property> &tson::PropertyCollection::getProperties()
     return m_properties;
 }
 
+/*!
+ * Gets vector of pointers to all the existing properties
+ * @return
+ */
+std::vector<tson::Property *> tson::PropertyCollection::get()
+{
+    std::vector<tson::Property *> props;
+    for(auto &i : m_properties)
+        props.emplace_back(&i.second);
+
+    return props;
+}
+
+
 
 const std::string &tson::PropertyCollection::getId() const
 {
@@ -76,3 +90,4 @@ size_t tson::PropertyCollection::getSize() const
 {
     return m_properties.size();
 }
+

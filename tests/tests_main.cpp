@@ -15,6 +15,7 @@ bool mapIsAbsolutelyFine(tson::Map &map)
             map.getSize() == tson::Vector2i(32, 16) &&
             map.getBackgroundColor() == tson::Colori("#3288c1") &&
             map.getLayers()[0].getProperties().getSize() > 0 &&
+            map.getLayers()[0].getProperties().get()[0]->getType() != tson::Property::Type::Undefined &&
             map.getLayers()[2].getName() == "Object Layer" &&
             map.getLayers()[2].getObjects().size() > 1 &&
             map.getLayers()[2].getObjects()[0].getName() == "coin" &&
