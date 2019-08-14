@@ -1,0 +1,9 @@
+dist: bionic
+sudo: require
+
+language: cpp
+compiler: gcc
+
+script:
+- cmake .
+- cmake --build . -- -j2
