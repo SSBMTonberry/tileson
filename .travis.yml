@@ -7,3 +7,4 @@ compiler: gcc
 script:
 - cmake .
 - cmake --build . -- -j2
+- ./tests/tileson_tests
