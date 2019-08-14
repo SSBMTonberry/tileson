@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/SSBMTonberry/tileson.svg?branch=master)](https://travis-ci.org/SSBMTonberry/tileson)
+
 # Tileson
 A modern and helpful json-parser for Tiled maps.
 
