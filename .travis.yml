@@ -37,11 +37,10 @@ matrix:
       env:
         - MATRIX_EVAL="CC=gcc-9 CXX=g++-9"
 
-    allow_failures:
     - os: windows
 
     - os: osx
-      osx_image: xcode11
+      osx_image: xcode10.2
 
 before_install:
   - eval "${MATRIX_EVAL}"
