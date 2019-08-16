@@ -7,6 +7,7 @@
 
 #include "tiled/Map.h"
 #include <fstream>
+#include <sstream>
 
 namespace tson
 {
