@@ -37,6 +37,7 @@ matrix:
       env:
         - MATRIX_EVAL="CC=gcc-9 CXX=g++-9"
 
+    allow_failures:
     - os: windows
 
     - os: osx
