@@ -43,7 +43,10 @@ bool mapIsAbsolutelyFine(tson::Map &map)
 
 TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" ) {
     tson::Tileson t;
-    tson::Map map = t.parse({"../../content/test-maps/ultimate_test.json"});
+    fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
+    fs::path pathTravis {"../content/test-maps/ultimate_test.json"};
+    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    tson::Map map = t.parse({pathToUse});
     REQUIRE( mapIsAbsolutelyFine(map) );
 }
 
