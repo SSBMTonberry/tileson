@@ -1,28 +1,36 @@
-dist: bionic
+language: cpp
+dist: xenial
 sudo: required
 
-language: cpp
 compiler: gcc
 
-addons:
-  apt:
-    update: true
-    sources:
-      - ubuntu-toolchain-r/test
-    packages:
-      - gcc-9
-      - g++-9
+matrix:
+  include:
+
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-8
+      env:
+        - MATRIX_EVAL="CC=gcc-8 CXX=g++-8"
+
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-9
+      env:
+        - MATRIX_EVAL="CC=gcc-9 CXX=g++-9"
+
+before_install:
+  - eval "${MATRIX_EVAL}"
 
 script:
-  # Link gcc-9 and g++-9 to their standard commands
-  - ln -s /usr/bin/gcc-9 /usr/local/bin/gcc
-  - ln -s /usr/bin/g++-9 /usr/local/bin/g++
-  # Export CC and CXX to tell cmake which compiler to use
-  - export CC=/usr/bin/gcc-9
-  - export CXX=/usr/bin/g++-9
-  # Check versions of gcc, g++ and cmake
-  - gcc -v && g++ -v && cmake --version
-  # Run your build commands next
   - cmake .
   - cmake --build . -- -j2
   - ./tests/tileson_tests
