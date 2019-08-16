@@ -5,6 +5,8 @@
 #ifndef TILESON_PROPERTY_H
 #define TILESON_PROPERTY_H
 
+#include "../../TilesonConfig.h"
+
 #if MSVC
     #include <filesystem>
     namespace fs = std::filesystem;
