@@ -7,6 +7,16 @@
 #include "../objects/Vector2.hpp"
 
 /*!
+ * When errors have happened before the map starts parsing, just keep the statuses
+ * @param status The status
+ * @param description Description of the status
+ */
+tson::Map::Map(tson::Map::ParseStatus status, std::string description) : m_status {status}, m_statusMessage { std::move(description) }
+{
+
+}
+
+/*!
  * Parses a json of a Tiled map.
  * @param json A json object with the format of Map
  * @return true if all mandatory fields was found. false otherwise.
@@ -235,5 +245,12 @@ tson::Property *tson::Map::getProp(const std::string &name)
     return nullptr;
 }
 
+tson::Map::ParseStatus tson::Map::getStatus() const
+{
+    return m_status;
+}
 
-
+const std::string &tson::Map::getStatusMessage() const
+{
+    return m_statusMessage;
+}

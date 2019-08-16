@@ -16,11 +16,22 @@ tson::Map tson::Tileson::parse(const fs::path &path)
     {
         std::ifstream i(path.u8string());
         nlohmann::json json;
-        i >> json;
+        try
+        {
+            i >> json;
+        }
+        catch(const nlohmann::json::parse_error &error)
+        {
+            std::string message = "Parse error: ";
+            message += std::string(error.what());
+            return tson::Map {tson::Map::ParseStatus::ParseError, message};
+        }
         return parseJson(json);
     }
 
-    return tson::Map {};
+    std::string msg = "File not found: ";
+    msg += std::string(path.u8string());
+    return tson::Map {tson::Map::ParseStatus::FileNotFound, msg};
 }
 
 /*!
@@ -50,5 +61,5 @@ tson::Map tson::Tileson::parseJson(const nlohmann::json &json)
     if(map.parse(json))
         return map;
 
-    return tson::Map {};
+    return tson::Map {tson::Map::ParseStatus::MissingData, "Missing map data..."};
 }

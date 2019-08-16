@@ -16,7 +16,16 @@ namespace tson
     class Map
     {
         public:
+            enum class ParseStatus : uint8_t
+            {
+                OK = 0, //OK unless otherwise stated
+                FileNotFound = 1,
+                ParseError = 2,
+                MissingData = 3
+            };
+
             Map() = default;
+            Map(ParseStatus status, std::string description);
             explicit Map(const nlohmann::json &json);
             bool parse(const nlohmann::json &json);
 
@@ -38,6 +47,10 @@ namespace tson
             [[nodiscard]] std::vector<tson::Layer> &getLayers();
             [[nodiscard]] PropertyCollection &getProperties();
             [[nodiscard]] std::vector<tson::Tileset> &getTilesets();
+
+            ParseStatus getStatus() const;
+
+            const std::string &getStatusMessage() const;
 
             Layer * getLayer(const std::string &name);
             Tileset * getTileset(const std::string &name);
@@ -64,6 +77,9 @@ namespace tson
             std::vector<tson::Tileset>             m_tilesets;          /*! 'tilesets': Array of Tilesets */
             std::string                            m_type;              /*! 'type': map (since 1.0) */
             int                                    m_version{};         /*! 'version': The JSON format version*/
+
+            ParseStatus                            m_status {ParseStatus::OK};
+            std::string                            m_statusMessage {"OK"};
     };
 
     /*!
