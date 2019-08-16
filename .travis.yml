@@ -47,5 +47,6 @@ before_install:
 
 script:
   - cmake .
-  - cmake --build . -- -j 2
+  - cmake --build .
+#  - cmake --build . -- -j 2
   - ./tests/tileson_tests
