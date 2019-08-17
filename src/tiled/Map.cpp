@@ -59,7 +59,27 @@ bool tson::Map::parse(const nlohmann::json &json)
     if(json.count("properties") > 0 && json["properties"].is_array())
         std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
 
+
+    processData();
+
     return allFound;
+}
+
+/*!
+ * Processes the parsed data and uses the data to create helpful objects, like tile maps.
+ */
+void tson::Map::processData()
+{
+    m_tileMap.clear();
+    for(auto &tileset : m_tilesets)
+    {
+        std::for_each(tileset.getTiles().begin(), tileset.getTiles().end(), [&](tson::Tile &tile) { m_tileMap[tile.getId()] = &tile; });
+    }
+    std::for_each(m_layers.begin(), m_layers.end(), [&](tson::Layer &layer)
+                                                    {
+                                                        layer.assignTileMap(m_tileMap);
+                                                        layer.createTileData(m_size, m_isInfinite);
+                                                    });
 }
 
 /*!
@@ -254,3 +274,14 @@ const std::string &tson::Map::getStatusMessage() const
 {
     return m_statusMessage;
 }
+
+/*!
+ * Get a tile map with pointers to every existing tile.
+ * @return
+ */
+const std::map<int, tson::Tile *> &tson::Map::getTileMap() const
+{
+    return m_tileMap;
+}
+
+

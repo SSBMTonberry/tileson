@@ -48,9 +48,9 @@ namespace tson
             [[nodiscard]] PropertyCollection &getProperties();
             [[nodiscard]] std::vector<tson::Tileset> &getTilesets();
 
-            ParseStatus getStatus() const;
-
-            const std::string &getStatusMessage() const;
+            [[nodiscard]] ParseStatus getStatus() const;
+            [[nodiscard]] const std::string &getStatusMessage() const;
+            [[nodiscard]] const std::map<int, tson::Tile *> &getTileMap() const;
 
             Layer * getLayer(const std::string &name);
             Tileset * getTileset(const std::string &name);
@@ -59,7 +59,9 @@ namespace tson
             T get(const std::string &name);
             tson::Property * getProp(const std::string &name);
 
-        protected:
+        private:
+            void processData();
+
             Colori                                 m_backgroundColor;   /*! 'backgroundcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)*/;
             Vector2i                               m_size;              /*! 'width' and 'height' of a Tiled map */
             int                                    m_hexsideLength {};  /*! 'hexsidelength': Length of the side of a hex tile in pixels */
@@ -80,6 +82,8 @@ namespace tson
 
             ParseStatus                            m_status {ParseStatus::OK};
             std::string                            m_statusMessage {"OK"};
+
+            std::map<int, tson::Tile*>             m_tileMap;           /*! key: Tile ID. Value: Pointer to Tile*/
     };
 
     /*!

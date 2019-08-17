@@ -157,7 +157,7 @@ const fs::path &tson::Tileset::getImage() const
  * 'tiles': Array of Tiles (optional)
  * @return
  */
-const std::vector<tson::Tile> &tson::Tileset::getTiles() const
+std::vector<tson::Tile> &tson::Tileset::getTiles()
 {
     return m_tiles;
 }

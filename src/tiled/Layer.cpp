@@ -3,6 +3,7 @@
 //
 
 #include "Layer.h"
+#include "Tile.h"
 
 /*!
  * Parses a Tiled layer from json
@@ -341,4 +342,68 @@ tson::Property *tson::Layer::getProp(const std::string &name)
 tson::Layer::Type tson::Layer::getType() const
 {
     return m_type;
+}
+
+/*!
+ * Assigns a tilemap of pointers to existing tiles.
+ * @param tileMap The tilemap. key: tile id, value: pointer to Tile.
+ */
+void tson::Layer::assignTileMap(const std::map<int, tson::Tile *> &tileMap)
+{
+    m_tileMap = tileMap;
+}
+
+void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
+{
+    size_t x = 0;
+    size_t y = 0;
+    if(!isInfiniteMap)
+    {
+        std::for_each(m_data.begin(), m_data.end(), [&](int tileId)
+        {
+            if (x == mapSize.x)
+            {
+                ++y;
+                x = 0;
+            }
+
+            if (tileId > 0)
+            {
+                m_tileData[{x, y}] = m_tileMap[tileId];
+            }
+            x++;
+        });
+    }
+}
+
+/*!
+ * Get tile data as some kind of map with x and y position with pointers to existing tiles.
+ * Map only contains tiles that are not empty. x and y position is in tile units.
+ *
+ * Example of getting tile from the returned map:
+ *
+ * Tile *tile = tileData[{0, 4}];
+ *
+ * @return A map that represents the data returned from getData() in a 2D map with Tile pointers.
+ */
+const std::map<std::tuple<int, int>, tson::Tile *> &tson::Layer::getTileData() const
+{
+    return m_tileData;
+}
+
+/*!
+ * A safe way to get tile data
+ * Get tile data as some kind of map with x and y position with pointers to existing tiles.
+ * Map only contains tiles that are not empty. x and y position is in tile units.
+ *
+ * Example of getting tile:
+ * Tile *tile = layer->getTileData(0, 4)
+ *
+ * @param x X position in tile units
+ * @param y Y position in tile units
+ * @return pointer to tile, if it exists. nullptr otherwise.
+ */
+tson::Tile *tson::Layer::getTileData(int x, int y)
+{
+    return (m_tileData.count({x, y}) > 0) ? m_tileData[{x,y}] : nullptr;
 }
