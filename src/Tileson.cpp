@@ -24,6 +24,7 @@ tson::Map tson::Tileson::parse(const fs::path &path)
         {
             std::string message = "Parse error: ";
             message += std::string(error.what());
+			message += std::string("\n");
             return tson::Map {tson::Map::ParseStatus::ParseError, message};
         }
         return parseJson(json);
@@ -45,7 +46,17 @@ tson::Map tson::Tileson::parse(const void *data, size_t size)
     std::istringstream i;
     i.rdbuf()->pubsetbuf((char *)data, size);
     nlohmann::json json;
-    i >> json;
+	try
+	{
+		i >> json;
+	}
+	catch (const nlohmann::json::parse_error& error)
+	{
+		std::string message = "Parse error: ";
+		message += std::string(error.what());
+		message += std::string("\n");
+		return tson::Map{ tson::Map::ParseStatus::ParseError, message };
+	}
 
     return parseJson(json);
 }

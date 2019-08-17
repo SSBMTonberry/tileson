@@ -11,3 +11,15 @@ CTestTestfile.cmake
 cmake-build-debug/
 
 TilesonConfig\.h
+
+\.vs/tileson/v16/ipch/AutoPCH/346938174d178ac2/
+
+\.vs/
+
+out/build/x64-Debug/
+
+CMakeSettings\.json
+
+out/build/x86-Debug/
+
+out/build/x86-Release/

@@ -1,13 +1,13 @@
-#define LINUX 1
-#define WINDOWS 0
+#define LINUX 0
+#define WINDOWS 1
 #define APPLE 0
-#define MSVC 0
+#define MSVC 1
 #define MINGW 0
-#define CMAKE_MAKE_PROGRAM /usr/bin/make
-#define CMAKE_SYSTEM_NAME Linux
-#define CMAKE_HOST_SYSTEM_NAME Linux //Windows, Linux or Darwin (OS X)
-#define CMAKE_HOST_SYSTEM_PROCESSOR x86_64
-#define CMAKE_CXX_COMPILER_VERSION 9.1.0
+#define CMAKE_MAKE_PROGRAM C:/Program Files (x86)/Microsoft Visual Studio/2019/Professional/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe
+#define CMAKE_SYSTEM_NAME Windows
+#define CMAKE_HOST_SYSTEM_NAME Windows //Windows, Linux or Darwin (OS X)
+#define CMAKE_HOST_SYSTEM_PROCESSOR AMD64
+#define CMAKE_CXX_COMPILER_VERSION 19.21.27702.2
 #define TILESON_PROJECT_VERSION_MAJOR 0
 #define TILESON_PROJECT_VERSION_MINOR 1
 #define TILESON_PROJECT_VERSION_PATCH 0
