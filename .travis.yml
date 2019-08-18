@@ -54,12 +54,9 @@ matrix:
           - cmake
           - llvm@8
         update: true
+            
       env:
-        - MATRIX_EVAL="export CC=clang-8 && export CXX=clang++-8"
-
-      before_script:
-        - export LDFLAGS="-L/usr/local/opt/llvm@8/lib"
-        - export CPPFLAGS="-I/usr/local/opt/llvm@8/include"
+        - MATRIX_EVAL="export CC=clang-8 && export CXX=clang++-8 && export LDFLAGS=-L/usr/local/opt/llvm@8/lib && export CPPFLAGS=-I/usr/local/opt/llvm@8/include"
 
       after_script: ./tileson_tests
 
