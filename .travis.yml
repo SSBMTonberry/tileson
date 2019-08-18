@@ -48,16 +48,17 @@ matrix:
           - llvm@8
           - ninja
         update: true
+        env: MATRIX_EVAL="export CC=clang-8 && export CXX=clang++-8"
 
 before_install:
   - eval "${MATRIX_EVAL}"
 
-install:
+#install:
   # The following Homebrew packages aren't linked by default, and need to be
   # prepended to the path explicitly.
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    export PATH="$(brew --prefix llvm)/bin:$PATH";
-    fi
+#  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+#    export PATH="$(brew --prefix llvm)/bin:$PATH";
+#    fi
 
 script:
   - cmake .
