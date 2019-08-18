@@ -68,4 +68,5 @@ script:
   - cd build
   - cmake ../
   - cmake --build .
-  - ./tests/tileson_tests
+  - cd tests
+  - tileson_tests
