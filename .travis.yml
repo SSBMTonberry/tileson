@@ -45,7 +45,6 @@ matrix:
       after_script: ./tileson_tests
 
     - os: windows
-      after_script: ..\..\run_test.bat
 
     - os: osx
       osx_image: xcode10.2
@@ -57,7 +56,7 @@ matrix:
         update: true
 
       env:
-        - MATRIX_EVAL="export CC=clang-8 && export CXX=clang++-8"
+        - MATRIX_EVAL="CC=clang-8 CXX=clang++-8"
 
       before_script:
         - export LDFLAGS="-L/usr/local/opt/llvm@8/lib"
