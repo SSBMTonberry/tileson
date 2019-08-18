@@ -39,16 +39,16 @@ matrix:
 
     - os: windows
 
-    - os: osx
-      osx_image: xcode10.2
-
-      homebrew:
-        packages:
-          - cmake
-          - llvm@8
-          - ninja
-        update: true
-        env: MATRIX_EVAL="export CC=clang-8 && export CXX=clang++-8"
+    #- os: osx
+    #  osx_image: xcode10.2
+      #
+        #    homebrew:
+        #packages:
+        #  - cmake
+        #  - llvm@8
+        #  - ninja
+        #update: true
+      #env: MATRIX_EVAL="export CC=clang-8 && export CXX=clang++-8"
 
 before_install:
   - eval "${MATRIX_EVAL}"
