@@ -18,6 +18,8 @@ matrix:
         - MATRIX_EVAL="CC=gcc-7 CXX=g++-7"
         - RUN_CMD = ./tileson_tests
 
+      after_script: ./tileson_tests
+
     - os: linux
       addons:
         apt:
@@ -27,7 +29,9 @@ matrix:
             - g++-8
       env:
         - MATRIX_EVAL="CC=gcc-8 CXX=g++-8"
-        - RUN_CMD = ./tileson_tests
+
+      after_script: ./tileson_tests
+
 
     - os: linux
       addons:
@@ -38,12 +42,13 @@ matrix:
             - g++-9
       env:
         - MATRIX_EVAL="CC=gcc-9 CXX=g++-9"
-        - RUN_CMD = ./tileson_tests
-    - os: windows
-        env:
-          - RUN_CMD = powershell ./tileson_tests
 
-    #- os: osx
+      after_script: ./tileson_tests
+      
+    - os: windows
+      after_script: powershell ./tileson_tests
+
+#- os: osx
     #  osx_image: xcode10.2
       #
         #    homebrew:
@@ -57,7 +62,7 @@ matrix:
 before_install:
   - eval "${MATRIX_EVAL}"
 
-#install:
+  #install:
   # The following Homebrew packages aren't linked by default, and need to be
   # prepended to the path explicitly.
 #  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
@@ -73,4 +78,3 @@ script:
   - cmake ../
   - cmake --build .
   - cd tests
-  - $RUN_CMD
