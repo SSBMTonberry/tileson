@@ -61,12 +61,12 @@ before_install:
 #    fi
 
 script:
-#  - cmake .
-#  - cmake --build .
-#  - cmake --build . -- -j 2
+  #  - cmake .
+  #  - cmake --build .
+  #  - cmake --build . -- -j 2
   - cmake -E make_directory build
   - cd build
   - cmake ../
   - cmake --build .
   - cd tests
-  - tileson_tests
+  - ./tileson_tests
