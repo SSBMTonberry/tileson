@@ -56,11 +56,11 @@ matrix:
           - ninja
         update: true
 
-      #before_script:
-      #  - export LDFLAGS="-L/usr/local/opt/llvm@8/lib"
-      #  - export CPPFLAGS="-I/usr/local/opt/llvm@8/include"
-      #  - export CC="/usr/local/opt/llvm/bin/clang"
-      #  - export CXX="/usr/local/opt/llvm/bin/clang++"
+      before_script:
+        - export LDFLAGS="-L/usr/local/opt/llvm@8/lib"
+        - export CPPFLAGS="-I/usr/local/opt/llvm@8/include"
+        - export CC="/usr/local/opt/llvm@8/bin/clang"
+        - export CXX="/usr/local/opt/llvm@8/bin/clang++"
       after_script: ./tileson_tests
 
 before_install:
