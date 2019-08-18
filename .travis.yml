@@ -69,4 +69,8 @@ script:
   - cmake ../
   - cmake --build .
   - cd tests
-  - ./tileson_tests
+  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then
+    powershell ./tileson_tests
+    else
+    ./tileson_tests
+    fi
