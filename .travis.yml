@@ -40,10 +40,26 @@ matrix:
     - os: windows
 
     - os: osx
-      osx_image: xcode11
+      osx_image: xcode10.2
+
+      homebrew:
+        packages:
+          - cmake
+          - llvm@8
+          - ninja
+        update: true
+        env:
+          - MATRIX_EVAL="CC=clang-8 CXX=clang++-8"
 
 before_install:
   - eval "${MATRIX_EVAL}"
+
+install:
+  # The following Homebrew packages aren't linked by default, and need to be
+  # prepended to the path explicitly.
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+    export PATH="$(brew --prefix llvm)/bin:$PATH";
+    fi
 
 script:
   - cmake .
