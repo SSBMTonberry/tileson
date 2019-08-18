@@ -48,6 +48,7 @@ matrix:
 
     - os: osx
       osx_image: xcode10.2
+      compiler: clang
       homebrew:
         packages:
           - cmake
@@ -55,10 +56,11 @@ matrix:
           - ninja
         update: true
 
-      before_script:
-        - export LDFLAGS="-L/usr/local/opt/llvm@8/lib"
-        - export CPPFLAGS="-I/usr/local/opt/llvm@8/include"
-
+      #before_script:
+      #  - export LDFLAGS="-L/usr/local/opt/llvm@8/lib"
+      #  - export CPPFLAGS="-I/usr/local/opt/llvm@8/include"
+      #  - export CC="/usr/local/opt/llvm/bin/clang"
+      #  - export CXX="/usr/local/opt/llvm/bin/clang++"
       after_script: ./tileson_tests
 
 before_install:
