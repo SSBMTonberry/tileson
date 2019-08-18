@@ -16,7 +16,6 @@ matrix:
             - g++-7
       env:
         - MATRIX_EVAL="CC=gcc-7 CXX=g++-7"
-        - RUN_CMD = ./tileson_tests
 
       after_script: ./tileson_tests
 
@@ -44,9 +43,9 @@ matrix:
         - MATRIX_EVAL="CC=gcc-9 CXX=g++-9"
 
       after_script: ./tileson_tests
-      
+
     - os: windows
-      after_script: powershell ./tileson_tests
+      after_script: tileson_tests.exe
 
 #- os: osx
     #  osx_image: xcode10.2
