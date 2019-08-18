@@ -48,8 +48,6 @@ matrix:
           - llvm@8
           - ninja
         update: true
-        env:
-          - MATRIX_EVAL="CC=clang-8 CXX=clang++-8"
 
 before_install:
   - eval "${MATRIX_EVAL}"
