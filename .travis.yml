@@ -45,8 +45,6 @@ matrix:
       after_script: ./tileson_tests
 
     - os: windows
-      after_script:
-      - ../../run_test.bat
 
 - os: osx
       osx_image: xcode10.2
