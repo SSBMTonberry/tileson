@@ -16,6 +16,7 @@ matrix:
             - g++-7
       env:
         - MATRIX_EVAL="CC=gcc-7 CXX=g++-7"
+        - RUN_CMD = ./tileson_tests
 
     - os: linux
       addons:
@@ -26,6 +27,7 @@ matrix:
             - g++-8
       env:
         - MATRIX_EVAL="CC=gcc-8 CXX=g++-8"
+        - RUN_CMD = ./tileson_tests
 
     - os: linux
       addons:
@@ -36,8 +38,10 @@ matrix:
             - g++-9
       env:
         - MATRIX_EVAL="CC=gcc-9 CXX=g++-9"
-
+        - RUN_CMD = ./tileson_tests
     - os: windows
+        env:
+          - RUN_CMD = powershell ./tileson_tests
 
     #- os: osx
     #  osx_image: xcode10.2
@@ -69,8 +73,4 @@ script:
   - cmake ../
   - cmake --build .
   - cd tests
-  - if [ "$TRAVIS_OS_NAME" == "windows" ]; then
-    powershell ./tileson_tests
-    else
-    ./tileson_tests
-    fi
+  - $RUN_CMD
