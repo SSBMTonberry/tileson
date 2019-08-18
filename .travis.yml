@@ -46,15 +46,15 @@ matrix:
 
     - os: windows
 
-- os: osx
+    - os: osx
       osx_image: xcode10.2
-
-            homebrew:
+      homebrew:
         packages:
           - cmake
           - llvm@8
+          - ninja
         update: true
-            
+
       env:
         - MATRIX_EVAL="export CC=clang-8 && export CXX=clang++-8 && export LDFLAGS=-L/usr/local/opt/llvm@8/lib && export CPPFLAGS=-I/usr/local/opt/llvm@8/include"
 
