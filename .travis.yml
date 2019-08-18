@@ -46,7 +46,7 @@ matrix:
 
     - os: windows
       after_script:
-      - ../../run_tests.bat
+      - ../../run_test.bat
 
 - os: osx
       osx_image: xcode10.2
