@@ -6,8 +6,10 @@
 #define TILESON_TILESON_H
 
 #include "tiled/Map.h"
+#include "misc/MemoryStream.h"
 #include <fstream>
 #include <sstream>
+
 
 namespace tson
 {

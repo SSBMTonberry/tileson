@@ -43,12 +43,15 @@ tson::Map tson::Tileson::parse(const fs::path &path)
  */
 tson::Map tson::Tileson::parse(const void *data, size_t size)
 {
-    std::istringstream i;
-    i.rdbuf()->pubsetbuf((char *)data, size);
+    //std::istringstream i;
+    //i.rdbuf()->pubsetbuf((char *)data, size);
+
+    tson::MemoryStream mem {(uint8_t *)data, size};
+
     nlohmann::json json;
 	try
 	{
-		i >> json;
+		mem >> json;
 	}
 	catch (const nlohmann::json::parse_error& error)
 	{

@@ -68,14 +68,27 @@ TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" ) {
 TEST_CASE( "Parse a whole map by memory", "[complete][parse][memory]" ) {
     tson::Tileson t;
     tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
-	if (map.getStatus() == tson::Map::ParseStatus::OK)
-		REQUIRE(mapIsAbsolutelyFine(map));
-	else
-	{
-		std::cout << "Ignored - Memory parse error - " << map.getStatusMessage() << std::endl;
-		REQUIRE(true);
-		//FAIL("Unexpected memory read failure!");
-	}
+    if (map.getStatus() == tson::Map::ParseStatus::OK)
+        REQUIRE(mapIsAbsolutelyFine(map));
+    else
+    {
+        std::cout << "Memory parse error - " << map.getStatusMessage() << std::endl;
+        //REQUIRE(true);
+        FAIL("Unexpected memory read failure!");
+    }
+}
+
+TEST_CASE( "Parse a minimal version of whole map by memory", "[complete][parse][memory]" ) {
+    tson::Tileson t;
+    tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_MIN_JSON, tson_files::_ULTIMATE_TEST_MIN_JSON_SIZE);
+    if (map.getStatus() == tson::Map::ParseStatus::OK)
+        REQUIRE(mapIsAbsolutelyFine(map));
+    else
+    {
+        std::cout << "Memory parse error - " << map.getStatusMessage() << std::endl;
+        //REQUIRE(true);
+        FAIL("Unexpected memory read failure!");
+    }
 }
 
 TEST_CASE( "Go through demo code - get success", "[demo]" ) {
