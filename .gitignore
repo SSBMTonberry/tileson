@@ -25,3 +25,5 @@ out/build/x86-Debug/
 out/build/x86-Release/
 
 .idea/
+
+\.DS_Store
