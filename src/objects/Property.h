@@ -7,9 +7,6 @@
 
 #include "../../TilesonConfig.h"
 
-//Test disabled filesystem
-#define USE_CPP17_FILESYSTEM 0
-
 #if USE_CPP17_FILESYSTEM
     #if MSVC
         #include <filesystem>
