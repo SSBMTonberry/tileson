@@ -51,9 +51,9 @@ matrix:
       compiler: clang
       homebrew:
         packages:
-          - cmake
+          #- cmake
           - llvm@8
-          - ninja
+          - ninjas
         update: true
 
       before_script:
