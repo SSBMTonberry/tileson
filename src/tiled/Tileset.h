@@ -26,7 +26,14 @@ namespace tson
 
             [[nodiscard]] int getColumns() const;
             [[nodiscard]] int getFirstgid() const;
+
+            #if USE_CPP17_FILESYSTEM
             [[nodiscard]] const fs::path &getImagePath() const;
+            [[nodiscard]] const fs::path &getImage() const;
+            #else
+            [[nodiscard]] const std::string &getImagePath() const;
+            [[nodiscard]] const std::string &getImage() const;
+            #endif
             [[nodiscard]] const Vector2i &getImageSize() const;
             [[nodiscard]] int getMargin() const;
             [[nodiscard]] const std::string &getName() const;
@@ -34,9 +41,8 @@ namespace tson
             [[nodiscard]] int getTileCount() const;
             [[nodiscard]] const Vector2i &getTileSize() const;
             [[nodiscard]] const Colori &getTransparentColor() const;
-            [[nodiscard]] const std::string &getType() const;
 
-            [[nodiscard]] const fs::path &getImage() const;
+            [[nodiscard]] const std::string &getType() const;
             [[nodiscard]] std::vector<tson::Tile> &getTiles();
             [[nodiscard]] const std::vector<tson::WangSet> &getWangsets() const;
             [[nodiscard]] PropertyCollection &getProperties();
@@ -54,7 +60,11 @@ namespace tson
         private:
             int                           m_columns {};       /*! 'columns': The number of tile columns in the tileset */
             int                           m_firstgid {};      /*! 'firstgid': GID corresponding to the first tile in the set */
+            #if USE_CPP17_FILESYSTEM
             fs::path                      m_image;            /*! 'image': Image used for tiles in this set */
+            #else
+            std::string                   m_image;
+            #endif
             tson::Vector2i                m_imageSize;        /*! x = 'imagewidth' and y = 'imageheight': in pixels */
             int                           m_margin {};        /*! 'margin': Buffer between image edge and first tile (pixels)*/
             std::string                   m_name;             /*! 'name': Name given to this tileset */

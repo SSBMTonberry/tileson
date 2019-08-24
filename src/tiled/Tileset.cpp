@@ -15,7 +15,11 @@ bool tson::Tileset::parse(const nlohmann::json &json)
 
     if(json.count("columns") > 0) m_columns = json["columns"].get<int>(); else allFound = false;
     if(json.count("firstgid") > 0) m_firstgid = json["firstgid"].get<int>(); else allFound = false;
+    #if USE_CPP17_FILESYSTEM
     if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); else allFound = false;
+    #else
+    if(json.count("image") > 0) m_image = json["image"].get<std::string>(); else allFound = false;
+    #endif
     if(json.count("margin") > 0) m_margin = json["margin"].get<int>(); else allFound = false;
     if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
     if(json.count("spacing") > 0) m_spacing = json["spacing"].get<int>(); else allFound = false;
@@ -67,11 +71,11 @@ int tson::Tileset::getFirstgid() const
  * 'image': Image used for tiles in this set
  * @return
  */
-const fs::path &tson::Tileset::getImagePath() const
-{
-    return m_image;
-}
-
+#if USE_CPP17_FILESYSTEM
+const fs::path &tson::Tileset::getImagePath() const { return m_image; }
+#else
+const std::string &tson::Tileset::getImagePath() const { return m_image; }
+#endif
 /*!
  * x = 'imagewidth' and y = 'imageheight': in pixels
  * @return
@@ -148,11 +152,11 @@ const std::string &tson::Tileset::getType() const
  * 'image': Image used for tiles in this set
  * @return
  */
-const fs::path &tson::Tileset::getImage() const
-{
-    return m_image;
-}
-
+#if USE_CPP17_FILESYSTEM
+const fs::path &tson::Tileset::getImage() const { return m_image; }
+#else
+const std::string &tson::Tileset::getImage() const { return m_image; }
+#endif
 /*!
  * 'tiles': Array of Tiles (optional)
  * @return

@@ -50,9 +50,13 @@ bool mapIsAbsolutelyFine(tson::Map &map)
 
 TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" ) {
     tson::Tileson t;
+    #if USE_CPP17_FILESYSTEM
     fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
     fs::path pathTravis {"../content/test-maps/ultimate_test.json"};
     fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    #else
+    std::string pathToUse = "../../content/test-maps/ultimate_test.json";
+    #endif
     tson::Map map = t.parse({pathToUse});
     if(map.getStatus() == tson::Map::ParseStatus::OK)
         REQUIRE(mapIsAbsolutelyFine(map));
@@ -185,7 +189,11 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
         bool myBool = layer->get<bool>("my_bool");
         std::string myString = layer->get<std::string>("my_string");
         tson::Colori myColor = layer->get<tson::Colori>("my_color");
+        #if USE_CPP17_FILESYSTEM
         fs::path file = layer->get<fs::path>("my_file");
+        #else
+        std::string file = layer->get<std::string>("my_file");
+        #endif
         tson::Property *prop = layer->getProp("my_property");
     }
     else //Error occured

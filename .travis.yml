@@ -56,11 +56,11 @@ matrix:
           - ninjas
         update: true
 
-      before_script:
-        - export LDFLAGS="-L/usr/local/opt/llvm@8/lib"
-        - export CPPFLAGS="-I/usr/local/opt/llvm@8/include"
-        - export CC="/usr/local/opt/llvm@8/bin/clang"
-        - export CXX="/usr/local/opt/llvm@8/bin/clang++"
+      #before_script:
+      #  - export LDFLAGS="-L/usr/local/opt/llvm@8/lib"
+      #  - export CPPFLAGS="-I/usr/local/opt/llvm@8/include"
+      #  - export CC="/usr/local/opt/llvm@8/bin/clang"
+      #  - export CXX="/usr/local/opt/llvm@8/bin/clang++"
       after_script: ./tileson_tests
 
 before_install:
@@ -69,9 +69,9 @@ before_install:
   #install:
   # The following Homebrew packages aren't linked by default, and need to be
   # prepended to the path explicitly.
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then
-    export PATH="$(brew --prefix llvm)/bin:$PATH";
-    fi
+  #- if [ "$TRAVIS_OS_NAME" == "osx" ]; then
+  #  export PATH="$(brew --prefix llvm)/bin:$PATH";
+  #  fi
 
 script:
   #  - cmake .

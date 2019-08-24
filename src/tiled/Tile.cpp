@@ -18,8 +18,11 @@ tson::Tile::Tile(const nlohmann::json &json)
 bool tson::Tile::parse(const nlohmann::json &json)
 {
     bool allFound = true;
-
+    #if USE_CPP17_FILESYSTEM
     if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); //Optional
+    #else
+    if(json.count("image") > 0) m_image = json["image"].get<std::string>(); //Optional
+    #endif
     if(json.count("id") > 0) m_id = json["id"].get<int>() + 1; else allFound = false;
     if(json.count("type") > 0) m_type = json["type"].get<std::string>(); //Optional
     if(json.count("objectgroup") > 0) m_objectgroup = tson::Layer(json["objectgroup"]); //Optional
@@ -52,11 +55,11 @@ int tson::Tile::getId() const
  * 'image': Image representing this tile (optional)
  * @return
  */
-const fs::path &tson::Tile::getImage() const
-{
-    return m_image;
-}
-
+#if USE_CPP17_FILESYSTEM
+const fs::path &tson::Tile::getImage() const { return m_image; }
+#else
+const std::string &tson::Tile::getImage() const { return m_image; }
+#endif
 /*!
  * x = 'imagewidth' and y = 'imageheight': in pixels
  * @return

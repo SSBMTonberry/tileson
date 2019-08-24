@@ -84,3 +84,4 @@ endif()
 
 unset(BUILD_SHARED_LIBS CACHE) #Must clear the cache to detect changes in this variable
 unset(BUILD_TESTS CACHE) #Must clear the cache to detect changes in this variable
+unset(USE_CPP17_FILESYSTEM CACHE)

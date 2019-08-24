@@ -22,7 +22,11 @@ namespace tson
             bool parse(const nlohmann::json &json);
 
             [[nodiscard]] int getId() const;
+            #if USE_CPP17_FILESYSTEM
             [[nodiscard]] const fs::path &getImage() const;
+            #else
+            [[nodiscard]] const std::string &getImage() const;
+            #endif
             [[nodiscard]] const Vector2i &getImageSize() const;
             [[nodiscard]] const std::string &getType() const;
 
@@ -38,7 +42,11 @@ namespace tson
         private:
             std::vector<tson::Frame>    m_animation; 	    /*! 'animation': Array of Frames */
             int                         m_id {};            /*! 'id': Local ID of the tile */
+            #if USE_CPP17_FILESYSTEM
             fs::path                    m_image;            /*! 'image': Image representing this tile (optional)*/
+            #else
+            std::string                 m_image;
+            #endif
             tson::Vector2i              m_imageSize;        /*! x = 'imagewidth' and y = 'imageheight': in pixels */
             tson::Layer                 m_objectgroup; 	 	/*! 'objectgroup': Layer with type objectgroup (optional) */
             tson::PropertyCollection    m_properties; 	    /*! 'properties': A list of properties (name, value, type). */
