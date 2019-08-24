@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/SSBMTonberry/tileson.svg?branch=master)](https://travis-ci.org/SSBMTonberry/tileson)
 
 # Tileson
-A modern and helpful json-parser for Tiled maps.
+A modern and helpful cross-platform json-parser for Tiled maps.
 
 Tileson utilizes modern C++ (C++17) to create a stable, safe and helpful, but fast, parser for Tiled maps.
 Including classes and functions to make it easier to use the Tiled data in your game. 
@@ -110,7 +110,11 @@ int main()
         bool myBool = layer->get<bool>("my_bool");
         std::string myString = layer->get<std::string>("my_string");
         tson::Colori myColor = layer->get<tson::Colori>("my_color");
-        fs::path file = layer->get<fs::path>("my_file");
+        #if USE_CPP17_FILESYSTEM
+            fs::path file = layer->get<fs::path>("my_file");
+        #else
+            std::string file = layer->get<std::string>("my_file");
+        #endif
         tson::Property *prop = layer->getProp("my_property");
     }
     else //Error occured
@@ -121,3 +125,21 @@ int main()
     return 0;
 }
 ```
+
+# Compiling
+The program is cross-platform. However, it does not compile on all compilers.
+`std::filesystem` is used as a default for Linux and Windows systems, as it has been 
+supported for a while. Unfortunately, the default compiler, `Apple Clang`, shipped with todays Apple OSX (as of `24.08.2019`) does not support `std::filesystem` at all. For this reason, `std::filesystem` is disabled as default for `Apple` systems. This can however be activated by turning the cmake-flag `USE_CPP17_FILESYSTEM` on.
+
+As a default the library is built statically, and `std::filesystem` is used (EXCEPT for Apple OSX), but this can be changed by changing the options in CMake. 
+
+## Windows
+While you probably can use other compilers as well, the only supported compiler for Tileson is the default shipped with Visual Studio: `MSVC`. The C++17 features used in this library has been available for quite a while, so you should be able to compile this easily. Just open the `CMakeLists.txt` file in the `CMake` gui, or simply use the `cmake CMakeLists.txt` command inside the project folder (if Visual Studio is your system default).
+
+## Linux
+If you have `GCC7`, `GCC8`, `GCC9` or newer as a compiler on your system, you should be good to go!
+If you are okay with the default settings: Just calling the `cmake CMakeLists.txt` inside the project folder will create a `Makefile` for you. Then you can compile the library by simply calling `make`.
+
+## Apple (OSX)
+As `std::filesystem` is not supported by the version of `Apple Clang` shipped with `Mac OSX 10.14 (Mojave)`, this functionality is disabled by default when using this system. You can, however, install the newest version of `llvm` via `Homebrew`, which actually has supported `std::filesystem` for a while.
+To generate a solution to be able to build this library, you will need to open the `CMakeLists.txt` file in `CMake`. If make is not installed on your system, it can easily be found on the internet.
