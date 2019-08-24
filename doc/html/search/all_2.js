@@ -7,5 +7,6 @@ var searchData=
   ['color_2ehpp',['Color.hpp',['../Color_8hpp.html',1,'']]],
   ['color_3c_20uint8_5ft_20_3e',['Color&lt; uint8_t &gt;',['../classtson_1_1Color.html',1,'tson']]],
   ['colorf',['Colorf',['../namespacetson.html#ab98b40935388bcf20b70099c66ad3055',1,'tson']]],
-  ['colori',['Colori',['../namespacetson.html#ae0579e97e7ba7d84797f4a258fd9af7e',1,'tson']]]
+  ['colori',['Colori',['../namespacetson.html#ae0579e97e7ba7d84797f4a258fd9af7e',1,'tson']]],
+  ['createtiledata',['createTileData',['../classtson_1_1Layer.html#a0fda78f286ab1f0179864b43a875b18a',1,'tson::Layer']]]
 ];

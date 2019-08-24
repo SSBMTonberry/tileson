@@ -154,6 +154,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a4d629dd00219fa52ac138107a72c0631"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a940b26d0a913c34bd4232a284a4779af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1Property.html">tson::Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#a940b26d0a913c34bd4232a284a4779af">getProp</a> (const std::string &amp;name)</td></tr>
 <tr class="separator:a940b26d0a913c34bd4232a284a4779af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74994c281180b6621cf65bb1ab5691af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#a74994c281180b6621cf65bb1ab5691af">assignTileMap</a> (const std::map&lt; int, <a class="el" href="classtson_1_1Tile.html">tson::Tile</a> * &gt; &amp;tileMap)</td></tr>
+<tr class="separator:a74994c281180b6621cf65bb1ab5691af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fda78f286ab1f0179864b43a875b18a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#a0fda78f286ab1f0179864b43a875b18a">createTileData</a> (const <a class="el" href="namespacetson.html#ad9b8bc05e1220a920f03acae32e72245">Vector2i</a> &amp;mapSize, bool isInfiniteMap)</td></tr>
+<tr class="separator:a0fda78f286ab1f0179864b43a875b18a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0bc443cd1c272a6f6fbf4cca77121ab6"><td class="memItemLeft" align="right" valign="top">const std::map&lt; std::tuple&lt; int, int &gt;, <a class="el" href="classtson_1_1Tile.html">tson::Tile</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#a0bc443cd1c272a6f6fbf4cca77121ab6">getTileData</a> () const</td></tr>
+<tr class="separator:a0bc443cd1c272a6f6fbf4cca77121ab6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a635667a7a59e06bac9613f9e675d2cbf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1Tile.html">tson::Tile</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Layer.html#a635667a7a59e06bac9613f9e675d2cbf">getTileData</a> (int x, int y)</td></tr>
+<tr class="separator:a635667a7a59e06bac9613f9e675d2cbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Enumeration Documentation</h2>
 <a id="a91f3be29328960e463a90930a06e8507"></a>
@@ -244,6 +252,58 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a74994c281180b6621cf65bb1ab5691af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74994c281180b6621cf65bb1ab5691af">&#9670;&nbsp;</a></span>assignTileMap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tson::Layer::assignTileMap </td>
+          <td>(</td>
+          <td class="paramtype">const std::map&lt; int, <a class="el" href="classtson_1_1Tile.html">tson::Tile</a> * &gt; &amp;&#160;</td>
+          <td class="paramname"><em>tileMap</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Assigns a tilemap of pointers to existing tiles. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tileMap</td><td>The tilemap. key: tile id, value: pointer to <a class="el" href="classtson_1_1Tile.html">Tile</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a0fda78f286ab1f0179864b43a875b18a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fda78f286ab1f0179864b43a875b18a">&#9670;&nbsp;</a></span>createTileData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tson::Layer::createTileData </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacetson.html#ad9b8bc05e1220a920f03acae32e72245">Vector2i</a> &amp;&#160;</td>
+          <td class="paramname"><em>mapSize</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>isInfiniteMap</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a1b635e2b5a9aec6921990b4946689475"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1b635e2b5a9aec6921990b4946689475">&#9670;&nbsp;</a></span>firstObj()</h2>
 
@@ -669,6 +729,65 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 <p>x = 'width': (Column count. Same as map width for fixed-size maps.) y = 'height': Row count. Same as map height for fixed-size maps. </p><dl class="section return"><dt>Returns</dt><dd>width and height as a single size </dd></dl>
+
+</div>
+</div>
+<a id="a0bc443cd1c272a6f6fbf4cca77121ab6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bc443cd1c272a6f6fbf4cca77121ab6">&#9670;&nbsp;</a></span>getTileData() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::map&lt; std::tuple&lt; int, int &gt;, <a class="el" href="classtson_1_1Tile.html">tson::Tile</a> * &gt; &amp; tson::Layer::getTileData </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get tile data as some kind of map with x and y position with pointers to existing tiles. <a class="el" href="classtson_1_1Map.html">Map</a> only contains tiles that are not empty. x and y position is in tile units.</p>
+<p>Example of getting tile from the returned map:</p>
+<p><a class="el" href="classtson_1_1Tile.html">Tile</a> *tile = tileData[{0, 4}];</p>
+<dl class="section return"><dt>Returns</dt><dd>A map that represents the data returned from <a class="el" href="classtson_1_1Layer.html#a0c82a2094baeaff103fb586db3cdfd06">getData()</a> in a 2D map with <a class="el" href="classtson_1_1Tile.html">Tile</a> pointers. </dd></dl>
+
+</div>
+</div>
+<a id="a635667a7a59e06bac9613f9e675d2cbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a635667a7a59e06bac9613f9e675d2cbf">&#9670;&nbsp;</a></span>getTileData() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtson_1_1Tile.html">tson::Tile</a> * tson::Layer::getTileData </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>y</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>A safe way to get tile data Get tile data as some kind of map with x and y position with pointers to existing tiles. <a class="el" href="classtson_1_1Map.html">Map</a> only contains tiles that are not empty. x and y position is in tile units.</p>
+<p>Example of getting tile: <a class="el" href="classtson_1_1Tile.html">Tile</a> *tile = layer-&gt;getTileData(0, 4)</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">x</td><td>X position in tile units </td></tr>
+    <tr><td class="paramname">y</td><td>Y position in tile units </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>pointer to tile, if it exists. nullptr otherwise. </dd></dl>
 
 </div>
 </div>

@@ -68,8 +68,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="classtson_1_1Map-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">tson::Map Class Reference</div>  </div>
@@ -78,10 +78,21 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="Map_8h_source.html">Map.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a3e1f7c3029eb36e00fbd1ee298bc53fb"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a3e1f7c3029eb36e00fbd1ee298bc53fb">ParseStatus</a> : uint8_t { <a class="el" href="classtson_1_1Map.html#a3e1f7c3029eb36e00fbd1ee298bc53fbae0aa021e21dddbd6d8cecec71e9cf564">ParseStatus::OK</a> = 0, 
+<a class="el" href="classtson_1_1Map.html#a3e1f7c3029eb36e00fbd1ee298bc53fba2767828026039e8ba7b38973cbb701f2">ParseStatus::FileNotFound</a> = 1, 
+<a class="el" href="classtson_1_1Map.html#a3e1f7c3029eb36e00fbd1ee298bc53fbae41199faa7290c167f70f314c5e6c165">ParseStatus::ParseError</a> = 2, 
+<a class="el" href="classtson_1_1Map.html#a3e1f7c3029eb36e00fbd1ee298bc53fbafe155956e8f33e5cffa82cc86a36afbd">ParseStatus::MissingData</a> = 3
+ }</td></tr>
+<tr class="separator:a3e1f7c3029eb36e00fbd1ee298bc53fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a4f027c90796e8e1e2d73d4ec0d2181fb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a4f027c90796e8e1e2d73d4ec0d2181fb">Map</a> ()=default</td></tr>
 <tr class="separator:a4f027c90796e8e1e2d73d4ec0d2181fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bee12cd32029f85cc83cd8a3bb97a0d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a2bee12cd32029f85cc83cd8a3bb97a0d">Map</a> (<a class="el" href="classtson_1_1Map.html#a3e1f7c3029eb36e00fbd1ee298bc53fb">ParseStatus</a> status, std::string description)</td></tr>
+<tr class="separator:a2bee12cd32029f85cc83cd8a3bb97a0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c71d531d004b3ff0cd35e968dd2a486"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a8c71d531d004b3ff0cd35e968dd2a486">Map</a> (const nlohmann::json &amp;json)</td></tr>
 <tr class="separator:a8c71d531d004b3ff0cd35e968dd2a486"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88817e9c2e114c0370cc162092322b93"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a88817e9c2e114c0370cc162092322b93">parse</a> (const nlohmann::json &amp;json)</td></tr>
@@ -120,6 +131,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac6060e10672261f4e80026aa2f29d2c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d31956672b6d52acc4ffac140f8248a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtson_1_1Tileset.html">tson::Tileset</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a6d31956672b6d52acc4ffac140f8248a">getTilesets</a> ()</td></tr>
 <tr class="separator:a6d31956672b6d52acc4ffac140f8248a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07356903a1b6d0f1a16755ace56a35e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1Map.html#a3e1f7c3029eb36e00fbd1ee298bc53fb">ParseStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a07356903a1b6d0f1a16755ace56a35e4">getStatus</a> () const</td></tr>
+<tr class="separator:a07356903a1b6d0f1a16755ace56a35e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee099a435757c3480b3a0bbfceda19d1"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#aee099a435757c3480b3a0bbfceda19d1">getStatusMessage</a> () const</td></tr>
+<tr class="separator:aee099a435757c3480b3a0bbfceda19d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b8dd5bb1af838f81b4db3bdf89c1ccd"><td class="memItemLeft" align="right" valign="top">const std::map&lt; int, <a class="el" href="classtson_1_1Tile.html">tson::Tile</a> * &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a8b8dd5bb1af838f81b4db3bdf89c1ccd">getTileMap</a> () const</td></tr>
+<tr class="separator:a8b8dd5bb1af838f81b4db3bdf89c1ccd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab672b9c6ff2a25a213500e6a658fe9a1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1Layer.html">Layer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#ab672b9c6ff2a25a213500e6a658fe9a1">getLayer</a> (const std::string &amp;name)</td></tr>
 <tr class="separator:ab672b9c6ff2a25a213500e6a658fe9a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a76699792ff662b6b41329ca9f4aaa874"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1Tileset.html">Tileset</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a76699792ff662b6b41329ca9f4aaa874">getTileset</a> (const std::string &amp;name)</td></tr>
@@ -129,47 +146,39 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a916580d35a1036ae5bcc7c13b7c3d023"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92cb642358d387c57811c56d584decd0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1Property.html">tson::Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a92cb642358d387c57811c56d584decd0">getProp</a> (const std::string &amp;name)</td></tr>
 <tr class="separator:a92cb642358d387c57811c56d584decd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
-Protected Attributes</h2></td></tr>
-<tr class="memitem:ace4fc508db67ef13d42cdf5fa940f659"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetson.html#ae0579e97e7ba7d84797f4a258fd9af7e">Colori</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#ace4fc508db67ef13d42cdf5fa940f659">m_backgroundColor</a></td></tr>
-<tr class="separator:ace4fc508db67ef13d42cdf5fa940f659"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c8ac61e7f8d22bc8180a2820ae27cbe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetson.html#ad9b8bc05e1220a920f03acae32e72245">Vector2i</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a2c8ac61e7f8d22bc8180a2820ae27cbe">m_size</a></td></tr>
-<tr class="separator:a2c8ac61e7f8d22bc8180a2820ae27cbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3d7518d854d45ce78a46393882bdc6f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#aa3d7518d854d45ce78a46393882bdc6f">m_hexsideLength</a> {}</td></tr>
-<tr class="separator:aa3d7518d854d45ce78a46393882bdc6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1e7e07f25e2f7ad244453173bf80a66"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#ae1e7e07f25e2f7ad244453173bf80a66">m_isInfinite</a> {}</td></tr>
-<tr class="separator:ae1e7e07f25e2f7ad244453173bf80a66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa1bab8154820ca1b80630edb0e9468ad"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtson_1_1Layer.html">tson::Layer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#aa1bab8154820ca1b80630edb0e9468ad">m_layers</a></td></tr>
-<tr class="separator:aa1bab8154820ca1b80630edb0e9468ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a97ceb328b6ba3f73079bfb1f760729e5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a97ceb328b6ba3f73079bfb1f760729e5">m_nextLayerId</a> {}</td></tr>
-<tr class="separator:a97ceb328b6ba3f73079bfb1f760729e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a14b6465e651ee0e251de755ad6d89d1a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a14b6465e651ee0e251de755ad6d89d1a">m_nextObjectId</a> {}</td></tr>
-<tr class="separator:a14b6465e651ee0e251de755ad6d89d1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4ef721845bd4737c2777c134caef1146"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a4ef721845bd4737c2777c134caef1146">m_orientation</a></td></tr>
-<tr class="separator:a4ef721845bd4737c2777c134caef1146"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a752a913fd3b8cd0c5cf6b28140ae8a19"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1PropertyCollection.html">tson::PropertyCollection</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a752a913fd3b8cd0c5cf6b28140ae8a19">m_properties</a></td></tr>
-<tr class="separator:a752a913fd3b8cd0c5cf6b28140ae8a19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0cafc62a02199d14feaf037fbe4b6051"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a0cafc62a02199d14feaf037fbe4b6051">m_renderOrder</a></td></tr>
-<tr class="separator:a0cafc62a02199d14feaf037fbe4b6051"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09d6628989c25f022c387bd5695c0ba7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a09d6628989c25f022c387bd5695c0ba7">m_staggerAxis</a></td></tr>
-<tr class="separator:a09d6628989c25f022c387bd5695c0ba7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe0173e3f4822dace7ac2d8fb59101df"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#abe0173e3f4822dace7ac2d8fb59101df">m_staggerIndex</a></td></tr>
-<tr class="separator:abe0173e3f4822dace7ac2d8fb59101df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c5f0baaa32e2127e38f8b7e6f574732"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a2c5f0baaa32e2127e38f8b7e6f574732">m_tiledVersion</a></td></tr>
-<tr class="separator:a2c5f0baaa32e2127e38f8b7e6f574732"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a011eeb7565dd099d7df62db7bb4efc23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetson.html#ad9b8bc05e1220a920f03acae32e72245">Vector2i</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a011eeb7565dd099d7df62db7bb4efc23">m_tileSize</a></td></tr>
-<tr class="separator:a011eeb7565dd099d7df62db7bb4efc23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d7f4cec29cd4ef6c6807e2e11fe8490"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classtson_1_1Tileset.html">tson::Tileset</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a8d7f4cec29cd4ef6c6807e2e11fe8490">m_tilesets</a></td></tr>
-<tr class="separator:a8d7f4cec29cd4ef6c6807e2e11fe8490"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12c02142580ab075820f4d706bf1a860"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#a12c02142580ab075820f4d706bf1a860">m_type</a></td></tr>
-<tr class="separator:a12c02142580ab075820f4d706bf1a860"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbdd3893dfc2a8c2984f078593939c13"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Map.html#acbdd3893dfc2a8c2984f078593939c13">m_version</a> {}</td></tr>
-<tr class="separator:acbdd3893dfc2a8c2984f078593939c13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="a3e1f7c3029eb36e00fbd1ee298bc53fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e1f7c3029eb36e00fbd1ee298bc53fb">&#9670;&nbsp;</a></span>ParseStatus</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="classtson_1_1Map.html#a3e1f7c3029eb36e00fbd1ee298bc53fb">tson::Map::ParseStatus</a> : uint8_t</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a3e1f7c3029eb36e00fbd1ee298bc53fbae0aa021e21dddbd6d8cecec71e9cf564"></a>OK&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a3e1f7c3029eb36e00fbd1ee298bc53fba2767828026039e8ba7b38973cbb701f2"></a>FileNotFound&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a3e1f7c3029eb36e00fbd1ee298bc53fbae41199faa7290c167f70f314c5e6c165"></a>ParseError&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a3e1f7c3029eb36e00fbd1ee298bc53fbafe155956e8f33e5cffa82cc86a36afbd"></a>MissingData&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a4f027c90796e8e1e2d73d4ec0d2181fb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4f027c90796e8e1e2d73d4ec0d2181fb">&#9670;&nbsp;</a></span>Map() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f027c90796e8e1e2d73d4ec0d2181fb">&#9670;&nbsp;</a></span>Map() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -193,8 +202,43 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a2bee12cd32029f85cc83cd8a3bb97a0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2bee12cd32029f85cc83cd8a3bb97a0d">&#9670;&nbsp;</a></span>Map() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">tson::Map::Map </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classtson_1_1Map.html#a3e1f7c3029eb36e00fbd1ee298bc53fb">ParseStatus</a>&#160;</td>
+          <td class="paramname"><em>status</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>description</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>When errors have happened before the map starts parsing, just keep the statuses </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">status</td><td>The status </td></tr>
+    <tr><td class="paramname">description</td><td>Description of the status </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a8c71d531d004b3ff0cd35e968dd2a486"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c71d531d004b3ff0cd35e968dd2a486">&#9670;&nbsp;</a></span>Map() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8c71d531d004b3ff0cd35e968dd2a486">&#9670;&nbsp;</a></span>Map() <span class="overload">[3/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -501,6 +545,40 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="a07356903a1b6d0f1a16755ace56a35e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07356903a1b6d0f1a16755ace56a35e4">&#9670;&nbsp;</a></span>getStatus()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtson_1_1Map.html#a3e1f7c3029eb36e00fbd1ee298bc53fb">tson::Map::ParseStatus</a> tson::Map::getStatus </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aee099a435757c3480b3a0bbfceda19d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee099a435757c3480b3a0bbfceda19d1">&#9670;&nbsp;</a></span>getStatusMessage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::string &amp; tson::Map::getStatusMessage </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="acab042e9e2c7aad6470068f5c687aae0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acab042e9e2c7aad6470068f5c687aae0">&#9670;&nbsp;</a></span>getTiledVersion()</h2>
 
@@ -516,6 +594,24 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 <p>'tiledversion': The Tiled version used to save the file </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="a8b8dd5bb1af838f81b4db3bdf89c1ccd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b8dd5bb1af838f81b4db3bdf89c1ccd">&#9670;&nbsp;</a></span>getTileMap()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::map&lt; int, <a class="el" href="classtson_1_1Tile.html">tson::Tile</a> * &gt; &amp; tson::Map::getTileMap </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Get a tile map with pointers to every existing tile. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>
@@ -649,397 +745,6 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if all mandatory fields was found. false otherwise. </dd></dl>
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="ace4fc508db67ef13d42cdf5fa940f659"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ace4fc508db67ef13d42cdf5fa940f659">&#9670;&nbsp;</a></span>m_backgroundColor</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespacetson.html#ae0579e97e7ba7d84797f4a258fd9af7e">Colori</a> tson::Map::m_backgroundColor</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa3d7518d854d45ce78a46393882bdc6f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3d7518d854d45ce78a46393882bdc6f">&#9670;&nbsp;</a></span>m_hexsideLength</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int tson::Map::m_hexsideLength {}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>'width' and 'height' of a Tiled map </p>
-
-</div>
-</div>
-<a id="ae1e7e07f25e2f7ad244453173bf80a66"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1e7e07f25e2f7ad244453173bf80a66">&#9670;&nbsp;</a></span>m_isInfinite</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool tson::Map::m_isInfinite {}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>'hexsidelength': Length of the side of a hex tile in pixels </p>
-
-</div>
-</div>
-<a id="aa1bab8154820ca1b80630edb0e9468ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa1bab8154820ca1b80630edb0e9468ad">&#9670;&nbsp;</a></span>m_layers</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;<a class="el" href="classtson_1_1Layer.html">tson::Layer</a>&gt; tson::Map::m_layers</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>'infinite': Whether the map has infinite dimensions </p>
-
-</div>
-</div>
-<a id="a97ceb328b6ba3f73079bfb1f760729e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a97ceb328b6ba3f73079bfb1f760729e5">&#9670;&nbsp;</a></span>m_nextLayerId</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int tson::Map::m_nextLayerId {}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>'layers': Array of layers. group on </p>
-
-</div>
-</div>
-<a id="a14b6465e651ee0e251de755ad6d89d1a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a14b6465e651ee0e251de755ad6d89d1a">&#9670;&nbsp;</a></span>m_nextObjectId</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int tson::Map::m_nextObjectId {}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>'nextlayerid': Auto-increments for each layer </p>
-
-</div>
-</div>
-<a id="a4ef721845bd4737c2777c134caef1146"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4ef721845bd4737c2777c134caef1146">&#9670;&nbsp;</a></span>m_orientation</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string tson::Map::m_orientation</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>'nextobjectid': Auto-increments for each placed object </p>
-
-</div>
-</div>
-<a id="a752a913fd3b8cd0c5cf6b28140ae8a19"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a752a913fd3b8cd0c5cf6b28140ae8a19">&#9670;&nbsp;</a></span>m_properties</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classtson_1_1PropertyCollection.html">tson::PropertyCollection</a> tson::Map::m_properties</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>'orientation': orthogonal, isometric, staggered or hexagonal </p>
-
-</div>
-</div>
-<a id="a0cafc62a02199d14feaf037fbe4b6051"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0cafc62a02199d14feaf037fbe4b6051">&#9670;&nbsp;</a></span>m_renderOrder</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string tson::Map::m_renderOrder</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>'properties': A list of properties (name, value, type). </p>
-
-</div>
-</div>
-<a id="a2c8ac61e7f8d22bc8180a2820ae27cbe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2c8ac61e7f8d22bc8180a2820ae27cbe">&#9670;&nbsp;</a></span>m_size</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespacetson.html#ad9b8bc05e1220a920f03acae32e72245">Vector2i</a> tson::Map::m_size</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>'backgroundcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) (optional) </p>
-
-</div>
-</div>
-<a id="a09d6628989c25f022c387bd5695c0ba7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a09d6628989c25f022c387bd5695c0ba7">&#9670;&nbsp;</a></span>m_staggerAxis</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string tson::Map::m_staggerAxis</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>'renderorder': Rendering direction (orthogonal maps only) </p>
-
-</div>
-</div>
-<a id="abe0173e3f4822dace7ac2d8fb59101df"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abe0173e3f4822dace7ac2d8fb59101df">&#9670;&nbsp;</a></span>m_staggerIndex</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string tson::Map::m_staggerIndex</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>'staggeraxis': x or y (staggered / hexagonal maps only) </p>
-
-</div>
-</div>
-<a id="a2c5f0baaa32e2127e38f8b7e6f574732"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2c5f0baaa32e2127e38f8b7e6f574732">&#9670;&nbsp;</a></span>m_tiledVersion</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string tson::Map::m_tiledVersion</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>'staggerindex': odd or even (staggered / hexagonal maps only) </p>
-
-</div>
-</div>
-<a id="a8d7f4cec29cd4ef6c6807e2e11fe8490"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8d7f4cec29cd4ef6c6807e2e11fe8490">&#9670;&nbsp;</a></span>m_tilesets</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt;<a class="el" href="classtson_1_1Tileset.html">tson::Tileset</a>&gt; tson::Map::m_tilesets</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>'tilewidth': and 'tileheight' of a map </p>
-
-</div>
-</div>
-<a id="a011eeb7565dd099d7df62db7bb4efc23"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a011eeb7565dd099d7df62db7bb4efc23">&#9670;&nbsp;</a></span>m_tileSize</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="namespacetson.html#ad9b8bc05e1220a920f03acae32e72245">Vector2i</a> tson::Map::m_tileSize</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>'tiledversion': The Tiled version used to save the file </p>
-
-</div>
-</div>
-<a id="a12c02142580ab075820f4d706bf1a860"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a12c02142580ab075820f4d706bf1a860">&#9670;&nbsp;</a></span>m_type</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string tson::Map::m_type</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>'tilesets': Array of Tilesets </p>
-
-</div>
-</div>
-<a id="acbdd3893dfc2a8c2984f078593939c13"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acbdd3893dfc2a8c2984f078593939c13">&#9670;&nbsp;</a></span>m_version</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int tson::Map::m_version {}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>'type': map (since 1.0) </p>
 
 </div>
 </div>
