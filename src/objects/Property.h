@@ -7,32 +7,37 @@
 
 #include "../../TilesonConfig.h"
 
-#if MSVC
-    #include <filesystem>
+//Test disabled filesystem
+#define USE_CPP17_FILESYSTEM 0
+
+#if USE_CPP17_FILESYSTEM
+    #if MSVC
+        #include <filesystem>
+        namespace fs = std::filesystem;
+    #elif MINGW
+    #if __MINGW64_VERSION_MAJOR > 6
+            #include <filesystem>
+            namespace fs = std::filesystem;
+        #else
+            #include <experimental/filesystem>
+            namespace fs = std::experimental::filesystem;
+        #endif
+    #elif APPLE
+        #if __clang_major__ < 8
+            #include <experimental/filesystem>
+            namespace fs = std::experimental::filesystem;
+        #else
+            #include <filesystem>
+            namespace fs = std::filesystem;
+        #endif
+    #else
+        #if __GNUC__ < 8 //GCC major version less than 8
+    #include <experimental/filesystem>
+            namespace fs = std::experimental::filesystem;
+        #else
+            #include <filesystem>
     namespace fs = std::filesystem;
-#elif MINGW
-#if __MINGW64_VERSION_MAJOR > 6
-        #include <filesystem>
-        namespace fs = std::filesystem;
-    #else
-        #include <experimental/filesystem>
-        namespace fs = std::experimental::filesystem;
-    #endif
-#elif APPLE
-    #if __clang_major__ < 8
-        #include <experimental/filesystem>
-        namespace fs = std::experimental::filesystem;
-    #else
-        #include <filesystem>
-        namespace fs = std::filesystem;
-    #endif
-#else
-    #if __GNUC__ < 8 //GCC major version less than 8
-#include <experimental/filesystem>
-        namespace fs = std::experimental::filesystem;
-    #else
-        #include <filesystem>
-namespace fs = std::filesystem;
+        #endif
     #endif
 #endif
 

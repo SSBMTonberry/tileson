@@ -110,7 +110,11 @@ void tson::Property::setValueByType(const nlohmann::json &json)
             break;
 
         case Type::File:
-            m_value = fs::path(json.get<std::string>());
+            #if USE_CPP17_FILESYSTEM
+                m_value = fs::path(json.get<std::string>());
+            #else
+                m_value = json.get<std::string>();
+            #endif
             break;
 
         case Type::Int:

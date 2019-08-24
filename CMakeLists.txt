@@ -54,11 +54,6 @@ else()
     set(MINGW 0)
 endif()
 
-configure_file (
-        "${PROJECT_SOURCE_DIR}/TilesonConfig.h.in"
-        "${PROJECT_SOURCE_DIR}/TilesonConfig.h"
-)
-
 option(BUILD_SHARED_LIBS "Build shared libraries." OFF)
 option(BUILD_TESTS "Build unit tests." ON)
 if(${APPLE})
@@ -66,6 +61,18 @@ if(${APPLE})
 else()
     option(USE_CPP17_FILESYSTEM "Uses cpp17 std::filesystem for anything file related" ON)
 endif()
+
+if(${USE_CPP17_FILESYSTEM})
+    set(TILESON_USE_FILESYSTEM 1)
+else()
+    set(TILESON_USE_FILESYSTEM 0)
+endif()
+
+configure_file (
+        "${PROJECT_SOURCE_DIR}/TilesonConfig.h.in"
+        "${PROJECT_SOURCE_DIR}/TilesonConfig.h"
+)
+
 include_directories(${PROJECT_SOURCE_DIR}/external_libs/)
 
 set(SOURCE_FILES src/objects/Vector2.hpp src/Tileson.cpp src/Tileson.h src/tiled/Map.cpp src/tiled/Map.h src/tiled/Layer.cpp src/tiled/Layer.h src/tiled/Chunk.cpp src/tiled/Chunk.h src/tiled/Object.cpp src/tiled/Object.h src/objects/Property.cpp src/objects/Property.h src/objects/PropertyCollection.cpp src/objects/PropertyCollection.h src/tiled/Tileset.cpp src/tiled/Tileset.h src/tiled/Tile.cpp src/tiled/Tile.h src/tiled/Frame.cpp src/tiled/Frame.h src/tiled/Terrain.cpp src/tiled/Terrain.h src/tiled/WangSet.cpp src/tiled/WangSet.h src/tiled/WangColor.cpp src/tiled/WangColor.h src/tiled/WangTile.cpp src/tiled/WangTile.h src/tiled/Text.hpp src/tiled/Grid.cpp src/tiled/Grid.h src/objects/Color.hpp src/misc/MemoryBuffer.cpp src/misc/MemoryBuffer.h src/misc/MemoryStream.cpp src/misc/MemoryStream.h)
