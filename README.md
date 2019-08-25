@@ -1,14 +1,26 @@
 [![Build Status](https://travis-ci.org/SSBMTonberry/tileson.svg?branch=master)](https://travis-ci.org/SSBMTonberry/tileson)
 
 # Tileson
-A modern and helpful cross-platform json-parser for Tiled maps.
+Tileson is a modern and helpful cross-platform json-parser for C++, used for parsing Tiled maps.
 
 Tileson utilizes modern C++ (C++17) to create a stable, safe and helpful, but fast, parser for Tiled maps.
 Including classes and functions to make it easier to use the Tiled data in your game. 
 Tileson supports Tiled maps up to version `1.2.4`, but will probably be able to parse
 maps made with newer versions of Tiled just as well.
 
-## How to parse
+# What is Tiled?
+Tiled is a general purpose map editor developed by `Thorbjørn Lindeijer`.
+Tiled is perfect if you want to create any map for 2D games, and is very popular.
+Many commercial games have used it as their goto map editor. 
+A few popular games that have used Tiled: `Shovel Knight`, `Axiom Verge` and `ScubaDiver`.
+
+
+
+Tiled can be found here:
+- [Homepage](https://www.mapeditor.org/)
+- [GitHub](https://github.com/bjorn/tiled)
+
+# How to parse
 Parsing a Tiled json 
 ```c++
 #include "Tileson.h"
@@ -142,4 +154,8 @@ If you are okay with the default settings: Just calling the `cmake CMakeLists.tx
 
 ## Apple (OSX)
 As `std::filesystem` is not supported by the version of `Apple Clang` shipped with `Mac OSX 10.14 (Mojave)`, this functionality is disabled by default when using this system. You can, however, install the newest version of `llvm` via `Homebrew`, which actually has supported `std::filesystem` for a while.
-To generate a solution to be able to build this library, you will need to open the `CMakeLists.txt` file in `CMake`. If make is not installed on your system, it can easily be found on the internet.
+To generate a solution to be able to build this library, you will need to open the `CMakeLists.txt` file in `CMake`. If `CMake` is not installed on your system, it can easily be found on the internet.
+
+# Libraries used by Tileson
+- [Catch2](https://github.com/catchorg/Catch2/) - For Unit Tests
+- [JSON for Modern C++](https://github.com/nlohmann/json) - For JSON read/write

@@ -48,7 +48,7 @@ namespace tson
             [[nodiscard]] const Vector2i &getSize() const;
             [[nodiscard]] const Colori &getTransparentcolor() const;
 
-            Type getType() const;
+            [[nodiscard]] Type getType() const;
 
             [[nodiscard]] const std::string &getTypeStr() const;
             [[nodiscard]] bool isVisible() const;
@@ -72,7 +72,7 @@ namespace tson
             void assignTileMap(const std::map<int, tson::Tile*> &tileMap);
             void createTileData(const Vector2i &mapSize, bool isInfiniteMap);
 
-            const std::map<std::tuple<int, int>, tson::Tile *> &getTileData() const;
+            [[nodiscard]] const std::map<std::tuple<int, int>, tson::Tile *> &getTileData() const;
             tson::Tile * getTileData(int x, int y);
 
         private:
