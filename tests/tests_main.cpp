@@ -172,6 +172,8 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
                 tson::Tile *tile3 = layer->getTileData(8, 14);      //x:8,  y:14 - Points to tile with ID 2 (Tiled internal ID: 1)
                 tson::Tile *tile4 = layer->getTileData(17, 5);      //x:17, y:5  - Points to tile with ID 5 (Tiled internal ID: 4)
 
+
+
                 //You can of course also loop through every tile!
                 for (const auto &[id, tile] : tileData)
                 {
@@ -202,3 +204,43 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
     }
     REQUIRE( true );
 }
+
+//TEST_CASE( "Show a small example for a dude", "[demo]" )
+//{
+//    tson::Tileson t;
+//    tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
+//
+//    if(map.getStatus() == tson::Map::ParseStatus::OK)
+//    {
+//        //Gets the layer called "Object Layer" from the "ultimate_demo.json map
+//        tson::Layer *objectLayer = map.getLayer("Object Layer");
+//        tson::Object *goomba = objectLayer->firstObj("goomba"); //Gets the first object with this name.
+//        tson::Object::Type objType = goomba->getObjectType();
+//
+//        if(objType == tson::Object::Type::Rectangle)
+//        {
+//            tson::Vector2i size = goomba->getSize();
+//            tson::Vector2i position = goomba->getPosition();
+//
+//            //If you have set a custom property, you can also get this
+//            int hp = goomba->get<int>("hp");
+//        }
+//
+//        /*!
+//         * tson::Object::Type is defined like this.
+//         * They are automatically detected based on what kind of object you have created
+//         * enum class Type : uint8_t
+//            {
+//                Undefined = 0,
+//                Object = 1,
+//                Ellipse = 2,
+//                Rectangle = 3,
+//                Point = 4,
+//                Polygon = 5,
+//                Polyline = 6,
+//                Text = 7,
+//                Template = 8
+//            };
+//         */
+//    }
+//}
