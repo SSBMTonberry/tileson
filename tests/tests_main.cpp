@@ -129,10 +129,10 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
                 //Or use these queries:
 
                 //Gets the first object it find with the name specified
-                tson::Object *player = layer.firstObj("player");
+                tson::Object *player = layer.firstObj("player"); //Does not exist in demo map...
 
                 //Gets all objects with a matching name
-                std::vector<tson::Object> enemies = layer.getObjectsByName("goomba");
+                std::vector<tson::Object> enemies = layer.getObjectsByName("goomba"); //But we got two of those
 
                 //Gets all objects of a specific type
                 std::vector<tson::Object> objects = layer.getObjectsByType(tson::Object::Type::Object);
@@ -205,105 +205,118 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
     REQUIRE( true );
 }
 
-//TEST_CASE( "Show a small example for a dude", "[demo]" )
-//{
-//    tson::Tileson t;
-//    tson::Map map = t.parse("../../content/test-maps/ultimate_test.json");
-//
-//    if(map.getStatus() == tson::Map::ParseStatus::OK)
-//    {
-//        //Gets the layer called "Object Layer" from the "ultimate_demo.json map
-//        tson::Layer *objectLayer = map.getLayer("Object Layer"); //This is an Object Layer
-//
-//        //Example from an Object Layer.
-//        if(objectLayer->getType() == tson::Layer::Type::ObjectGroup)
-//        {
-//            tson::Object *goomba = objectLayer->firstObj("goomba"); //Gets the first object with this name. This can be any object.
-//            tson::Object::Type objType = goomba->getObjectType();
-//
-//            /*!
-//             * tson::Object::Type is defined like this.
-//             * They are automatically detected based on what kind of object you have created
-//             * enum class Type : uint8_t
-//                {
-//                    Undefined = 0,
-//                    Object = 1,
-//                    Ellipse = 2, //<-- Circle
-//                    Rectangle = 3,
-//                    Point = 4,
-//                    Polygon = 5,
-//                    Polyline = 6,
-//                    Text = 7,
-//                    Template = 8
-//                };
-//             */
-//
-//            if (objType == tson::Object::Type::Rectangle)
-//            {
-//                tson::Vector2i size = goomba->getSize();
-//                tson::Vector2i position = goomba->getPosition();
-//
-//                //If you have set a custom property, you can also get this
-//                int hp = goomba->get<int>("hp");
-//
-//                //Using size and position you can can create a Rectangle object by your library of choice.
-//                //An example if you were about to use SFML for drawing:
-//
-//                //sf::RectangleShape rect;
-//                //rect.setSize(sf::Vector2f(size.x, size.y));
-//                //rect.setPosition(sf::Vector2f(position.x, position.y));
-//            }
-//            else if (objType == tson::Object::Type::Polygon)
-//            {
-//                //std::vector<sf::Vector2f> polys;
-//                //for(auto const &poly : goomba->getPolygons())
-//                //    polys.emplace_back(poly.x, poly.y);
-//
-//                //If you were using SFML, you could use the poly data here to create a sf::ConvexShape
-//            }
-//            else if (objType == tson::Object::Type::Polyline)
-//            {
-//                std::vector<tson::Vector2i> polys = goomba->getPolylines();
-//                //Can be used the same way as Polygon to create a ConvexShape
-//            }
-//        }
-//
-//        tson::Layer *tileLayer = map.getLayer("Main Layer"); //This is a Tile Layer.
-//        tson::Tileset *tileset = map.getTileset("demo-tileset"); //You will also need the tileset used
-//                                                                       //by the tile map to make sense of everything
-//
-//        int firstId = tileset->getFirstgid(); //First tile id of the tileset
-//        int columns = tileset->getColumns(); //For the demo map it is 8.
-//        int lastId = (tileset->getFirstgid() + tileset->getTileCount()) - 1;
-//
-//        //Example from a Tile Layer
-//        //I know for a fact that this is a Tile Layer, but you can check it this way to be sure.
-//        if(tileLayer->getType() == tson::Layer::Type::TileLayer)
-//        {
-//            //pos = position in tile units
-//            for(auto &[pos, tile] : tileLayer->getTileData())
-//            {
-//                if(tile->getId() > 0) //There is a tile here if ID is higher than 0
-//                {
-//                    //Get position in pixel units
-//
-//                    fs::path imagePath;
-//                    std::string pathStr;
-//                    //With this, I know that it's related to the tileset above (though I only have one tileset)
-//                    if(tile->getId() >= firstId && tile->getId() <= lastId)
-//                    {
-//                        imagePath = tileset->getImagePath();
-//                        pathStr = imagePath.u8string();
-//                    }
-//
-//                    tson::Vector2i position = {std::get<0>(pos) * map.getTileSize().x,std::get<1>(pos) * map.getTileSize().y};
-//                    int tileId = tile->getId();
-//                    //The ID can be used to calculate offset on its related tileset.
-//                    int offsetX = tileId % columns;
-//                    int offsetY = tileId / 8;
-//                }
-//            }
-//        }
-//    }
-//    REQUIRE( true );
-//}
+TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" )
+{
+    tson::Tileson t;
+    tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
+
+    if(map.getStatus() == tson::Map::ParseStatus::OK)
+    {
+        //Gets the layer called "Object Layer" from the "ultimate_demo.json map
+        tson::Layer *objectLayer = map.getLayer("Object Layer"); //This is an Object Layer
+
+        //Example from an Object Layer.
+        if(objectLayer->getType() == tson::Layer::Type::ObjectGroup)
+        {
+            tson::Object *goomba = objectLayer->firstObj("goomba"); //Gets the first object with this name. This can be any object.
+
+            //If you want to just go through every existing object in the layer:
+            for(auto &obj : objectLayer->getObjects())
+            {
+                tson::Vector2i position = obj.getPosition();
+                tson::Vector2i size = obj.getSize();
+                tson::Object::Type objType = obj.getObjectType();
+
+                //You may want to check the object type to make sure you use the data right.
+            }
+
+            tson::Object::Type objType = goomba->getObjectType();
+
+            /*!
+             * tson::Object::Type is defined like this.
+             * They are automatically detected based on what kind of object you have created
+             * enum class Type : uint8_t
+                {
+                    Undefined = 0,
+                    Object = 1,
+                    Ellipse = 2, //<-- Circle
+                    Rectangle = 3,
+                    Point = 4,
+                    Polygon = 5,
+                    Polyline = 6,
+                    Text = 7,
+                    Template = 8
+                };
+             */
+
+            if (objType == tson::Object::Type::Rectangle)
+            {
+                tson::Vector2i size = goomba->getSize();
+                tson::Vector2i position = goomba->getPosition();
+
+                //If you have set a custom property, you can also get this
+                int hp = goomba->get<int>("hp");
+
+                //Using size and position you can can create a Rectangle object by your library of choice.
+                //An example if you were about to use SFML for drawing:
+                //sf::RectangleShape rect;
+                //rect.setSize(sf::Vector2f(size.x, size.y));
+                //rect.setPosition(sf::Vector2f(position.x, position.y));
+            }
+            else if (objType == tson::Object::Type::Polygon)
+            {
+                for(auto const &poly : goomba->getPolygons())
+                {
+                    //Set a point on a shape taking polygons
+                }
+                tson::Vector2i position = goomba->getPosition();
+            }
+            else if (objType == tson::Object::Type::Polyline)
+            {
+                std::vector<tson::Vector2i> polys = goomba->getPolylines();
+                for(auto const &poly : goomba->getPolylines())
+                {
+
+                }
+                tson::Vector2i position = goomba->getPosition();
+            }
+        }
+
+        tson::Layer *tileLayer = map.getLayer("Main Layer"); //This is a Tile Layer.
+        tson::Tileset *tileset = map.getTileset("demo-tileset"); //You will also need the tileset used
+                                                                       //by the tile map to make sense of everything
+
+        int firstId = tileset->getFirstgid(); //First tile id of the tileset
+        int columns = tileset->getColumns(); //For the demo map it is 8.
+        int lastId = (tileset->getFirstgid() + tileset->getTileCount()) - 1;
+
+        //Example from a Tile Layer
+        //I know for a fact that this is a Tile Layer, but you can check it this way to be sure.
+        if(tileLayer->getType() == tson::Layer::Type::TileLayer)
+        {
+            //pos = position in tile units
+            for(auto &[pos, tile] : tileLayer->getTileData()) //Loops through absolutely all existing tiles
+            {
+                fs::path imagePath;
+                std::string pathStr;
+                //With this, I know that it's related to the tileset above (though I only have one tileset)
+                if(tile->getId() >= firstId && tile->getId() <= lastId)
+                {
+                    imagePath = tileset->getImagePath();
+                    pathStr = imagePath.u8string();
+                }
+
+                //Get position in pixel units
+                tson::Vector2i position = {std::get<0>(pos) * map.getTileSize().x,std::get<1>(pos) * map.getTileSize().y};
+                int tileId = tile->getId();
+                //The ID can be used to calculate offset on its related tileset image.
+                int offsetX = (tileId % columns) * map.getTileSize().x;
+                int offsetY = (tileId / 8) * map.getTileSize().y;
+
+                //Now you can use your library of choice to load the image (like SFML), then set the offset
+                //to get the right image representation of the tile.
+            }
+        }
+    }
+    REQUIRE( true );
+}
