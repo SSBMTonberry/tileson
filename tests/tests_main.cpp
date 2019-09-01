@@ -297,13 +297,21 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
             //pos = position in tile units
             for(auto &[pos, tile] : tileLayer->getTileData()) //Loops through absolutely all existing tiles
             {
+                #if USE_CPP17_FILESYSTEM
                 fs::path imagePath;
                 std::string pathStr;
+                #else
+                std::string imagePath;
+                #endif
                 //With this, I know that it's related to the tileset above (though I only have one tileset)
                 if(tile->getId() >= firstId && tile->getId() <= lastId)
                 {
+                    #if USE_CPP17_FILESYSTEM
                     imagePath = tileset->getImagePath();
                     pathStr = imagePath.u8string();
+                    #else
+                    imagePath = tileset->getImagePath();
+                    #endif
                 }
 
                 //Get position in pixel units
