@@ -14,6 +14,7 @@
 #include "Tile.h"
 #include "Terrain.h"
 #include "Grid.h"
+#include <functional>
 
 namespace tson
 {
@@ -58,6 +59,8 @@ namespace tson
             tson::Property * getProp(const std::string &name);
 
         private:
+            void generateMissingTiles();
+
             int                           m_columns {};       /*! 'columns': The number of tile columns in the tileset */
             int                           m_firstgid {};      /*! 'firstgid': GID corresponding to the first tile in the set */
             #if USE_CPP17_FILESYSTEM

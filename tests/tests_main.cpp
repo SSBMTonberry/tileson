@@ -80,6 +80,25 @@ TEST_CASE( "Parse a whole map by memory", "[complete][parse][memory]" ) {
     }
 }
 
+TEST_CASE( "Parse a simple map by memory - tiles without any properties (issue #4)", "[simple][parse][memory]" ) {
+    tson::Tileson t;
+    tson::Map map = t.parse(tson_files_mapper::_SIMPLE_MAP_JSON, tson_files_mapper::_SIMPLE_MAP_JSON_SIZE);
+    if (map.getStatus() == tson::Map::ParseStatus::OK)
+    {
+        auto main = map.getLayer("simple_layer");
+        auto tileset = map.getTilesets()[0];
+        auto tileData = main->getTileData();
+        bool result = (tileData.size() > 16 && main->getTileData(0,0) != nullptr && tileset.getTiles().size() == 48);
+        REQUIRE(result);
+    }
+    else
+    {
+        std::cout << "Memory parse error - " << map.getStatusMessage() << std::endl;
+        //REQUIRE(true);
+        FAIL("Unexpected memory read failure!");
+    }
+}
+
 TEST_CASE( "Parse a minimal version of whole map by memory", "[complete][parse][memory]" ) {
     tson::Tileson t;
     tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_MIN_JSON, tson_files::_ULTIMATE_TEST_MIN_JSON_SIZE);
@@ -92,6 +111,8 @@ TEST_CASE( "Parse a minimal version of whole map by memory", "[complete][parse][
         FAIL("Unexpected memory read failure!");
     }
 }
+
+
 
 TEST_CASE( "Go through demo code - get success", "[demo]" ) {
     tson::Tileson t;

@@ -46,6 +46,8 @@ bool tson::Tileset::parse(const nlohmann::json &json)
     if(json.count("properties") > 0 && json["properties"].is_array())
         std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
 
+    generateMissingTiles();
+
     return allFound;
 }
 
@@ -252,4 +254,22 @@ tson::Property *tson::Tileset::getProp(const std::string &name)
         return m_properties.getProperty(name);
 
     return nullptr;
+}
+
+/*!
+ * Tiled only has tiles with a property stored in the map. This function makes sure even the ones with no properties will exist.
+ */
+void tson::Tileset::generateMissingTiles()
+{
+    std::vector<int> tileIds;
+    for(auto &tile : m_tiles)
+        tileIds.push_back(tile.getId());
+
+    for(int i = m_firstgid; i < m_firstgid + m_tileCount; ++i)
+    {
+        if(std::count(tileIds.begin(), tileIds.end(), i) == 0)
+        {
+            m_tiles.emplace_back(Tile(i));
+        }
+    }
 }

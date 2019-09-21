@@ -19,6 +19,7 @@ namespace tson
         public:
             Tile() = default;
             explicit Tile(const nlohmann::json &json);
+            explicit Tile(int id);
             bool parse(const nlohmann::json &json);
 
             [[nodiscard]] int getId() const;
@@ -65,6 +66,8 @@ namespace tson
     {
         return m_properties.getValue<T>(name);
     }
+
+
 }
 
 #endif //TILESON_TILE_H

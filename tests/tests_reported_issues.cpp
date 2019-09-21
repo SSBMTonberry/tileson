@@ -8,7 +8,7 @@
 #include "tson_files_mapper.h"
 #include "../TilesonConfig.h"
 
-TEST_CASE( "Help a fellow programmer in need - expect solution", "[help][issue]")
+TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[help][issue]")
 {
     tson::Map jsCarte;
     //std::string pathCarte;
@@ -16,8 +16,13 @@ TEST_CASE( "Help a fellow programmer in need - expect solution", "[help][issue]"
     tson::Layer* tileLayer;
     tson::Tileset* tileset;
 
-    fs::path pathCarte {"../../content/test-maps/issues/Preluda3.jsonz"};
+    #if USE_CPP17_FILESYSTEM
+    fs::path pathCarte {"../../content/test-maps/issues/Preluda3.json"};
     jsCarte = jsTileson.parse(pathCarte);
+    #else
+    std::string pathCarte {"../../content/test-maps/issues/Preluda3.json"};
+    jsCarte = jsTileson.parse(pathCarte);
+    #endif
     if (jsCarte.getStatus() == tson::Map::ParseStatus::OK)
     {
         std::cout << "C'est bon, j'ai chargé la carte : " << pathCarte << std::endl;
@@ -32,8 +37,6 @@ TEST_CASE( "Help a fellow programmer in need - expect solution", "[help][issue]"
     tileLayer = jsCarte.getLayer("WL");
     ////On met en mémoire le tileset
     tileset = jsCarte.getTileset("ground_tiles");
-    //tileLayer = jsCarte.getLayer("Main Layer");
-    //tileset = jsCarte.getTileset("demo-tileset");
 
     //sfText.loadFromFile("C:/Users/remy/source/repos/PROJET JEU/PRO2/Tiles/TS/ground_tiles.png");
 
@@ -68,6 +71,8 @@ TEST_CASE( "Help a fellow programmer in need - expect solution", "[help][issue]"
             //The ID can be used to calculate offset on its related tileset image.
             int offsetX = (tileId % columns) * jsCarte.getTileSize().x;
             int offsetY = (tileId / columns) * jsCarte.getTileSize().y;
+
+            REQUIRE(tile != nullptr);
             //Now you can use your library of choice to load the image (like SFML), then set the offset
             //to get the right image representation of the tile.
 

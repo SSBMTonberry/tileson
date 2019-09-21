@@ -11,6 +11,15 @@ tson::Tile::Tile(const nlohmann::json &json)
 }
 
 /*!
+ * Used in cases where you have a tile without any property
+ * @param id
+ */
+tson::Tile::Tile(int id) : m_id {id}
+{
+
+}
+
+/*!
  * Parses a tile from a Tiled json. id on tile is store as id + 1 to match the references in data containers.
  * @param json
  * @return
