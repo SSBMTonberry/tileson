@@ -55,7 +55,11 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
         //pos = position in tile units
         for (auto& [pos, tile] : tileLayer->getTileData()) //Loops through absolutely all existing tiles
         {
+            #if USE_CPP17_FILESYSTEM
             fs::path imagePath;
+            #else
+            std::string imagePath;
+            #endif
             std::string pathStr;
             //With this, I know that it's related to the tileset above (though I only have one tileset)
             //Si l'ID de la tile est compris entre le premier et le dernier ID inclus
