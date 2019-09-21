@@ -65,8 +65,10 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
             //Si l'ID de la tile est compris entre le premier et le dernier ID inclus
             if (tile->getId() >= firstId && tile->getId() <= lastId)
             {
+                #if USE_CPP17_FILESYSTEM
                 imagePath = tileset->getImagePath();
                 pathStr = imagePath.u8string();
+                #endif
             }
 
             //Get position in pixel units --> Position de la Tile
