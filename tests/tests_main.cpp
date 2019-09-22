@@ -309,6 +309,7 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
 
         int firstId = tileset->getFirstgid(); //First tile id of the tileset
         int columns = tileset->getColumns(); //For the demo map it is 8.
+        int rows = tileset->getTileCount() / columns;
         int lastId = (tileset->getFirstgid() + tileset->getTileCount()) - 1;
 
         //Example from a Tile Layer
@@ -337,13 +338,19 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
 
                 //Get position in pixel units
                 tson::Vector2i position = {std::get<0>(pos) * map.getTileSize().x,std::get<1>(pos) * map.getTileSize().y};
-                int tileId = tile->getId();
-                //The ID can be used to calculate offset on its related tileset image.
-                int offsetX = (tileId % columns) * map.getTileSize().x;
-                int offsetY = (tileId / 8) * map.getTileSize().y;
 
-                //Now you can use your library of choice to load the image (like SFML), then set the offset
-                //to get the right image representation of the tile.
+                int baseTilePosition = (tile->getId() - firstId); //This will determine the base position of the tile.
+
+                //The baseTilePosition can be used to calculate offset on its related tileset image.
+                int tileModX = (baseTilePosition % columns);
+                int currentRow = (baseTilePosition / columns);
+                int offsetX = (tileModX != 0) ? ((tileModX) * map.getTileSize().x) : (0 * map.getTileSize().x);
+                int offsetY =  (currentRow < rows-1) ? (currentRow * map.getTileSize().y) : ((rows-1) * map.getTileSize().y);
+
+                //Here you can determine the offset that should be set on a sprite
+                //Example on how it would be done using SFML (where sprite presumably is a member of a generated game object):
+                //sprite.setTextureRect({offsetX, offsetY, map.getTileSize().x, map.getTileSize().y});
+                //sprite.setPosition({position.x, position.y});
             }
         }
     }

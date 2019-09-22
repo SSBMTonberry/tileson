@@ -25,7 +25,7 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
     #endif
     if (jsCarte.getStatus() == tson::Map::ParseStatus::OK)
     {
-        std::cout << "C'est bon, j'ai chargé la carte : " << pathCarte << std::endl;
+        //std::cout << "C'est bon, j'ai chargé la carte : " << pathCarte << std::endl;
     }
     else
     {

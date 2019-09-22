@@ -218,6 +218,7 @@ if(map.getStatus() == tson::Map::ParseStatus::OK)
 
     int firstId = tileset->getFirstgid(); //First tile id of the tileset
     int columns = tileset->getColumns(); //For the demo map it is 8.
+    int rows = tileset->getTileCount() / columns;
     int lastId = (tileset->getFirstgid() + tileset->getTileCount()) - 1;
 
     //Example from a Tile Layer
@@ -227,24 +228,39 @@ if(map.getStatus() == tson::Map::ParseStatus::OK)
         //pos = position in tile units
         for(auto &[pos, tile] : tileLayer->getTileData()) //Loops through absolutely all existing tiles
         {
+            #if USE_CPP17_FILESYSTEM
             fs::path imagePath;
             std::string pathStr;
+            #else
+            std::string imagePath;
+            #endif
             //With this, I know that it's related to the tileset above (though I only have one tileset)
             if(tile->getId() >= firstId && tile->getId() <= lastId)
             {
+                #if USE_CPP17_FILESYSTEM
                 imagePath = tileset->getImagePath();
                 pathStr = imagePath.u8string();
+                #else
+                imagePath = tileset->getImagePath();
+                #endif
             }
 
             //Get position in pixel units
             tson::Vector2i position = {std::get<0>(pos) * map.getTileSize().x,std::get<1>(pos) * map.getTileSize().y};
-            int tileId = tile->getId();
-            //The ID can be used to calculate offset on its related tileset image.
-            int offsetX = (tileId % columns) * map.getTileSize().x;
-            int offsetY = (tileId / 8) * map.getTileSize().y;
+            
+            int baseTilePosition = (tile->getId() - firstId); //This will determine the base position of the tile.
+            
+            //The baseTilePosition can be used to calculate offset on its related tileset image.
+            int tileModX = (baseTilePosition % columns);
+            int currentRow = (baseTilePosition / columns);
+            int offsetX = (tileModX != 0) ? ((tileModX) * map.getTileSize().x) : (0 * map.getTileSize().x);
+            int offsetY =  (currentRow < rows-1) ? (currentRow * map.getTileSize().y) : 
+                           ((rows-1) * map.getTileSize().y);
 
-            //Now you can use your library of choice to load the image (like SFML), then set the offset
-            //to get the right image representation of the tile.
+            //Here you can determine the offset that should be set on a sprite
+            //Example on how it would be done using SFML (where sprite presumably is a member of a generated game object):
+            //sprite.setTextureRect({offsetX, offsetY, map.getTileSize().x, map.getTileSize().y});
+            //sprite.setPosition({position.x, position.y});
         }
     }
 }
