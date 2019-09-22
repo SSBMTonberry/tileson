@@ -16,20 +16,12 @@ bool SfmlDemoManager::parseMap(const std::string &filename)
     tson::Tileson t;
     m_map = t.parse(fs::path(m_basePath / filename));
 
-
-    fs::path demoTilesetPath = m_basePath / m_map.getTileset("demo-tileset")->getImage();
-
     if(m_map.getStatus() == tson::Map::ParseStatus::OK)
     {
-        if(fs::exists(demoTilesetPath))
-        {
-            m_demoTilesetTexture.loadFromFile(demoTilesetPath.u8string());
-            m_demoTilesetSprite.setTexture(m_demoTilesetTexture);
+        for(auto &tileset : m_map.getTilesets())
+            storeAndLoadImage(tileset.getImage().u8string(), {0,0});
 
-            return true;
-        }
-        else
-            std::cout << "Invalid Demo Tileset Path: " << demoTilesetPath.u8string() << std::endl;
+        return true;
     }
     else
         std::cout << "Parse error: " << m_map.getStatusMessage() << std::endl;
@@ -39,7 +31,7 @@ bool SfmlDemoManager::parseMap(const std::string &filename)
 
 void SfmlDemoManager::drawMap()
 {
-    tson::Tileset* tileset = m_map.getTileset("demo-tileset"); /
+    tson::Tileset* tileset = m_map.getTileset("demo-tileset");
 
     for(auto &layer : m_map.getLayers())
     {
@@ -54,7 +46,7 @@ void SfmlDemoManager::drawMap()
                 break;
 
             case tson::Layer::Type::ImageLayer:
-                //TODO: Implement
+                drawImageLayer(layer);
                 break;
 
             case tson::Layer::Type::Group:
@@ -112,9 +104,50 @@ void SfmlDemoManager::drawTileLayer(tson::Layer& layer, tson::Tileset* tileset)
             int offsetY =  (currentRow < rows-1) ? (currentRow * m_map.getTileSize().y) : ((rows-1) * m_map.getTileSize().y);
 
             //Set sprite data to draw the tile
-            m_demoTilesetSprite.setTextureRect({offsetX, offsetY, m_map.getTileSize().x, m_map.getTileSize().y});
-            m_demoTilesetSprite.setPosition({position.x, position.y});
-            m_window.draw(m_demoTilesetSprite);
+            sf::Sprite *sprite = storeAndLoadImage(tileset->getImage().u8string(), {0,0});
+            if(sprite != nullptr)
+            {
+                sprite->setTextureRect({offsetX, offsetY, m_map.getTileSize().x, m_map.getTileSize().y});
+                sprite->setPosition({position.x, position.y});
+                m_window.draw(*sprite);
+            }
         }
     }
+}
+
+void SfmlDemoManager::drawImageLayer(tson::Layer &layer)
+{
+    sf::Sprite *sprite = storeAndLoadImage(layer.getImage(), {layer.getOffset().x, layer.getOffset().y});
+    if(sprite != nullptr)
+        m_window.draw(*sprite);
+}
+
+/*!
+ * Stores and loads the image if it doesn't exists, and retrieves it if it does.
+ * @param image
+ * @return
+ */
+sf::Sprite *SfmlDemoManager::storeAndLoadImage(const std::string &image, const sf::Vector2f &position)
+{
+    if(m_textures.count(image) == 0)
+    {
+        fs::path path = m_basePath / image;
+        if(fs::exists(path))
+        {
+            std::unique_ptr<sf::Texture> tex = std::make_unique<sf::Texture>();
+            tex->loadFromFile(path);
+            std::unique_ptr<sf::Sprite> spr = std::make_unique<sf::Sprite>();
+            spr->setTexture(*tex);
+            spr->setPosition(position);
+            m_textures[image] = std::move(tex);
+            m_sprites[image] = std::move(spr);
+        }
+        else
+            std::cout << "Could not find: " << path.u8string() << std::endl;
+    }
+
+    if(m_sprites.count(image) > 0)
+        return m_sprites[image].get();
+
+    return nullptr;
 }

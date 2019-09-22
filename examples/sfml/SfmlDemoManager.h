@@ -9,6 +9,7 @@
 #include "SFML/Audio.hpp"
 #include "SFML/Graphics.hpp"
 #include "Tileson.h"
+#include <map>
 
 class SfmlDemoManager
 {
@@ -23,13 +24,16 @@ class SfmlDemoManager
         void drawMap();
 
         void drawTileLayer(tson::Layer& layer, tson::Tileset* tileset);
+        void drawImageLayer(tson::Layer& layer);
+
+        sf::Sprite * storeAndLoadImage(const std::string &image, const sf::Vector2f &position);
 
         fs::path m_basePath {};
         sf::RenderWindow m_window;
         tson::Map m_map;
 
-        sf::Texture m_demoTilesetTexture;
-        sf::Sprite m_demoTilesetSprite;
+        std::map<std::string, std::unique_ptr<sf::Texture>> m_textures;
+        std::map<std::string, std::unique_ptr<sf::Sprite>> m_sprites;
 };
 
 
