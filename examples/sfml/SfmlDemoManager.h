@@ -23,8 +23,12 @@ class SfmlDemoManager
     private:
         void drawMap();
 
+        void drawLayer(tson::Layer& layer);
         void drawTileLayer(tson::Layer& layer, tson::Tileset* tileset);
         void drawImageLayer(tson::Layer& layer);
+        void drawObjectLayer(tson::Layer& layer);
+
+        sf::Vector2f getTileOffset(int tileId);
 
         sf::Sprite * storeAndLoadImage(const std::string &image, const sf::Vector2f &position);
 

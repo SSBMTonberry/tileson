@@ -31,31 +31,11 @@ bool SfmlDemoManager::parseMap(const std::string &filename)
 
 void SfmlDemoManager::drawMap()
 {
-    tson::Tileset* tileset = m_map.getTileset("demo-tileset");
+
 
     for(auto &layer : m_map.getLayers())
     {
-        switch (layer.getType())
-        {
-            case tson::Layer::Type::TileLayer:
-                drawTileLayer(layer, tileset);
-                break;
-
-            case tson::Layer::Type::ObjectGroup:
-                //TODO: Implement
-                break;
-
-            case tson::Layer::Type::ImageLayer:
-                drawImageLayer(layer);
-                break;
-
-            case tson::Layer::Type::Group:
-                //TODO: Implement
-                break;
-
-            default:
-                break;
-        }
+        drawLayer(layer);
     }
 }
 
@@ -88,8 +68,7 @@ void SfmlDemoManager::drawTileLayer(tson::Layer& layer, tson::Tileset* tileset)
     //pos = position in tile units
     for (auto& [pos, tile] : layer.getTileData()) //Loops through absolutely all existing tiles
     {
-        fs::path imagePath;
-        std::string pathStr;
+
         //With this, I know that it's related to the tileset above (though I only have one tileset)
         if (tile->getId() >= firstId && tile->getId() <= lastId)
         {
@@ -122,6 +101,49 @@ void SfmlDemoManager::drawImageLayer(tson::Layer &layer)
         m_window.draw(*sprite);
 }
 
+void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
+{
+    tson::Tileset* tileset = m_map.getTileset("demo-tileset");
+
+    for(auto &obj : layer.getObjects())
+    {
+        switch(obj.getObjectType())
+        {
+            case tson::Object::Type::Object:
+            {
+                sf::Vector2f offset = getTileOffset(obj.getGid());
+                sf::Sprite *sprite = storeAndLoadImage(tileset->getImage().u8string(), {0,0});
+                std::string name = obj.getName();
+                if(sprite != nullptr)
+                {
+                    sprite->setTextureRect({(int)offset.x, (int)offset.y, m_map.getTileSize().x, m_map.getTileSize().y});
+                    sprite->setPosition({(float)obj.getPosition().x, (float)obj.getPosition().y - m_map.getTileSize().y});
+                    m_window.draw(*sprite);
+                }
+            }
+            break;
+
+            case tson::Object::Type::Ellipse:
+                break;
+            case tson::Object::Type::Rectangle:
+                break;
+            case tson::Object::Type::Point:
+                break;
+            case tson::Object::Type::Polygon:
+                break;
+            case tson::Object::Type::Polyline:
+                break;
+            case tson::Object::Type::Text:
+                break;
+            case tson::Object::Type::Template:
+                break;
+
+            default:
+                break;
+        }
+    }
+}
+
 /*!
  * Stores and loads the image if it doesn't exists, and retrieves it if it does.
  * @param image
@@ -150,4 +172,57 @@ sf::Sprite *SfmlDemoManager::storeAndLoadImage(const std::string &image, const s
         return m_sprites[image].get();
 
     return nullptr;
+}
+
+sf::Vector2f SfmlDemoManager::getTileOffset(int tileId)
+{
+    tson::Tileset* tileset = m_map.getTileset("demo-tileset");
+    int firstId = tileset->getFirstgid(); //First tile id of the tileset
+    int columns = tileset->getColumns(); //For the demo map it is 8.
+    int rows = tileset->getTileCount() / columns;
+    int lastId = (tileset->getFirstgid() + tileset->getTileCount()) - 1;
+
+    //With this, I know that it's related to the tileset above (though I only have one tileset)
+    if (tileId >= firstId && tileId <= lastId)
+    {
+        int baseTilePosition = (tileId - firstId);
+
+        int tileModX = (baseTilePosition % columns);
+        int currentRow = (baseTilePosition / columns);
+        int offsetX = (tileModX != 0) ? ((tileModX) * m_map.getTileSize().x) : (0 * m_map.getTileSize().x);
+        int offsetY =  (currentRow < rows-1) ? (currentRow * m_map.getTileSize().y) : ((rows-1) * m_map.getTileSize().y);
+        return sf::Vector2f((float)offsetX, (float)offsetY);
+    }
+
+    return {0.f, 0.f};
+}
+
+void SfmlDemoManager::drawLayer(tson::Layer &layer)
+{
+    tson::Tileset* tileset = m_map.getTileset("demo-tileset");
+    switch (layer.getType())
+    {
+        case tson::Layer::Type::TileLayer:
+            drawTileLayer(layer, tileset);
+            break;
+
+        case tson::Layer::Type::ObjectGroup:
+            drawObjectLayer(layer);
+            break;
+
+        case tson::Layer::Type::ImageLayer:
+            drawImageLayer(layer);
+            break;
+
+        case tson::Layer::Type::Group:
+            //There are no group layers in the demo map, but it basicly just contains sub layers
+            //You can call this function on those layers, like this:
+            for(auto &l : layer.getLayers())
+                drawLayer(l);
+
+            break;
+
+        default:
+            break;
+    }
 }
