@@ -56,6 +56,7 @@ endif()
 
 option(BUILD_SHARED_LIBS "Build shared libraries." OFF)
 option(BUILD_TESTS "Build unit tests." ON)
+option(BUILD_EXAMPLES "Build examples." OFF)
 if(${APPLE})
     option(USE_CPP17_FILESYSTEM "Uses cpp17 std::filesystem for anything file related" OFF)
 else()
@@ -82,6 +83,11 @@ if(${BUILD_TESTS})
     add_subdirectory(tests)
 endif()
 
+if(${BUILD_EXAMPLES})
+    add_subdirectory(examples)
+endif()
+
 unset(BUILD_SHARED_LIBS CACHE) #Must clear the cache to detect changes in this variable
 unset(BUILD_TESTS CACHE) #Must clear the cache to detect changes in this variable
+unset(BUILD_EXAMPLES CACHE) #Must clear the cache to detect changes in this variable
 unset(USE_CPP17_FILESYSTEM CACHE)
