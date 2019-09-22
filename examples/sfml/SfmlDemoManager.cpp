@@ -16,8 +16,7 @@ bool SfmlDemoManager::parseMap(const std::string &filename)
     tson::Tileson t;
     m_map = t.parse(fs::path(m_basePath / filename));
 
-    //std::string demoTilesetPath = m_map.getTileset("demo-tileset")->getImage().filename().u8string();
-    //fs::path demoTilesetPath = m_basePath / demoTilesetFilename;
+
     fs::path demoTilesetPath = m_basePath / m_map.getTileset("demo-tileset")->getImage();
 
     if(m_map.getStatus() == tson::Map::ParseStatus::OK)
@@ -40,9 +39,7 @@ bool SfmlDemoManager::parseMap(const std::string &filename)
 
 void SfmlDemoManager::drawMap()
 {
-    //by the tile map to make sense of everything
-    //tson::Layer* tileLayer = m_map.getLayer("Main Layer"); //This is a Tile Layer.
-    tson::Tileset* tileset = m_map.getTileset("demo-tileset"); //You will also need the tileset used
+    tson::Tileset* tileset = m_map.getTileset("demo-tileset"); /
 
     for(auto &layer : m_map.getLayers())
     {
