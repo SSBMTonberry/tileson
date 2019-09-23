@@ -6,8 +6,8 @@
 
 void SfmlDemoManager::initialize(const sf::Vector2i &windowSize, const sf::Vector2i &resolution, const std::string &title, const fs::path &basePath)
 {
-    m_window.create(sf::VideoMode(windowSize.x, windowSize.y), title, sf::Style::Titlebar);
-    m_window.setView(sf::View(sf::FloatRect(0.f, 0.f, resolution.x, resolution.y)));
+    m_window.create(sf::VideoMode(windowSize.x, windowSize.y), title, sf::Style::Titlebar | sf::Style::Close);
+    m_window.setView(sf::View(sf::FloatRect(0.f, 0.f, (float) resolution.x, (float)resolution.y)));
     m_basePath = basePath;
     m_font.loadFromMemory(vera_font::_VERA_TTF, vera_font::_VERA_TTF_SIZE);
 }
@@ -185,7 +185,7 @@ sf::Sprite *SfmlDemoManager::storeAndLoadImage(const std::string &image, const s
         if(fs::exists(path))
         {
             std::unique_ptr<sf::Texture> tex = std::make_unique<sf::Texture>();
-            tex->loadFromFile(path);
+            tex->loadFromFile(path.u8string());
             std::unique_ptr<sf::Sprite> spr = std::make_unique<sf::Sprite>();
             spr->setTexture(*tex);
             spr->setPosition(position);

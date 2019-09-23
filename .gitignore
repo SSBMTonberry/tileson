@@ -27,3 +27,5 @@ out/build/x86-Release/
 .idea/
 
 \.DS_Store
+
+cmake-build-release/
