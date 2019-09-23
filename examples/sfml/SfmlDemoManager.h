@@ -10,6 +10,7 @@
 #include "SFML/Graphics.hpp"
 #include "Tileson.h"
 #include <map>
+#include "vera_font.h"
 
 class SfmlDemoManager
 {
@@ -35,6 +36,9 @@ class SfmlDemoManager
         fs::path m_basePath {};
         sf::RenderWindow m_window;
         tson::Map m_map;
+
+        sf::Font m_font;
+        sf::Text m_demoText;
 
         std::map<std::string, std::unique_ptr<sf::Texture>> m_textures;
         std::map<std::string, std::unique_ptr<sf::Sprite>> m_sprites;

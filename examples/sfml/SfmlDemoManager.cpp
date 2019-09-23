@@ -9,6 +9,7 @@ void SfmlDemoManager::initialize(const sf::Vector2i &windowSize, const sf::Vecto
     m_window.create(sf::VideoMode(windowSize.x, windowSize.y), title, sf::Style::Titlebar);
     m_window.setView(sf::View(sf::FloatRect(0.f, 0.f, resolution.x, resolution.y)));
     m_basePath = basePath;
+    m_font.loadFromMemory(vera_font::_VERA_TTF, vera_font::_VERA_TTF_SIZE);
 }
 
 bool SfmlDemoManager::parseMap(const std::string &filename)
@@ -134,6 +135,12 @@ void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
             case tson::Object::Type::Polyline:
                 break;
             case tson::Object::Type::Text:
+                m_demoText.setFont(m_font);
+                m_demoText.setPosition({(float)obj.getPosition().x, (float)obj.getPosition().y});
+                m_demoText.setString(obj.getText().text);
+                m_demoText.setCharacterSize(32); //It is 16, but makes it double for a "sharp text hack"
+                m_demoText.setScale(0.5f, 0.5f); //Half scale for making a sharp text.
+                m_window.draw(m_demoText);
                 break;
             case tson::Object::Type::Template:
                 break;
