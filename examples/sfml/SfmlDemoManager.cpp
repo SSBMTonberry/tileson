@@ -125,15 +125,32 @@ void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
             break;
 
             case tson::Object::Type::Ellipse:
+                //Not used by the demo map, but you could use the properties of obj for a sf::CircleShape
                 break;
+
             case tson::Object::Type::Rectangle:
+                //Not used by the demo map, but you could use the properties of obj for a sf::RectangleShape
                 break;
+
             case tson::Object::Type::Point:
+                //Not used by the demo map but one could use the points of obj (polygon or polyline)
+                //then pass them into logic like this:
+                //sf::Vertex line[] =
+                //        {
+                //                sf::Vertex(sf::Vector2f(obj.getPolylines()[0].x, obj.getPolylines()[0].y)),
+                //                sf::Vertex(sf::Vector2f(obj.getPolylines()[1].x, obj.getPolylines()[1].y))
+                //        };
+                //m_window.draw(line, 2, sf::Lines);
                 break;
+
             case tson::Object::Type::Polygon:
+                //Not used by the demo map, but you could use the properties of obj for a sf::ConvexShape
                 break;
+
             case tson::Object::Type::Polyline:
+                //Not used by the demo map, but you could use the properties of obj for a sf::ConvexShape
                 break;
+
             case tson::Object::Type::Text:
                 m_demoText.setFont(m_font);
                 m_demoText.setPosition({(float)obj.getPosition().x, (float)obj.getPosition().y});
@@ -142,7 +159,11 @@ void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
                 m_demoText.setScale(0.5f, 0.5f); //Half scale for making a sharp text.
                 m_window.draw(m_demoText);
                 break;
+
             case tson::Object::Type::Template:
+                //use obj.getTemplate() to get the connected template. References an external file not covered by Tileson.
+                //obj.getPosition() and obj.getId() should also be related to the placement of the template.
+
                 break;
 
             default:

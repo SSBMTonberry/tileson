@@ -17,7 +17,9 @@ class SfmlDemoManager
     public:
         SfmlDemoManager() = default;
 
-        void initialize( const sf::Vector2i &windowSize, const sf::Vector2i &resolution = {400, 240}, const std::string &title = "SFML Tileson demo", const fs::path &basePath = fs::path("../../../content/test-maps/"));
+        void initialize( const sf::Vector2i &windowSize, const sf::Vector2i &resolution = {400, 240},
+                         const std::string &title = "SFML Tileson demo",
+                         const fs::path &basePath = fs::path("../../../content/test-maps/"));
         bool parseMap(const std::string &filename = "ultimate_test.json");
         void run();
 

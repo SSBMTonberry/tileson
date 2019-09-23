@@ -284,6 +284,13 @@ If you are okay with the default settings: Just calling the `cmake CMakeLists.tx
 As `std::filesystem` is not supported by the version of `Apple Clang` shipped with `Mac OSX 10.14 (Mojave)`, this functionality is disabled by default when using this system. You can, however, install the newest version of `llvm` via `Homebrew`, which actually has supported `std::filesystem` for a while.
 To generate a solution to be able to build this library, you will need to open the `CMakeLists.txt` file in `CMake`. If `CMake` is not installed on your system, it can easily be found on the internet.
 
+# Examples
+You can find examples on how to draw the demo map using frameworks like SFML under [examples](https://github.com/SSBMTonberry/tileson/tree/master/examples).
+To build this, you will have to enable the CMake flag `BUILD_EXAMPLES`. All examples requires `C++17 std::filesystem` to work, and will fail to build on compilers not supporting this feature.
+For Windows systems, you will need to include the [openal32.dll](https://github.com/SSBMTonberry/tileson/tree/master/external_libs/libs/win/release/msvc/sfml)-file 
+in the executable directory to be able to run the demo.
+
+
 # Libraries used by Tileson
 - [Catch2](https://github.com/catchorg/Catch2/) - For Unit Tests
 - [JSON for Modern C++](https://github.com/nlohmann/json) - For JSON read/write
