@@ -5,6 +5,7 @@
 #include "../external_libs/catch.hpp"
 //#include "../src/Tileson.h"
 //#include "../include/tileson.hpp"
+#include "../TilesonConfig.h"
 #include "../single_include/tileson.hpp"
 
 #include "tson_files_mapper.h"
@@ -18,7 +19,7 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
     tson::Layer* tileLayer;
     tson::Tileset* tileset;
 
-    #if USE_CPP17_FILESYSTEM
+    #ifndef DISABLE_CPP17_FILESYSTEM
     fs::path pathCarte {"../../content/test-maps/issues/Preluda3.json"};
     jsCarte = jsTileson.parse(pathCarte);
     #else
@@ -57,7 +58,7 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
         //pos = position in tile units
         for (auto& [pos, tile] : tileLayer->getTileData()) //Loops through absolutely all existing tiles
         {
-            #if USE_CPP17_FILESYSTEM
+            #ifndef DISABLE_CPP17_FILESYSTEM
             fs::path imagePath;
             #else
             std::string imagePath;
@@ -67,7 +68,7 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
             //Si l'ID de la tile est compris entre le premier et le dernier ID inclus
             if (tile->getId() >= firstId && tile->getId() <= lastId)
             {
-                #if USE_CPP17_FILESYSTEM
+                #ifndef DISABLE_CPP17_FILESYSTEM
                 imagePath = tileset->getImagePath();
                 pathStr = imagePath.u8string();
                 #endif

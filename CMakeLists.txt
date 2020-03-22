@@ -54,19 +54,19 @@ else()
     set(MINGW 0)
 endif()
 
-option(BUILD_SHARED_LIBS "Build shared libraries." OFF)
+#option(BUILD_SHARED_LIBS "Build shared libraries." OFF)
 option(BUILD_TESTS "Build unit tests." ON)
 option(BUILD_EXAMPLES "Build examples." ON)
 if(${APPLE})
-    option(USE_CPP17_FILESYSTEM "Uses cpp17 std::filesystem for anything file related" OFF)
+    option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" ON)
 else()
-    option(USE_CPP17_FILESYSTEM "Uses cpp17 std::filesystem for anything file related" ON)
+    option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" OFF)
 endif()
 
-if(${USE_CPP17_FILESYSTEM})
-    set(TILESON_USE_FILESYSTEM 1)
+if(${DISABLE_CPP17_FILESYSTEM})
+    set(DISABLE_CPP17_FILESYSTEM 1)
 else()
-    set(TILESON_USE_FILESYSTEM 0)
+    set(DISABLE_CPP17_FILESYSTEM 0)
 endif()
 
 configure_file (
@@ -79,7 +79,8 @@ include_directories(${PROJECT_SOURCE_DIR}/external_libs/)
 #set(SOURCE_FILES src/objects/Vector2.hpp src/Tileson.cpp src/Tileson.h src/tiled/Map.cpp src/tiled/Map.h src/tiled/Layer.cpp src/tiled/Layer.h src/tiled/Chunk.cpp src/tiled/Chunk.h src/tiled/Object.cpp src/tiled/Object.h src/objects/Property.cpp src/objects/Property.h src/objects/PropertyCollection.cpp src/objects/PropertyCollection.h src/tiled/Tileset.cpp src/tiled/Tileset.h src/tiled/Tile.cpp src/tiled/Tile.h src/tiled/Frame.cpp src/tiled/Frame.h src/tiled/Terrain.cpp src/tiled/Terrain.h src/tiled/WangSet.cpp src/tiled/WangSet.h src/tiled/WangColor.cpp src/tiled/WangColor.h src/tiled/WangTile.cpp src/tiled/WangTile.h src/tiled/Text.hpp src/tiled/Grid.cpp src/tiled/Grid.h src/objects/Color.hpp src/misc/MemoryBuffer.cpp src/misc/MemoryBuffer.h src/misc/MemoryStream.cpp src/misc/MemoryStream.h include/tileson_parser.hpp)
 set(INCLUDE_FILES include/tileson.hpp include/tileson_parser.hpp include/misc/MemoryBuffer.hpp include/misc/MemoryStream.hpp include/objects/Color.hpp
         include/objects/Property.hpp include/objects/PropertyCollection.hpp include/objects/Vector2.hpp include/tiled/Chunk.hpp include/tiled/Frame.hpp
-        include/tiled/Grid.hpp include/tiled/Layer.hpp include/tiled/Map.hpp include/tiled/Object.hpp include/tiled/Terrain.hpp include/tiled/Text.hpp include/tiled/Tile.hpp include/tiled/Tileset.hpp include/tiled/WangColor.hpp include/tiled/WangSet.hpp include/tiled/WangTile.hpp)
+        include/tiled/Grid.hpp include/tiled/Layer.hpp include/tiled/Map.hpp include/tiled/Object.hpp include/tiled/Terrain.hpp include/tiled/Text.hpp
+        include/tiled/Tile.hpp include/tiled/Tileset.hpp include/tiled/WangColor.hpp include/tiled/WangSet.hpp include/tiled/WangTile.hpp)
 #add_library(tileson ${SOURCE_FILES} ${INCLUDE_FILES})
 
 if(${BUILD_TESTS})
@@ -90,7 +91,7 @@ if(${BUILD_EXAMPLES})
     add_subdirectory(examples)
 endif()
 
-unset(BUILD_SHARED_LIBS CACHE) #Must clear the cache to detect changes in this variable
+#unset(BUILD_SHARED_LIBS CACHE) #Must clear the cache to detect changes in this variable
 unset(BUILD_TESTS CACHE) #Must clear the cache to detect changes in this variable
 unset(BUILD_EXAMPLES CACHE) #Must clear the cache to detect changes in this variable
-unset(USE_CPP17_FILESYSTEM CACHE)
+unset(DISABLE_CPP17_FILESYSTEM CACHE)

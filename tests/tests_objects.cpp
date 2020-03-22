@@ -4,6 +4,7 @@
 
 #include "../external_libs/catch.hpp"
 //#include "../include/objects/Color.hpp"
+#include "../TilesonConfig.h"
 #include "../single_include/tileson.hpp"
 //#include "../src/objects/Color.hpp"
 

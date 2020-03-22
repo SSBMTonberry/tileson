@@ -15,7 +15,10 @@
 //#include <tiled/WangTile.h>
 //#include <tiled/WangSet.h>
 //#include "../include/tileson.hpp"
+
+#include "../TilesonConfig.h"
 #include "../single_include/tileson.hpp"
+
 #include "../external_libs/catch.hpp"
 
 TEST_CASE( "Parse a Map from Tiled's documentation", "[tiled][map]" )
@@ -506,7 +509,7 @@ TEST_CASE( "Parse a Tileset from Tiled's documentation - read simple values", "[
     bool hasCorrectValues = (
         tileset.getColumns() == 19 &&
         tileset.getFirstgid() == 1 &&
-        #if USE_CPP17_FILESYSTEM
+        #ifndef DISABLE_CPP17_FILESYSTEM
         tileset.getImagePath() == fs::path("../image/fishbaddie_parts.png") &&
         #endif
         tileset.getImageSize() == tson::Vector2i(640, 480) &&
@@ -815,7 +818,7 @@ TEST_CASE( "Property-tests - Set properties from json", "[tiled][wang]" )
         properties.getProperties().size() == 6 &&
         properties.getValue<tson::Colori>("color") == tson::Colori("#ff268176") &&
         properties.getProperty("color")->getType() == tson::Property::Type::Color &&
-        #if USE_CPP17_FILESYSTEM
+        #ifndef DISABLE_CPP17_FILESYSTEM
         properties.getValue<fs::path>("file_ref") == fs::path("../demo-tileset.png") &&
         #endif
         properties.getProperty("file_ref")->getType() == tson::Property::Type::File &&

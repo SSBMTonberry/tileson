@@ -3,13 +3,15 @@
 //
 
 #include "../external_libs/catch.hpp"
+
+#include "../TilesonConfig.h"
 #include "../single_include/tileson.hpp"
 //#include "../src/Tileson.h"
 
 #include "tson_files_mapper.h"
 #include "../TilesonConfig.h"
 
-bool mapIsAbsolutelyFine(tson::Map &map)
+bool mapIsAbsolutelyFine2(tson::Map &map)
 {
     auto main = map.getLayer("Main Layer");
     auto tileData = main->getTileData();
@@ -48,9 +50,9 @@ bool mapIsAbsolutelyFine(tson::Map &map)
 }
 
 
-TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" ) {
+TEST_CASE( "Parse a whole map by file (Single Header)", "[complete][parse][file]" ) {
     tson::Tileson t;
-    #if USE_CPP17_FILESYSTEM
+    #ifndef DISABLE_CPP17_FILESYSTEM
     fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
     fs::path pathTravis {"../content/test-maps/ultimate_test.json"};
     fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
@@ -59,7 +61,7 @@ TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" ) {
     #endif
     tson::Map map = t.parse({pathToUse});
     if(map.getStatus() == tson::Map::ParseStatus::OK)
-        REQUIRE(mapIsAbsolutelyFine(map));
+        REQUIRE(mapIsAbsolutelyFine2(map));
     else
     {
         std::cout << "Ignored - " << map.getStatusMessage() << std::endl;
@@ -67,11 +69,11 @@ TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" ) {
     }
 }
 
-TEST_CASE( "Parse a whole map by memory", "[complete][parse][memory]" ) {
+TEST_CASE( "Parse a whole map by memory (Single Header)", "[complete][parse][memory]" ) {
     tson::Tileson t;
     tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
     if (map.getStatus() == tson::Map::ParseStatus::OK)
-        REQUIRE(mapIsAbsolutelyFine(map));
+        REQUIRE(mapIsAbsolutelyFine2(map));
     else
     {
         std::cout << "Memory parse error - " << map.getStatusMessage() << std::endl;
@@ -80,7 +82,7 @@ TEST_CASE( "Parse a whole map by memory", "[complete][parse][memory]" ) {
     }
 }
 
-TEST_CASE( "Parse a simple map by memory - tiles without any properties (issue #4)", "[simple][parse][memory]" ) {
+TEST_CASE( "Parse a simple map by memory - tiles without any properties (issue #4) (Single Header)", "[simple][parse][memory]" ) {
     tson::Tileson t;
     tson::Map map = t.parse(tson_files_mapper::_SIMPLE_MAP_JSON, tson_files_mapper::_SIMPLE_MAP_JSON_SIZE);
     if (map.getStatus() == tson::Map::ParseStatus::OK)
@@ -99,11 +101,11 @@ TEST_CASE( "Parse a simple map by memory - tiles without any properties (issue #
     }
 }
 
-TEST_CASE( "Parse a minimal version of whole map by memory", "[complete][parse][memory]" ) {
+TEST_CASE( "Parse a minimal version of whole map by memory (Single Header)", "[complete][parse][memory]" ) {
     tson::Tileson t;
     tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_MIN_JSON, tson_files::_ULTIMATE_TEST_MIN_JSON_SIZE);
     if (map.getStatus() == tson::Map::ParseStatus::OK)
-        REQUIRE(mapIsAbsolutelyFine(map));
+        REQUIRE(mapIsAbsolutelyFine2(map));
     else
     {
         std::cout << "Memory parse error - " << map.getStatusMessage() << std::endl;
@@ -114,7 +116,7 @@ TEST_CASE( "Parse a minimal version of whole map by memory", "[complete][parse][
 
 
 
-TEST_CASE( "Go through demo code - get success", "[demo]" ) {
+TEST_CASE( "Go through demo code - get success (Single Header)", "[demo]" ) {
     tson::Tileson t;
     tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
 
@@ -212,7 +214,7 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
         bool myBool = layer->get<bool>("my_bool");
         std::string myString = layer->get<std::string>("my_string");
         tson::Colori myColor = layer->get<tson::Colori>("my_color");
-        #if USE_CPP17_FILESYSTEM
+        #ifndef DISABLE_CPP17_FILESYSTEM
         fs::path file = layer->get<fs::path>("my_file");
         #else
         std::string file = layer->get<std::string>("my_file");
@@ -226,7 +228,7 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
     REQUIRE( true );
 }
 
-TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" )
+TEST_CASE( "A simple example on how to use data of objects and tiles (Single Header)", "[demo]" )
 {
     tson::Tileson t;
     tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
@@ -319,7 +321,7 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
             //pos = position in tile units
             for(auto &[pos, tile] : tileLayer->getTileData()) //Loops through absolutely all existing tiles
             {
-                #if USE_CPP17_FILESYSTEM
+                #ifndef DISABLE_CPP17_FILESYSTEM
                 fs::path imagePath;
                 std::string pathStr;
                 #else
@@ -328,7 +330,7 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
                 //With this, I know that it's related to the tileset above (though I only have one tileset)
                 if(tile->getId() >= firstId && tile->getId() <= lastId)
                 {
-                    #if USE_CPP17_FILESYSTEM
+                    #ifndef DISABLE_CPP17_FILESYSTEM
                     imagePath = tileset->getImagePath();
                     pathStr = imagePath.u8string();
                     #else

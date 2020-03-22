@@ -4,6 +4,8 @@
 
 #define CATCH_CONFIG_MAIN
 #include "../external_libs/catch.hpp"
+
+#include "../TilesonConfig.h"
 #include "../include/tileson.hpp"
 //#include "../src/Tileson.h"
 
@@ -51,7 +53,7 @@ bool mapIsAbsolutelyFine(tson::Map &map)
 
 TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" ) {
     tson::Tileson t;
-    #if USE_CPP17_FILESYSTEM
+    #ifndef DISABLE_CPP17_FILESYSTEM
     fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
     fs::path pathTravis {"../content/test-maps/ultimate_test.json"};
     fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
@@ -213,7 +215,7 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
         bool myBool = layer->get<bool>("my_bool");
         std::string myString = layer->get<std::string>("my_string");
         tson::Colori myColor = layer->get<tson::Colori>("my_color");
-        #if USE_CPP17_FILESYSTEM
+        #ifndef DISABLE_CPP17_FILESYSTEM
         fs::path file = layer->get<fs::path>("my_file");
         #else
         std::string file = layer->get<std::string>("my_file");
@@ -320,7 +322,7 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
             //pos = position in tile units
             for(auto &[pos, tile] : tileLayer->getTileData()) //Loops through absolutely all existing tiles
             {
-                #if USE_CPP17_FILESYSTEM
+                #ifndef DISABLE_CPP17_FILESYSTEM
                 fs::path imagePath;
                 std::string pathStr;
                 #else
@@ -329,7 +331,7 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
                 //With this, I know that it's related to the tileset above (though I only have one tileset)
                 if(tile->getId() >= firstId && tile->getId() <= lastId)
                 {
-                    #if USE_CPP17_FILESYSTEM
+                    #ifndef DISABLE_CPP17_FILESYSTEM
                     imagePath = tileset->getImagePath();
                     pathStr = imagePath.u8string();
                     #else
