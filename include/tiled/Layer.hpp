@@ -13,6 +13,7 @@
 #include "../objects/Property.hpp"
 #include "../objects/PropertyCollection.hpp"
 //#include "Tile.h"
+#include "../common/Enums.hpp"
 
 namespace tson
 {
@@ -22,14 +23,14 @@ namespace tson
     {
         public:
             //'type': tilelayer, objectgroup, imagelayer or group
-            enum class Type : uint8_t
-            {
-                    Undefined = 0,
-                    TileLayer = 1,
-                    ObjectGroup = 2,
-                    ImageLayer = 3,
-                    Group = 4
-            };
+            //enum class Type : uint8_t
+            //{
+            //        Undefined = 0,
+            //        TileLayer = 1,
+            //        ObjectGroup = 2,
+            //        ImageLayer = 3,
+            //        Group = 4
+            //};
 
             inline Layer() = default;
             inline explicit Layer(const nlohmann::json &json);
@@ -48,7 +49,7 @@ namespace tson
             [[nodiscard]] inline const Vector2i &getSize() const;
             [[nodiscard]] inline const Colori &getTransparentcolor() const;
 
-            [[nodiscard]] inline Type getType() const;
+            [[nodiscard]] inline LayerType getType() const;
 
             [[nodiscard]] inline const std::string &getTypeStr() const;
             [[nodiscard]] inline bool isVisible() const;
@@ -63,7 +64,7 @@ namespace tson
             inline tson::Object *getObj(int id);
             inline tson::Object *firstObj(const std::string &name);
             inline std::vector<tson::Object> getObjectsByName(const std::string &name);
-            inline std::vector<tson::Object> getObjectsByType(tson::Object::Type type);
+            inline std::vector<tson::Object> getObjectsByType(tson::ObjectType type);
 
             template <typename T>
             inline T get(const std::string &name);
@@ -78,28 +79,28 @@ namespace tson
         private:
             inline void setTypeByString();
 
-            std::vector<tson::Chunk>                       m_chunks; 	       /*! 'chunks': Array of chunks (optional). tilelayer only. */
-            std::string                                    m_compression;      /*! 'compression': zlib, gzip or empty (default). tilelayer only. */
-            std::vector<int>                               m_data;             /*! 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded
-                                                                                *   data. tilelayer only. */
-            std::string                                    m_base64Data;       /*! 'data' (when string):     Array of unsigned int (GIDs) or base64-encoded
-                                                                                *   data. tilelayer only. */
-            std::string                                    m_drawOrder;        /*! 'draworder': topdown (default) or index. objectgroup only. */
-            std::string                                    m_encoding;         /*! 'encoding': csv (default) or base64. tilelayer only. */
-            int                                            m_id{};             /*! 'id': Incremental id - unique across all layers */
-            std::string                                    m_image;            /*! 'image': Image used by this layer. imagelayer only. */
-            std::vector<tson::Layer>                       m_layers; 	       /*! 'layers': Array of layers. group on */
-            std::string                                    m_name;             /*! 'name': Name assigned to this layer */
-            std::vector<tson::Object>                      m_objects;          /*! 'objects': Array of objects. objectgroup only. */
-            tson::Vector2f                                 m_offset;           /*! 'offsetx' and 'offsety': Horizontal and Vertical layer offset in pixels
-                                                                                *  (default: {0, 0}) */
-            float                                          m_opacity{};        /*! 'opacity': Value between 0 and 1 */
-            tson::PropertyCollection                       m_properties; 	   /*! 'properties': A list of properties (name, value, type). */
-            tson::Vector2i                                 m_size;             /*! x = 'width': (Column count. Same as map width for fixed-size maps.)
-                                                                                   y = 'height': Row count. Same as map height for fixed-size maps. */
-            tson::Colori                                   m_transparentcolor; /*! 'transparentcolor': Hex-formatted color (#RRGGBB) (optional, imagelayer only */
-            std::string                                    m_typeStr;          /*! 'type': tilelayer, objectgroup, imagelayer or group */
-            Layer::Type                                    m_type {Layer::Type::Undefined};             /*! Layer type as enum*/
+            std::vector<tson::Chunk>                       m_chunks; 	                              /*! 'chunks': Array of chunks (optional). tilelayer only. */
+            std::string                                    m_compression;                             /*! 'compression': zlib, gzip or empty (default). tilelayer only. */
+            std::vector<int>                               m_data;                                    /*! 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded
+                                                                                                       *   data. tilelayer only. */
+            std::string                                    m_base64Data;                              /*! 'data' (when string):     Array of unsigned int (GIDs) or base64-encoded
+                                                                                                       *   data. tilelayer only. */
+            std::string                                    m_drawOrder;                               /*! 'draworder': topdown (default) or index. objectgroup only. */
+            std::string                                    m_encoding;                                /*! 'encoding': csv (default) or base64. tilelayer only. */
+            int                                            m_id{};                                    /*! 'id': Incremental id - unique across all layers */
+            std::string                                    m_image;                                   /*! 'image': Image used by this layer. imagelayer only. */
+            std::vector<tson::Layer>                       m_layers; 	                              /*! 'layers': Array of layers. group on */
+            std::string                                    m_name;                                    /*! 'name': Name assigned to this layer */
+            std::vector<tson::Object>                      m_objects;                                 /*! 'objects': Array of objects. objectgroup only. */
+            tson::Vector2f                                 m_offset;                                  /*! 'offsetx' and 'offsety': Horizontal and Vertical layer offset in pixels
+                                                                                                       *  (default: {0, 0}) */
+            float                                          m_opacity{};                               /*! 'opacity': Value between 0 and 1 */
+            tson::PropertyCollection                       m_properties; 	                          /*! 'properties': A list of properties (name, value, type). */
+            tson::Vector2i                                 m_size;                                    /*! x = 'width': (Column count. Same as map width for fixed-size maps.)
+                                                                                                          y = 'height': Row count. Same as map height for fixed-size maps. */
+            tson::Colori                                   m_transparentcolor;                        /*! 'transparentcolor': Hex-formatted color (#RRGGBB) (optional, imagelayer only */
+            std::string                                    m_typeStr;                                 /*! 'type': tilelayer, objectgroup, imagelayer or group */
+            LayerType                                      m_type {LayerType::Undefined};             /*! Layer type as enum*/
             bool                                           m_visible{};        /*! 'visible': Whether layer is shown or hidden in editor */
             int                                            m_x{};              /*! 'x': Horizontal layer offset in tiles. Always 0. */
             int                                            m_y{};              /*! 'y': Vertical layer offset in tiles. Always 0. */
@@ -202,10 +203,10 @@ std::vector<tson::Object> tson::Layer::getObjectsByName(const std::string &name)
 
 /*!
  * Copies all objects with a type that equals the parameter
- * @param type Type of the objects to return
+ * @param type LayerType of the objects to return
  * @return All objects with a matching type
  */
-std::vector<tson::Object> tson::Layer::getObjectsByType(tson::Object::Type type)
+std::vector<tson::Object> tson::Layer::getObjectsByType(tson::ObjectType type)
 {
     std::vector<tson::Object> found;
 
@@ -251,11 +252,11 @@ tson::Object *tson::Layer::getObj(int id)
  */
 void tson::Layer::setTypeByString()
 {
-    if(m_typeStr == "tilelayer") m_type = Type::TileLayer;
-    else if(m_typeStr == "objectgroup") m_type = Type::ObjectGroup;
-    else if(m_typeStr == "imagelayer") m_type = Type::ImageLayer;
-    else if(m_typeStr == "group") m_type = Type::Group;
-    else m_type = Type::Undefined;
+    if(m_typeStr == "tilelayer") m_type = LayerType::TileLayer;
+    else if(m_typeStr == "objectgroup") m_type = LayerType::ObjectGroup;
+    else if(m_typeStr == "imagelayer") m_type = LayerType::ImageLayer;
+    else if(m_typeStr == "group") m_type = LayerType::Group;
+    else m_type = LayerType::Undefined;
 }
 
 /*!
@@ -455,7 +456,7 @@ tson::Property *tson::Layer::getProp(const std::string &name)
  * Get layer type
  * @return Layer type as enum
  */
-tson::Layer::Type tson::Layer::getType() const
+tson::LayerType tson::Layer::getType() const
 {
     return m_type;
 }

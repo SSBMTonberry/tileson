@@ -26,7 +26,7 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
     std::string pathCarte {"../../content/test-maps/issues/Preluda3.json"};
     jsCarte = jsTileson.parse(pathCarte);
     #endif
-    if (jsCarte.getStatus() == tson::Map::ParseStatus::OK)
+    if (jsCarte.getStatus() == tson::ParseStatus::OK)
     {
         //std::cout << "C'est bon, j'ai chargé la carte : " << pathCarte << std::endl;
     }
@@ -53,7 +53,7 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
     int lastId = (tileset->getFirstgid() + tileset->getTileCount()) - 1;
 
     //On vérifie que le layer est bien un tileLayer
-    if (tileLayer->getType() == tson::Layer::Type::TileLayer)
+    if (tileLayer->getType() == tson::LayerType::TileLayer)
     {
         //pos = position in tile units
         for (auto& [pos, tile] : tileLayer->getTileData()) //Loops through absolutely all existing tiles

@@ -28,7 +28,7 @@ namespace tson
             [[nodiscard]] inline int getColumns() const;
             [[nodiscard]] inline int getFirstgid() const;
 
-            #if USE_CPP17_FILESYSTEM
+            #ifndef DISABLE_CPP17_FILESYSTEM
             [[nodiscard]] inline const fs::path &getImagePath() const;
             [[nodiscard]] inline const fs::path &getImage() const;
             #else
@@ -63,7 +63,7 @@ namespace tson
 
             int                           m_columns {};       /*! 'columns': The number of tile columns in the tileset */
             int                           m_firstgid {};      /*! 'firstgid': GID corresponding to the first tile in the set */
-            #if USE_CPP17_FILESYSTEM
+            #ifndef DISABLE_CPP17_FILESYSTEM
             fs::path                      m_image;            /*! 'image': Image used for tiles in this set */
             #else
             std::string                   m_image;

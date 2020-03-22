@@ -64,9 +64,9 @@ TEST_CASE( "Parse a Map from Tiled's documentation", "[tiled][map]" )
                                 map.getProperties().getSize() == 2 &&
                                 map.getProperties().get()[0]->getName() == "mapProperty1" &&
                                 map.getProperties().getValue<std::string>("mapProperty1") == "string" &&
-                                map.getProperties().getProperty("mapProperty2")->getType() == tson::Property::Type::Undefined && //The doc got some errors
+                                map.getProperties().getProperty("mapProperty2")->getType() == tson::Type::Undefined && //The doc got some errors
                                 map.get<std::string>("mapProperty1") == "string" &&
-                                map.getProp("mapProperty1")->getType() == tson::Property::Type::Undefined
+                                map.getProp("mapProperty1")->getType() == tson::Type::Undefined
                             );
 
     REQUIRE( (parseOk && hasCorrectValues) );
@@ -108,7 +108,7 @@ TEST_CASE( "Parse a Layer from Tiled's documentation - read simple values", "[ti
                 layer.getY() == 0 &&
                 layer.getProperties().getSize() > 0 &&
                 layer.getProperties().getValue<int>("tileLayerProp") == 1 &&
-                layer.getProperties().getProperty("tileLayerProp")->getType() == tson::Property::Type::Int
+                layer.getProperties().getProperty("tileLayerProp")->getType() == tson::Type::Int
 
         );
 
@@ -149,7 +149,7 @@ TEST_CASE( "Parse a Layer from Tiled's documentation - read simple values", "[ti
                 layer.getX() == 0 &&
                 layer.getY() == 0 &&
                 layer.getProperties().getValue<std::string>("layerProp1") == "someStringValue" &&
-                layer.getProperties().getProperty("layerProp1")->getType() == tson::Property::Type::String &&
+                layer.getProperties().getProperty("layerProp1")->getType() == tson::Type::String &&
                 layer.getObjects().empty()
         );
 
@@ -213,11 +213,11 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                 obj.isVisible() &&
                 obj.getSize() == tson::Vector2i(0, 0) &&
                 obj.getPosition() == tson::Vector2i(32, 32) &&
-                obj.getObjectType() == tson::Object::Type::Object &&
+                obj.getObjectType() == tson::ObjectType::Object &&
                 obj.getProperties().getValue<int>("hp") == 12 &&
-                obj.getProperties().getProperty("hp")->getType() == tson::Property::Type::Int &&
+                obj.getProperties().getProperty("hp")->getType() == tson::Type::Int &&
                 obj.get<int>("hp") == 12 &&
-                obj.getProp("hp")->getType() == tson::Property::Type::Int
+                obj.getProp("hp")->getType() == tson::Type::Int
         );
 
         REQUIRE((parseOk && hasCorrectValues));
@@ -249,7 +249,7 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                 obj.isVisible() &&
                 obj.getSize() == tson::Vector2i(248, 152) &&
                 obj.getPosition() == tson::Vector2i(560, 808)
-                && obj.getObjectType() == tson::Object::Type::Ellipse
+                && obj.getObjectType() == tson::ObjectType::Ellipse
         );
 
         REQUIRE((parseOk && hasCorrectValues));
@@ -279,7 +279,7 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                 obj.isVisible() &&
                 obj.getSize() == tson::Vector2i(368, 184) &&
                 obj.getPosition() == tson::Vector2i(576, 584)
-                && obj.getObjectType() == tson::Object::Type::Rectangle
+                && obj.getObjectType() == tson::ObjectType::Rectangle
         );
 
         REQUIRE((parseOk && hasCorrectValues));
@@ -311,7 +311,7 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                 obj.isVisible() &&
                 obj.getSize() == tson::Vector2i(0, 0) &&
                 obj.getPosition() == tson::Vector2i(220, 350)
-                && obj.getObjectType() == tson::Object::Type::Point
+                && obj.getObjectType() == tson::ObjectType::Point
         );
 
         REQUIRE((parseOk && hasCorrectValues));
@@ -362,7 +362,7 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                 obj.isVisible() &&
                 obj.getSize() == tson::Vector2i(0, 0) &&
                 obj.getPosition() == tson::Vector2i(-176, 432) &&
-                obj.getObjectType() == tson::Object::Type::Polygon &&
+                obj.getObjectType() == tson::ObjectType::Polygon &&
                 obj.getPolygons().size() == 5 &&
                 obj.getPolygons()[2] == tson::Vector2i(136, -128)
         );
@@ -416,7 +416,7 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                 obj.isVisible() &&
                 obj.getSize() == tson::Vector2i(0, 0) &&
                 obj.getPosition() == tson::Vector2i(240, 88) &&
-                obj.getObjectType() == tson::Object::Type::Polyline &&
+                obj.getObjectType() == tson::ObjectType::Polyline &&
                 obj.getPolylines().size() == 6 &&
                 obj.getPolylines()[4] == tson::Vector2i(656, 120)
         );
@@ -452,7 +452,7 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                 obj.isVisible() &&
                 obj.getSize() == tson::Vector2i(248, 19) &&
                 obj.getPosition() == tson::Vector2i(48, 136) &&
-                obj.getObjectType() == tson::Object::Type::Text &&
+                obj.getObjectType() == tson::ObjectType::Text &&
                 obj.getText().text == "Hello World" &&
                 obj.getText().wrap
         );
@@ -475,7 +475,7 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                 obj.getId() == 13 &&
                 obj.getTemplate() == "useless_template_object.tx" &&
                 obj.getPosition() == tson::Vector2i(104, 34) &&
-                obj.getObjectType() == tson::Object::Type::Template
+                obj.getObjectType() == tson::ObjectType::Template
         );
 
         REQUIRE((parseOk && hasCorrectValues));
@@ -817,15 +817,15 @@ TEST_CASE( "Property-tests - Set properties from json", "[tiled][wang]" )
     bool hasCorrectValues = (
         properties.getProperties().size() == 6 &&
         properties.getValue<tson::Colori>("color") == tson::Colori("#ff268176") &&
-        properties.getProperty("color")->getType() == tson::Property::Type::Color &&
+        properties.getProperty("color")->getType() == tson::Type::Color &&
         #ifndef DISABLE_CPP17_FILESYSTEM
         properties.getValue<fs::path>("file_ref") == fs::path("../demo-tileset.png") &&
         #endif
-        properties.getProperty("file_ref")->getType() == tson::Property::Type::File &&
-        properties.getValue<int>("hp") == 4 && properties.getProperty("hp")->getType() == tson::Property::Type::Int &&
-        properties.getValue<bool>("is_player") && properties.getProperty("is_player")->getType() == tson::Property::Type::Boolean &&
-        properties.getValue<float>("jump_force") == 10 && properties.getProperty("jump_force")->getType() == tson::Property::Type::Float &&
-        properties.getValue<std::string>("name") == "Mario" && properties.getProperty("name")->getType() == tson::Property::Type::String
+        properties.getProperty("file_ref")->getType() == tson::Type::File &&
+        properties.getValue<int>("hp") == 4 && properties.getProperty("hp")->getType() == tson::Type::Int &&
+        properties.getValue<bool>("is_player") && properties.getProperty("is_player")->getType() == tson::Type::Boolean &&
+        properties.getValue<float>("jump_force") == 10 && properties.getProperty("jump_force")->getType() == tson::Type::Float &&
+        properties.getValue<std::string>("name") == "Mario" && properties.getProperty("name")->getType() == tson::Type::String
     );
 
     REQUIRE(hasCorrectValues);

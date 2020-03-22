@@ -43,6 +43,7 @@
 
 #include <any>
 #include <string>
+#include "../common/Enums.hpp"
 #include "../external/json.hpp"
 #include "Color.hpp"
 
@@ -52,16 +53,16 @@ namespace tson
     {
         public:
 
-            enum class Type : uint8_t
-            {
-                    Undefined = 0,
-                    Color = 1, /*! color */
-                    File = 2, /*! file */
-                    Int = 3, /*! int */
-                    Boolean = 4, /*! bool */
-                    Float = 5, /*! float */
-                    String = 6 /*! string */
-            };
+            //enum class Type : uint8_t
+            //{
+            //        Undefined = 0,
+            //        Color = 1, /*! color */
+            //        File = 2, /*! file */
+            //        Int = 3, /*! int */
+            //        Boolean = 4, /*! bool */
+            //        Float = 5, /*! float */
+            //        String = 6 /*! string */
+            //};
 
             inline Property();
             inline Property(const nlohmann::json &json);
@@ -179,7 +180,7 @@ std::string tson::Property::getValueTypeInfo()
     return m_value.type().name();
 }
 
-tson::Property::Type tson::Property::getType() const
+tson::Type tson::Property::getType() const
 {
     return m_type;
 }
@@ -187,19 +188,19 @@ tson::Property::Type tson::Property::getType() const
 void tson::Property::setTypeByString(const std::string &str)
 {
     if(str == "color")
-        m_type = tson::Property::Type::Color;
+        m_type = tson::Type::Color;
     else if(str == "file")
-        m_type = tson::Property::Type::File;
+        m_type = tson::Type::File;
     else if(str == "int")
-        m_type = tson::Property::Type::Int;
+        m_type = tson::Type::Int;
     else if(str == "bool")
-        m_type = tson::Property::Type::Boolean;
+        m_type = tson::Type::Boolean;
     else if(str == "float")
-        m_type = tson::Property::Type::Float;
+        m_type = tson::Type::Float;
     else if(str == "string")
-        m_type = tson::Property::Type::String;
+        m_type = tson::Type::String;
     else
-        m_type = tson::Property::Type::Undefined;
+        m_type = tson::Type::Undefined;
 }
 
 void tson::Property::setValueByType(const nlohmann::json &json)

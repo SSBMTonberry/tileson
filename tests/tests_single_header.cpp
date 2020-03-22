@@ -20,26 +20,26 @@ bool mapIsAbsolutelyFine2(tson::Map &map)
             map.getSize() == tson::Vector2i(32, 16) &&
             map.getBackgroundColor() == tson::Colori("#3288c1") &&
             map.getLayers()[0].getProperties().getSize() > 0 &&
-            map.getLayers()[0].getProperties().get()[0]->getType() != tson::Property::Type::Undefined &&
+            map.getLayers()[0].getProperties().get()[0]->getType() != tson::Type::Undefined &&
             map.getLayers()[2].getName() == "Object Layer" &&
             map.getLayers()[2].getObjects().size() > 1 &&
             map.getLayers()[2].getObjects()[0].getName() == "coin" &&
             map.getLayers()[2].getObjects()[0].getProperties().getSize() > 0 &&
             map.getLayer("Main Layer") != nullptr &&
-            map.getLayer("Main Layer")->getType() == tson::Layer::Type::TileLayer &&
-            map.getLayer("Background Image")->getType() == tson::Layer::Type::ImageLayer &&
+            map.getLayer("Main Layer")->getType() == tson::LayerType::TileLayer &&
+            map.getLayer("Background Image")->getType() == tson::LayerType::ImageLayer &&
             map.getLayer("Background Image")->get<float>("scroll_speed") == 1.f &&
-            map.getLayer("Background Image")->getProp("repeat_bg")->getType() == tson::Property::Type::Boolean &&
-            map.getLayer("Object Layer")->getType() == tson::Layer::Type::ObjectGroup &&
+            map.getLayer("Background Image")->getProp("repeat_bg")->getType() == tson::Type::Boolean &&
+            map.getLayer("Object Layer")->getType() == tson::LayerType::ObjectGroup &&
             map.getLayer("Object Layer")->firstObj("coin") != nullptr &&
             map.getLayer("Object Layer")->getObjectsByName("goomba").size() == 2 &&
-            !map.getLayer("Object Layer")->getObjectsByType(tson::Object::Type::Object).empty() &&
+            !map.getLayer("Object Layer")->getObjectsByType(tson::ObjectType::Object).empty() &&
             map.getLayer("Object Layer")->getObj(2)->getName() == "coin" &&
             map.getTileset("demo-tileset") != nullptr &&
             map.getTileset("demo-tileset")->getTile(36) != nullptr &&
             map.getTileset("demo-tileset")->getTile(36)->getAnimation().size() == 2 &&
             map.getTileset("demo-tileset")->getTerrain("test_terrain")->getProperties().getSize() == 2 &&
-            map.getTileset("demo-tileset")->getTerrain("test_terrain")->getProp("i_like_this")->getType() == tson::Property::Type::Boolean &&
+            map.getTileset("demo-tileset")->getTerrain("test_terrain")->getProp("i_like_this")->getType() == tson::Type::Boolean &&
             !map.getTileset("demo-tileset")->getTerrain("test_terrain")->get<std::string>("description").empty() &&
             map.getTileMap().size() > 10 &&
             tileData[{4,4}] != nullptr && tileData[{4,4}]->getId() == 1 &&
@@ -60,7 +60,7 @@ TEST_CASE( "Parse a whole map by file (Single Header)", "[complete][parse][file]
     std::string pathToUse = "../../content/test-maps/ultimate_test.json";
     #endif
     tson::Map map = t.parse({pathToUse});
-    if(map.getStatus() == tson::Map::ParseStatus::OK)
+    if(map.getStatus() == tson::ParseStatus::OK)
         REQUIRE(mapIsAbsolutelyFine2(map));
     else
     {
@@ -72,7 +72,7 @@ TEST_CASE( "Parse a whole map by file (Single Header)", "[complete][parse][file]
 TEST_CASE( "Parse a whole map by memory (Single Header)", "[complete][parse][memory]" ) {
     tson::Tileson t;
     tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
-    if (map.getStatus() == tson::Map::ParseStatus::OK)
+    if (map.getStatus() == tson::ParseStatus::OK)
         REQUIRE(mapIsAbsolutelyFine2(map));
     else
     {
@@ -85,7 +85,7 @@ TEST_CASE( "Parse a whole map by memory (Single Header)", "[complete][parse][mem
 TEST_CASE( "Parse a simple map by memory - tiles without any properties (issue #4) (Single Header)", "[simple][parse][memory]" ) {
     tson::Tileson t;
     tson::Map map = t.parse(tson_files_mapper::_SIMPLE_MAP_JSON, tson_files_mapper::_SIMPLE_MAP_JSON_SIZE);
-    if (map.getStatus() == tson::Map::ParseStatus::OK)
+    if (map.getStatus() == tson::ParseStatus::OK)
     {
         auto main = map.getLayer("simple_layer");
         auto tileset = map.getTilesets()[0];
@@ -104,7 +104,7 @@ TEST_CASE( "Parse a simple map by memory - tiles without any properties (issue #
 TEST_CASE( "Parse a minimal version of whole map by memory (Single Header)", "[complete][parse][memory]" ) {
     tson::Tileson t;
     tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_MIN_JSON, tson_files::_ULTIMATE_TEST_MIN_JSON_SIZE);
-    if (map.getStatus() == tson::Map::ParseStatus::OK)
+    if (map.getStatus() == tson::ParseStatus::OK)
         REQUIRE(mapIsAbsolutelyFine2(map));
     else
     {
@@ -120,7 +120,7 @@ TEST_CASE( "Go through demo code - get success (Single Header)", "[demo]" ) {
     tson::Tileson t;
     tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
 
-    if(map.getStatus() == tson::Map::ParseStatus::OK)
+    if(map.getStatus() == tson::ParseStatus::OK)
     {
         //Get color as an rgba color object
         tson::Colori bgColor = map.getBackgroundColor(); //RGBA with 0-255 on each channel
@@ -143,7 +143,7 @@ TEST_CASE( "Go through demo code - get success (Single Header)", "[demo]" ) {
         //You can loop through every container of objects
         for (auto &layer : map.getLayers())
         {
-            if (layer.getType() == tson::Layer::Type::ObjectGroup)
+            if (layer.getType() == tson::LayerType::ObjectGroup)
             {
                 for (auto &obj : layer.getObjects())
                 {
@@ -158,7 +158,7 @@ TEST_CASE( "Go through demo code - get success (Single Header)", "[demo]" ) {
                 std::vector<tson::Object> enemies = layer.getObjectsByName("goomba"); //But we got two of those
 
                 //Gets all objects of a specific type
-                std::vector<tson::Object> objects = layer.getObjectsByType(tson::Object::Type::Object);
+                std::vector<tson::Object> objects = layer.getObjectsByType(tson::ObjectType::Object);
 
                 //Gets an unique object by its name.
                 tson::Object *uniqueObj = layer.getObj(2);
@@ -174,7 +174,7 @@ TEST_CASE( "Go through demo code - get success (Single Header)", "[demo]" ) {
 
         //For tile layers, you can get the tiles presented as a 2D map by calling getTileData()
         //Using x and y positions in tile units.
-        if(layer->getType() == tson::Layer::Type::TileLayer)
+        if(layer->getType() == tson::LayerType::TileLayer)
         {
             //When the map is of a fixed size, you can get the tiles like this
             if(!map.isInfinite())
@@ -233,13 +233,13 @@ TEST_CASE( "A simple example on how to use data of objects and tiles (Single Hea
     tson::Tileson t;
     tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
 
-    if(map.getStatus() == tson::Map::ParseStatus::OK)
+    if(map.getStatus() == tson::ParseStatus::OK)
     {
         //Gets the layer called "Object Layer" from the "ultimate_demo.json map
         tson::Layer *objectLayer = map.getLayer("Object Layer"); //This is an Object Layer
 
         //Example from an Object Layer.
-        if(objectLayer->getType() == tson::Layer::Type::ObjectGroup)
+        if(objectLayer->getType() == tson::LayerType::ObjectGroup)
         {
             tson::Object *goomba = objectLayer->firstObj("goomba"); //Gets the first object with this name. This can be any object.
 
@@ -248,15 +248,15 @@ TEST_CASE( "A simple example on how to use data of objects and tiles (Single Hea
             {
                 tson::Vector2i position = obj.getPosition();
                 tson::Vector2i size = obj.getSize();
-                tson::Object::Type objType = obj.getObjectType();
+                tson::ObjectType objType = obj.getObjectType();
 
                 //You may want to check the object type to make sure you use the data right.
             }
 
-            tson::Object::Type objType = goomba->getObjectType();
+            tson::ObjectType objType = goomba->getObjectType();
 
             /*!
-             * tson::Object::Type is defined like this.
+             * tson::ObjectType is defined like this.
              * They are automatically detected based on what kind of object you have created
              * enum class Type : uint8_t
                 {
@@ -272,7 +272,7 @@ TEST_CASE( "A simple example on how to use data of objects and tiles (Single Hea
                 };
              */
 
-            if (objType == tson::Object::Type::Rectangle)
+            if (objType == tson::ObjectType::Rectangle)
             {
                 tson::Vector2i size = goomba->getSize();
                 tson::Vector2i position = goomba->getPosition();
@@ -286,7 +286,7 @@ TEST_CASE( "A simple example on how to use data of objects and tiles (Single Hea
                 //rect.setSize(sf::Vector2f(size.x, size.y));
                 //rect.setPosition(sf::Vector2f(position.x, position.y));
             }
-            else if (objType == tson::Object::Type::Polygon)
+            else if (objType == tson::ObjectType::Polygon)
             {
                 for(auto const &poly : goomba->getPolygons())
                 {
@@ -294,7 +294,7 @@ TEST_CASE( "A simple example on how to use data of objects and tiles (Single Hea
                 }
                 tson::Vector2i position = goomba->getPosition();
             }
-            else if (objType == tson::Object::Type::Polyline)
+            else if (objType == tson::ObjectType::Polyline)
             {
                 std::vector<tson::Vector2i> polys = goomba->getPolylines();
                 for(auto const &poly : goomba->getPolylines())
@@ -316,7 +316,7 @@ TEST_CASE( "A simple example on how to use data of objects and tiles (Single Hea
 
         //Example from a Tile Layer
         //I know for a fact that this is a Tile Layer, but you can check it this way to be sure.
-        if(tileLayer->getType() == tson::Layer::Type::TileLayer)
+        if(tileLayer->getType() == tson::LayerType::TileLayer)
         {
             //pos = position in tile units
             for(auto &[pos, tile] : tileLayer->getTileData()) //Loops through absolutely all existing tiles

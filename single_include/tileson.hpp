@@ -23015,22 +23015,93 @@ const tson::Vector2i &tson::Chunk::getPosition() const
 #include <any>
 #include <string>
 
+/*** Start of inlined file: Enums.hpp ***/
+//
+// Created by robin on 22.03.2020.
+//
+
+#ifndef TILESON_ENUMS_HPP
+#define TILESON_ENUMS_HPP
+#include <cstdint>
+
+namespace tson
+{
+	/*!
+	 * Type used in Property.hpp
+	 */
+	enum class Type : uint8_t
+	{
+			Undefined = 0,
+			Color = 1, /*! color */
+			File = 2, /*! file */
+			Int = 3, /*! int */
+			Boolean = 4, /*! bool */
+			Float = 5, /*! float */
+			String = 6 /*! string */
+	};
+
+	/*!
+	 * Layer.hpp - LayerType
+	 * //'type': tilelayer, objectgroup, imagelayer or group
+	 */
+	enum class LayerType : uint8_t
+	{
+			Undefined = 0,
+			TileLayer = 1,
+			ObjectGroup = 2,
+			ImageLayer = 3,
+			Group = 4
+	};
+
+	/*!
+	 * Map.hpp - ParseStatus
+	 */
+	enum class ParseStatus : uint8_t
+	{
+			OK = 0, //OK unless otherwise stated
+			FileNotFound = 1,
+			ParseError = 2,
+			MissingData = 3
+	};
+
+	/*!
+	 * Object.hpp - ObjectType
+	 */
+	enum class ObjectType : uint8_t
+	{
+			Undefined = 0,
+			Object = 1,
+			Ellipse = 2,
+			Rectangle = 3,
+			Point = 4,
+			Polygon = 5,
+			Polyline = 6,
+			Text = 7,
+			Template = 8
+	};
+}
+
+#endif //TILESON_ENUMS_HPP
+
+/*** End of inlined file: Enums.hpp ***/
+
+
 namespace tson
 {
 	class Property
 	{
 		public:
 
-			enum class Type : uint8_t
-			{
-					Undefined = 0,
-					Color = 1, /*! color */
-					File = 2, /*! file */
-					Int = 3, /*! int */
-					Boolean = 4, /*! bool */
-					Float = 5, /*! float */
-					String = 6 /*! string */
-			};
+			//enum class Type : uint8_t
+			//{
+			//        Undefined = 0,
+			//        Color = 1, /*! color */
+			//        File = 2, /*! file */
+			//        Int = 3, /*! int */
+			//        Boolean = 4, /*! bool */
+			//        Float = 5, /*! float */
+			//        String = 6 /*! string */
+			//};
 
 			inline Property();
 			inline Property(const nlohmann::json &json);
@@ -23148,7 +23219,7 @@ std::string tson::Property::getValueTypeInfo()
 	return m_value.type().name();
 }
 
-tson::Property::Type tson::Property::getType() const
+tson::Type tson::Property::getType() const
 {
 	return m_type;
 }
@@ -23156,19 +23227,19 @@ tson::Property::Type tson::Property::getType() const
 void tson::Property::setTypeByString(const std::string &str)
 {
 	if(str == "color")
-		m_type = tson::Property::Type::Color;
+		m_type = tson::Type::Color;
 	else if(str == "file")
-		m_type = tson::Property::Type::File;
+		m_type = tson::Type::File;
 	else if(str == "int")
-		m_type = tson::Property::Type::Int;
+		m_type = tson::Type::Int;
 	else if(str == "bool")
-		m_type = tson::Property::Type::Boolean;
+		m_type = tson::Type::Boolean;
 	else if(str == "float")
-		m_type = tson::Property::Type::Float;
+		m_type = tson::Type::Float;
 	else if(str == "string")
-		m_type = tson::Property::Type::String;
+		m_type = tson::Type::String;
 	else
-		m_type = tson::Property::Type::Undefined;
+		m_type = tson::Type::Undefined;
 }
 
 void tson::Property::setValueByType(const nlohmann::json &json)
@@ -23180,7 +23251,7 @@ void tson::Property::setValueByType(const nlohmann::json &json)
 			break;
 
 		case Type::File:
-			#if USE_CPP17_FILESYSTEM
+			#ifndef DISABLE_CPP17_FILESYSTEM
 			m_value = fs::path(json.get<std::string>());
 			#else
 			m_value = json.get<std::string>();
@@ -23227,7 +23298,7 @@ namespace tson
 
 			inline tson::Property * add(const tson::Property &property);
 			inline tson::Property * add(const nlohmann::json &json);
-			inline tson::Property * add(const std::string &name, const std::any &value, tson::Property::Type type);
+			inline tson::Property * add(const std::string &name, const std::any &value, tson::Type type);
 
 			inline void remove(const std::string &name);
 
@@ -23275,7 +23346,7 @@ tson::Property *tson::PropertyCollection::add(const nlohmann::json &json)
 	return &m_properties[name];
 }
 
-tson::Property *tson::PropertyCollection::add(const std::string &name, const std::any &value, tson::Property::Type type)
+tson::Property *tson::PropertyCollection::add(const std::string &name, const std::any &value, tson::Type type)
 {
 	m_properties[name] = {name, value, type};
 	return &m_properties[name];
@@ -23383,24 +23454,24 @@ namespace tson
 	class Object
 	{
 		public:
-			enum class Type : uint8_t
-			{
-					Undefined = 0,
-					Object = 1,
-					Ellipse = 2,
-					Rectangle = 3,
-					Point = 4,
-					Polygon = 5,
-					Polyline = 6,
-					Text = 7,
-					Template = 8
-			};
+			//enum class Type : uint8_t
+			//{
+			//        Undefined = 0,
+			//        Object = 1,
+			//        Ellipse = 2,
+			//        Rectangle = 3,
+			//        Point = 4,
+			//        Polygon = 5,
+			//        Polyline = 6,
+			//        Text = 7,
+			//        Template = 8
+			//};
 
 			inline Object() = default;
 			inline explicit Object(const nlohmann::json &json);
 			inline bool parse(const nlohmann::json &json);
 
-			[[nodiscard]] inline Type getObjectType() const;
+			[[nodiscard]] inline ObjectType getObjectType() const;
 			[[nodiscard]] inline bool isEllipse() const;
 			[[nodiscard]] inline int getGid() const;
 			[[nodiscard]] inline const Vector2i &getSize() const;
@@ -23425,22 +23496,22 @@ namespace tson
 		private:
 			inline void setObjectTypeByJson(const nlohmann::json &json);
 
-			Type                              m_objectType = Type::Undefined;    /*! Says with object type this is */
-			bool                              m_ellipse {};                      /*! 'ellipse': Used to mark an object as an ellipse */
-			int                               m_gid {};                          /*! 'gid': GID, only if object comes from a Tilemap */
-			tson::Vector2i                    m_size;                            /*! x = 'width' (Width in pixels), y = 'height' (Height in pixels). Ignored if using a gid.)*/
-			int                               m_id{};                            /*! 'id': Incremental id - unique across all objects */
-			std::string                       m_name;                            /*! 'name':  String assigned to name field in editor*/
-			bool                              m_point {};                        /*! 'point': Used to mark an object as a point */
-			std::vector<tson::Vector2i>       m_polygon; 	                     /*! 'polygon': A list of x,y coordinates in pixels */
-			std::vector<tson::Vector2i>       m_polyline; 	                     /*! 'polyline': A list of x,y coordinates in pixels */
-			tson::PropertyCollection          m_properties; 	                 /*! 'properties': A list of properties (name, value, type). */
-			float                             m_rotation {};                     /*! 'rotation': Angle in degrees clockwise */
-			std::string                       m_template;                        /*! 'template': Reference to a template file, in case object is a template instance */
-			tson::Text                        m_text; 	                         /*! first: 'text' second: 'wrap' */
-			std::string                       m_type;                            /*! 'type': String assigned to type field in editor */
-			bool                              m_visible {};                      /*! 'visible': Whether object is shown in editor. */
-			tson::Vector2i                    m_position;                        /*! 'x' and 'y': coordinate in pixels */
+			ObjectType                        m_objectType = ObjectType::Undefined;    /*! Says with object type this is */
+			bool                              m_ellipse {};                            /*! 'ellipse': Used to mark an object as an ellipse */
+			int                               m_gid {};                                /*! 'gid': GID, only if object comes from a Tilemap */
+			tson::Vector2i                    m_size;                                  /*! x = 'width' (Width in pixels), y = 'height' (Height in pixels). Ignored if using a gid.)*/
+			int                               m_id{};                                  /*! 'id': Incremental id - unique across all objects */
+			std::string                       m_name;                                  /*! 'name':  String assigned to name field in editor*/
+			bool                              m_point {};                              /*! 'point': Used to mark an object as a point */
+			std::vector<tson::Vector2i>       m_polygon; 	                           /*! 'polygon': A list of x,y coordinates in pixels */
+			std::vector<tson::Vector2i>       m_polyline; 	                           /*! 'polyline': A list of x,y coordinates in pixels */
+			tson::PropertyCollection          m_properties; 	                       /*! 'properties': A list of properties (name, value, type). */
+			float                             m_rotation {};                           /*! 'rotation': Angle in degrees clockwise */
+			std::string                       m_template;                              /*! 'template': Reference to a template file, in case object is a template instance */
+			tson::Text                        m_text; 	                               /*! first: 'text' second: 'wrap' */
+			std::string                       m_type;                                  /*! 'type': String assigned to type field in editor */
+			bool                              m_visible {};                            /*! 'visible': Whether object is shown in editor. */
+			tson::Vector2i                    m_position;                              /*! 'x' and 'y': coordinate in pixels */
 	};
 
 	/*!
@@ -23495,7 +23566,7 @@ bool tson::Object::parse(const nlohmann::json &json)
 
 	setObjectTypeByJson(json);
 
-	if(m_objectType == Type::Template)
+	if(m_objectType == ObjectType::Template)
 		allFound = true; //Just accept anything with this type
 
 	//More advanced data
@@ -23519,23 +23590,23 @@ bool tson::Object::parse(const nlohmann::json &json)
  */
 void tson::Object::setObjectTypeByJson(const nlohmann::json &json)
 {
-	m_objectType = Type::Undefined;
+	m_objectType = ObjectType::Undefined;
 	if(m_ellipse)
-		m_objectType = Type::Ellipse;
+		m_objectType = ObjectType::Ellipse;
 	else if(m_point)
-		m_objectType = Type::Point;
+		m_objectType = ObjectType::Point;
 	else if(json.count("polygon") > 0)
-		m_objectType = Type::Polygon;
+		m_objectType = ObjectType::Polygon;
 	else if(json.count("polyline") > 0)
-		m_objectType = Type::Polyline;
+		m_objectType = ObjectType::Polyline;
 	else if(json.count("text") > 0)
-		m_objectType = Type::Text;
+		m_objectType = ObjectType::Text;
 	else if(json.count("gid") > 0)
-		m_objectType = Type::Object;
+		m_objectType = ObjectType::Object;
 	else if(json.count("template") > 0)
-		m_objectType = Type::Template;
+		m_objectType = ObjectType::Template;
 	else
-		m_objectType = Type::Rectangle;
+		m_objectType = ObjectType::Rectangle;
 }
 
 /*!
@@ -23543,7 +23614,7 @@ void tson::Object::setObjectTypeByJson(const nlohmann::json &json)
  * @return
  */
 
-tson::Object::Type tson::Object::getObjectType() const
+tson::ObjectType tson::Object::getObjectType() const
 {
 	return m_objectType;
 }
@@ -23711,14 +23782,14 @@ namespace tson
 	{
 		public:
 			//'type': tilelayer, objectgroup, imagelayer or group
-			enum class Type : uint8_t
-			{
-					Undefined = 0,
-					TileLayer = 1,
-					ObjectGroup = 2,
-					ImageLayer = 3,
-					Group = 4
-			};
+			//enum class Type : uint8_t
+			//{
+			//        Undefined = 0,
+			//        TileLayer = 1,
+			//        ObjectGroup = 2,
+			//        ImageLayer = 3,
+			//        Group = 4
+			//};
 
 			inline Layer() = default;
 			inline explicit Layer(const nlohmann::json &json);
@@ -23737,7 +23808,7 @@ namespace tson
 			[[nodiscard]] inline const Vector2i &getSize() const;
 			[[nodiscard]] inline const Colori &getTransparentcolor() const;
 
-			[[nodiscard]] inline Type getType() const;
+			[[nodiscard]] inline LayerType getType() const;
 
 			[[nodiscard]] inline const std::string &getTypeStr() const;
 			[[nodiscard]] inline bool isVisible() const;
@@ -23752,7 +23823,7 @@ namespace tson
 			inline tson::Object *getObj(int id);
 			inline tson::Object *firstObj(const std::string &name);
 			inline std::vector<tson::Object> getObjectsByName(const std::string &name);
-			inline std::vector<tson::Object> getObjectsByType(tson::Object::Type type);
+			inline std::vector<tson::Object> getObjectsByType(tson::ObjectType type);
 
 			template <typename T>
 			inline T get(const std::string &name);
@@ -23767,28 +23838,28 @@ namespace tson
 		private:
 			inline void setTypeByString();
 
-			std::vector<tson::Chunk>                       m_chunks; 	       /*! 'chunks': Array of chunks (optional). tilelayer only. */
-			std::string                                    m_compression;      /*! 'compression': zlib, gzip or empty (default). tilelayer only. */
-			std::vector<int>                               m_data;             /*! 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded
-																				*   data. tilelayer only. */
-			std::string                                    m_base64Data;       /*! 'data' (when string):     Array of unsigned int (GIDs) or base64-encoded
-																				*   data. tilelayer only. */
-			std::string                                    m_drawOrder;        /*! 'draworder': topdown (default) or index. objectgroup only. */
-			std::string                                    m_encoding;         /*! 'encoding': csv (default) or base64. tilelayer only. */
-			int                                            m_id{};             /*! 'id': Incremental id - unique across all layers */
-			std::string                                    m_image;            /*! 'image': Image used by this layer. imagelayer only. */
-			std::vector<tson::Layer>                       m_layers; 	       /*! 'layers': Array of layers. group on */
-			std::string                                    m_name;             /*! 'name': Name assigned to this layer */
-			std::vector<tson::Object>                      m_objects;          /*! 'objects': Array of objects. objectgroup only. */
-			tson::Vector2f                                 m_offset;           /*! 'offsetx' and 'offsety': Horizontal and Vertical layer offset in pixels
-																				*  (default: {0, 0}) */
-			float                                          m_opacity{};        /*! 'opacity': Value between 0 and 1 */
-			tson::PropertyCollection                       m_properties; 	   /*! 'properties': A list of properties (name, value, type). */
-			tson::Vector2i                                 m_size;             /*! x = 'width': (Column count. Same as map width for fixed-size maps.)
-																				   y = 'height': Row count. Same as map height for fixed-size maps. */
-			tson::Colori                                   m_transparentcolor; /*! 'transparentcolor': Hex-formatted color (#RRGGBB) (optional, imagelayer only */
-			std::string                                    m_typeStr;          /*! 'type': tilelayer, objectgroup, imagelayer or group */
-			Layer::Type                                    m_type {Layer::Type::Undefined};             /*! Layer type as enum*/
+			std::vector<tson::Chunk>                       m_chunks; 	                              /*! 'chunks': Array of chunks (optional). tilelayer only. */
+			std::string                                    m_compression;                             /*! 'compression': zlib, gzip or empty (default). tilelayer only. */
+			std::vector<int>                               m_data;                                    /*! 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded
+																									   *   data. tilelayer only. */
+			std::string                                    m_base64Data;                              /*! 'data' (when string):     Array of unsigned int (GIDs) or base64-encoded
+																									   *   data. tilelayer only. */
+			std::string                                    m_drawOrder;                               /*! 'draworder': topdown (default) or index. objectgroup only. */
+			std::string                                    m_encoding;                                /*! 'encoding': csv (default) or base64. tilelayer only. */
+			int                                            m_id{};                                    /*! 'id': Incremental id - unique across all layers */
+			std::string                                    m_image;                                   /*! 'image': Image used by this layer. imagelayer only. */
+			std::vector<tson::Layer>                       m_layers; 	                              /*! 'layers': Array of layers. group on */
+			std::string                                    m_name;                                    /*! 'name': Name assigned to this layer */
+			std::vector<tson::Object>                      m_objects;                                 /*! 'objects': Array of objects. objectgroup only. */
+			tson::Vector2f                                 m_offset;                                  /*! 'offsetx' and 'offsety': Horizontal and Vertical layer offset in pixels
+																									   *  (default: {0, 0}) */
+			float                                          m_opacity{};                               /*! 'opacity': Value between 0 and 1 */
+			tson::PropertyCollection                       m_properties; 	                          /*! 'properties': A list of properties (name, value, type). */
+			tson::Vector2i                                 m_size;                                    /*! x = 'width': (Column count. Same as map width for fixed-size maps.)
+																										  y = 'height': Row count. Same as map height for fixed-size maps. */
+			tson::Colori                                   m_transparentcolor;                        /*! 'transparentcolor': Hex-formatted color (#RRGGBB) (optional, imagelayer only */
+			std::string                                    m_typeStr;                                 /*! 'type': tilelayer, objectgroup, imagelayer or group */
+			LayerType                                      m_type {LayerType::Undefined};             /*! Layer type as enum*/
 			bool                                           m_visible{};        /*! 'visible': Whether layer is shown or hidden in editor */
 			int                                            m_x{};              /*! 'x': Horizontal layer offset in tiles. Always 0. */
 			int                                            m_y{};              /*! 'y': Vertical layer offset in tiles. Always 0. */
@@ -23889,10 +23960,10 @@ std::vector<tson::Object> tson::Layer::getObjectsByName(const std::string &name)
 
 /*!
  * Copies all objects with a type that equals the parameter
- * @param type Type of the objects to return
+ * @param type LayerType of the objects to return
  * @return All objects with a matching type
  */
-std::vector<tson::Object> tson::Layer::getObjectsByType(tson::Object::Type type)
+std::vector<tson::Object> tson::Layer::getObjectsByType(tson::ObjectType type)
 {
 	std::vector<tson::Object> found;
 
@@ -23938,11 +24009,11 @@ tson::Object *tson::Layer::getObj(int id)
  */
 void tson::Layer::setTypeByString()
 {
-	if(m_typeStr == "tilelayer") m_type = Type::TileLayer;
-	else if(m_typeStr == "objectgroup") m_type = Type::ObjectGroup;
-	else if(m_typeStr == "imagelayer") m_type = Type::ImageLayer;
-	else if(m_typeStr == "group") m_type = Type::Group;
-	else m_type = Type::Undefined;
+	if(m_typeStr == "tilelayer") m_type = LayerType::TileLayer;
+	else if(m_typeStr == "objectgroup") m_type = LayerType::ObjectGroup;
+	else if(m_typeStr == "imagelayer") m_type = LayerType::ImageLayer;
+	else if(m_typeStr == "group") m_type = LayerType::Group;
+	else m_type = LayerType::Undefined;
 }
 
 /*!
@@ -24142,7 +24213,7 @@ tson::Property *tson::Layer::getProp(const std::string &name)
  * Get layer type
  * @return Layer type as enum
  */
-tson::Layer::Type tson::Layer::getType() const
+tson::LayerType tson::Layer::getType() const
 {
 	return m_type;
 }
@@ -24675,7 +24746,7 @@ namespace tson
 			inline bool parse(const nlohmann::json &json);
 
 			[[nodiscard]] inline int getId() const;
-			#if USE_CPP17_FILESYSTEM
+			#ifndef DISABLE_CPP17_FILESYSTEM
 			[[nodiscard]] inline const fs::path &getImage() const;
 			#else
 			[[nodiscard]] inline const std::string &getImage() const;
@@ -24695,7 +24766,7 @@ namespace tson
 		private:
 			std::vector<tson::Frame>    m_animation; 	    /*! 'animation': Array of Frames */
 			int                         m_id {};            /*! 'id': Local ID of the tile */
-			#if USE_CPP17_FILESYSTEM
+			#ifndef DISABLE_CPP17_FILESYSTEM
 			fs::path                    m_image;            /*! 'image': Image representing this tile (optional)*/
 			#else
 			std::string                 m_image;
@@ -24742,7 +24813,7 @@ tson::Tile::Tile(int id) : m_id {id}
 bool tson::Tile::parse(const nlohmann::json &json)
 {
 	bool allFound = true;
-	#if USE_CPP17_FILESYSTEM
+	#ifndef DISABLE_CPP17_FILESYSTEM
 	if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); //Optional
 	#else
 	if(json.count("image") > 0) m_image = json["image"].get<std::string>(); //Optional
@@ -24779,7 +24850,7 @@ int tson::Tile::getId() const
  * 'image': Image representing this tile (optional)
  * @return
  */
-#if USE_CPP17_FILESYSTEM
+#ifndef DISABLE_CPP17_FILESYSTEM
 const fs::path &tson::Tile::getImage() const { return m_image; }
 #else
 const std::string &tson::Tile::getImage() const { return m_image; }
@@ -25060,7 +25131,7 @@ namespace tson
 			[[nodiscard]] inline int getColumns() const;
 			[[nodiscard]] inline int getFirstgid() const;
 
-			#if USE_CPP17_FILESYSTEM
+			#ifndef DISABLE_CPP17_FILESYSTEM
 			[[nodiscard]] inline const fs::path &getImagePath() const;
 			[[nodiscard]] inline const fs::path &getImage() const;
 			#else
@@ -25095,7 +25166,7 @@ namespace tson
 
 			int                           m_columns {};       /*! 'columns': The number of tile columns in the tileset */
 			int                           m_firstgid {};      /*! 'firstgid': GID corresponding to the first tile in the set */
-			#if USE_CPP17_FILESYSTEM
+			#ifndef DISABLE_CPP17_FILESYSTEM
 			fs::path                      m_image;            /*! 'image': Image used for tiles in this set */
 			#else
 			std::string                   m_image;
@@ -25143,7 +25214,7 @@ bool tson::Tileset::parse(const nlohmann::json &json)
 
 	if(json.count("columns") > 0) m_columns = json["columns"].get<int>(); else allFound = false;
 	if(json.count("firstgid") > 0) m_firstgid = json["firstgid"].get<int>(); else allFound = false;
-	#if USE_CPP17_FILESYSTEM
+	#ifndef DISABLE_CPP17_FILESYSTEM
 	if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); else allFound = false;
 	#else
 	if(json.count("image") > 0) m_image = json["image"].get<std::string>(); else allFound = false;
@@ -25201,7 +25272,7 @@ int tson::Tileset::getFirstgid() const
  * 'image': Image used for tiles in this set
  * @return
  */
-#if USE_CPP17_FILESYSTEM
+#ifndef DISABLE_CPP17_FILESYSTEM
 const fs::path &tson::Tileset::getImagePath() const { return m_image; }
 #else
 const std::string &tson::Tileset::getImagePath() const { return m_image; }
@@ -25282,7 +25353,7 @@ const std::string &tson::Tileset::getType() const
  * 'image': Image used for tiles in this set
  * @return
  */
-#if USE_CPP17_FILESYSTEM
+#ifndef DISABLE_CPP17_FILESYSTEM
 const fs::path &tson::Tileset::getImage() const { return m_image; }
 #else
 const std::string &tson::Tileset::getImage() const { return m_image; }
@@ -25411,13 +25482,13 @@ namespace tson
 	class Map
 	{
 		public:
-			enum class ParseStatus : uint8_t
-			{
-					OK = 0, //OK unless otherwise stated
-					FileNotFound = 1,
-					ParseError = 2,
-					MissingData = 3
-			};
+			//enum class ParseStatus : uint8_t
+			//{
+			//        OK = 0, //OK unless otherwise stated
+			//        FileNotFound = 1,
+			//        ParseError = 2,
+			//        MissingData = 3
+			//};
 
 			inline Map() = default;
 			inline Map(ParseStatus status, std::string description);
@@ -25499,7 +25570,7 @@ namespace tson
  * @param status The status
  * @param description Description of the status
  */
-tson::Map::Map(tson::Map::ParseStatus status, std::string description) : m_status {status}, m_statusMessage { std::move(description) }
+tson::Map::Map(tson::ParseStatus status, std::string description) : m_status {status}, m_statusMessage { std::move(description) }
 {
 
 }
@@ -25752,7 +25823,7 @@ tson::Property *tson::Map::getProp(const std::string &name)
 	return nullptr;
 }
 
-tson::Map::ParseStatus tson::Map::getStatus() const
+tson::ParseStatus tson::Map::getStatus() const
 {
 	return m_status;
 }
@@ -25837,7 +25908,7 @@ namespace tson
 	{
 		public:
 			Tileson() = default;
-			#if USE_CPP17_FILESYSTEM
+			#ifndef DISABLE_CPP17_FILESYSTEM
 			inline tson::Map parse(const fs::path &path);
 			#else
 			inline tson::Map parse(const std::string &path);
@@ -25854,7 +25925,7 @@ namespace tson
  * @param path path to file
  * @return parsed data as Map
  */
-#if USE_CPP17_FILESYSTEM
+#ifndef DISABLE_CPP17_FILESYSTEM
 tson::Map tson::Tileson::parse(const fs::path &path)
 {
 	if(fs::exists(path) && fs::is_regular_file(path))
@@ -25870,14 +25941,14 @@ tson::Map tson::Tileson::parse(const fs::path &path)
 			std::string message = "Parse error: ";
 			message += std::string(error.what());
 			message += std::string("\n");
-			return tson::Map {tson::Map::ParseStatus::ParseError, message};
+			return tson::Map {tson::ParseStatus::ParseError, message};
 		}
 		return parseJson(json);
 	}
 
 	std::string msg = "File not found: ";
 	msg += std::string(path.u8string());
-	return tson::Map {tson::Map::ParseStatus::FileNotFound, msg};
+	return tson::Map {tson::ParseStatus::FileNotFound, msg};
 }
 #else
 tson::Map tson::Tileson::parse(const std::string &path)
@@ -25894,7 +25965,7 @@ tson::Map tson::Tileson::parse(const std::string &path)
 		std::string message = "Parse error: ";
 		message += std::string(error.what());
 		message += std::string("\n");
-		return tson::Map {tson::Map::ParseStatus::ParseError, message};
+		return tson::Map {tson::ParseStatus::ParseError, message};
 	}
 	return parseJson(json);
 
@@ -25923,7 +25994,7 @@ tson::Map tson::Tileson::parse(const void *data, size_t size)
 		std::string message = "Parse error: ";
 		message += std::string(error.what());
 		message += std::string("\n");
-		return tson::Map{ tson::Map::ParseStatus::ParseError, message };
+		return tson::Map{ tson::ParseStatus::ParseError, message };
 	}
 
 	return parseJson(json);
@@ -25940,7 +26011,7 @@ tson::Map tson::Tileson::parseJson(const nlohmann::json &json)
 	if(map.parse(json))
 		return map;
 
-	return tson::Map {tson::Map::ParseStatus::MissingData, "Missing map data..."};
+	return tson::Map {tson::ParseStatus::MissingData, "Missing map data..."};
 }
 
 #endif //TILESON_TILESON_PARSER_HPP

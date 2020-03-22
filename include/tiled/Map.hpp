@@ -11,18 +11,20 @@
 #include "Layer.hpp"
 #include "Tileset.hpp"
 
+#include "../common/Enums.hpp"
+
 namespace tson
 {
     class Map
     {
         public:
-            enum class ParseStatus : uint8_t
-            {
-                    OK = 0, //OK unless otherwise stated
-                    FileNotFound = 1,
-                    ParseError = 2,
-                    MissingData = 3
-            };
+            //enum class ParseStatus : uint8_t
+            //{
+            //        OK = 0, //OK unless otherwise stated
+            //        FileNotFound = 1,
+            //        ParseError = 2,
+            //        MissingData = 3
+            //};
 
             inline Map() = default;
             inline Map(ParseStatus status, std::string description);
@@ -104,7 +106,7 @@ namespace tson
  * @param status The status
  * @param description Description of the status
  */
-tson::Map::Map(tson::Map::ParseStatus status, std::string description) : m_status {status}, m_statusMessage { std::move(description) }
+tson::Map::Map(tson::ParseStatus status, std::string description) : m_status {status}, m_statusMessage { std::move(description) }
 {
 
 }
@@ -358,7 +360,7 @@ tson::Property *tson::Map::getProp(const std::string &name)
     return nullptr;
 }
 
-tson::Map::ParseStatus tson::Map::getStatus() const
+tson::ParseStatus tson::Map::getStatus() const
 {
     return m_status;
 }

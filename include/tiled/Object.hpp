@@ -10,30 +10,32 @@
 #include "../objects/PropertyCollection.hpp"
 #include "Text.hpp"
 
+#include "../common/Enums.hpp"
+
 namespace tson
 {
     class Object
     {
         public:
-            enum class Type : uint8_t
-            {
-                    Undefined = 0,
-                    Object = 1,
-                    Ellipse = 2,
-                    Rectangle = 3,
-                    Point = 4,
-                    Polygon = 5,
-                    Polyline = 6,
-                    Text = 7,
-                    Template = 8
-            };
+            //enum class Type : uint8_t
+            //{
+            //        Undefined = 0,
+            //        Object = 1,
+            //        Ellipse = 2,
+            //        Rectangle = 3,
+            //        Point = 4,
+            //        Polygon = 5,
+            //        Polyline = 6,
+            //        Text = 7,
+            //        Template = 8
+            //};
 
 
             inline Object() = default;
             inline explicit Object(const nlohmann::json &json);
             inline bool parse(const nlohmann::json &json);
 
-            [[nodiscard]] inline Type getObjectType() const;
+            [[nodiscard]] inline ObjectType getObjectType() const;
             [[nodiscard]] inline bool isEllipse() const;
             [[nodiscard]] inline int getGid() const;
             [[nodiscard]] inline const Vector2i &getSize() const;
@@ -58,22 +60,22 @@ namespace tson
         private:
             inline void setObjectTypeByJson(const nlohmann::json &json);
 
-            Type                              m_objectType = Type::Undefined;    /*! Says with object type this is */
-            bool                              m_ellipse {};                      /*! 'ellipse': Used to mark an object as an ellipse */
-            int                               m_gid {};                          /*! 'gid': GID, only if object comes from a Tilemap */
-            tson::Vector2i                    m_size;                            /*! x = 'width' (Width in pixels), y = 'height' (Height in pixels). Ignored if using a gid.)*/
-            int                               m_id{};                            /*! 'id': Incremental id - unique across all objects */
-            std::string                       m_name;                            /*! 'name':  String assigned to name field in editor*/
-            bool                              m_point {};                        /*! 'point': Used to mark an object as a point */
-            std::vector<tson::Vector2i>       m_polygon; 	                     /*! 'polygon': A list of x,y coordinates in pixels */
-            std::vector<tson::Vector2i>       m_polyline; 	                     /*! 'polyline': A list of x,y coordinates in pixels */
-            tson::PropertyCollection          m_properties; 	                 /*! 'properties': A list of properties (name, value, type). */
-            float                             m_rotation {};                     /*! 'rotation': Angle in degrees clockwise */
-            std::string                       m_template;                        /*! 'template': Reference to a template file, in case object is a template instance */
-            tson::Text                        m_text; 	                         /*! first: 'text' second: 'wrap' */
-            std::string                       m_type;                            /*! 'type': String assigned to type field in editor */
-            bool                              m_visible {};                      /*! 'visible': Whether object is shown in editor. */
-            tson::Vector2i                    m_position;                        /*! 'x' and 'y': coordinate in pixels */
+            ObjectType                        m_objectType = ObjectType::Undefined;    /*! Says with object type this is */
+            bool                              m_ellipse {};                            /*! 'ellipse': Used to mark an object as an ellipse */
+            int                               m_gid {};                                /*! 'gid': GID, only if object comes from a Tilemap */
+            tson::Vector2i                    m_size;                                  /*! x = 'width' (Width in pixels), y = 'height' (Height in pixels). Ignored if using a gid.)*/
+            int                               m_id{};                                  /*! 'id': Incremental id - unique across all objects */
+            std::string                       m_name;                                  /*! 'name':  String assigned to name field in editor*/
+            bool                              m_point {};                              /*! 'point': Used to mark an object as a point */
+            std::vector<tson::Vector2i>       m_polygon; 	                           /*! 'polygon': A list of x,y coordinates in pixels */
+            std::vector<tson::Vector2i>       m_polyline; 	                           /*! 'polyline': A list of x,y coordinates in pixels */
+            tson::PropertyCollection          m_properties; 	                       /*! 'properties': A list of properties (name, value, type). */
+            float                             m_rotation {};                           /*! 'rotation': Angle in degrees clockwise */
+            std::string                       m_template;                              /*! 'template': Reference to a template file, in case object is a template instance */
+            tson::Text                        m_text; 	                               /*! first: 'text' second: 'wrap' */
+            std::string                       m_type;                                  /*! 'type': String assigned to type field in editor */
+            bool                              m_visible {};                            /*! 'visible': Whether object is shown in editor. */
+            tson::Vector2i                    m_position;                              /*! 'x' and 'y': coordinate in pixels */
     };
 
     /*!
@@ -128,7 +130,7 @@ bool tson::Object::parse(const nlohmann::json &json)
 
     setObjectTypeByJson(json);
 
-    if(m_objectType == Type::Template)
+    if(m_objectType == ObjectType::Template)
         allFound = true; //Just accept anything with this type
 
     //More advanced data
@@ -153,23 +155,23 @@ bool tson::Object::parse(const nlohmann::json &json)
  */
 void tson::Object::setObjectTypeByJson(const nlohmann::json &json)
 {
-    m_objectType = Type::Undefined;
+    m_objectType = ObjectType::Undefined;
     if(m_ellipse)
-        m_objectType = Type::Ellipse;
+        m_objectType = ObjectType::Ellipse;
     else if(m_point)
-        m_objectType = Type::Point;
+        m_objectType = ObjectType::Point;
     else if(json.count("polygon") > 0)
-        m_objectType = Type::Polygon;
+        m_objectType = ObjectType::Polygon;
     else if(json.count("polyline") > 0)
-        m_objectType = Type::Polyline;
+        m_objectType = ObjectType::Polyline;
     else if(json.count("text") > 0)
-        m_objectType = Type::Text;
+        m_objectType = ObjectType::Text;
     else if(json.count("gid") > 0)
-        m_objectType = Type::Object;
+        m_objectType = ObjectType::Object;
     else if(json.count("template") > 0)
-        m_objectType = Type::Template;
+        m_objectType = ObjectType::Template;
     else
-        m_objectType = Type::Rectangle;
+        m_objectType = ObjectType::Rectangle;
 }
 
 /*!
@@ -177,7 +179,7 @@ void tson::Object::setObjectTypeByJson(const nlohmann::json &json)
  * @return
  */
 
-tson::Object::Type tson::Object::getObjectType() const
+tson::ObjectType tson::Object::getObjectType() const
 {
     return m_objectType;
 }

@@ -20,7 +20,7 @@ namespace tson
 
             inline tson::Property * add(const tson::Property &property);
             inline tson::Property * add(const nlohmann::json &json);
-            inline tson::Property * add(const std::string &name, const std::any &value, tson::Property::Type type);
+            inline tson::Property * add(const std::string &name, const std::any &value, tson::Type type);
 
             inline void remove(const std::string &name);
 
@@ -68,7 +68,7 @@ tson::Property *tson::PropertyCollection::add(const nlohmann::json &json)
     return &m_properties[name];
 }
 
-tson::Property *tson::PropertyCollection::add(const std::string &name, const std::any &value, tson::Property::Type type)
+tson::Property *tson::PropertyCollection::add(const std::string &name, const std::any &value, tson::Type type)
 {
     m_properties[name] = {name, value, type};
     return &m_properties[name];

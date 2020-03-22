@@ -50,14 +50,14 @@ tson::Map tson::Tileson::parse(const fs::path &path)
             std::string message = "Parse error: ";
             message += std::string(error.what());
             message += std::string("\n");
-            return tson::Map {tson::Map::ParseStatus::ParseError, message};
+            return tson::Map {tson::ParseStatus::ParseError, message};
         }
         return parseJson(json);
     }
 
     std::string msg = "File not found: ";
     msg += std::string(path.u8string());
-    return tson::Map {tson::Map::ParseStatus::FileNotFound, msg};
+    return tson::Map {tson::ParseStatus::FileNotFound, msg};
 }
 #else
 tson::Map tson::Tileson::parse(const std::string &path)
@@ -74,7 +74,7 @@ tson::Map tson::Tileson::parse(const std::string &path)
         std::string message = "Parse error: ";
         message += std::string(error.what());
         message += std::string("\n");
-        return tson::Map {tson::Map::ParseStatus::ParseError, message};
+        return tson::Map {tson::ParseStatus::ParseError, message};
     }
     return parseJson(json);
 
@@ -103,7 +103,7 @@ tson::Map tson::Tileson::parse(const void *data, size_t size)
         std::string message = "Parse error: ";
         message += std::string(error.what());
         message += std::string("\n");
-        return tson::Map{ tson::Map::ParseStatus::ParseError, message };
+        return tson::Map{ tson::ParseStatus::ParseError, message };
     }
 
     return parseJson(json);
@@ -120,7 +120,7 @@ tson::Map tson::Tileson::parseJson(const nlohmann::json &json)
     if(map.parse(json))
         return map;
 
-    return tson::Map {tson::Map::ParseStatus::MissingData, "Missing map data..."};
+    return tson::Map {tson::ParseStatus::MissingData, "Missing map data..."};
 }
 
 #endif //TILESON_TILESON_PARSER_HPP
