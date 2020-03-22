@@ -14,7 +14,8 @@
 //#include <tiled/WangColor.h>
 //#include <tiled/WangTile.h>
 //#include <tiled/WangSet.h>
-#include "../include/tileson.hpp"
+//#include "../include/tileson.hpp"
+#include "../single_include/tileson.hpp"
 #include "../external_libs/catch.hpp"
 
 TEST_CASE( "Parse a Map from Tiled's documentation", "[tiled][map]" )
