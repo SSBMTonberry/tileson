@@ -2,18 +2,19 @@
 // Created by robin on 31.07.2019.
 //
 
-#include <tiled/Map.h>
-#include <tiled/Layer.h>
-#include <tiled/Chunk.h>
-#include <iostream>
-#include <tiled/Object.h>
-#include <tiled/Tileset.h>
-#include <tiled/Tile.h>
-#include <tiled/Frame.h>
-#include <tiled/Terrain.h>
-#include <tiled/WangColor.h>
-#include <tiled/WangTile.h>
-#include <tiled/WangSet.h>
+//#include <tiled/Map.h>
+//#include <tiled/Layer.h>
+//#include <tiled/Chunk.h>
+//#include <iostream>
+//#include <tiled/Object.h>
+//#include <tiled/Tileset.h>
+//#include <tiled/Tile.h>
+//#include <tiled/Frame.h>
+//#include <tiled/Terrain.h>
+//#include <tiled/WangColor.h>
+//#include <tiled/WangTile.h>
+//#include <tiled/WangSet.h>
+#include "../include/tileson.hpp"
 #include "../external_libs/catch.hpp"
 
 TEST_CASE( "Parse a Map from Tiled's documentation", "[tiled][map]" )

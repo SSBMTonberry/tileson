@@ -4,7 +4,8 @@
 
 #define CATCH_CONFIG_MAIN
 #include "../external_libs/catch.hpp"
-#include "../src/Tileson.h"
+#include "../include/tileson.hpp"
+//#include "../src/Tileson.h"
 
 #include "tson_files_mapper.h"
 #include "../TilesonConfig.h"
