@@ -22977,35 +22977,37 @@ const tson::Vector2i &tson::Chunk::getPosition() const
 #ifndef TILESON_PROPERTY_HPP
 #define TILESON_PROPERTY_HPP
 
-#include "../TilesonConfig.h"
+//#include "../../TilesonConfig.h"
 
-#if USE_CPP17_FILESYSTEM
-	#if MSVC
-#include <filesystem>
+//#if USE_CPP17_FILESYSTEM
+
+#ifndef DISABLE_CPP17_FILESYSTEM
+	#if _MSC_VER && !__INTEL_COMPILER
+		#include <filesystem>
 		namespace fs = std::filesystem;
-	#elif MINGW
-#if __MINGW64_VERSION_MAJOR > 6
+	#elif __MINGW64__
+		#if __MINGW64_VERSION_MAJOR > 6
 			#include <filesystem>
 			namespace fs = std::filesystem;
 		#else
 			#include <experimental/filesystem>
 			namespace fs = std::experimental::filesystem;
 		#endif
-	#elif APPLE
-#if __clang_major__ < 8
+	#elif __clang__
+		#if __clang_major__ < 8
 			#include <experimental/filesystem>
 			namespace fs = std::experimental::filesystem;
 		#else
 			#include <filesystem>
 			namespace fs = std::filesystem;
 		#endif
-	#else
+	#else //Linux
 		#if __GNUC__ < 8 //GCC major version less than 8
-#include <experimental/filesystem>
+			#include <experimental/filesystem>
 			namespace fs = std::experimental::filesystem;
 		#else
 			#include <filesystem>
-namespace fs = std::filesystem;
+			namespace fs = std::filesystem;
 		#endif
 	#endif
 #endif

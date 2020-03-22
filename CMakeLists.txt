@@ -56,7 +56,7 @@ endif()
 
 option(BUILD_SHARED_LIBS "Build shared libraries." OFF)
 option(BUILD_TESTS "Build unit tests." ON)
-option(BUILD_EXAMPLES "Build examples." OFF)
+option(BUILD_EXAMPLES "Build examples." ON)
 if(${APPLE})
     option(USE_CPP17_FILESYSTEM "Uses cpp17 std::filesystem for anything file related" OFF)
 else()

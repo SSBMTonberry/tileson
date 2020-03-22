@@ -17,7 +17,7 @@ namespace tson
     {
         public:
             Tileson() = default;
-            #if USE_CPP17_FILESYSTEM
+            #ifndef DISABLE_CPP17_FILESYSTEM
             inline tson::Map parse(const fs::path &path);
             #else
             inline tson::Map parse(const std::string &path);
@@ -34,7 +34,7 @@ namespace tson
  * @param path path to file
  * @return parsed data as Map
  */
-#if USE_CPP17_FILESYSTEM
+#ifndef DISABLE_CPP17_FILESYSTEM
 tson::Map tson::Tileson::parse(const fs::path &path)
 {
     if(fs::exists(path) && fs::is_regular_file(path))

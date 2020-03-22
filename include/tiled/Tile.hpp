@@ -23,7 +23,7 @@ namespace tson
             inline bool parse(const nlohmann::json &json);
 
             [[nodiscard]] inline int getId() const;
-            #if USE_CPP17_FILESYSTEM
+            #ifndef DISABLE_CPP17_FILESYSTEM
             [[nodiscard]] inline const fs::path &getImage() const;
             #else
             [[nodiscard]] inline const std::string &getImage() const;
@@ -43,7 +43,7 @@ namespace tson
         private:
             std::vector<tson::Frame>    m_animation; 	    /*! 'animation': Array of Frames */
             int                         m_id {};            /*! 'id': Local ID of the tile */
-            #if USE_CPP17_FILESYSTEM
+            #ifndef DISABLE_CPP17_FILESYSTEM
             fs::path                    m_image;            /*! 'image': Image representing this tile (optional)*/
             #else
             std::string                 m_image;
@@ -90,7 +90,7 @@ tson::Tile::Tile(int id) : m_id {id}
 bool tson::Tile::parse(const nlohmann::json &json)
 {
     bool allFound = true;
-    #if USE_CPP17_FILESYSTEM
+    #ifndef DISABLE_CPP17_FILESYSTEM
     if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); //Optional
     #else
     if(json.count("image") > 0) m_image = json["image"].get<std::string>(); //Optional
@@ -127,7 +127,7 @@ int tson::Tile::getId() const
  * 'image': Image representing this tile (optional)
  * @return
  */
-#if USE_CPP17_FILESYSTEM
+#ifndef DISABLE_CPP17_FILESYSTEM
 const fs::path &tson::Tile::getImage() const { return m_image; }
 #else
 const std::string &tson::Tile::getImage() const { return m_image; }
