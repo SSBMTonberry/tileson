@@ -17,7 +17,7 @@ bool SfmlDemoManager::parseMap(const std::string &filename)
     tson::Tileson t;
     m_map = t.parse(fs::path(m_basePath / filename));
 
-    if(m_map.getStatus() == tson::Map::ParseStatus::OK)
+    if(m_map.getStatus() == tson::ParseStatus::OK)
     {
         for(auto &tileset : m_map.getTilesets())
             storeAndLoadImage(tileset.getImage().u8string(), {0,0});
@@ -110,7 +110,7 @@ void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
     {
         switch(obj.getObjectType())
         {
-            case tson::Object::Type::Object:
+            case tson::ObjectType::Object:
             {
                 sf::Vector2f offset = getTileOffset(obj.getGid());
                 sf::Sprite *sprite = storeAndLoadImage(tileset->getImage().u8string(), {0,0});
@@ -124,15 +124,15 @@ void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
             }
             break;
 
-            case tson::Object::Type::Ellipse:
+            case tson::ObjectType::Ellipse:
                 //Not used by the demo map, but you could use the properties of obj for a sf::CircleShape
                 break;
 
-            case tson::Object::Type::Rectangle:
+            case tson::ObjectType::Rectangle:
                 //Not used by the demo map, but you could use the properties of obj for a sf::RectangleShape
                 break;
 
-            case tson::Object::Type::Point:
+            case tson::ObjectType::Point:
                 //Not used by the demo map but one could use the points of obj (polygon or polyline)
                 //then pass them into logic like this:
                 //sf::Vertex line[] =
@@ -143,15 +143,15 @@ void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
                 //m_window.draw(line, 2, sf::Lines);
                 break;
 
-            case tson::Object::Type::Polygon:
+            case tson::ObjectType::Polygon:
                 //Not used by the demo map, but you could use the properties of obj for a sf::ConvexShape
                 break;
 
-            case tson::Object::Type::Polyline:
+            case tson::ObjectType::Polyline:
                 //Not used by the demo map, but you could use the properties of obj for a sf::ConvexShape
                 break;
 
-            case tson::Object::Type::Text:
+            case tson::ObjectType::Text:
                 m_demoText.setFont(m_font);
                 m_demoText.setPosition({(float)obj.getPosition().x, (float)obj.getPosition().y});
                 m_demoText.setString(obj.getText().text);
@@ -160,7 +160,7 @@ void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
                 m_window.draw(m_demoText);
                 break;
 
-            case tson::Object::Type::Template:
+            case tson::ObjectType::Template:
                 //use obj.getTemplate() to get the connected template. References an external file not covered by Tileson.
                 //obj.getPosition() and obj.getId() should also be related to the placement of the template.
 
@@ -230,19 +230,19 @@ void SfmlDemoManager::drawLayer(tson::Layer &layer)
     tson::Tileset* tileset = m_map.getTileset("demo-tileset");
     switch (layer.getType())
     {
-        case tson::Layer::Type::TileLayer:
+        case tson::LayerType::TileLayer:
             drawTileLayer(layer, tileset);
             break;
 
-        case tson::Layer::Type::ObjectGroup:
+        case tson::LayerType::ObjectGroup:
             drawObjectLayer(layer);
             break;
 
-        case tson::Layer::Type::ImageLayer:
+        case tson::LayerType::ImageLayer:
             drawImageLayer(layer);
             break;
 
-        case tson::Layer::Type::Group:
+        case tson::LayerType::Group:
             //There are no group layers in the demo map, but it basicly just contains sub layers
             //You can call this function on those layers, like this:
             for(auto &l : layer.getLayers())

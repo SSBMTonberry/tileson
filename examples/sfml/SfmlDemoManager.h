@@ -8,7 +8,8 @@
 
 #include "SFML/Audio.hpp"
 #include "SFML/Graphics.hpp"
-#include "Tileson.h"
+
+#include "tileson.hpp"
 #include <map>
 #include "vera_font.h"
 

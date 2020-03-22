@@ -1,18 +1,17 @@
 //
-// Created by robin on 31.07.2019.
+// Created by robin on 22.03.2020.
 //
 
-#define CATCH_CONFIG_MAIN
 #include "../external_libs/catch.hpp"
 
 #include "../TilesonConfig.h"
-#include "../include/tileson.hpp"
+#include "../single_include/tileson.hpp"
 //#include "../src/Tileson.h"
 
 #include "tson_files_mapper.h"
 #include "../TilesonConfig.h"
 
-bool mapIsAbsolutelyFine(tson::Map &map)
+bool mapIsAbsolutelyFine2(tson::Map &map)
 {
     auto main = map.getLayer("Main Layer");
     auto tileData = main->getTileData();
@@ -47,11 +46,11 @@ bool mapIsAbsolutelyFine(tson::Map &map)
             tileData[{5,4}] != nullptr && tileData[{5,4}]->getId() == 3 &&
             main->getTileData(8,14) != nullptr && main->getTileData(8,14)->getId() == 2 &&
             main->getTileData(17,5) != nullptr && main->getTileData(17,5)->getId() == 5
-            );
+    );
 }
 
 
-TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" ) {
+TEST_CASE( "Parse a whole map by file (Single Header)", "[complete][parse][file]" ) {
     tson::Tileson t;
     #ifndef DISABLE_CPP17_FILESYSTEM
     fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
@@ -62,7 +61,7 @@ TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" ) {
     #endif
     tson::Map map = t.parse({pathToUse});
     if(map.getStatus() == tson::ParseStatus::OK)
-        REQUIRE(mapIsAbsolutelyFine(map));
+        REQUIRE(mapIsAbsolutelyFine2(map));
     else
     {
         std::cout << "Ignored - " << map.getStatusMessage() << std::endl;
@@ -70,11 +69,11 @@ TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" ) {
     }
 }
 
-TEST_CASE( "Parse a whole map by memory", "[complete][parse][memory]" ) {
+TEST_CASE( "Parse a whole map by memory (Single Header)", "[complete][parse][memory]" ) {
     tson::Tileson t;
     tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
     if (map.getStatus() == tson::ParseStatus::OK)
-        REQUIRE(mapIsAbsolutelyFine(map));
+        REQUIRE(mapIsAbsolutelyFine2(map));
     else
     {
         std::cout << "Memory parse error - " << map.getStatusMessage() << std::endl;
@@ -83,7 +82,7 @@ TEST_CASE( "Parse a whole map by memory", "[complete][parse][memory]" ) {
     }
 }
 
-TEST_CASE( "Parse a simple map by memory - tiles without any properties (issue #4)", "[simple][parse][memory]" ) {
+TEST_CASE( "Parse a simple map by memory - tiles without any properties (issue #4) (Single Header)", "[simple][parse][memory]" ) {
     tson::Tileson t;
     tson::Map map = t.parse(tson_files_mapper::_SIMPLE_MAP_JSON, tson_files_mapper::_SIMPLE_MAP_JSON_SIZE);
     if (map.getStatus() == tson::ParseStatus::OK)
@@ -102,11 +101,11 @@ TEST_CASE( "Parse a simple map by memory - tiles without any properties (issue #
     }
 }
 
-TEST_CASE( "Parse a minimal version of whole map by memory", "[complete][parse][memory]" ) {
+TEST_CASE( "Parse a minimal version of whole map by memory (Single Header)", "[complete][parse][memory]" ) {
     tson::Tileson t;
     tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_MIN_JSON, tson_files::_ULTIMATE_TEST_MIN_JSON_SIZE);
     if (map.getStatus() == tson::ParseStatus::OK)
-        REQUIRE(mapIsAbsolutelyFine(map));
+        REQUIRE(mapIsAbsolutelyFine2(map));
     else
     {
         std::cout << "Memory parse error - " << map.getStatusMessage() << std::endl;
@@ -117,7 +116,7 @@ TEST_CASE( "Parse a minimal version of whole map by memory", "[complete][parse][
 
 
 
-TEST_CASE( "Go through demo code - get success", "[demo]" ) {
+TEST_CASE( "Go through demo code - get success (Single Header)", "[demo]" ) {
     tson::Tileson t;
     tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
 
@@ -184,12 +183,12 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
 
                 //Unsafe way to get a tile
                 tson::Tile *invalidTile = tileData[{0, 4}]; // x:0,  y:4  - There is no tile here, so this will be nullptr.
-                                                                   // Be careful with this, as it expands the map with an ID of {0,4} pointing
-                                                                   // to a nullptr...
+                // Be careful with this, as it expands the map with an ID of {0,4} pointing
+                // to a nullptr...
 
                 //Individual tiles should be retrieved by calling the safe version:
                 tson::Tile *safeInvalid = layer->getTileData(0, 5); //Another non-existent tile, but with safety check.
-                                                                         //Will not expand the map with a nullptr
+                //Will not expand the map with a nullptr
 
                 tson::Tile *tile1 = layer->getTileData(4, 4);       //x:4,  y:4  - Points to tile with ID 1 (Tiled internal ID: 0)
                 tson::Tile *tile2 = layer->getTileData(5, 4);       //x:5,  y:4  - Points to tile with ID 3 (Tiled internal ID: 2)
@@ -229,7 +228,7 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
     REQUIRE( true );
 }
 
-TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" )
+TEST_CASE( "A simple example on how to use data of objects and tiles (Single Header)", "[demo]" )
 {
     tson::Tileson t;
     tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
@@ -308,7 +307,7 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
 
         tson::Layer *tileLayer = map.getLayer("Main Layer"); //This is a Tile Layer.
         tson::Tileset *tileset = map.getTileset("demo-tileset"); //You will also need the tileset used
-                                                                       //by the tile map to make sense of everything
+        //by the tile map to make sense of everything
 
         int firstId = tileset->getFirstgid(); //First tile id of the tileset
         int columns = tileset->getColumns(); //For the demo map it is 8.
