@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['ellipse',['Ellipse',['../classtson_1_1Object.html#a57a5d95ed19603db6cf16a8f965b9e06a119518c2134c46108179369f0ce81fa2',1,'tson::Object']]]
+  ['cbor_1362',['cbor',['../namespacenlohmann_1_1detail.html#aa554fc6a11519e4f347deb25a9f0db40aaf9de350d652f0c9055ddab514bd23ea',1,'nlohmann::detail']]],
+  ['color_1363',['Color',['../namespacetson.html#a072f9f86eaa4189282ed315ddfde0094acb5feb1b7314637725a2e73bdc9f7295',1,'tson']]]
 ];

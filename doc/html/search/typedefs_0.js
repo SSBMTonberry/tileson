@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['colorf',['Colorf',['../namespacetson.html#ab98b40935388bcf20b70099c66ad3055',1,'tson']]],
-  ['colori',['Colori',['../namespacetson.html#ae0579e97e7ba7d84797f4a258fd9af7e',1,'tson']]]
+  ['allocator_5ftype_1265',['allocator_type',['../classnlohmann_1_1basic__json.html#a69388a77648e83007af1295aaf350c0f',1,'nlohmann::basic_json']]],
+  ['array_5ft_1266',['array_t',['../classnlohmann_1_1basic__json.html#a69524b1f8f42c0a81b86cee3fc54e034',1,'nlohmann::basic_json']]]
 ];

@@ -1,13 +1,14 @@
 var searchData=
 [
-  ['wangcolor',['WangColor',['../classtson_1_1WangColor.html',1,'tson::WangColor'],['../classtson_1_1WangColor.html#ab63531d43ad1c8e0c90e6ad971fd3612',1,'tson::WangColor::WangColor()=default'],['../classtson_1_1WangColor.html#a3905b98c07f69d6e1d512bf134b16a27',1,'tson::WangColor::WangColor(const nlohmann::json &amp;json)']]],
-  ['wangcolor_2ecpp',['WangColor.cpp',['../WangColor_8cpp.html',1,'']]],
-  ['wangcolor_2eh',['WangColor.h',['../WangColor_8h.html',1,'']]],
-  ['wangset',['WangSet',['../classtson_1_1WangSet.html',1,'tson::WangSet'],['../classtson_1_1WangSet.html#a4b1a092a2db68d023af50db93f7479bb',1,'tson::WangSet::WangSet()=default'],['../classtson_1_1WangSet.html#a92f6efb6644f330de7d3f1f79117b921',1,'tson::WangSet::WangSet(const nlohmann::json &amp;json)']]],
-  ['wangset_2ecpp',['WangSet.cpp',['../WangSet_8cpp.html',1,'']]],
-  ['wangset_2eh',['WangSet.h',['../WangSet_8h.html',1,'']]],
-  ['wangtile',['WangTile',['../classtson_1_1WangTile.html',1,'tson::WangTile'],['../classtson_1_1WangTile.html#a6181ae35f0b88a7cd080daebbe165b8d',1,'tson::WangTile::WangTile()=default'],['../classtson_1_1WangTile.html#ad83d7fb15bfca975944549e33f0e90bb',1,'tson::WangTile::WangTile(const nlohmann::json &amp;json)']]],
-  ['wangtile_2ecpp',['WangTile.cpp',['../WangTile_8cpp.html',1,'']]],
-  ['wangtile_2eh',['WangTile.h',['../WangTile_8h.html',1,'']]],
-  ['wrap',['wrap',['../classtson_1_1Text.html#a73bb67581dff6050b6b6c324f5a82ee5',1,'tson::Text']]]
+  ['r_606',['r',['../classtson_1_1Color.html#af3fcb996a66d8c0301eca603d3710a95',1,'tson::Color']]],
+  ['rbegin_607',['rbegin',['../classnlohmann_1_1basic__json.html#a32674498f617591fff4002ad0934a4f6',1,'nlohmann::basic_json::rbegin() noexcept'],['../classnlohmann_1_1basic__json.html#a8d792070799098e6172e82a3865875ee',1,'nlohmann::basic_json::rbegin() const noexcept']]],
+  ['reallimits_608',['RealLimits',['../structnlohmann_1_1detail_1_1is__compatible__integer__type__impl_3_01RealIntegerType_00_01Compati58dfea94b501210ab5eb55b99717d8e4.html#ad4316bb4401538e9fd5662d1b7bb94f6',1,'nlohmann::detail::is_compatible_integer_type_impl&lt; RealIntegerType, CompatibleNumberIntegerType, enable_if_t&lt; std::is_integral&lt; RealIntegerType &gt;::value andstd::is_integral&lt; CompatibleNumberIntegerType &gt;::value andnot std::is_same&lt; bool, CompatibleNumberIntegerType &gt;::value &gt; &gt;']]],
+  ['rectangle_609',['Rectangle',['../namespacetson.html#a7316610048678651b4f11a7319bee3f8ace9291906a4c3b042650b70d7f3b152e',1,'tson']]],
+  ['reference_610',['reference',['../structnlohmann_1_1detail_1_1iterator__types_3_01It_00_01void__t_3_01typename_01It_1_1difference_d2be8685966c97e00e99d4fd2366dc0b.html#a5e82d2d8dabd022b8ff916f2e83a82f2',1,'nlohmann::detail::iterator_types&lt; It, void_t&lt; typename It::difference_type, typename It::value_type, typename It::pointer, typename It::reference, typename It::iterator_category &gt; &gt;::reference()'],['../structnlohmann_1_1detail_1_1iterator__traits_3_01T_01_5_00_01enable__if__t_3_01std_1_1is__object_3_01T_01_4_1_1value_01_4_01_4.html#a0809c5949d22f08a993231d2fdf285f0',1,'nlohmann::detail::iterator_traits&lt; T *, enable_if_t&lt; std::is_object&lt; T &gt;::value &gt; &gt;::reference()'],['../classnlohmann_1_1detail_1_1iteration__proxy__value.html#a5bc7d3133daab5ec4797f3132e093af8',1,'nlohmann::detail::iteration_proxy_value::reference()'],['../classnlohmann_1_1detail_1_1iter__impl.html#a5be8001be099c6b82310f4d387b953ce',1,'nlohmann::detail::iter_impl::reference()'],['../classnlohmann_1_1detail_1_1json__reverse__iterator.html#a42f51a69bac7b2aebb613b2164e457f1',1,'nlohmann::detail::json_reverse_iterator::reference()'],['../classnlohmann_1_1basic__json.html#af11372ea846fedea8b2098dba7323831',1,'nlohmann::basic_json::reference()']]],
+  ['reference_5ft_611',['reference_t',['../namespacenlohmann_1_1detail.html#a082bdafd3b4c61d9d1e92b35b8f75ee3',1,'nlohmann::detail']]],
+  ['reinterpret_5fbits_612',['reinterpret_bits',['../namespacenlohmann_1_1detail_1_1dtoa__impl.html#a1c5d30eb51e5e994a3f48bde104d2ce8',1,'nlohmann::detail::dtoa_impl']]],
+  ['remove_613',['remove',['../classtson_1_1PropertyCollection.html#a1bbda14527b9276a34ed7057c54e315d',1,'tson::PropertyCollection']]],
+  ['rend_614',['rend',['../classnlohmann_1_1basic__json.html#a27d668c5b974f4b3bded760f5553b5c6',1,'nlohmann::basic_json::rend() noexcept'],['../classnlohmann_1_1basic__json.html#a6adf45af5f550ae31fe3bf0759b9af14',1,'nlohmann::basic_json::rend() const noexcept']]],
+  ['replace_615',['replace',['../namespacenlohmann_1_1detail.html#a5a76b60b26dc8c47256a996d18d967dfa9dde360102c103867bd2f45872f1129c',1,'nlohmann::detail']]],
+  ['reverse_5fiterator_616',['reverse_iterator',['../classnlohmann_1_1basic__json.html#a0d2df32b8689b776dd3b0865f1362f40',1,'nlohmann::basic_json']]]
 ];

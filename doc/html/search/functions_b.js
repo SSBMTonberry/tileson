@@ -1,9 +1,6 @@
 var searchData=
 [
-  ['setid',['setId',['../classtson_1_1PropertyCollection.html#ac7946632c038ef7dcc10881229f29c18',1,'tson::PropertyCollection']]],
-  ['setname',['setName',['../classtson_1_1Property.html#aec8cb237c1dac262589cd2b52189bde1',1,'tson::Property']]],
-  ['setstrvalue',['setStrValue',['../classtson_1_1Property.html#ad9df5aff4283d1ffdf40abf12090e034',1,'tson::Property']]],
-  ['settypebystring',['setTypeByString',['../classtson_1_1Property.html#a69849575fcc65abcfed6ea0e3990c367',1,'tson::Property']]],
-  ['setvalue',['setValue',['../classtson_1_1Property.html#a8ff1dae4110fac51d024407303552b1b',1,'tson::Property::setValue()'],['../classtson_1_1PropertyCollection.html#a80470b96535b25aae6bc09c6ea3d51d6',1,'tson::PropertyCollection::setValue()']]],
-  ['setvaluebytype',['setValueByType',['../classtson_1_1Property.html#aab4439cdd26d7ab8b99be58b219558a5',1,'tson::Property']]]
+  ['layer_1105',['Layer',['../classtson_1_1Layer.html#ac744d2ba56eb9e2e11063db895c7318b',1,'tson::Layer::Layer()=default'],['../classtson_1_1Layer.html#adfa7e5c62ec8906ceca1ead705183a41',1,'tson::Layer::Layer(const nlohmann::json &amp;json)']]],
+  ['lexer_1106',['lexer',['../classnlohmann_1_1detail_1_1lexer.html#ab6818e0fc05f4a52c65aeb967dd79919',1,'nlohmann::detail::lexer::lexer(detail::input_adapter_t &amp;&amp;adapter)'],['../classnlohmann_1_1detail_1_1lexer.html#a2e8ce2a0d266d148b69dfbcc2e4ad71a',1,'nlohmann::detail::lexer::lexer(const lexer &amp;)=delete'],['../classnlohmann_1_1detail_1_1lexer.html#a9045348915010649fad1f15e80b6e34d',1,'nlohmann::detail::lexer::lexer(lexer &amp;&amp;)=delete']]],
+  ['little_5fendianess_1107',['little_endianess',['../classnlohmann_1_1detail_1_1binary__reader.html#a1e31dbfcf9567c8c2d4f0e4eb1b0230a',1,'nlohmann::detail::binary_reader']]]
 ];
