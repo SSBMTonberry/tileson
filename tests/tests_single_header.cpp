@@ -2,6 +2,12 @@
 // Created by robin on 22.03.2020.
 //
 
+
+/*!
+ * Single include is a bit heavy for CLion in the test project, so it is ignored unless manually changed for testing.
+ */
+#if 0
+
 #include "../external_libs/catch.hpp"
 
 #include "../TilesonConfig.h"
@@ -358,3 +364,5 @@ TEST_CASE( "A simple example on how to use data of objects and tiles (Single Hea
     }
     REQUIRE( true );
 }
+
+#endif

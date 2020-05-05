@@ -1,10 +1,15 @@
 [![Build Status](https://travis-ci.org/SSBMTonberry/tileson.svg?branch=master)](https://travis-ci.org/SSBMTonberry/tileson)
 
-## As of version 1.1.0, Tileson is now single-header!
+## As of version 1.1.0, Tileson is now header-only!
 This means that all you need is one file, `single_include/tileson.hpp` to have Tileson going
-in your project! You can also alternatively copy the `include` directory and all its contents if you
-want to have every component in their own file, but you will still only need to include the
-`tileson.hpp` file
+in your project! The single-file is generated, and is quite large, as it uses the nlohmann/json as a built-in dependency,
+and might thus be a bit heavy to load (26 000 lines of code). 
+You may alternatively copy the `include` directory and all its contents if you
+want to have every component in their own file. This will probably be way less heavy for your IDE, but you will still 
+only need to include the `tileson.h` file in the top level. 
+
+The reason behind this change is to make it much easier to include Tileson in your project, without the need to build 
+a Tileson lib or even care about which build system you use (whether it is CMake or something else). 
 
 # Tileson
 Tileson is a modern and helpful cross-platform json-parser for C++, used for parsing Tiled maps.
@@ -37,7 +42,7 @@ int main()
     tson::Tileson parser;
     tson::Map map = parser.parse(fs::path("./path/to/map.json"));
 
-    if(map.getStatus() == tson::Map::ParseStatus::OK)
+    if(map.getStatus() == tson::ParseStatus::OK)
     {
         //Get color as an rgba color object
         tson::Colori bgColor = map.getBackgroundColor(); //RGBA with 0-255 on each channel
@@ -60,7 +65,7 @@ int main()
         //You can loop through every container of objects
         for (auto &layer : map.getLayers())
         {
-            if (layer.getType() == tson::Layer::Type::ObjectGroup)
+            if (layer.getType() == tson::LayerType::ObjectGroup)
             {
                 for (auto &obj : layer.getObjects())
                 {
@@ -75,7 +80,7 @@ int main()
                 std::vector<tson::Object> enemies = layer.getObjectsByName("goomba");
 
                 //Gets all objects of a specific type
-                std::vector<tson::Object> objects = layer.getObjectsByType(tson::Object::Type::Object);
+                std::vector<tson::Object> objects = layer.getObjectsByType(tson::ObjectType::Object);
 
                 //Gets an unique object by its name.
                 tson::Object *uniqueObj = layer.getObj(2);
@@ -91,7 +96,7 @@ int main()
 
         //For tile layers, you can get the tiles presented as a 2D map by calling getTileData()
         //Using x and y positions in tile units.
-        if(layer->getType() == tson::Layer::Type::TileLayer)
+        if(layer->getType() == tson::LayerType::TileLayer)
         {
             //When the map is of a fixed size, you can get the tiles like this
             if(!map.isInfinite())
@@ -150,13 +155,13 @@ Another quick example to showcase how to get data that can be used to produce dr
 tson::Tileson t;
 tson::Map map = t.parse(fs::path("./path/to/map.json"));
 
-if(map.getStatus() == tson::Map::ParseStatus::OK)
+if(map.getStatus() == tson::ParseStatus::OK)
 {
     //Gets the layer called "Object Layer" from the "ultimate_demo.json map
     tson::Layer *objectLayer = map.getLayer("Object Layer"); //This is an Object Layer
 
     //Example from an Object Layer.
-    if(objectLayer->getType() == tson::Layer::Type::ObjectGroup)
+    if(objectLayer->getType() == tson::LayerType::ObjectGroup)
     {
         tson::Object *goomba = objectLayer->firstObj("goomba"); //Gets the first object with this name. This can be any object.
 
@@ -165,15 +170,15 @@ if(map.getStatus() == tson::Map::ParseStatus::OK)
         {
             tson::Vector2i position = obj.getPosition();
             tson::Vector2i size = obj.getSize();
-            tson::Object::Type objType = obj.getObjectType();
+            tson::ObjectType objType = obj.getObjectType();
 
             //You may want to check the object type to make sure you use the data right.
         }
 
-        tson::Object::Type objType = goomba->getObjectType();
+        tson::ObjectType objType = goomba->getObjectType();
 
         /*!
-            * tson::Object::Type is defined like this.
+            * tson::ObjectType is defined like this.
             * They are automatically detected based on what kind of object you have created
             * enum class Type : uint8_t
             {
@@ -189,7 +194,7 @@ if(map.getStatus() == tson::Map::ParseStatus::OK)
             };
             */
 
-        if (objType == tson::Object::Type::Rectangle)
+        if (objType == tson::ObjectType::Rectangle)
         {
             tson::Vector2i size = goomba->getSize();
             tson::Vector2i position = goomba->getPosition();
@@ -199,7 +204,7 @@ if(map.getStatus() == tson::Map::ParseStatus::OK)
 
             //Using size and position you can can create a Rectangle object by your library of choice.
         }
-        else if (objType == tson::Object::Type::Polygon)
+        else if (objType == tson::ObjectType::Polygon)
         {
             for(auto const &poly : goomba->getPolygons())
             {
@@ -207,7 +212,7 @@ if(map.getStatus() == tson::Map::ParseStatus::OK)
             }
             tson::Vector2i position = goomba->getPosition();
         }
-        else if (objType == tson::Object::Type::Polyline)
+        else if (objType == tson::ObjectType::Polyline)
         {
             std::vector<tson::Vector2i> polys = goomba->getPolylines();
             for(auto const &poly : goomba->getPolylines())
@@ -229,7 +234,7 @@ if(map.getStatus() == tson::Map::ParseStatus::OK)
 
     //Example from a Tile Layer
     //I know for a fact that this is a Tile Layer, but you can check it this way to be sure.
-    if(tileLayer->getType() == tson::Layer::Type::TileLayer)
+    if(tileLayer->getType() == tson::LayerType::TileLayer)
     {
         //pos = position in tile units
         for(auto &[pos, tile] : tileLayer->getTileData()) //Loops through absolutely all existing tiles

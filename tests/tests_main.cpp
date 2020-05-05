@@ -6,7 +6,7 @@
 #include "../external_libs/catch.hpp"
 
 #include "../TilesonConfig.h"
-#include "../include/tileson.hpp"
+#include "../include/tileson.h"
 //#include "../src/Tileson.h"
 
 #include "tson_files_mapper.h"

@@ -9,9 +9,10 @@
 #include "SFML/Audio.hpp"
 #include "SFML/Graphics.hpp"
 
-#include "tileson.hpp"
 #include <map>
 #include "vera_font.h"
+#include "../../include/tileson.h"
+
 
 class SfmlDemoManager
 {
