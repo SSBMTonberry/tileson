@@ -9,6 +9,10 @@ void SfmlDemoManager::initialize(const sf::Vector2i &windowSize, const sf::Vecto
     m_window.create(sf::VideoMode(windowSize.x, windowSize.y), title, sf::Style::Titlebar | sf::Style::Close);
     m_window.setView(sf::View(sf::FloatRect(0.f, 0.f, (float) resolution.x, (float)resolution.y)));
     m_basePath = basePath;
+    #if __clang__
+    fs::path appRoot = getMacApplicationFolder(true);
+    m_basePath = appRoot / m_basePath;
+    #endif
     m_font.loadFromMemory(vera_font::_VERA_TTF, vera_font::_VERA_TTF_SIZE);
 }
 
@@ -268,8 +272,8 @@ fs::path SfmlDemoManager::getMacApplicationFolder(bool isAppPath)
     //produce a file. It is still inside the .app-file, which makes it possible to move preferences
     //with the file itself.
     if(isAppPath)
-        return path.parent_path().parent_path().parent_path();
+        return path.parent_path().parent_path().parent_path().parent_path();
     else
-        return path.parent_path();
+        return path.parent_path().parent_path();
 }
 #endif

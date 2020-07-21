@@ -13,6 +13,9 @@
 #include "vera_font.h"
 #include "../../include/tileson.h"
 
+#if __clang__
+#include <mach-o/dyld.h>
+#endif
 
 class SfmlDemoManager
 {

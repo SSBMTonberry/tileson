@@ -57,15 +57,15 @@ endif()
 #option(BUILD_SHARED_LIBS "Build shared libraries." OFF)
 option(BUILD_TESTS "Build unit tests." ON)
 option(BUILD_EXAMPLES "Build examples." OFF)
-option(CLEAR_CMAKE_CACHE "Clear CMake cache for variables. Activate if you are working on the code. Otherwise: keep it off" OFF)
+option(CLEAR_TSON_CMAKE_CACHE "Clear CMake cache for variables. Activate if you are working on the code. Otherwise: keep it off" OFF)
 
-if(${APPLE})
+if(APPLE)
     option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" ON)
 else()
     option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" OFF)
 endif()
 
-if(${DISABLE_CPP17_FILESYSTEM})
+if(DISABLE_CPP17_FILESYSTEM)
     set(DISABLE_CPP17_FILESYSTEM 1)
 else()
     set(DISABLE_CPP17_FILESYSTEM 0)
@@ -85,15 +85,15 @@ set(INCLUDE_FILES include/tileson.h include/tileson_parser.hpp include/misc/Memo
         include/tiled/Tile.hpp include/tiled/Tileset.hpp include/tiled/WangColor.hpp include/tiled/WangSet.hpp include/tiled/WangTile.hpp)
 #add_library(tileson ${SOURCE_FILES} ${INCLUDE_FILES})
 
-if(${BUILD_TESTS})
+if(BUILD_TESTS)
     add_subdirectory(tests)
 endif()
 
-if(${BUILD_EXAMPLES})
+if(BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
-if(CLEAR_CMAKE_CACHE)
+if(CLEAR_TSON_CMAKE_CACHE)
     unset(BUILD_TESTS CACHE) #Must clear the cache to detect changes in this variable
     unset(BUILD_EXAMPLES CACHE) #Must clear the cache to detect changes in this variable
     unset(DISABLE_CPP17_FILESYSTEM CACHE)
