@@ -254,3 +254,22 @@ void SfmlDemoManager::drawLayer(tson::Layer &layer)
             break;
     }
 }
+
+#if __clang__
+fs::path SfmlDemoManager::getMacApplicationFolder(bool isAppPath)
+{
+    char buf [PATH_MAX];
+    uint32_t bufsize = PATH_MAX;
+    if(!_NSGetExecutablePath(buf, &bufsize))
+        puts(buf);
+
+    fs::path path {buf};
+    //Using parent_path several times to get to the part of the .app file where we are allowed to
+    //produce a file. It is still inside the .app-file, which makes it possible to move preferences
+    //with the file itself.
+    if(isAppPath)
+        return path.parent_path().parent_path().parent_path();
+    else
+        return path.parent_path();
+}
+#endif

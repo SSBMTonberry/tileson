@@ -57,6 +57,8 @@ endif()
 #option(BUILD_SHARED_LIBS "Build shared libraries." OFF)
 option(BUILD_TESTS "Build unit tests." ON)
 option(BUILD_EXAMPLES "Build examples." OFF)
+option(CLEAR_CMAKE_CACHE "Clear CMake cache for variables. Activate if you are working on the code. Otherwise: keep it off" OFF)
+
 if(${APPLE})
     option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" ON)
 else()
@@ -91,7 +93,8 @@ if(${BUILD_EXAMPLES})
     add_subdirectory(examples)
 endif()
 
-#unset(BUILD_SHARED_LIBS CACHE) #Must clear the cache to detect changes in this variable
-unset(BUILD_TESTS CACHE) #Must clear the cache to detect changes in this variable
-unset(BUILD_EXAMPLES CACHE) #Must clear the cache to detect changes in this variable
-unset(DISABLE_CPP17_FILESYSTEM CACHE)
+if(CLEAR_CMAKE_CACHE)
+    unset(BUILD_TESTS CACHE) #Must clear the cache to detect changes in this variable
+    unset(BUILD_EXAMPLES CACHE) #Must clear the cache to detect changes in this variable
+    unset(DISABLE_CPP17_FILESYSTEM CACHE)
+endif()

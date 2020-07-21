@@ -26,6 +26,10 @@ class SfmlDemoManager
         void run();
 
     private:
+        #if __clang__
+        fs::path getMacApplicationFolder(bool isAppPath);
+        #endif
+        
         void drawMap();
 
         void drawLayer(tson::Layer& layer);

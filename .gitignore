@@ -29,3 +29,5 @@ out/build/x86-Release/
 \.DS_Store
 
 cmake-build-release/
+
+build/
