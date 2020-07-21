@@ -98,3 +98,4 @@ if(CLEAR_TSON_CMAKE_CACHE)
     unset(BUILD_EXAMPLES CACHE) #Must clear the cache to detect changes in this variable
     unset(DISABLE_CPP17_FILESYSTEM CACHE)
 endif()
+unset(CLEAR_TSON_CMAKE_CACHE CACHE)
