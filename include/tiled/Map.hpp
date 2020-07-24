@@ -148,9 +148,9 @@ bool tson::Map::parse(const nlohmann::json &json)
 
     //More advanced data
     if(json.count("layers") > 0 && json["layers"].is_array())
-        std::for_each(json["layers"].begin(), json["layers"].end(), [&](const nlohmann::json &item) { m_layers.emplace_back(item); });
+        std::for_each(json["layers"].begin(), json["layers"].end(), [&](const nlohmann::json &item) { m_layers.emplace_back(item, this); });
     if(json.count("tilesets") > 0 && json["tilesets"].is_array())
-        std::for_each(json["tilesets"].begin(), json["tilesets"].end(), [&](const nlohmann::json &item) { m_tilesets.emplace_back(item); });
+        std::for_each(json["tilesets"].begin(), json["tilesets"].end(), [&](const nlohmann::json &item) { m_tilesets.emplace_back(item, this); });
     if(json.count("properties") > 0 && json["properties"].is_array())
         std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
 

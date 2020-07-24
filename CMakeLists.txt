@@ -3,7 +3,7 @@ project(tileson)
 
 set(CMAKE_CXX_STANDARD 17)
 set(TILESON_PROJECT_VERSION_MAJOR 1)
-set(TILESON_PROJECT_VERSION_MINOR 1)
+set(TILESON_PROJECT_VERSION_MINOR 2)
 set(TILESON_PROJECT_VERSION_PATCH 0)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DTILESON_DEBUG")
@@ -82,8 +82,11 @@ include_directories(${PROJECT_SOURCE_DIR}/external_libs/)
 set(INCLUDE_FILES include/tileson.h include/tileson_parser.hpp include/misc/MemoryBuffer.hpp include/misc/MemoryStream.hpp include/objects/Color.hpp
         include/objects/Property.hpp include/objects/PropertyCollection.hpp include/objects/Vector2.hpp include/tiled/Chunk.hpp include/tiled/Frame.hpp
         include/tiled/Grid.hpp include/tiled/Layer.hpp include/tiled/Map.hpp include/tiled/Object.hpp include/tiled/Terrain.hpp include/tiled/Text.hpp
-        include/tiled/Tile.hpp include/tiled/Tileset.hpp include/tiled/WangColor.hpp include/tiled/WangSet.hpp include/tiled/WangTile.hpp)
-#add_library(tileson ${SOURCE_FILES} ${INCLUDE_FILES})
+        include/tiled/Tile.hpp include/tiled/Tileset.hpp include/tiled/WangColor.hpp include/tiled/WangSet.hpp include/tiled/WangTile.hpp
+        include/objects/Rect.hpp)
+
+# Only activated for code completion, must be uncommented before release!
+add_library(tileson ${SOURCE_FILES} ${INCLUDE_FILES})
 
 if(BUILD_TESTS)
     add_subdirectory(tests)

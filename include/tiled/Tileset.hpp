@@ -18,12 +18,13 @@
 
 namespace tson
 {
+    class Map;
     class Tileset
     {
         public:
             inline Tileset() = default;
-            inline explicit Tileset(const nlohmann::json &json);
-            inline bool parse(const nlohmann::json &json);
+            inline explicit Tileset(const nlohmann::json &json, tson::Map *map);
+            inline bool parse(const nlohmann::json &json, tson::Map *map);
 
             [[nodiscard]] inline int getColumns() const;
             [[nodiscard]] inline int getFirstgid() const;
@@ -58,6 +59,9 @@ namespace tson
             inline T get(const std::string &name);
             inline tson::Property * getProp(const std::string &name);
 
+            //v1.2.0-stuff
+            tson::Map *getMap() const;
+
         private:
             inline void generateMissingTiles();
 
@@ -85,6 +89,9 @@ namespace tson
             tson::Vector2i                m_tileOffset;       /*! 'x' and 'y': See <tileoffset> (optional) */
             tson::Grid                    m_grid;             /*! 'grid': This element is only used in case of isometric orientation, and determines
                                                                    how tile overlays for terrain and collision information are rendered. */
+
+            //v1.2.0-stuff
+            tson::Map *                   m_map;              /*! The map who owns this tileset */
     };
 
     /*!
@@ -100,13 +107,14 @@ namespace tson
     }
 }
 
-tson::Tileset::Tileset(const nlohmann::json &json)
+tson::Tileset::Tileset(const nlohmann::json &json, tson::Map *map)
 {
-    parse(json);
+    parse(json, map);
 }
 
-bool tson::Tileset::parse(const nlohmann::json &json)
+bool tson::Tileset::parse(const nlohmann::json &json, tson::Map *map)
 {
+    m_map = map;
     bool allFound = true;
 
     if(json.count("columns") > 0) m_columns = json["columns"].get<int>(); else allFound = false;
@@ -135,7 +143,7 @@ bool tson::Tileset::parse(const nlohmann::json &json)
     if(json.count("wangsets") > 0 && json["wangsets"].is_array())
         std::for_each(json["wangsets"].begin(), json["wangsets"].end(), [&](const nlohmann::json &item) { m_wangsets.emplace_back(item); });
     if(json.count("tiles") > 0 && json["tiles"].is_array())
-        std::for_each(json["tiles"].begin(), json["tiles"].end(), [&](const nlohmann::json &item) { m_tiles.emplace_back(item); });
+        std::for_each(json["tiles"].begin(), json["tiles"].end(), [&](const nlohmann::json &item) { m_tiles.emplace_back(item, this, m_map); });
     if(json.count("terrains") > 0 && json["terrains"].is_array())
         std::for_each(json["terrains"].begin(), json["terrains"].end(), [&](const nlohmann::json &item) { m_terrains.emplace_back(item); });
 
@@ -365,9 +373,14 @@ void tson::Tileset::generateMissingTiles()
     {
         if(std::count(tileIds.begin(), tileIds.end(), i) == 0)
         {
-            m_tiles.emplace_back(Tile(i));
+            m_tiles.emplace_back(Tile(i, this, m_map));
         }
     }
+}
+
+tson::Map *tson::Tileset::getMap() const
+{
+    return m_map;
 }
 
 #endif //TILESON_TILESET_HPP

@@ -14,13 +14,15 @@
 
 namespace tson
 {
+    class Tileset;
+    class Map;
     class Tile
     {
         public:
             inline Tile() = default;
-            inline explicit Tile(const nlohmann::json &json);
-            inline explicit Tile(int id);
-            inline bool parse(const nlohmann::json &json);
+            inline explicit Tile(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
+            inline explicit Tile(int id, tson::Tileset *tileset, tson::Map *map);
+            inline bool parse(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
 
             [[nodiscard]] inline int getId() const;
             #ifndef DISABLE_CPP17_FILESYSTEM
@@ -40,6 +42,10 @@ namespace tson
             inline T get(const std::string &name);
             inline tson::Property * getProp(const std::string &name);
 
+            //v1.2.0-stuff
+            tson::Tileset * getTileset() const;
+            tson::Map * getMap() const;
+
         private:
             std::vector<tson::Frame>    m_animation; 	    /*! 'animation': Array of Frames */
             int                         m_id {};            /*! 'id': Local ID of the tile */
@@ -53,6 +59,10 @@ namespace tson
             tson::PropertyCollection    m_properties; 	    /*! 'properties': A list of properties (name, value, type). */
             std::vector<int>            m_terrain;          /*! 'terrain': Index of terrain for each corner of tile */
             std::string                 m_type;             /*! 'type': The type of the tile (optional) */
+
+            //v1.2.0-stuff
+            tson::Tileset *             m_tileset;          /*! A pointer to the tileset where this Tile comes from */
+            tson::Map *                 m_map;              /*! A pointer to the map where this tile is contained */
     };
 
     /*!
@@ -68,18 +78,19 @@ namespace tson
     }
 }
 
-tson::Tile::Tile(const nlohmann::json &json)
+tson::Tile::Tile(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map)
 {
-    parse(json);
+    parse(json, tileset, map);
 }
 
 /*!
  * Used in cases where you have a tile without any property
  * @param id
  */
-tson::Tile::Tile(int id) : m_id {id}
+tson::Tile::Tile(int id, tson::Tileset *tileset, tson::Map *map) : m_id {id}
 {
-
+    m_tileset = tileset;
+    m_map = map;
 }
 
 /*!
@@ -87,8 +98,11 @@ tson::Tile::Tile(int id) : m_id {id}
  * @param json
  * @return
  */
-bool tson::Tile::parse(const nlohmann::json &json)
+bool tson::Tile::parse(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map)
 {
+    m_tileset = tileset;
+    m_map = map;
+
     bool allFound = true;
     #ifndef DISABLE_CPP17_FILESYSTEM
     if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); //Optional
@@ -97,7 +111,7 @@ bool tson::Tile::parse(const nlohmann::json &json)
     #endif
     if(json.count("id") > 0) m_id = json["id"].get<int>() + 1; else allFound = false;
     if(json.count("type") > 0) m_type = json["type"].get<std::string>(); //Optional
-    if(json.count("objectgroup") > 0) m_objectgroup = tson::Layer(json["objectgroup"]); //Optional
+    if(json.count("objectgroup") > 0) m_objectgroup = tson::Layer(json["objectgroup"], m_map); //Optional
 
     if(json.count("imagewidth") > 0 && json.count("imageheight") > 0)
         m_imageSize = {json["imagewidth"].get<int>(), json["imageheight"].get<int>()}; //Optional
@@ -197,6 +211,17 @@ tson::Property *tson::Tile::getProp(const std::string &name)
         return m_properties.getProperty(name);
 
     return nullptr;
+}
+
+
+tson::Tileset *tson::Tile::getTileset() const
+{
+    return m_tileset;
+}
+
+tson::Map *tson::Tile::getMap() const
+{
+    return m_map;
 }
 
 #endif //TILESON_TILE_HPP
