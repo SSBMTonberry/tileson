@@ -9,7 +9,7 @@
 #include "misc/MemoryStream.hpp"
 #include <fstream>
 #include <sstream>
-
+#include "common/tileson_forward.hpp"
 
 namespace tson
 {

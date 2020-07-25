@@ -18,14 +18,6 @@ namespace tson
     class Map
     {
         public:
-            //enum class ParseStatus : uint8_t
-            //{
-            //        OK = 0, //OK unless otherwise stated
-            //        FileNotFound = 1,
-            //        ParseError = 2,
-            //        MissingData = 3
-            //};
-
             inline Map() = default;
             inline Map(ParseStatus status, std::string description);
             inline explicit Map(const nlohmann::json &json);

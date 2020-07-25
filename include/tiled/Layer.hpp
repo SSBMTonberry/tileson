@@ -12,7 +12,6 @@
 #include "Object.hpp"
 #include "../objects/Property.hpp"
 #include "../objects/PropertyCollection.hpp"
-//#include "Tile.h"
 #include "../common/Enums.hpp"
 
 namespace tson
@@ -23,16 +22,6 @@ namespace tson
     class Layer
     {
         public:
-            //'type': tilelayer, objectgroup, imagelayer or group
-            //enum class Type : uint8_t
-            //{
-            //        Undefined = 0,
-            //        TileLayer = 1,
-            //        ObjectGroup = 2,
-            //        ImageLayer = 3,
-            //        Group = 4
-            //};
-
             inline Layer() = default;
             inline Layer(const nlohmann::json &json, tson::Map *map);
             inline bool parse(const nlohmann::json &json, tson::Map *map);
@@ -72,13 +61,13 @@ namespace tson
             inline tson::Property * getProp(const std::string &name);
 
             inline void assignTileMap(const std::map<int, tson::Tile*> &tileMap);
-            inline void createTileData(const Vector2i &mapSize, bool isInfiniteMap);
+            inline void createTileData(const Vector2i &mapSize, bool isInfiniteMap); /*! Declared in tileson_forward.hpp */
 
             [[nodiscard]] inline const std::map<std::tuple<int, int>, tson::Tile *> &getTileData() const;
             inline tson::Tile * getTileData(int x, int y);
 
             //v1.2.0-stuff
-            tson::Map *getMap() const;
+            inline tson::Map *getMap() const;
 
         private:
             inline void setTypeByString();
@@ -477,29 +466,6 @@ tson::LayerType tson::Layer::getType() const
 void tson::Layer::assignTileMap(const std::map<int, tson::Tile *> &tileMap)
 {
     m_tileMap = tileMap;
-}
-
-void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
-{
-    size_t x = 0;
-    size_t y = 0;
-    if(!isInfiniteMap)
-    {
-        std::for_each(m_data.begin(), m_data.end(), [&](int tileId)
-        {
-            if (x == mapSize.x)
-            {
-                ++y;
-                x = 0;
-            }
-
-            if (tileId > 0)
-            {
-                m_tileData[{x, y}] = m_tileMap[tileId];
-            }
-            x++;
-        });
-    }
 }
 
 /*!
