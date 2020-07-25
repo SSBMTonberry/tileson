@@ -78,6 +78,7 @@ void SfmlDemoManager::drawTileLayer(tson::Layer& layer, tson::Tileset* tileset)
             //Set sprite data to draw the tile
             tson::Rect drawingRect = tile->getDrawingRect();
             tson::Vector2f position = tile->getPosition();
+            //tson::Vector2f position = {(float) std::get<0>(pos) * m_map.getTileSize().x, (float) std::get<1>(pos) * m_map.getTileSize().y};
             sf::Sprite *sprite = storeAndLoadImage(tileset->getImage().u8string(), {0, 0});
             if (sprite != nullptr)
             {

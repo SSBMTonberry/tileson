@@ -68,7 +68,7 @@ void tson::Tile::performDataCalculations()
 }
 
 /*!
- * Calculates position data based on incomming tile units
+ * Calculates position data based on incoming tile units
  * @param posInTileUnits position of the tile in tile units
  */
 void tson::Tile::calculatePositionData(const tson::Vector2i &posInTileUnits)
