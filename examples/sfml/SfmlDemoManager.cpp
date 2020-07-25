@@ -73,27 +73,42 @@ void SfmlDemoManager::drawTileLayer(tson::Layer& layer, tson::Tileset* tileset)
     //pos = position in tile units
     for (auto& [pos, tile] : layer.getTileData()) //Loops through absolutely all existing tiles
     {
-
-        //With this, I know that it's related to the tileset above (though I only have one tileset)
-        if (tile->getId() >= firstId && tile->getId() <= lastId)
+        if constexpr(CURRENT_VERSION == 120)
         {
-            //Get position in pixel units
-            tson::Vector2f position = {(float) std::get<0>(pos) * m_map.getTileSize().x, (float) std::get<1>(pos) * m_map.getTileSize().y};
-
-            int baseTilePosition = (tile->getId() - firstId);
-
-            int tileModX = (baseTilePosition % columns);
-            int currentRow = (baseTilePosition / columns);
-            int offsetX = (tileModX != 0) ? ((tileModX) * m_map.getTileSize().x) : (0 * m_map.getTileSize().x);
-            int offsetY =  (currentRow < rows-1) ? (currentRow * m_map.getTileSize().y) : ((rows-1) * m_map.getTileSize().y);
-
             //Set sprite data to draw the tile
-            sf::Sprite *sprite = storeAndLoadImage(tileset->getImage().u8string(), {0,0});
-            if(sprite != nullptr)
+            tson::Rect drawingRect = tile->getDrawingRect();
+            tson::Vector2f position = tile->getPosition();
+            sf::Sprite *sprite = storeAndLoadImage(tileset->getImage().u8string(), {0, 0});
+            if (sprite != nullptr)
             {
-                sprite->setTextureRect({offsetX, offsetY, m_map.getTileSize().x, m_map.getTileSize().y});
+                sprite->setTextureRect({drawingRect.x, drawingRect.y, drawingRect.width, drawingRect.height});
                 sprite->setPosition({position.x, position.y});
                 m_window.draw(*sprite);
+            }
+        }
+        else
+        {
+            //With this, I know that it's related to the tileset above (though I only have one tileset)
+            if (tile->getId() >= firstId && tile->getId() <= lastId)
+            {
+                //Get position in pixel units
+                tson::Vector2f position = {(float) std::get<0>(pos) * m_map.getTileSize().x, (float) std::get<1>(pos) * m_map.getTileSize().y};
+
+                int baseTilePosition = (tile->getId() - firstId);
+
+                int tileModX = (baseTilePosition % columns);
+                int currentRow = (baseTilePosition / columns);
+                int offsetX = (tileModX != 0) ? ((tileModX) * m_map.getTileSize().x) : (0 * m_map.getTileSize().x);
+                int offsetY = (currentRow < rows - 1) ? (currentRow * m_map.getTileSize().y) : ((rows - 1) * m_map.getTileSize().y);
+
+                //Set sprite data to draw the tile
+                sf::Sprite *sprite = storeAndLoadImage(tileset->getImage().u8string(), {0, 0});
+                if (sprite != nullptr)
+                {
+                    sprite->setTextureRect({offsetX, offsetY, m_map.getTileSize().x, m_map.getTileSize().y});
+                    sprite->setPosition({position.x, position.y});
+                    m_window.draw(*sprite);
+                }
             }
         }
     }
@@ -208,7 +223,9 @@ sf::Sprite *SfmlDemoManager::storeAndLoadImage(const std::string &image, const s
 
 sf::Vector2f SfmlDemoManager::getTileOffset(int tileId)
 {
+
     tson::Tileset* tileset = m_map.getTileset("demo-tileset");
+
     int firstId = tileset->getFirstgid(); //First tile id of the tileset
     int columns = tileset->getColumns(); //For the demo map it is 8.
     int rows = tileset->getTileCount() / columns;
@@ -222,8 +239,8 @@ sf::Vector2f SfmlDemoManager::getTileOffset(int tileId)
         int tileModX = (baseTilePosition % columns);
         int currentRow = (baseTilePosition / columns);
         int offsetX = (tileModX != 0) ? ((tileModX) * m_map.getTileSize().x) : (0 * m_map.getTileSize().x);
-        int offsetY =  (currentRow < rows-1) ? (currentRow * m_map.getTileSize().y) : ((rows-1) * m_map.getTileSize().y);
-        return sf::Vector2f((float)offsetX, (float)offsetY);
+        int offsetY = (currentRow < rows - 1) ? (currentRow * m_map.getTileSize().y) : ((rows - 1) * m_map.getTileSize().y);
+        return sf::Vector2f((float) offsetX, (float) offsetY);
     }
 
     return {0.f, 0.f};

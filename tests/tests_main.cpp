@@ -16,6 +16,7 @@ bool mapIsAbsolutelyFine(tson::Map &map)
 {
     auto main = map.getLayer("Main Layer");
     auto tileData = main->getTileData();
+    tson::Rect rect = main->getTileData(8,14)->getDrawingRect();
     return (map.getLayers().size() == 6 &&
             !map.isInfinite() &&
             map.getSize() == tson::Vector2i(32, 16) &&
@@ -46,7 +47,10 @@ bool mapIsAbsolutelyFine(tson::Map &map)
             tileData[{4,4}] != nullptr && tileData[{4,4}]->getId() == 1 &&
             tileData[{5,4}] != nullptr && tileData[{5,4}]->getId() == 3 &&
             main->getTileData(8,14) != nullptr && main->getTileData(8,14)->getId() == 2 &&
-            main->getTileData(17,5) != nullptr && main->getTileData(17,5)->getId() == 5
+            main->getTileData(17,5) != nullptr && main->getTileData(17,5)->getId() == 5 &&
+            //v1.2.0-tests
+            main->getTileData(8,14)->getPositionInTileUnits() == tson::Vector2i(8, 14) &&
+            main->getTileData(8,14)->getPosition() == tson::Vector2f(8.f * 16.f, 14.f * 16.f)
             );
 }
 
