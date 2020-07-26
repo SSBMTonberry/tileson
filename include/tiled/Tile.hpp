@@ -100,6 +100,7 @@ tson::Tile::Tile(int id, tson::Tileset *tileset, tson::Map *map) : m_id {id}
 {
     m_tileset = tileset;
     m_map = map;
+    performDataCalculations();
 }
 
 /*!

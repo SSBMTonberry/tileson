@@ -71,16 +71,13 @@ void SfmlDemoManager::drawTileLayer(tson::Layer& layer, tson::Tileset* tileset)
     int lastId = (tileset->getFirstgid() + tileset->getTileCount()) - 1;
 
     //pos = position in tile units
-    for (auto& [pos, tile] : layer.getTileData()) //Loops through absolutely all existing tiles
+    for (const auto& [pos, tile] : layer.getTileData()) //Loops through absolutely all existing tiles
     {
         if constexpr(CURRENT_VERSION == 120)
         {
             //Set sprite data to draw the tile
             tson::Rect drawingRect = tile->getDrawingRect();
             tson::Vector2f position = tile->getPosition(pos);
-            tson::Vector2i tilePos = tile->getPositionInTileUnits(pos);
-
-            //bool isSameMap = (m_map.get() == tile->getMap());
 
             //tson::Vector2f position = {(float) std::get<0>(pos) * m_map->getTileSize().x, (float) std::get<1>(pos) * m_map->getTileSize().y};
             sf::Sprite *sprite = storeAndLoadImage(tileset->getImage().u8string(), {0, 0});

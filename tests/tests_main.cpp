@@ -12,46 +12,123 @@
 #include "tson_files_mapper.h"
 #include "../TilesonConfig.h"
 
-bool mapIsAbsolutelyFine(tson::Map &map)
+#include <memory>
+#include <map>
+#include <functional>
+
+std::string getFailingTestsMessage(const std::vector<int> &failingTests)
 {
-    auto main = map.getLayer("Main Layer");
+    if(failingTests.empty())
+        return "";
+
+    std::string msg = "Tests failed (by ID): ";
+    bool first = true;
+    for(const auto &id : failingTests)
+    {
+        if(!first)
+            msg.append(", ");
+        msg.append(std::to_string(id));
+        first = false;
+    }
+    return msg;
+}
+
+std::vector<int> getFailingMapTests(tson::Map *map)
+{
+    std::vector<int> failingTests;
+    std::map<int, bool> tests;
+    auto main = map->getLayer("Main Layer");
     auto tileData = main->getTileData();
     tson::Rect rect = main->getTileData(8,14)->getDrawingRect();
-    return (map.getLayers().size() == 6 &&
-            !map.isInfinite() &&
-            map.getSize() == tson::Vector2i(32, 16) &&
-            map.getBackgroundColor() == tson::Colori("#3288c1") &&
-            map.getLayers()[0].getProperties().getSize() > 0 &&
-            map.getLayers()[0].getProperties().get()[0]->getType() != tson::Type::Undefined &&
-            map.getLayers()[2].getName() == "Object Layer" &&
-            map.getLayers()[2].getObjects().size() > 1 &&
-            map.getLayers()[2].getObjects()[0].getName() == "coin" &&
-            map.getLayers()[2].getObjects()[0].getProperties().getSize() > 0 &&
-            map.getLayer("Main Layer") != nullptr &&
-            map.getLayer("Main Layer")->getType() == tson::LayerType::TileLayer &&
-            map.getLayer("Background Image")->getType() == tson::LayerType::ImageLayer &&
-            map.getLayer("Background Image")->get<float>("scroll_speed") == 1.f &&
-            map.getLayer("Background Image")->getProp("repeat_bg")->getType() == tson::Type::Boolean &&
-            map.getLayer("Object Layer")->getType() == tson::LayerType::ObjectGroup &&
-            map.getLayer("Object Layer")->firstObj("coin") != nullptr &&
-            map.getLayer("Object Layer")->getObjectsByName("goomba").size() == 2 &&
-            !map.getLayer("Object Layer")->getObjectsByType(tson::ObjectType::Object).empty() &&
-            map.getLayer("Object Layer")->getObj(2)->getName() == "coin" &&
-            map.getTileset("demo-tileset") != nullptr &&
-            map.getTileset("demo-tileset")->getTile(36) != nullptr &&
-            map.getTileset("demo-tileset")->getTile(36)->getAnimation().size() == 2 &&
-            map.getTileset("demo-tileset")->getTerrain("test_terrain")->getProperties().getSize() == 2 &&
-            map.getTileset("demo-tileset")->getTerrain("test_terrain")->getProp("i_like_this")->getType() == tson::Type::Boolean &&
-            !map.getTileset("demo-tileset")->getTerrain("test_terrain")->get<std::string>("description").empty() &&
-            map.getTileMap().size() > 10 &&
-            tileData[{4,4}] != nullptr && tileData[{4,4}]->getId() == 1 &&
-            tileData[{5,4}] != nullptr && tileData[{5,4}]->getId() == 3 &&
-            main->getTileData(8,14) != nullptr && main->getTileData(8,14)->getId() == 2 &&
-            main->getTileData(17,5) != nullptr && main->getTileData(17,5)->getId() == 5 &&
-            //v1.2.0-tests
-            main->getTileData(8,14)->getPositionInTileUnits() == tson::Vector2i(8, 14) &&
-            main->getTileData(8,14)->getPosition() == tson::Vector2f(8.f * 16.f, 14.f * 16.f)
-            );
+
+    tests[0] = map->getLayers().size() == 6;
+    tests[1] = !map->isInfinite();
+    tests[2] = map->getSize() == tson::Vector2i(32, 16);
+    tests[3] = map->getBackgroundColor() == tson::Colori("#3288c1");
+    tests[4] = map->getLayers()[0].getProperties().getSize() > 0;
+    tests[5] = map->getLayers()[0].getProperties().get()[0]->getType() != tson::Type::Undefined;
+    tests[6] = map->getLayers()[2].getName() == "Object Layer";
+    tests[7] = map->getLayers()[2].getObjects().size() > 1;
+    tests[8] = map->getLayers()[2].getObjects()[0].getName() == "coin";
+    tests[9] = map->getLayers()[2].getObjects()[0].getProperties().getSize() > 0;
+    tests[10] = map->getLayer("Main Layer") != nullptr;
+    tests[11] = map->getLayer("Main Layer")->getType() == tson::LayerType::TileLayer;
+    tests[12] = map->getLayer("Background Image")->getType() == tson::LayerType::ImageLayer;
+    tests[13] = map->getLayer("Background Image")->get<float>("scroll_speed") == 1.f;
+    tests[14] = map->getLayer("Background Image")->getProp("repeat_bg")->getType() == tson::Type::Boolean;
+    tests[15] = map->getLayer("Object Layer")->getType() == tson::LayerType::ObjectGroup;
+    tests[16] = map->getLayer("Object Layer")->firstObj("coin") != nullptr;
+    tests[17] = map->getLayer("Object Layer")->getObjectsByName("goomba").size() == 2;
+    tests[18] = !map->getLayer("Object Layer")->getObjectsByType(tson::ObjectType::Object).empty();
+    tests[19] = map->getLayer("Object Layer")->getObj(2)->getName() == "coin";
+    tests[20] = map->getTileset("demo-tileset") != nullptr;
+    tests[21] = map->getTileset("demo-tileset")->getTile(36) != nullptr;
+    tests[22] = map->getTileset("demo-tileset")->getTile(36)->getAnimation().size() == 2;
+    tests[23] = map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProperties().getSize() == 2;
+    tests[24] = map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProp("i_like_this")->getType() == tson::Type::Boolean;
+    tests[25] = !map->getTileset("demo-tileset")->getTerrain("test_terrain")->get<std::string>("description").empty();
+    tests[26] = map->getTileMap().size() > 10;
+    tests[27] = tileData[{4,4}] != nullptr && tileData[{4,4}]->getId() == 1;
+    tests[28] = tileData[{5,4}] != nullptr && tileData[{5,4}]->getId() == 3;
+    tests[29] = main->getTileData(8,14) != nullptr && main->getTileData(8,14)->getId() == 2;
+    tests[30] = main->getTileData(17,5) != nullptr && main->getTileData(17,5)->getId() == 5;
+    //v1.2.0-tests
+    tests[31] = main->getTileData(8,14)->getPositionInTileUnits({8,14}) == tson::Vector2i(8, 14);
+    tests[32] = main->getTileData(8,14)->getPosition({8,14}) == tson::Vector2f(8.f * 16.f, 14.f * 16.f);
+    tests[33] = main->getMap() != nullptr;
+    tests[34] = main->getMap() == map;
+    tests[35] = main->getTileData(8,14)->getMap() != nullptr;
+    tests[36] = main->getTileData(8,14)->getMap() == map;
+    tests[37] = main->getTileData(8,14)->getTileset() != nullptr;
+
+    for(const auto & [id, result] : tests)
+    {
+        if(!result)
+            failingTests.push_back(id);
+    }
+
+    return failingTests;
+
+    //return (map->getLayers().size() == 6 &&
+    //        !map->isInfinite() &&
+    //        map->getSize() == tson::Vector2i(32, 16) &&
+    //        map->getBackgroundColor() == tson::Colori("#3288c1") &&
+    //        map->getLayers()[0].getProperties().getSize() > 0 &&
+    //        map->getLayers()[0].getProperties().get()[0]->getType() != tson::Type::Undefined &&
+    //        map->getLayers()[2].getName() == "Object Layer" &&
+    //        map->getLayers()[2].getObjects().size() > 1 &&
+    //        map->getLayers()[2].getObjects()[0].getName() == "coin" &&
+    //        map->getLayers()[2].getObjects()[0].getProperties().getSize() > 0 &&
+    //        map->getLayer("Main Layer") != nullptr &&
+    //        map->getLayer("Main Layer")->getType() == tson::LayerType::TileLayer &&
+    //        map->getLayer("Background Image")->getType() == tson::LayerType::ImageLayer &&
+    //        map->getLayer("Background Image")->get<float>("scroll_speed") == 1.f &&
+    //        map->getLayer("Background Image")->getProp("repeat_bg")->getType() == tson::Type::Boolean &&
+    //        map->getLayer("Object Layer")->getType() == tson::LayerType::ObjectGroup &&
+    //        map->getLayer("Object Layer")->firstObj("coin") != nullptr &&
+    //        map->getLayer("Object Layer")->getObjectsByName("goomba").size() == 2 &&
+    //        !map->getLayer("Object Layer")->getObjectsByType(tson::ObjectType::Object).empty() &&
+    //        map->getLayer("Object Layer")->getObj(2)->getName() == "coin" &&
+    //        map->getTileset("demo-tileset") != nullptr &&
+    //        map->getTileset("demo-tileset")->getTile(36) != nullptr &&
+    //        map->getTileset("demo-tileset")->getTile(36)->getAnimation().size() == 2 &&
+    //        map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProperties().getSize() == 2 &&
+    //        map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProp("i_like_this")->getType() == tson::Type::Boolean &&
+    //        !map->getTileset("demo-tileset")->getTerrain("test_terrain")->get<std::string>("description").empty() &&
+    //        map->getTileMap().size() > 10 &&
+    //        tileData[{4,4}] != nullptr && tileData[{4,4}]->getId() == 1 &&
+    //        tileData[{5,4}] != nullptr && tileData[{5,4}]->getId() == 3 &&
+    //        main->getTileData(8,14) != nullptr && main->getTileData(8,14)->getId() == 2 &&
+    //        main->getTileData(17,5) != nullptr && main->getTileData(17,5)->getId() == 5 &&
+    //        //v1.2.0-tests
+    //        main->getTileData(8,14)->getPositionInTileUnits({8,14}) == tson::Vector2i(8, 14) &&
+    //        main->getTileData(8,14)->getPosition({8,14}) == tson::Vector2f(8.f * 16.f, 14.f * 16.f) &&
+    //        main->getMap() != nullptr &&
+    //        main->getMap() == map &&
+    //        main->getTileData(8,14)->getMap() != nullptr &&
+    //        main->getTileData(8,14)->getMap() == map &&
+    //        main->getTileData(8,14)->getTileset() != nullptr
+    //        );
 }
 
 
@@ -64,24 +141,34 @@ TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" ) {
     #else
     std::string pathToUse = "../../content/test-maps/ultimate_test.json";
     #endif
-    tson::Map map = t.parse({pathToUse});
-    if(map.getStatus() == tson::ParseStatus::OK)
-        REQUIRE(mapIsAbsolutelyFine(map));
+    std::unique_ptr<tson::Map> map = t.parse({pathToUse});
+    if(map->getStatus() == tson::ParseStatus::OK)
+    {
+        std::vector<int> failing = getFailingMapTests(map.get());
+        if(!failing.empty())
+            FAIL(getFailingTestsMessage(failing));
+        REQUIRE(failing.empty());
+    }
     else
     {
-        std::cout << "Ignored - " << map.getStatusMessage() << std::endl;
+        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
         REQUIRE(true);
     }
 }
 
 TEST_CASE( "Parse a whole map by memory", "[complete][parse][memory]" ) {
     tson::Tileson t;
-    tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
-    if (map.getStatus() == tson::ParseStatus::OK)
-        REQUIRE(mapIsAbsolutelyFine(map));
+    std::unique_ptr<tson::Map> map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
+    if (map->getStatus() == tson::ParseStatus::OK)
+    {
+        std::vector<int> failing = getFailingMapTests(map.get());
+        if(!failing.empty())
+            FAIL(getFailingTestsMessage(failing));
+        REQUIRE(failing.empty());
+    }
     else
     {
-        std::cout << "Memory parse error - " << map.getStatusMessage() << std::endl;
+        std::cout << "Memory parse error - " << map->getStatusMessage() << std::endl;
         //REQUIRE(true);
         FAIL("Unexpected memory read failure!");
     }
@@ -89,18 +176,18 @@ TEST_CASE( "Parse a whole map by memory", "[complete][parse][memory]" ) {
 
 TEST_CASE( "Parse a simple map by memory - tiles without any properties (issue #4)", "[simple][parse][memory]" ) {
     tson::Tileson t;
-    tson::Map map = t.parse(tson_files_mapper::_SIMPLE_MAP_JSON, tson_files_mapper::_SIMPLE_MAP_JSON_SIZE);
-    if (map.getStatus() == tson::ParseStatus::OK)
+    std::unique_ptr<tson::Map> map = t.parse(tson_files_mapper::_SIMPLE_MAP_JSON, tson_files_mapper::_SIMPLE_MAP_JSON_SIZE);
+    if (map->getStatus() == tson::ParseStatus::OK)
     {
-        auto main = map.getLayer("simple_layer");
-        auto tileset = map.getTilesets()[0];
+        auto main = map->getLayer("simple_layer");
+        auto tileset = map->getTilesets()[0];
         auto tileData = main->getTileData();
         bool result = (tileData.size() > 16 && main->getTileData(0,0) != nullptr && tileset.getTiles().size() == 48);
         REQUIRE(result);
     }
     else
     {
-        std::cout << "Memory parse error - " << map.getStatusMessage() << std::endl;
+        std::cout << "Memory parse error - " << map->getStatusMessage() << std::endl;
         //REQUIRE(true);
         FAIL("Unexpected memory read failure!");
     }
@@ -108,12 +195,17 @@ TEST_CASE( "Parse a simple map by memory - tiles without any properties (issue #
 
 TEST_CASE( "Parse a minimal version of whole map by memory", "[complete][parse][memory]" ) {
     tson::Tileson t;
-    tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_MIN_JSON, tson_files::_ULTIMATE_TEST_MIN_JSON_SIZE);
-    if (map.getStatus() == tson::ParseStatus::OK)
-        REQUIRE(mapIsAbsolutelyFine(map));
+    std::unique_ptr<tson::Map> map = t.parse(tson_files::_ULTIMATE_TEST_MIN_JSON, tson_files::_ULTIMATE_TEST_MIN_JSON_SIZE);
+    if (map->getStatus() == tson::ParseStatus::OK)
+    {
+        std::vector<int> failing = getFailingMapTests(map.get());
+        if(!failing.empty())
+            FAIL(getFailingTestsMessage(failing));
+        REQUIRE(failing.empty());
+    }
     else
     {
-        std::cout << "Memory parse error - " << map.getStatusMessage() << std::endl;
+        std::cout << "Memory parse error - " << map->getStatusMessage() << std::endl;
         //REQUIRE(true);
         FAIL("Unexpected memory read failure!");
     }
@@ -123,12 +215,12 @@ TEST_CASE( "Parse a minimal version of whole map by memory", "[complete][parse][
 
 TEST_CASE( "Go through demo code - get success", "[demo]" ) {
     tson::Tileson t;
-    tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
+    std::unique_ptr<tson::Map> map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
 
-    if(map.getStatus() == tson::ParseStatus::OK)
+    if(map->getStatus() == tson::ParseStatus::OK)
     {
         //Get color as an rgba color object
-        tson::Colori bgColor = map.getBackgroundColor(); //RGBA with 0-255 on each channel
+        tson::Colori bgColor = map->getBackgroundColor(); //RGBA with 0-255 on each channel
 
         //This color can be compared with Tiled hex string
         if (bgColor == "#ffaa07")
@@ -146,7 +238,7 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
         tson::Colori newBg = bgColorFloat.asInt();
 
         //You can loop through every container of objects
-        for (auto &layer : map.getLayers())
+        for (auto &layer : map->getLayers())
         {
             if (layer.getType() == tson::LayerType::ObjectGroup)
             {
@@ -157,7 +249,7 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
                 //Or use these queries:
 
                 //Gets the first object it find with the name specified
-                tson::Object *player = layer.firstObj("player"); //Does not exist in demo map...
+                tson::Object *player = layer.firstObj("player"); //Does not exist in demo map->..
 
                 //Gets all objects with a matching name
                 std::vector<tson::Object> enemies = layer.getObjectsByName("goomba"); //But we got two of those
@@ -171,8 +263,8 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
         }
 
         //Or get a specific object if you know its name (or id)
-        tson::Layer *layer = map.getLayer("Main Layer");
-        tson::Tileset *tileset = map.getTileset("demo-tileset");
+        tson::Layer *layer = map->getLayer("Main Layer");
+        tson::Tileset *tileset = map->getTileset("demo-tileset");
         tson::Tile *tile = tileset->getTile(1); //Tileson tile-IDs starts with 1, to be consistent
         // with IDs in data lists. This is in other words the
         //first tile.
@@ -182,7 +274,7 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
         if(layer->getType() == tson::LayerType::TileLayer)
         {
             //When the map is of a fixed size, you can get the tiles like this
-            if(!map.isInfinite())
+            if(!map->isInfinite())
             {
                 std::map<std::tuple<int, int>, tson::Tile *> tileData = layer->getTileData();
 
@@ -228,7 +320,7 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
     }
     else //Error occured
     {
-        std::cout << map.getStatusMessage();
+        std::cout << map->getStatusMessage();
     }
     REQUIRE( true );
 }
@@ -236,12 +328,12 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
 TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" )
 {
     tson::Tileson t;
-    tson::Map map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
+    std::unique_ptr<tson::Map> map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
 
-    if(map.getStatus() == tson::ParseStatus::OK)
+    if(map->getStatus() == tson::ParseStatus::OK)
     {
         //Gets the layer called "Object Layer" from the "ultimate_demo.json map
-        tson::Layer *objectLayer = map.getLayer("Object Layer"); //This is an Object Layer
+        tson::Layer *objectLayer = map->getLayer("Object Layer"); //This is an Object Layer
 
         //Example from an Object Layer.
         if(objectLayer->getType() == tson::LayerType::ObjectGroup)
@@ -310,8 +402,8 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
             }
         }
 
-        tson::Layer *tileLayer = map.getLayer("Main Layer"); //This is a Tile Layer.
-        tson::Tileset *tileset = map.getTileset("demo-tileset"); //You will also need the tileset used
+        tson::Layer *tileLayer = map->getLayer("Main Layer"); //This is a Tile Layer.
+        tson::Tileset *tileset = map->getTileset("demo-tileset"); //You will also need the tileset used
                                                                        //by the tile map to make sense of everything
 
         int firstId = tileset->getFirstgid(); //First tile id of the tileset
@@ -344,19 +436,19 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
                 }
 
                 //Get position in pixel units
-                tson::Vector2i position = {std::get<0>(pos) * map.getTileSize().x,std::get<1>(pos) * map.getTileSize().y};
+                tson::Vector2i position = {std::get<0>(pos) * map->getTileSize().x,std::get<1>(pos) * map->getTileSize().y};
 
                 int baseTilePosition = (tile->getId() - firstId); //This will determine the base position of the tile.
 
                 //The baseTilePosition can be used to calculate offset on its related tileset image.
                 int tileModX = (baseTilePosition % columns);
                 int currentRow = (baseTilePosition / columns);
-                int offsetX = (tileModX != 0) ? ((tileModX) * map.getTileSize().x) : (0 * map.getTileSize().x);
-                int offsetY =  (currentRow < rows-1) ? (currentRow * map.getTileSize().y) : ((rows-1) * map.getTileSize().y);
+                int offsetX = (tileModX != 0) ? ((tileModX) * map->getTileSize().x) : (0 * map->getTileSize().x);
+                int offsetY =  (currentRow < rows-1) ? (currentRow * map->getTileSize().y) : ((rows-1) * map->getTileSize().y);
 
                 //Here you can determine the offset that should be set on a sprite
                 //Example on how it would be done using SFML (where sprite presumably is a member of a generated game object):
-                //sprite.setTextureRect({offsetX, offsetY, map.getTileSize().x, map.getTileSize().y});
+                //sprite.setTextureRect({offsetX, offsetY, map->getTileSize().x, map->getTileSize().y});
                 //sprite.setPosition({position.x, position.y});
             }
         }
