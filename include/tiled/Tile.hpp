@@ -47,8 +47,8 @@ namespace tson
             inline tson::Tileset * getTileset() const;
             inline tson::Map * getMap() const;
             inline const tson::Rect &getDrawingRect() const;
-            inline const tson::Vector2f &getPosition() const;
-            inline const tson::Vector2i &getPositionInTileUnits() const;
+            inline const tson::Vector2f getPosition(const std::tuple<int, int> &tileDataPos);
+            inline const tson::Vector2i getPositionInTileUnits(const std::tuple<int, int> &tileDataPos);
             inline const tson::Vector2i getTileSize() const;                       /*! Declared in tileson_forward.hpp */
 
         private:
@@ -69,10 +69,7 @@ namespace tson
             tson::Tileset *             m_tileset;                                   /*! A pointer to the tileset where this Tile comes from */
             tson::Map *                 m_map;                                       /*! A pointer to the map where this tile is contained */
             tson::Rect                  m_drawingRect;                               /*! A rect that shows which part of the tileset that is used for this tile */
-            tson::Vector2f              m_position;                                  /*! The position of the tile calculated based on map data */
-            tson::Vector2i              m_tilePosition;                              /*! The position in tile units */
             inline void performDataCalculations();                                   /*! Declared in tileson_forward.hpp - Calculate all the values used in the tile class. */
-            inline void calculatePositionData(const tson::Vector2i &posInTileUnits); /*! Declared in tileson_forward.hpp */
 
             friend class Layer;
     };
@@ -255,15 +252,8 @@ const tson::Rect &tson::Tile::getDrawingRect() const
 }
 
 /*!
- * Get the position of the tile in pixels
- * @return The position of the tile in Pixels
- */
-const tson::Vector2f &tson::Tile::getPosition() const
-{
-    return m_position;
-}
-
-/*!
+ * Helper function.
+ *
  * Get the position of the tile in tile units.
  * The size of each unit is determined by the tile size property of the map.
  * Example: If the tile size is 16x16 in the map, a tile unit of [2, 4] would be [32, 64] in pixels.
@@ -271,9 +261,9 @@ const tson::Vector2f &tson::Tile::getPosition() const
  *
  * @return Position of tile in tile units.
  */
-const tson::Vector2i &tson::Tile::getPositionInTileUnits() const
+const tson::Vector2i tson::Tile::getPositionInTileUnits(const std::tuple<int, int> &tileDataPos)
 {
-    return m_tilePosition;
+    return {std::get<0>(tileDataPos), std::get<1>(tileDataPos)};
 }
 
 

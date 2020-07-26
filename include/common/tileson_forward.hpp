@@ -43,9 +43,6 @@ void tson::Tile::performDataCalculations()
 
     if (getId() >= firstId && getId() <= lastId)
     {
-        //Get position in pixel units
-        //tson::Vector2f position = {(float) std::get<0>(pos) * m_map->getTileSize().x, (float) std::get<1>(pos) * m_map->getTileSize().y};
-
         int baseTilePosition = (getId() - firstId);
 
         int tileModX = (baseTilePosition % columns);
@@ -54,62 +51,18 @@ void tson::Tile::performDataCalculations()
         int offsetY =  (currentRow < rows-1) ? (currentRow * m_map->getTileSize().y) : ((rows-1) * m_map->getTileSize().y);
 
         m_drawingRect = { offsetX, offsetY, m_map->getTileSize().x, m_map->getTileSize().y };
-        //Set sprite data to draw the tile
-        //sf::Sprite *sprite = storeAndLoadImage(m_tileset->getImage().u8string(), {0,0});
-        //if(sprite != nullptr)
-        //{
-        //    sprite->setTextureRect({offsetX, offsetY, m_map->getTileSize().x, m_map->getTileSize().y});
-        //    sprite->setPosition({position.x, position.y});
-        //    m_window.draw(*sprite);
-        //}
     }
     else
         m_drawingRect = {0, 0, 0, 0};
 }
 
 /*!
- * Calculates position data based on incoming tile units
- * @param posInTileUnits position of the tile in tile units
+ * Get the position of the tile in pixels based on the tile data position from the current layer.
+ * @return The position of the tile in Pixels
  */
-void tson::Tile::calculatePositionData(const tson::Vector2i &posInTileUnits)
+const tson::Vector2f tson::Tile::getPosition(const std::tuple<int, int> &tileDataPos)
 {
-    m_position = {(float) posInTileUnits.x * m_map->getTileSize().x, (float) posInTileUnits.y * m_map->getTileSize().y};
-    m_tilePosition = posInTileUnits;
-}
-
-
-// L a y e r . h p p
-// -------------------
-
-/*!
- *
- * This is only supported for non-infinte maps!
- *
- * @param mapSize The size of the map
- * @param isInfiniteMap Whether or not the current map is infinte.
- */
-void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
-{
-    size_t x = 0;
-    size_t y = 0;
-    if(!isInfiniteMap)
-    {
-        std::for_each(m_data.begin(), m_data.end(), [&](int tileId)
-        {
-            if (x == mapSize.x)
-            {
-                ++y;
-                x = 0;
-            }
-
-            if (tileId > 0)
-            {
-                m_tileData[{x, y}] = m_tileMap[tileId];
-                m_tileData[{x, y}]->calculatePositionData({(int)x, (int)y});
-            }
-            x++;
-        });
-    }
+    return {((float) std::get<0>(tileDataPos)) * m_drawingRect.width, ((float) std::get<1>(tileDataPos)) * m_drawingRect.height};
 }
 
 #endif //TILESON_TILESON_FORWARD_HPP

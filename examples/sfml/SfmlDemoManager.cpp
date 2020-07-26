@@ -21,15 +21,15 @@ bool SfmlDemoManager::parseMap(const std::string &filename)
     tson::Tileson t;
     m_map = t.parse(fs::path(m_basePath / filename));
 
-    if(m_map.getStatus() == tson::ParseStatus::OK)
+    if(m_map->getStatus() == tson::ParseStatus::OK)
     {
-        for(auto &tileset : m_map.getTilesets())
+        for(auto &tileset : m_map->getTilesets())
             storeAndLoadImage(tileset.getImage().u8string(), {0,0});
 
         return true;
     }
     else
-        std::cout << "Parse error: " << m_map.getStatusMessage() << std::endl;
+        std::cout << "Parse error: " << m_map->getStatusMessage() << std::endl;
 
     return false;
 }
@@ -38,7 +38,7 @@ void SfmlDemoManager::drawMap()
 {
 
 
-    for(auto &layer : m_map.getLayers())
+    for(auto &layer : m_map->getLayers())
     {
         drawLayer(layer);
     }
@@ -77,8 +77,12 @@ void SfmlDemoManager::drawTileLayer(tson::Layer& layer, tson::Tileset* tileset)
         {
             //Set sprite data to draw the tile
             tson::Rect drawingRect = tile->getDrawingRect();
-            tson::Vector2f position = tile->getPosition();
-            //tson::Vector2f position = {(float) std::get<0>(pos) * m_map.getTileSize().x, (float) std::get<1>(pos) * m_map.getTileSize().y};
+            tson::Vector2f position = tile->getPosition(pos);
+            tson::Vector2i tilePos = tile->getPositionInTileUnits(pos);
+
+            //bool isSameMap = (m_map.get() == tile->getMap());
+
+            //tson::Vector2f position = {(float) std::get<0>(pos) * m_map->getTileSize().x, (float) std::get<1>(pos) * m_map->getTileSize().y};
             sf::Sprite *sprite = storeAndLoadImage(tileset->getImage().u8string(), {0, 0});
             if (sprite != nullptr)
             {
@@ -93,20 +97,20 @@ void SfmlDemoManager::drawTileLayer(tson::Layer& layer, tson::Tileset* tileset)
             if (tile->getId() >= firstId && tile->getId() <= lastId)
             {
                 //Get position in pixel units
-                tson::Vector2f position = {(float) std::get<0>(pos) * m_map.getTileSize().x, (float) std::get<1>(pos) * m_map.getTileSize().y};
+                tson::Vector2f position = {(float) std::get<0>(pos) * m_map->getTileSize().x, (float) std::get<1>(pos) * m_map->getTileSize().y};
 
                 int baseTilePosition = (tile->getId() - firstId);
 
                 int tileModX = (baseTilePosition % columns);
                 int currentRow = (baseTilePosition / columns);
-                int offsetX = (tileModX != 0) ? ((tileModX) * m_map.getTileSize().x) : (0 * m_map.getTileSize().x);
-                int offsetY = (currentRow < rows - 1) ? (currentRow * m_map.getTileSize().y) : ((rows - 1) * m_map.getTileSize().y);
+                int offsetX = (tileModX != 0) ? ((tileModX) * m_map->getTileSize().x) : (0 * m_map->getTileSize().x);
+                int offsetY = (currentRow < rows - 1) ? (currentRow * m_map->getTileSize().y) : ((rows - 1) * m_map->getTileSize().y);
 
                 //Set sprite data to draw the tile
                 sf::Sprite *sprite = storeAndLoadImage(tileset->getImage().u8string(), {0, 0});
                 if (sprite != nullptr)
                 {
-                    sprite->setTextureRect({offsetX, offsetY, m_map.getTileSize().x, m_map.getTileSize().y});
+                    sprite->setTextureRect({offsetX, offsetY, m_map->getTileSize().x, m_map->getTileSize().y});
                     sprite->setPosition({position.x, position.y});
                     m_window.draw(*sprite);
                 }
@@ -124,7 +128,7 @@ void SfmlDemoManager::drawImageLayer(tson::Layer &layer)
 
 void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
 {
-    tson::Tileset* tileset = m_map.getTileset("demo-tileset");
+    tson::Tileset* tileset = m_map->getTileset("demo-tileset");
 
     for(auto &obj : layer.getObjects())
     {
@@ -137,8 +141,8 @@ void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
                 std::string name = obj.getName();
                 if(sprite != nullptr)
                 {
-                    sprite->setTextureRect({(int)offset.x, (int)offset.y, m_map.getTileSize().x, m_map.getTileSize().y});
-                    sprite->setPosition({(float)obj.getPosition().x, (float)obj.getPosition().y - m_map.getTileSize().y});
+                    sprite->setTextureRect({(int)offset.x, (int)offset.y, m_map->getTileSize().x, m_map->getTileSize().y});
+                    sprite->setPosition({(float)obj.getPosition().x, (float)obj.getPosition().y - m_map->getTileSize().y});
                     m_window.draw(*sprite);
                 }
             }
@@ -225,7 +229,7 @@ sf::Sprite *SfmlDemoManager::storeAndLoadImage(const std::string &image, const s
 sf::Vector2f SfmlDemoManager::getTileOffset(int tileId)
 {
 
-    tson::Tileset* tileset = m_map.getTileset("demo-tileset");
+    tson::Tileset* tileset = m_map->getTileset("demo-tileset");
 
     int firstId = tileset->getFirstgid(); //First tile id of the tileset
     int columns = tileset->getColumns(); //For the demo map it is 8.
@@ -239,8 +243,8 @@ sf::Vector2f SfmlDemoManager::getTileOffset(int tileId)
 
         int tileModX = (baseTilePosition % columns);
         int currentRow = (baseTilePosition / columns);
-        int offsetX = (tileModX != 0) ? ((tileModX) * m_map.getTileSize().x) : (0 * m_map.getTileSize().x);
-        int offsetY = (currentRow < rows - 1) ? (currentRow * m_map.getTileSize().y) : ((rows - 1) * m_map.getTileSize().y);
+        int offsetX = (tileModX != 0) ? ((tileModX) * m_map->getTileSize().x) : (0 * m_map->getTileSize().x);
+        int offsetY = (currentRow < rows - 1) ? (currentRow * m_map->getTileSize().y) : ((rows - 1) * m_map->getTileSize().y);
         return sf::Vector2f((float) offsetX, (float) offsetY);
     }
 
@@ -249,7 +253,7 @@ sf::Vector2f SfmlDemoManager::getTileOffset(int tileId)
 
 void SfmlDemoManager::drawLayer(tson::Layer &layer)
 {
-    tson::Tileset* tileset = m_map.getTileset("demo-tileset");
+    tson::Tileset* tileset = m_map->getTileset("demo-tileset");
     switch (layer.getType())
     {
         case tson::LayerType::TileLayer:

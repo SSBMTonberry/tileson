@@ -61,7 +61,7 @@ namespace tson
             inline tson::Property * getProp(const std::string &name);
 
             inline void assignTileMap(const std::map<int, tson::Tile*> &tileMap);
-            inline void createTileData(const Vector2i &mapSize, bool isInfiniteMap); /*! Declared in tileson_forward.hpp */
+            inline void createTileData(const Vector2i &mapSize, bool isInfiniteMap);
 
             [[nodiscard]] inline const std::map<std::tuple<int, int>, tson::Tile *> &getTileData() const;
             inline tson::Tile * getTileData(int x, int y);
@@ -507,6 +507,36 @@ tson::Tile *tson::Layer::getTileData(int x, int y)
 tson::Map *tson::Layer::getMap() const
 {
     return m_map;
+}
+
+/*!
+ *
+ * This is only supported for non-infinte maps!
+ *
+ * @param mapSize The size of the map
+ * @param isInfiniteMap Whether or not the current map is infinte.
+ */
+void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
+{
+    size_t x = 0;
+    size_t y = 0;
+    if(!isInfiniteMap)
+    {
+        std::for_each(m_data.begin(), m_data.end(), [&](int tileId)
+        {
+            if (x == mapSize.x)
+            {
+                ++y;
+                x = 0;
+            }
+
+            if (tileId > 0)
+            {
+                m_tileData[{x, y}] = m_tileMap[tileId];
+            }
+            x++;
+        });
+    }
 }
 
 #endif //TILESON_LAYER_HPP

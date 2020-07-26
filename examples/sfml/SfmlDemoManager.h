@@ -48,7 +48,7 @@ class SfmlDemoManager
 
         fs::path m_basePath {};
         sf::RenderWindow m_window;
-        tson::Map m_map;
+        std::unique_ptr<tson::Map> m_map;
 
         sf::Font m_font;
         sf::Text m_demoText;
