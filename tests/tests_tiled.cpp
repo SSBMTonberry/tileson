@@ -17,7 +17,8 @@
 //#include "../include/tileson.hpp"
 
 #include "../TilesonConfig.h"
-#include "../single_include/tileson.hpp"
+//#include "../single_include/tileson.hpp"
+#include "../include/tileson.h"
 
 #include "../external_libs/catch.hpp"
 
@@ -96,7 +97,7 @@ TEST_CASE( "Parse a Layer from Tiled's documentation - read simple values", "[ti
                            "}"_json;
 
         tson::Layer layer;
-        bool parseOk = layer.parse(j);
+        bool parseOk = layer.parse(j, nullptr);
         bool hasCorrectValues = (
                 layer.getData().size() == 16 &&
                 layer.getSize() == tson::Vector2i(4, 4) &&
@@ -138,7 +139,7 @@ TEST_CASE( "Parse a Layer from Tiled's documentation - read simple values", "[ti
                            "}"_json;
 
         tson::Layer layer;
-        bool parseOk = layer.parse(j);
+        bool parseOk = layer.parse(j, nullptr);
         bool hasCorrectValues = (
                 layer.getDrawOrder() == "topdown" &&
                 layer.getName() == "people" &&
@@ -505,7 +506,7 @@ TEST_CASE( "Parse a Tileset from Tiled's documentation - read simple values", "[
                        "}"_json;
 
     tson::Tileset tileset;
-    bool parseOk = tileset.parse(j);
+    bool parseOk = tileset.parse(j, nullptr);
     bool hasCorrectValues = (
         tileset.getColumns() == 19 &&
         tileset.getFirstgid() == 1 &&
@@ -538,7 +539,7 @@ TEST_CASE( "Parse a Tile from Tiled's documentation - read simple values", "[til
                        "}"_json;
 
     tson::Tile tile;
-    bool parseOk = tile.parse(j);
+    bool parseOk = tile.parse(j, nullptr, nullptr);
     bool hasCorrectValues = (
         tile.getId() == 12 &&
         tile.getTerrain().size() == 4 &&

@@ -36,6 +36,9 @@ const tson::Vector2i tson::Tile::getTileSize() const
  */
 void tson::Tile::performDataCalculations()
 {
+    if(m_tileset == nullptr || m_map == nullptr)
+        return;
+
     int firstId = m_tileset->getFirstgid(); //First tile id of the tileset
     int columns = m_tileset->getColumns();
     int rows = m_tileset->getTileCount() / columns;
