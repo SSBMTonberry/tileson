@@ -10,6 +10,7 @@
 #include "../objects/Color.hpp"
 #include "Chunk.hpp"
 #include "Object.hpp"
+#include "../objects/TileObject.hpp"
 #include "../objects/Property.hpp"
 #include "../objects/PropertyCollection.hpp"
 #include "../common/Enums.hpp"
@@ -69,6 +70,9 @@ namespace tson
             //v1.2.0-stuff
             inline tson::Map *getMap() const;
 
+            [[nodiscard]] inline const std::map<std::tuple<int, int>, tson::TileObject> &getTileObjects() const;
+            inline tson::TileObject * getTileObject(int x, int y);
+
         private:
             inline void setTypeByString();
 
@@ -102,7 +106,8 @@ namespace tson
             std::map<std::tuple<int, int>, tson::Tile*>    m_tileData;                        /*! Key: Tuple of x and y pos in tile units. */
 
             //v1.2.0-stuff
-            tson::Map *                                    m_map;                             /*! The map who owns this layer */
+            tson::Map *                                         m_map;                        /*! The map who owns this layer */
+            std::map<std::tuple<int, int>, tson::TileObject>    m_tileObjects;
     };
 
     /*!
@@ -533,10 +538,21 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
             if (tileId > 0)
             {
                 m_tileData[{x, y}] = m_tileMap[tileId];
+                m_tileObjects[{x, y}] = {{x, y}, m_tileData[{x, y}]};
             }
             x++;
         });
     }
+}
+
+const std::map<std::tuple<int, int>, tson::TileObject> &tson::Layer::getTileObjects() const
+{
+    return m_tileObjects;
+}
+
+tson::TileObject *tson::Layer::getTileObject(int x, int y)
+{
+    return (m_tileObjects.count({x, y}) > 0) ? &m_tileObjects[{x,y}] : nullptr;
 }
 
 #endif //TILESON_LAYER_HPP

@@ -38,7 +38,7 @@ class SfmlDemoManager
         static constexpr int CURRENT_VERSION = 120; //v1.2.0
 
         void drawLayer(tson::Layer& layer);
-        void drawTileLayer(tson::Layer& layer, tson::Tileset* tileset);
+        void drawTileLayer(const tson::Layer& layer, tson::Tileset* tileset);
         void drawImageLayer(tson::Layer& layer);
         void drawObjectLayer(tson::Layer& layer);
 

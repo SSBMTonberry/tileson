@@ -68,4 +68,25 @@ const tson::Vector2f tson::Tile::getPosition(const std::tuple<int, int> &tileDat
     return {((float) std::get<0>(tileDataPos)) * m_drawingRect.width, ((float) std::get<1>(tileDataPos)) * m_drawingRect.height};
 }
 
+// T i l e O b j e c t . h p p
+// ---------------------
+
+/*!
+ * In cases where the empty constructor is called, this must be called manually
+ * for this class to make sense
+ * @param posInTileUnits
+ * @param tile
+ */
+void tson::TileObject::initialize(const std::tuple<int, int> &posInTileUnits, tson::Tile *tile)
+{
+    m_tile = tile;
+    m_posInTileUnits = tile->getPositionInTileUnits(posInTileUnits);
+    m_position = tile->getPosition(posInTileUnits);
+}
+
+const tson::Rect &tson::TileObject::getDrawingRect() const
+{
+    return m_tile->getDrawingRect();
+}
+
 #endif //TILESON_TILESON_FORWARD_HPP
