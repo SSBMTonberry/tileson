@@ -23794,28 +23794,17 @@ tson::Property *tson::Object::getProp(const std::string &name)
 
 /*** End of inlined file: Object.hpp ***/
 
-//#include "Tile.h"
-
 namespace tson
 {
 	class Tile;
+	class Map;
 
 	class Layer
 	{
 		public:
-			//'type': tilelayer, objectgroup, imagelayer or group
-			//enum class Type : uint8_t
-			//{
-			//        Undefined = 0,
-			//        TileLayer = 1,
-			//        ObjectGroup = 2,
-			//        ImageLayer = 3,
-			//        Group = 4
-			//};
-
 			inline Layer() = default;
-			inline explicit Layer(const nlohmann::json &json);
-			inline bool parse(const nlohmann::json &json);
+			inline Layer(const nlohmann::json &json, tson::Map *map);
+			inline bool parse(const nlohmann::json &json, tson::Map *map);
 
 			[[nodiscard]] inline const std::string &getCompression() const;
 			[[nodiscard]] inline const std::vector<int> &getData() const;
@@ -23857,37 +23846,43 @@ namespace tson
 			[[nodiscard]] inline const std::map<std::tuple<int, int>, tson::Tile *> &getTileData() const;
 			inline tson::Tile * getTileData(int x, int y);
 
+			//v1.2.0-stuff
+			inline tson::Map *getMap() const;
+
 		private:
 			inline void setTypeByString();
 
-			std::vector<tson::Chunk>                       m_chunks; 	                              /*! 'chunks': Array of chunks (optional). tilelayer only. */
-			std::string                                    m_compression;                             /*! 'compression': zlib, gzip or empty (default). tilelayer only. */
-			std::vector<int>                               m_data;                                    /*! 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded
-																									   *   data. tilelayer only. */
-			std::string                                    m_base64Data;                              /*! 'data' (when string):     Array of unsigned int (GIDs) or base64-encoded
-																									   *   data. tilelayer only. */
-			std::string                                    m_drawOrder;                               /*! 'draworder': topdown (default) or index. objectgroup only. */
-			std::string                                    m_encoding;                                /*! 'encoding': csv (default) or base64. tilelayer only. */
-			int                                            m_id{};                                    /*! 'id': Incremental id - unique across all layers */
-			std::string                                    m_image;                                   /*! 'image': Image used by this layer. imagelayer only. */
-			std::vector<tson::Layer>                       m_layers; 	                              /*! 'layers': Array of layers. group on */
-			std::string                                    m_name;                                    /*! 'name': Name assigned to this layer */
-			std::vector<tson::Object>                      m_objects;                                 /*! 'objects': Array of objects. objectgroup only. */
-			tson::Vector2f                                 m_offset;                                  /*! 'offsetx' and 'offsety': Horizontal and Vertical layer offset in pixels
-																									   *  (default: {0, 0}) */
-			float                                          m_opacity{};                               /*! 'opacity': Value between 0 and 1 */
-			tson::PropertyCollection                       m_properties; 	                          /*! 'properties': A list of properties (name, value, type). */
-			tson::Vector2i                                 m_size;                                    /*! x = 'width': (Column count. Same as map width for fixed-size maps.)
-																										  y = 'height': Row count. Same as map height for fixed-size maps. */
-			tson::Colori                                   m_transparentcolor;                        /*! 'transparentcolor': Hex-formatted color (#RRGGBB) (optional, imagelayer only */
-			std::string                                    m_typeStr;                                 /*! 'type': tilelayer, objectgroup, imagelayer or group */
-			LayerType                                      m_type {LayerType::Undefined};             /*! Layer type as enum*/
-			bool                                           m_visible{};        /*! 'visible': Whether layer is shown or hidden in editor */
-			int                                            m_x{};              /*! 'x': Horizontal layer offset in tiles. Always 0. */
-			int                                            m_y{};              /*! 'y': Vertical layer offset in tiles. Always 0. */
+			std::vector<tson::Chunk>                       m_chunks; 	                      /*! 'chunks': Array of chunks (optional). tilelayer only. */
+			std::string                                    m_compression;                     /*! 'compression': zlib, gzip or empty (default). tilelayer only. */
+			std::vector<int>                               m_data;                            /*! 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded
+																							   *   data. tilelayer only. */
+			std::string                                    m_base64Data;                      /*! 'data' (when string):     Array of unsigned int (GIDs) or base64-encoded
+																							   *   data. tilelayer only. */
+			std::string                                    m_drawOrder;                       /*! 'draworder': topdown (default) or index. objectgroup only. */
+			std::string                                    m_encoding;                        /*! 'encoding': csv (default) or base64. tilelayer only. */
+			int                                            m_id{};                            /*! 'id': Incremental id - unique across all layers */
+			std::string                                    m_image;                           /*! 'image': Image used by this layer. imagelayer only. */
+			std::vector<tson::Layer>                       m_layers; 	                      /*! 'layers': Array of layers. group on */
+			std::string                                    m_name;                            /*! 'name': Name assigned to this layer */
+			std::vector<tson::Object>                      m_objects;                         /*! 'objects': Array of objects. objectgroup only. */
+			tson::Vector2f                                 m_offset;                          /*! 'offsetx' and 'offsety': Horizontal and Vertical layer offset in pixels
+																							   *  (default: {0, 0}) */
+			float                                          m_opacity{};                       /*! 'opacity': Value between 0 and 1 */
+			tson::PropertyCollection                       m_properties; 	                  /*! 'properties': A list of properties (name, value, type). */
+			tson::Vector2i                                 m_size;                            /*! x = 'width': (Column count. Same as map width for fixed-size maps.)
+																								  y = 'height': Row count. Same as map height for fixed-size maps. */
+			tson::Colori                                   m_transparentcolor;                /*! 'transparentcolor': Hex-formatted color (#RRGGBB) (optional, imagelayer only */
+			std::string                                    m_typeStr;                         /*! 'type': tilelayer, objectgroup, imagelayer or group */
+			LayerType                                      m_type {LayerType::Undefined};     /*! Layer type as enum*/
+			bool                                           m_visible{};                       /*! 'visible': Whether layer is shown or hidden in editor */
+			int                                            m_x{};                             /*! 'x': Horizontal layer offset in tiles. Always 0. */
+			int                                            m_y{};                             /*! 'y': Vertical layer offset in tiles. Always 0. */
 
 			std::map<int, tson::Tile*>                     m_tileMap;
-			std::map<std::tuple<int, int>, tson::Tile*>    m_tileData;         /*! Key: Tuple of x and y pos in tile units. */
+			std::map<std::tuple<int, int>, tson::Tile*>    m_tileData;                        /*! Key: Tuple of x and y pos in tile units. */
+
+			//v1.2.0-stuff
+			tson::Map *                                    m_map;                             /*! The map who owns this layer */
 	};
 
 	/*!
@@ -23907,9 +23902,9 @@ namespace tson
  * Parses a Tiled layer from json
  * @param json
  */
-tson::Layer::Layer(const nlohmann::json &json)
+tson::Layer::Layer(const nlohmann::json &json, tson::Map *map)
 {
-	parse(json);
+	parse(json, map);
 }
 
 /*!
@@ -23917,8 +23912,10 @@ tson::Layer::Layer(const nlohmann::json &json)
  * @param json
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Layer::parse(const nlohmann::json &json)
+bool tson::Layer::parse(const nlohmann::json &json, tson::Map *map)
 {
+	m_map = map;
+
 	bool allFound = true;
 	if(json.count("compression") > 0) m_compression = json["compression"].get<std::string>(); //Optional
 	if(json.count("draworder") > 0) m_drawOrder = json["draworder"].get<std::string>(); //Optional
@@ -23952,7 +23949,7 @@ bool tson::Layer::parse(const nlohmann::json &json)
 	if(json.count("chunks") > 0 && json["chunks"].is_array())
 		std::for_each(json["chunks"].begin(), json["chunks"].end(), [&](const nlohmann::json &item) { m_chunks.emplace_back(item); });
 	if(json.count("layers") > 0 && json["layers"].is_array())
-		std::for_each(json["layers"].begin(), json["layers"].end(), [&](const nlohmann::json &item) { m_layers.emplace_back(item); });
+		std::for_each(json["layers"].begin(), json["layers"].end(), [&](const nlohmann::json &item) { m_layers.emplace_back(item, m_map); });
 	if(json.count("objects") > 0 && json["objects"].is_array())
 		std::for_each(json["objects"].begin(), json["objects"].end(), [&](const nlohmann::json &item) { m_objects.emplace_back(item); });
 	if(json.count("properties") > 0 && json["properties"].is_array())
@@ -24249,29 +24246,6 @@ void tson::Layer::assignTileMap(const std::map<int, tson::Tile *> &tileMap)
 	m_tileMap = tileMap;
 }
 
-void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
-{
-	size_t x = 0;
-	size_t y = 0;
-	if(!isInfiniteMap)
-	{
-		std::for_each(m_data.begin(), m_data.end(), [&](int tileId)
-		{
-			if (x == mapSize.x)
-			{
-				++y;
-				x = 0;
-			}
-
-			if (tileId > 0)
-			{
-				m_tileData[{x, y}] = m_tileMap[tileId];
-			}
-			x++;
-		});
-	}
-}
-
 /*!
  * Get tile data as some kind of map with x and y position with pointers to existing tiles.
  * Map only contains tiles that are not empty. x and y position is in tile units.
@@ -24302,6 +24276,45 @@ const std::map<std::tuple<int, int>, tson::Tile *> &tson::Layer::getTileData() c
 tson::Tile *tson::Layer::getTileData(int x, int y)
 {
 	return (m_tileData.count({x, y}) > 0) ? m_tileData[{x,y}] : nullptr;
+}
+
+/*!
+ * Used for getting the tson::Map who is the parent of this Layer.
+ * @return a pointer to the tson::Map where this layer is contained.
+ */
+tson::Map *tson::Layer::getMap() const
+{
+	return m_map;
+}
+
+/*!
+ *
+ * This is only supported for non-infinte maps!
+ *
+ * @param mapSize The size of the map
+ * @param isInfiniteMap Whether or not the current map is infinte.
+ */
+void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
+{
+	size_t x = 0;
+	size_t y = 0;
+	if(!isInfiniteMap)
+	{
+		std::for_each(m_data.begin(), m_data.end(), [&](int tileId)
+		{
+			if (x == mapSize.x)
+			{
+				++y;
+				x = 0;
+			}
+
+			if (tileId > 0)
+			{
+				m_tileData[{x, y}] = m_tileMap[tileId];
+			}
+			x++;
+		});
+	}
 }
 
 #endif //TILESON_LAYER_HPP
@@ -24757,15 +24770,75 @@ int tson::Frame::getTileId() const
 
 /*** End of inlined file: Frame.hpp ***/
 
+
+/*** Start of inlined file: Rect.hpp ***/
+//
+// Created by robin on 24.07.2020.
+//
+
+#ifndef TILESON_RECT_HPP
+#define TILESON_RECT_HPP
+
 namespace tson
 {
+	class Rect
+	{
+		public:
+
+			inline Rect();
+			inline Rect(int x_, int y_, int width_, int height_);
+
+			inline bool operator==(const Rect &rhs) const;
+			inline bool operator!=(const Rect &rhs) const;
+
+			int x;
+			int y;
+			int width;
+			int height;
+	};
+
+	Rect::Rect()
+	{
+
+	}
+
+	Rect::Rect(int x_, int y_, int width_, int height_)
+	{
+		x = x_;
+		y = y_;
+		width = width_;
+		height = height_;
+	}
+
+	bool Rect::operator==(const Rect &rhs) const
+	{
+		return x == rhs.x &&
+			   y == rhs.y &&
+			   width == rhs.width &&
+			   height == rhs.height;
+	}
+
+	bool Rect::operator!=(const Rect &rhs) const
+	{
+		return !(rhs == *this);
+	}
+}
+
+#endif //TILESON_RECT_HPP
+
+/*** End of inlined file: Rect.hpp ***/
+
+namespace tson
+{
+	class Tileset;
+
 	class Tile
 	{
 		public:
 			inline Tile() = default;
-			inline explicit Tile(const nlohmann::json &json);
-			inline explicit Tile(int id);
-			inline bool parse(const nlohmann::json &json);
+			inline explicit Tile(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
+			inline explicit Tile(int id, tson::Tileset *tileset, tson::Map *map);
+			inline bool parse(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
 
 			[[nodiscard]] inline int getId() const;
 			#ifndef DISABLE_CPP17_FILESYSTEM
@@ -24785,6 +24858,14 @@ namespace tson
 			inline T get(const std::string &name);
 			inline tson::Property * getProp(const std::string &name);
 
+			//v1.2.0-stuff
+			inline tson::Tileset * getTileset() const;
+			inline tson::Map * getMap() const;
+			inline const tson::Rect &getDrawingRect() const;
+			inline const tson::Vector2f getPosition(const std::tuple<int, int> &tileDataPos);
+			inline const tson::Vector2i getPositionInTileUnits(const std::tuple<int, int> &tileDataPos);
+			inline const tson::Vector2i getTileSize() const;                       /*! Declared in tileson_forward.hpp */
+
 		private:
 			std::vector<tson::Frame>    m_animation; 	    /*! 'animation': Array of Frames */
 			int                         m_id {};            /*! 'id': Local ID of the tile */
@@ -24798,6 +24879,14 @@ namespace tson
 			tson::PropertyCollection    m_properties; 	    /*! 'properties': A list of properties (name, value, type). */
 			std::vector<int>            m_terrain;          /*! 'terrain': Index of terrain for each corner of tile */
 			std::string                 m_type;             /*! 'type': The type of the tile (optional) */
+
+			//v1.2.0-stuff
+			tson::Tileset *             m_tileset;                                   /*! A pointer to the tileset where this Tile comes from */
+			tson::Map *                 m_map;                                       /*! A pointer to the map where this tile is contained */
+			tson::Rect                  m_drawingRect;                               /*! A rect that shows which part of the tileset that is used for this tile */
+			inline void performDataCalculations();                                   /*! Declared in tileson_forward.hpp - Calculate all the values used in the tile class. */
+
+			friend class Layer;
 	};
 
 	/*!
@@ -24813,18 +24902,20 @@ namespace tson
 	}
 }
 
-tson::Tile::Tile(const nlohmann::json &json)
+tson::Tile::Tile(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map)
 {
-	parse(json);
+	parse(json, tileset, map);
 }
 
 /*!
  * Used in cases where you have a tile without any property
  * @param id
  */
-tson::Tile::Tile(int id) : m_id {id}
+tson::Tile::Tile(int id, tson::Tileset *tileset, tson::Map *map) : m_id {id}
 {
-
+	m_tileset = tileset;
+	m_map = map;
+	performDataCalculations();
 }
 
 /*!
@@ -24832,8 +24923,11 @@ tson::Tile::Tile(int id) : m_id {id}
  * @param json
  * @return
  */
-bool tson::Tile::parse(const nlohmann::json &json)
+bool tson::Tile::parse(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map)
 {
+	m_tileset = tileset;
+	m_map = map;
+
 	bool allFound = true;
 	#ifndef DISABLE_CPP17_FILESYSTEM
 	if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); //Optional
@@ -24842,7 +24936,7 @@ bool tson::Tile::parse(const nlohmann::json &json)
 	#endif
 	if(json.count("id") > 0) m_id = json["id"].get<int>() + 1; else allFound = false;
 	if(json.count("type") > 0) m_type = json["type"].get<std::string>(); //Optional
-	if(json.count("objectgroup") > 0) m_objectgroup = tson::Layer(json["objectgroup"]); //Optional
+	if(json.count("objectgroup") > 0) m_objectgroup = tson::Layer(json["objectgroup"], m_map); //Optional
 
 	if(json.count("imagewidth") > 0 && json.count("imageheight") > 0)
 		m_imageSize = {json["imagewidth"].get<int>(), json["imageheight"].get<int>()}; //Optional
@@ -24855,6 +24949,8 @@ bool tson::Tile::parse(const nlohmann::json &json)
 
 	if(json.count("properties") > 0 && json["properties"].is_array())
 		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+
+	performDataCalculations();
 
 	return allFound;
 }
@@ -24942,6 +25038,48 @@ tson::Property *tson::Tile::getProp(const std::string &name)
 		return m_properties.getProperty(name);
 
 	return nullptr;
+}
+
+/*!
+ * Used for getting the tson::Tileset who is the parent of this Tile.
+ * @return a pointer to the tson::Tileset where this tile is contained.
+ */
+tson::Tileset *tson::Tile::getTileset() const
+{
+	return m_tileset;
+}
+
+/*!
+ * Used for getting the tson::Map who is the parent of this Tile.
+ * @return a pointer to the tson::Map where this tile is contained.
+ */
+tson::Map *tson::Tile::getMap() const
+{
+	return m_map;
+}
+
+/*!
+ * Get the information needed to draw the Tile based on its current tileset
+ * @return a tson::Rect containing the information needed to draw the tile.
+ */
+const tson::Rect &tson::Tile::getDrawingRect() const
+{
+	return m_drawingRect;
+}
+
+/*!
+ * Helper function.
+ *
+ * Get the position of the tile in tile units.
+ * The size of each unit is determined by the tile size property of the map.
+ * Example: If the tile size is 16x16 in the map, a tile unit of [2, 4] would be [32, 64] in pixels.
+ * If you want the position in pixels: use getPosition() instead.
+ *
+ * @return Position of tile in tile units.
+ */
+const tson::Vector2i tson::Tile::getPositionInTileUnits(const std::tuple<int, int> &tileDataPos)
+{
+	return {std::get<0>(tileDataPos), std::get<1>(tileDataPos)};
 }
 
 #endif //TILESON_TILE_HPP
@@ -25143,12 +25281,13 @@ const tson::Vector2i &tson::Grid::getSize() const
 
 namespace tson
 {
+	class Map;
 	class Tileset
 	{
 		public:
 			inline Tileset() = default;
-			inline explicit Tileset(const nlohmann::json &json);
-			inline bool parse(const nlohmann::json &json);
+			inline explicit Tileset(const nlohmann::json &json, tson::Map *map);
+			inline bool parse(const nlohmann::json &json, tson::Map *map);
 
 			[[nodiscard]] inline int getColumns() const;
 			[[nodiscard]] inline int getFirstgid() const;
@@ -25183,6 +25322,9 @@ namespace tson
 			inline T get(const std::string &name);
 			inline tson::Property * getProp(const std::string &name);
 
+			//v1.2.0-stuff
+			inline tson::Map *getMap() const;
+
 		private:
 			inline void generateMissingTiles();
 
@@ -25210,6 +25352,9 @@ namespace tson
 			tson::Vector2i                m_tileOffset;       /*! 'x' and 'y': See <tileoffset> (optional) */
 			tson::Grid                    m_grid;             /*! 'grid': This element is only used in case of isometric orientation, and determines
 																   how tile overlays for terrain and collision information are rendered. */
+
+			//v1.2.0-stuff
+			tson::Map *                   m_map;              /*! The map who owns this tileset */
 	};
 
 	/*!
@@ -25225,13 +25370,14 @@ namespace tson
 	}
 }
 
-tson::Tileset::Tileset(const nlohmann::json &json)
+tson::Tileset::Tileset(const nlohmann::json &json, tson::Map *map)
 {
-	parse(json);
+	parse(json, map);
 }
 
-bool tson::Tileset::parse(const nlohmann::json &json)
+bool tson::Tileset::parse(const nlohmann::json &json, tson::Map *map)
 {
+	m_map = map;
 	bool allFound = true;
 
 	if(json.count("columns") > 0) m_columns = json["columns"].get<int>(); else allFound = false;
@@ -25260,7 +25406,7 @@ bool tson::Tileset::parse(const nlohmann::json &json)
 	if(json.count("wangsets") > 0 && json["wangsets"].is_array())
 		std::for_each(json["wangsets"].begin(), json["wangsets"].end(), [&](const nlohmann::json &item) { m_wangsets.emplace_back(item); });
 	if(json.count("tiles") > 0 && json["tiles"].is_array())
-		std::for_each(json["tiles"].begin(), json["tiles"].end(), [&](const nlohmann::json &item) { m_tiles.emplace_back(item); });
+		std::for_each(json["tiles"].begin(), json["tiles"].end(), [&](const nlohmann::json &item) { m_tiles.emplace_back(item, this, m_map); });
 	if(json.count("terrains") > 0 && json["terrains"].is_array())
 		std::for_each(json["terrains"].begin(), json["terrains"].end(), [&](const nlohmann::json &item) { m_terrains.emplace_back(item); });
 
@@ -25490,13 +25636,21 @@ void tson::Tileset::generateMissingTiles()
 	{
 		if(std::count(tileIds.begin(), tileIds.end(), i) == 0)
 		{
-			m_tiles.emplace_back(Tile(i));
+			m_tiles.emplace_back(Tile(i, this, m_map));
 		}
 	}
 }
 
-#endif //TILESON_TILESET_HPP
+/*!
+ * Used for getting the tson::Map who is the parent of this Tileset.
+ * @return a pointer to the tson::Map where this tileset is contained.
+ */
+tson::Map *tson::Tileset::getMap() const
+{
+	return m_map;
+}
 
+#endif //TILESON_TILESET_HPP
 /*** End of inlined file: Tileset.hpp ***/
 
 namespace tson
@@ -25504,14 +25658,6 @@ namespace tson
 	class Map
 	{
 		public:
-			//enum class ParseStatus : uint8_t
-			//{
-			//        OK = 0, //OK unless otherwise stated
-			//        FileNotFound = 1,
-			//        ParseError = 2,
-			//        MissingData = 3
-			//};
-
 			inline Map() = default;
 			inline Map(ParseStatus status, std::string description);
 			inline explicit Map(const nlohmann::json &json);
@@ -25634,9 +25780,9 @@ bool tson::Map::parse(const nlohmann::json &json)
 
 	//More advanced data
 	if(json.count("layers") > 0 && json["layers"].is_array())
-		std::for_each(json["layers"].begin(), json["layers"].end(), [&](const nlohmann::json &item) { m_layers.emplace_back(item); });
+		std::for_each(json["layers"].begin(), json["layers"].end(), [&](const nlohmann::json &item) { m_layers.emplace_back(item, this); });
 	if(json.count("tilesets") > 0 && json["tilesets"].is_array())
-		std::for_each(json["tilesets"].begin(), json["tilesets"].end(), [&](const nlohmann::json &item) { m_tilesets.emplace_back(item); });
+		std::for_each(json["tilesets"].begin(), json["tilesets"].end(), [&](const nlohmann::json &item) { m_tilesets.emplace_back(item, this); });
 	if(json.count("properties") > 0 && json["properties"].is_array())
 		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
 
@@ -25923,6 +26069,82 @@ namespace tson
 
 #include <fstream>
 #include <sstream>
+#include <memory>
+
+/*** Start of inlined file: tileson_forward.hpp ***/
+//
+// Created by robin on 25.07.2020.
+//
+
+#ifndef TILESON_TILESON_FORWARD_HPP
+#define TILESON_TILESON_FORWARD_HPP
+/*!
+ * T I L E S O N   F O R W A R D   D E C L A R A T I O N S
+ * -------------------------------------------------------
+ *
+ * Due to cross-references we have forward declarations that cannot be resolved during the
+ * implementation, thus the implementations must be done later when the class definition itself is known.
+ *
+ * All those forward declarations can be found below.
+ */
+
+// T i l e . h p p
+// ---------------------
+
+/*!
+ * Really just a shortcut to retrieve the tile size from the map.
+ * @return TileSize based on the map property for tile size.
+ */
+const tson::Vector2i tson::Tile::getTileSize() const
+{
+	if(m_map != nullptr)
+		return m_map->getTileSize();
+	else
+		return {0,0};
+}
+
+/*!
+ * Uses tson::Tileset and tson::Map data to calculate related values for tson::Tile.
+ * Added in v1.2.0
+ */
+void tson::Tile::performDataCalculations()
+{
+	if(m_tileset == nullptr || m_map == nullptr)
+		return;
+
+	int firstId = m_tileset->getFirstgid(); //First tile id of the tileset
+	int columns = m_tileset->getColumns();
+	int rows = m_tileset->getTileCount() / columns;
+	int lastId = (m_tileset->getFirstgid() + m_tileset->getTileCount()) - 1;
+
+	if (getId() >= firstId && getId() <= lastId)
+	{
+		int baseTilePosition = (getId() - firstId);
+
+		int tileModX = (baseTilePosition % columns);
+		int currentRow = (baseTilePosition / columns);
+		int offsetX = (tileModX != 0) ? ((tileModX) * m_map->getTileSize().x) : (0 * m_map->getTileSize().x);
+		int offsetY =  (currentRow < rows-1) ? (currentRow * m_map->getTileSize().y) : ((rows-1) * m_map->getTileSize().y);
+
+		m_drawingRect = { offsetX, offsetY, m_map->getTileSize().x, m_map->getTileSize().y };
+	}
+	else
+		m_drawingRect = {0, 0, 0, 0};
+}
+
+/*!
+ * Get the position of the tile in pixels based on the tile data position from the current layer.
+ * @return The position of the tile in Pixels
+ */
+const tson::Vector2f tson::Tile::getPosition(const std::tuple<int, int> &tileDataPos)
+{
+	return {((float) std::get<0>(tileDataPos)) * m_drawingRect.width, ((float) std::get<1>(tileDataPos)) * m_drawingRect.height};
+}
+
+#endif //TILESON_TILESON_FORWARD_HPP
+
+/*** End of inlined file: tileson_forward.hpp ***/
+
 
 namespace tson
 {
@@ -25931,14 +26153,14 @@ namespace tson
 		public:
 			Tileson() = default;
 			#ifndef DISABLE_CPP17_FILESYSTEM
-			inline tson::Map parse(const fs::path &path);
+			inline std::unique_ptr<tson::Map> parse(const fs::path &path);
 			#else
-			inline tson::Map parse(const std::string &path);
+			inline std::unique_ptr<tson::Map> parse(const std::string &path);
 			#endif
-			inline tson::Map parse(const void * data, size_t size);
+			inline std::unique_ptr<tson::Map> parse(const void * data, size_t size);
 
 		private:
-			inline tson::Map parseJson(const nlohmann::json &json);
+			inline std::unique_ptr<tson::Map> parseJson(const nlohmann::json &json);
 	};
 }
 
@@ -25948,7 +26170,7 @@ namespace tson
  * @return parsed data as Map
  */
 #ifndef DISABLE_CPP17_FILESYSTEM
-tson::Map tson::Tileson::parse(const fs::path &path)
+std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
 {
 	if(fs::exists(path) && fs::is_regular_file(path))
 	{
@@ -25963,17 +26185,17 @@ tson::Map tson::Tileson::parse(const fs::path &path)
 			std::string message = "Parse error: ";
 			message += std::string(error.what());
 			message += std::string("\n");
-			return tson::Map {tson::ParseStatus::ParseError, message};
+			return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, message);
 		}
 		return parseJson(json);
 	}
 
 	std::string msg = "File not found: ";
 	msg += std::string(path.u8string());
-	return tson::Map {tson::ParseStatus::FileNotFound, msg};
+	return std::make_unique<tson::Map>(tson::ParseStatus::FileNotFound, msg);
 }
 #else
-tson::Map tson::Tileson::parse(const std::string &path)
+std::unique_ptr<tson::Map> tson::Tileson::parse(const std::string &path)
 {
 
 	std::ifstream i(path);
@@ -25987,10 +26209,9 @@ tson::Map tson::Tileson::parse(const std::string &path)
 		std::string message = "Parse error: ";
 		message += std::string(error.what());
 		message += std::string("\n");
-		return tson::Map {tson::ParseStatus::ParseError, message};
+		return std::make_unique<tson::Map> (tson::ParseStatus::ParseError, message);
 	}
-	return parseJson(json);
-
+	return std::move(parseJson(json));
 }
 #endif
 /*!
@@ -25999,7 +26220,7 @@ tson::Map tson::Tileson::parse(const std::string &path)
  * @param size The size of the data to parse
  * @return parsed data as Map
  */
-tson::Map tson::Tileson::parse(const void *data, size_t size)
+std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size)
 {
 	//std::istringstream i;
 	//i.rdbuf()->pubsetbuf((char *)data, size);
@@ -26016,10 +26237,10 @@ tson::Map tson::Tileson::parse(const void *data, size_t size)
 		std::string message = "Parse error: ";
 		message += std::string(error.what());
 		message += std::string("\n");
-		return tson::Map{ tson::ParseStatus::ParseError, message };
+		return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, message);
 	}
 
-	return parseJson(json);
+	return std::move(parseJson(json));
 }
 
 /*!
@@ -26027,13 +26248,13 @@ tson::Map tson::Tileson::parse(const void *data, size_t size)
  * @param json Tiled json to parse
  * @return parsed data as Map
  */
-tson::Map tson::Tileson::parseJson(const nlohmann::json &json)
+std::unique_ptr<tson::Map> tson::Tileson::parseJson(const nlohmann::json &json)
 {
-	tson::Map map;
-	if(map.parse(json))
-		return map;
+	std::unique_ptr<tson::Map> map = std::make_unique<tson::Map>();
+	if(map->parse(json))
+		return std::move(map);
 
-	return tson::Map {tson::ParseStatus::MissingData, "Missing map data..."};
+	return std::make_unique<tson::Map> (tson::ParseStatus::MissingData, "Missing map data...");
 }
 
 #endif //TILESON_TILESON_PARSER_HPP

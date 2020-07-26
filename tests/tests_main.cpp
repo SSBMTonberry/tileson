@@ -88,47 +88,6 @@ std::vector<int> getFailingMapTests(tson::Map *map)
     }
 
     return failingTests;
-
-    //return (map->getLayers().size() == 6 &&
-    //        !map->isInfinite() &&
-    //        map->getSize() == tson::Vector2i(32, 16) &&
-    //        map->getBackgroundColor() == tson::Colori("#3288c1") &&
-    //        map->getLayers()[0].getProperties().getSize() > 0 &&
-    //        map->getLayers()[0].getProperties().get()[0]->getType() != tson::Type::Undefined &&
-    //        map->getLayers()[2].getName() == "Object Layer" &&
-    //        map->getLayers()[2].getObjects().size() > 1 &&
-    //        map->getLayers()[2].getObjects()[0].getName() == "coin" &&
-    //        map->getLayers()[2].getObjects()[0].getProperties().getSize() > 0 &&
-    //        map->getLayer("Main Layer") != nullptr &&
-    //        map->getLayer("Main Layer")->getType() == tson::LayerType::TileLayer &&
-    //        map->getLayer("Background Image")->getType() == tson::LayerType::ImageLayer &&
-    //        map->getLayer("Background Image")->get<float>("scroll_speed") == 1.f &&
-    //        map->getLayer("Background Image")->getProp("repeat_bg")->getType() == tson::Type::Boolean &&
-    //        map->getLayer("Object Layer")->getType() == tson::LayerType::ObjectGroup &&
-    //        map->getLayer("Object Layer")->firstObj("coin") != nullptr &&
-    //        map->getLayer("Object Layer")->getObjectsByName("goomba").size() == 2 &&
-    //        !map->getLayer("Object Layer")->getObjectsByType(tson::ObjectType::Object).empty() &&
-    //        map->getLayer("Object Layer")->getObj(2)->getName() == "coin" &&
-    //        map->getTileset("demo-tileset") != nullptr &&
-    //        map->getTileset("demo-tileset")->getTile(36) != nullptr &&
-    //        map->getTileset("demo-tileset")->getTile(36)->getAnimation().size() == 2 &&
-    //        map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProperties().getSize() == 2 &&
-    //        map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProp("i_like_this")->getType() == tson::Type::Boolean &&
-    //        !map->getTileset("demo-tileset")->getTerrain("test_terrain")->get<std::string>("description").empty() &&
-    //        map->getTileMap().size() > 10 &&
-    //        tileData[{4,4}] != nullptr && tileData[{4,4}]->getId() == 1 &&
-    //        tileData[{5,4}] != nullptr && tileData[{5,4}]->getId() == 3 &&
-    //        main->getTileData(8,14) != nullptr && main->getTileData(8,14)->getId() == 2 &&
-    //        main->getTileData(17,5) != nullptr && main->getTileData(17,5)->getId() == 5 &&
-    //        //v1.2.0-tests
-    //        main->getTileData(8,14)->getPositionInTileUnits({8,14}) == tson::Vector2i(8, 14) &&
-    //        main->getTileData(8,14)->getPosition({8,14}) == tson::Vector2f(8.f * 16.f, 14.f * 16.f) &&
-    //        main->getMap() != nullptr &&
-    //        main->getMap() == map &&
-    //        main->getTileData(8,14)->getMap() != nullptr &&
-    //        main->getTileData(8,14)->getMap() == map &&
-    //        main->getTileData(8,14)->getTileset() != nullptr
-    //        );
 }
 
 
