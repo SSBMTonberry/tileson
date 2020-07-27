@@ -85,6 +85,8 @@ std::vector<int> getFailingMapTests2(tson::Map *map)
     tests[35] = main->getTileData(8,14)->getMap() != nullptr;
     tests[36] = main->getTileData(8,14)->getMap() == map;
     tests[37] = main->getTileData(8,14)->getTileset() != nullptr;
+    tests[38] = main->getTileData(8,14)->getPosition({8,14}) == main->getTileObject(8,14)->getPosition();
+    tests[39] = main->getTileData().size() == main->getTileObjects().size();
 
     for(const auto & [id, result] : tests)
     {

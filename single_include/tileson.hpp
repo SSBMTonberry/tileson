@@ -23794,6 +23794,133 @@ tson::Property *tson::Object::getProp(const std::string &name)
 
 /*** End of inlined file: Object.hpp ***/
 
+
+/*** Start of inlined file: TileObject.hpp ***/
+//
+// Created by robin on 26.07.2020.
+//
+
+#ifndef TILESON_TILEOBJECT_HPP
+#define TILESON_TILEOBJECT_HPP
+
+
+/*** Start of inlined file: Rect.hpp ***/
+//
+// Created by robin on 24.07.2020.
+//
+
+#ifndef TILESON_RECT_HPP
+#define TILESON_RECT_HPP
+
+namespace tson
+{
+	class Rect
+	{
+		public:
+
+			inline Rect();
+			inline Rect(int x_, int y_, int width_, int height_);
+
+			inline bool operator==(const Rect &rhs) const;
+			inline bool operator!=(const Rect &rhs) const;
+
+			int x;
+			int y;
+			int width;
+			int height;
+	};
+
+	Rect::Rect()
+	{
+
+	}
+
+	Rect::Rect(int x_, int y_, int width_, int height_)
+	{
+		x = x_;
+		y = y_;
+		width = width_;
+		height = height_;
+	}
+
+	bool Rect::operator==(const Rect &rhs) const
+	{
+		return x == rhs.x &&
+			   y == rhs.y &&
+			   width == rhs.width &&
+			   height == rhs.height;
+	}
+
+	bool Rect::operator!=(const Rect &rhs) const
+	{
+		return !(rhs == *this);
+	}
+}
+
+#endif //TILESON_RECT_HPP
+
+/*** End of inlined file: Rect.hpp ***/
+
+namespace tson
+{
+	class Tile;
+	class TileObject
+	{
+		public:
+			inline TileObject() = default;
+			inline TileObject(const std::tuple<int, int> &posInTileUnits, tson::Tile *tile);
+
+			inline void initialize(const std::tuple<int, int> &posInTileUnits, tson::Tile *tile); //Defined in tileson_forward.hpp
+
+			inline Tile *getTile() const;
+			inline const Vector2i &getPositionInTileUnits() const;
+			inline const Vector2f &getPosition() const;
+			inline const tson::Rect &getDrawingRect() const; //Defined in tileson_forward.hpp
+
+		private:
+			tson::Tile *m_tile;
+			tson::Vector2i m_posInTileUnits;
+			tson::Vector2f m_position;
+
+	};
+
+	TileObject::TileObject(const std::tuple<int, int> &posInTileUnits, tson::Tile *tile)
+	{
+		initialize(posInTileUnits, tile);
+	}
+
+	/*!
+	 * Get a pointer to the related tile
+	 * @return
+	 */
+	Tile *TileObject::getTile() const
+	{
+		return m_tile;
+	}
+
+	/*!
+	 * Gets the position of the tile in tile units
+	 * @return
+	 */
+	const Vector2i &TileObject::getPositionInTileUnits() const
+	{
+		return m_posInTileUnits;
+	}
+
+	/*!
+	 * Gets the position of the tile in pixels.
+	 * @return
+	 */
+	const Vector2f &TileObject::getPosition() const
+	{
+		return m_position;
+	}
+}
+
+#endif //TILESON_TILEOBJECT_HPP
+
+/*** End of inlined file: TileObject.hpp ***/
+
 namespace tson
 {
 	class Tile;
@@ -23849,6 +23976,9 @@ namespace tson
 			//v1.2.0-stuff
 			inline tson::Map *getMap() const;
 
+			[[nodiscard]] inline const std::map<std::tuple<int, int>, tson::TileObject> &getTileObjects() const;
+			inline tson::TileObject * getTileObject(int x, int y);
+
 		private:
 			inline void setTypeByString();
 
@@ -23882,7 +24012,8 @@ namespace tson
 			std::map<std::tuple<int, int>, tson::Tile*>    m_tileData;                        /*! Key: Tuple of x and y pos in tile units. */
 
 			//v1.2.0-stuff
-			tson::Map *                                    m_map;                             /*! The map who owns this layer */
+			tson::Map *                                         m_map;                        /*! The map who owns this layer */
+			std::map<std::tuple<int, int>, tson::TileObject>    m_tileObjects;
 	};
 
 	/*!
@@ -24311,10 +24442,21 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
 			if (tileId > 0)
 			{
 				m_tileData[{x, y}] = m_tileMap[tileId];
+				m_tileObjects[{x, y}] = {{x, y}, m_tileData[{x, y}]};
 			}
 			x++;
 		});
 	}
+}
+
+const std::map<std::tuple<int, int>, tson::TileObject> &tson::Layer::getTileObjects() const
+{
+	return m_tileObjects;
+}
+
+tson::TileObject *tson::Layer::getTileObject(int x, int y)
+{
+	return (m_tileObjects.count({x, y}) > 0) ? &m_tileObjects[{x,y}] : nullptr;
 }
 
 #endif //TILESON_LAYER_HPP
@@ -24769,64 +24911,6 @@ int tson::Frame::getTileId() const
 #endif //TILESON_FRAME_HPP
 
 /*** End of inlined file: Frame.hpp ***/
-
-
-/*** Start of inlined file: Rect.hpp ***/
-//
-// Created by robin on 24.07.2020.
-//
-
-#ifndef TILESON_RECT_HPP
-#define TILESON_RECT_HPP
-
-namespace tson
-{
-	class Rect
-	{
-		public:
-
-			inline Rect();
-			inline Rect(int x_, int y_, int width_, int height_);
-
-			inline bool operator==(const Rect &rhs) const;
-			inline bool operator!=(const Rect &rhs) const;
-
-			int x;
-			int y;
-			int width;
-			int height;
-	};
-
-	Rect::Rect()
-	{
-
-	}
-
-	Rect::Rect(int x_, int y_, int width_, int height_)
-	{
-		x = x_;
-		y = y_;
-		width = width_;
-		height = height_;
-	}
-
-	bool Rect::operator==(const Rect &rhs) const
-	{
-		return x == rhs.x &&
-			   y == rhs.y &&
-			   width == rhs.width &&
-			   height == rhs.height;
-	}
-
-	bool Rect::operator!=(const Rect &rhs) const
-	{
-		return !(rhs == *this);
-	}
-}
-
-#endif //TILESON_RECT_HPP
-
-/*** End of inlined file: Rect.hpp ***/
 
 namespace tson
 {
@@ -26139,6 +26223,27 @@ void tson::Tile::performDataCalculations()
 const tson::Vector2f tson::Tile::getPosition(const std::tuple<int, int> &tileDataPos)
 {
 	return {((float) std::get<0>(tileDataPos)) * m_drawingRect.width, ((float) std::get<1>(tileDataPos)) * m_drawingRect.height};
+}
+
+// T i l e O b j e c t . h p p
+// ---------------------
+
+/*!
+ * In cases where the empty constructor is called, this must be called manually
+ * for this class to make sense
+ * @param posInTileUnits
+ * @param tile
+ */
+void tson::TileObject::initialize(const std::tuple<int, int> &posInTileUnits, tson::Tile *tile)
+{
+	m_tile = tile;
+	m_posInTileUnits = tile->getPositionInTileUnits(posInTileUnits);
+	m_position = tile->getPosition(posInTileUnits);
+}
+
+const tson::Rect &tson::TileObject::getDrawingRect() const
+{
+	return m_tile->getDrawingRect();
 }
 
 #endif //TILESON_TILESON_FORWARD_HPP

@@ -253,7 +253,12 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
                 tson::Tile *tile3 = layer->getTileData(8, 14);      //x:8,  y:14 - Points to tile with ID 2 (Tiled internal ID: 1)
                 tson::Tile *tile4 = layer->getTileData(17, 5);      //x:17, y:5  - Points to tile with ID 5 (Tiled internal ID: 4)
 
-
+                //New in v1.2.0
+                //You can now get tiles with positions and drawing rect via tson::TileObject
+                //Drawing rects are also accessible through tson::Tile.
+                tson::TileObject *tileobj1 = layer->getTileObject(4, 4);
+                tson::Vector2f position = tileobj1->getPosition();
+                tson::Rect drawingRect = tileobj1->getDrawingRect();
 
                 //You can of course also loop through every tile!
                 for (const auto &[id, tile] : tileData)
