@@ -86,7 +86,7 @@ set(INCLUDE_FILES include/tileson.h include/tileson_parser.hpp include/misc/Memo
         include/objects/Rect.hpp include/common/tileson_forward.hpp)
 
 # Only activated for code completion, must be uncommented before release!
-add_library(tileson ${SOURCE_FILES} ${INCLUDE_FILES})
+# add_library(tileson ${SOURCE_FILES} ${INCLUDE_FILES})
 
 if(BUILD_TESTS)
     add_subdirectory(tests)
