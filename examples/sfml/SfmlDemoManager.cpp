@@ -63,12 +63,13 @@ void SfmlDemoManager::run()
     }
 }
 
-void SfmlDemoManager::drawTileLayer(const tson::Layer& layer, tson::Tileset* tileset)
+void SfmlDemoManager::drawTileLayer(const tson::Layer& layer)//, tson::Tileset* tileset)
 {
     //pos = position in tile units
     for (const auto& [pos, tileObject] : layer.getTileObjects()) //Loops through absolutely all existing tiles
     {
         //Set sprite data to draw the tile
+        tson::Tileset *tileset = tileObject.getTile()->getTileset();
         tson::Rect drawingRect = tileObject.getDrawingRect();
         tson::Vector2f position = tileObject.getPosition();
 
@@ -220,7 +221,7 @@ void SfmlDemoManager::drawLayer(tson::Layer &layer)
     switch (layer.getType())
     {
         case tson::LayerType::TileLayer:
-            drawTileLayer(layer, tileset);
+            drawTileLayer(layer);//, tileset);
             break;
 
         case tson::LayerType::ObjectGroup:

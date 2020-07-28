@@ -40,30 +40,30 @@ Parsing a Tiled json
 //Tileson uses an alias fs for std::filesystem.
 int main()
     tson::Tileson parser;
-    tson::Map map = parser.parse(fs::path("./path/to/map.json"));
+    std::unique_ptr<tson::Map> map = parser.parse(fs::path("./path/to/map.json"));
 
-    if(map.getStatus() == tson::ParseStatus::OK)
+    if(map->getStatus() == tson::ParseStatus::OK)
     {
         //Get color as an rgba color object
-        tson::Colori bgColor = map.getBackgroundColor(); //RGBA with 0-255 on each channel
+        tson::Colori bgColor = map->getBackgroundColor(); //RGBA with 0-255 on each channel
 
         //This color can be compared with Tiled hex string
         if (bgColor == "#ffaa07")
             printf("Cool!");
 
         //Or you can compare them with other colors
-        tson::Colori otherColor{128, 87, 65, 255};
+        tson::Colori otherColor{255, 170, 7, 255};
         if (bgColor == otherColor)
             printf("This works, too!");
 
         //You can also get the color as float, transforming values if they are already in their int form, from max 255 to 1.f
         tson::Colorf bgColorFloat = bgColor.asFloat();
-Write 
+
         //Or the other way around
         tson::Colori newBg = bgColorFloat.asInt();
 
         //You can loop through every container of objects
-        for (auto &layer : map.getLayers())
+        for (auto &layer : map->getLayers())
         {
             if (layer.getType() == tson::LayerType::ObjectGroup)
             {
@@ -73,11 +73,11 @@ Write
                 }
                 //Or use these queries:
 
-                //Gets the first object it find with the name specified
-                tson::Object *player = layer.firstObj("player");
+                //Gets the first object it finds with the name specified
+                tson::Object *player = layer.firstObj("player"); //Does not exist in demo map->..
 
                 //Gets all objects with a matching name
-                std::vector<tson::Object> enemies = layer.getObjectsByName("goomba");
+                std::vector<tson::Object> enemies = layer.getObjectsByName("goomba"); //But we got two of those
 
                 //Gets all objects of a specific type
                 std::vector<tson::Object> objects = layer.getObjectsByType(tson::ObjectType::Object);
@@ -88,8 +88,8 @@ Write
         }
 
         //Or get a specific object if you know its name (or id)
-        tson::Layer *layer = map.getLayer("Main Layer");
-        tson::Tileset *tileset = map.getTileset("demo-tileset");
+        tson::Layer *layer = map->getLayer("Main Layer");
+        tson::Tileset *tileset = map->getTileset("demo-tileset");
         tson::Tile *tile = tileset->getTile(1); //Tileson tile-IDs starts with 1, to be consistent
         // with IDs in data lists. This is in other words the
         //first tile.
@@ -99,7 +99,7 @@ Write
         if(layer->getType() == tson::LayerType::TileLayer)
         {
             //When the map is of a fixed size, you can get the tiles like this
-            if(!map.isInfinite())
+            if(!map->isInfinite())
             {
                 std::map<std::tuple<int, int>, tson::Tile *> tileData = layer->getTileData();
 
@@ -116,6 +116,13 @@ Write
                 tson::Tile *tile2 = layer->getTileData(5, 4);       //x:5,  y:4  - Points to tile with ID 3 (Tiled internal ID: 2)
                 tson::Tile *tile3 = layer->getTileData(8, 14);      //x:8,  y:14 - Points to tile with ID 2 (Tiled internal ID: 1)
                 tson::Tile *tile4 = layer->getTileData(17, 5);      //x:17, y:5  - Points to tile with ID 5 (Tiled internal ID: 4)
+
+                //New in v1.2.0
+                //You can now get tiles with positions and drawing rect via tson::TileObject
+                //Drawing rects are also accessible through tson::Tile.
+                tson::TileObject *tileobj1 = layer->getTileObject(4, 4);
+                tson::Vector2f position = tileobj1->getPosition();
+                tson::Rect drawingRect = tileobj1->getDrawingRect();
 
                 //You can of course also loop through every tile!
                 for (const auto &[id, tile] : tileData)
@@ -134,16 +141,16 @@ Write
         bool myBool = layer->get<bool>("my_bool");
         std::string myString = layer->get<std::string>("my_string");
         tson::Colori myColor = layer->get<tson::Colori>("my_color");
-        #if USE_CPP17_FILESYSTEM
-            fs::path file = layer->get<fs::path>("my_file");
+        #ifndef DISABLE_CPP17_FILESYSTEM
+        fs::path file = layer->get<fs::path>("my_file");
         #else
-            std::string file = layer->get<std::string>("my_file");
+        std::string file = layer->get<std::string>("my_file");
         #endif
         tson::Property *prop = layer->getProp("my_property");
     }
     else //Error occured
     {
-        std::cout << map.getStatusMessage();
+        std::cout << map->getStatusMessage();
     }
 
     return 0;
@@ -153,12 +160,12 @@ Write
 Another quick example to showcase how to get data that can be used to produce drawable objects:
 ```c++
 tson::Tileson t;
-tson::Map map = t.parse(fs::path("./path/to/map.json"));
+std::unique_ptr<tson::Map> map = t.parse(fs::path("./path/to/map.json"));
 
-if(map.getStatus() == tson::ParseStatus::OK)
+if(map->getStatus() == tson::ParseStatus::OK)
 {
     //Gets the layer called "Object Layer" from the "ultimate_demo.json map
-    tson::Layer *objectLayer = map.getLayer("Object Layer"); //This is an Object Layer
+    tson::Layer *objectLayer = map->getLayer("Object Layer"); //This is an Object Layer
 
     //Example from an Object Layer.
     if(objectLayer->getType() == tson::LayerType::ObjectGroup)
@@ -178,9 +185,9 @@ if(map.getStatus() == tson::ParseStatus::OK)
         tson::ObjectType objType = goomba->getObjectType();
 
         /*!
-            * tson::ObjectType is defined like this.
-            * They are automatically detected based on what kind of object you have created
-            * enum class Type : uint8_t
+         * tson::ObjectType is defined like this.
+         * They are automatically detected based on what kind of object you have created
+         * enum class Type : uint8_t
             {
                 Undefined = 0,
                 Object = 1,
@@ -192,7 +199,7 @@ if(map.getStatus() == tson::ParseStatus::OK)
                 Text = 7,
                 Template = 8
             };
-            */
+         */
 
         if (objType == tson::ObjectType::Rectangle)
         {
@@ -203,6 +210,10 @@ if(map.getStatus() == tson::ParseStatus::OK)
             int hp = goomba->get<int>("hp");
 
             //Using size and position you can can create a Rectangle object by your library of choice.
+            //An example if you were about to use SFML for drawing:
+            //sf::RectangleShape rect;
+            //rect.setSize(sf::Vector2f(size.x, size.y));
+            //rect.setPosition(sf::Vector2f(position.x, position.y));
         }
         else if (objType == tson::ObjectType::Polygon)
         {
@@ -223,55 +234,32 @@ if(map.getStatus() == tson::ParseStatus::OK)
         }
     }
 
-    tson::Layer *tileLayer = map.getLayer("Main Layer"); //This is a Tile Layer.
-    tson::Tileset *tileset = map.getTileset("demo-tileset"); //You will also need the tileset used
-                                                                    //by the tile map to make sense of everything
+    tson::Layer *tileLayer = map->getLayer("Main Layer"); //This is a Tile Layer.
 
-    int firstId = tileset->getFirstgid(); //First tile id of the tileset
-    int columns = tileset->getColumns(); //For the demo map it is 8.
-    int rows = tileset->getTileCount() / columns;
-    int lastId = (tileset->getFirstgid() + tileset->getTileCount()) - 1;
+    //You can get your tileset like this, but in v1.2.0
+    //The tiles themselves holds a pointer to their related tileset.
+    tson::Tileset *tileset = map->getTileset("demo-tileset");
 
     //Example from a Tile Layer
     //I know for a fact that this is a Tile Layer, but you can check it this way to be sure.
     if(tileLayer->getType() == tson::LayerType::TileLayer)
     {
         //pos = position in tile units
-        for(auto &[pos, tile] : tileLayer->getTileData()) //Loops through absolutely all existing tiles
+        for(auto &[pos, tileObject] : tileLayer->getTileObjects()) //Loops through absolutely all existing tileObjects
         {
-            #if USE_CPP17_FILESYSTEM
-            fs::path imagePath;
-            std::string pathStr;
-            #else
-            std::string imagePath;
-            #endif
-            //With this, I know that it's related to the tileset above (though I only have one tileset)
-            if(tile->getId() >= firstId && tile->getId() <= lastId)
-            {
-                #if USE_CPP17_FILESYSTEM
-                imagePath = tileset->getImagePath();
-                pathStr = imagePath.u8string();
-                #else
-                imagePath = tileset->getImagePath();
-                #endif
-            }
-
-            //Get position in pixel units
-            tson::Vector2i position = {std::get<0>(pos) * map.getTileSize().x,std::get<1>(pos) * map.getTileSize().y};
-            
-            int baseTilePosition = (tile->getId() - firstId); //This will determine the base position of the tile.
-            
-            //The baseTilePosition can be used to calculate offset on its related tileset image.
-            int tileModX = (baseTilePosition % columns);
-            int currentRow = (baseTilePosition / columns);
-            int offsetX = (tileModX != 0) ? ((tileModX) * map.getTileSize().x) : (0 * map.getTileSize().x);
-            int offsetY =  (currentRow < rows-1) ? (currentRow * map.getTileSize().y) : 
-                           ((rows-1) * map.getTileSize().y);
+            tson::Tileset *tileset = tileObject.getTile()->getTileset();
+            tson::Rect drawingRect = tileObject.getDrawingRect();
+            tson::Vector2f position = tileObject.getPosition();
 
             //Here you can determine the offset that should be set on a sprite
             //Example on how it would be done using SFML (where sprite presumably is a member of a generated game object):
-            //sprite.setTextureRect({offsetX, offsetY, map.getTileSize().x, map.getTileSize().y});
-            //sprite.setPosition({position.x, position.y});
+            //sf::Sprite *sprite = storeAndLoadImage(tileset->getImage().u8string(), {0, 0});
+            //if (sprite != nullptr)
+            //{
+            //    sprite->setTextureRect({drawingRect.x, drawingRect.y, drawingRect.width, drawingRect.height});
+            //    sprite->setPosition({position.x, position.y});
+            //    m_window.draw(*sprite);
+            //}
         }
     }
 }

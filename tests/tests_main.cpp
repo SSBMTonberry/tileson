@@ -188,7 +188,7 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
             printf("Cool!");
 
         //Or you can compare them with other colors
-        tson::Colori otherColor{128, 87, 65, 255};
+        tson::Colori otherColor{255, 170, 7, 255};
         if (bgColor == otherColor)
             printf("This works, too!");
 
@@ -209,7 +209,7 @@ TEST_CASE( "Go through demo code - get success", "[demo]" ) {
                 }
                 //Or use these queries:
 
-                //Gets the first object it find with the name specified
+                //Gets the first object it finds with the name specified
                 tson::Object *player = layer.firstObj("player"); //Does not exist in demo map->..
 
                 //Gets all objects with a matching name
@@ -369,53 +369,31 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
         }
 
         tson::Layer *tileLayer = map->getLayer("Main Layer"); //This is a Tile Layer.
-        tson::Tileset *tileset = map->getTileset("demo-tileset"); //You will also need the tileset used
-                                                                       //by the tile map to make sense of everything
 
-        int firstId = tileset->getFirstgid(); //First tile id of the tileset
-        int columns = tileset->getColumns(); //For the demo map it is 8.
-        int rows = tileset->getTileCount() / columns;
-        int lastId = (tileset->getFirstgid() + tileset->getTileCount()) - 1;
+        //You can get your tileset like this, but in v1.2.0
+        //The tiles themselves holds a pointer to their related tileset.
+        tson::Tileset *tileset = map->getTileset("demo-tileset");
 
         //Example from a Tile Layer
         //I know for a fact that this is a Tile Layer, but you can check it this way to be sure.
         if(tileLayer->getType() == tson::LayerType::TileLayer)
         {
             //pos = position in tile units
-            for(auto &[pos, tile] : tileLayer->getTileData()) //Loops through absolutely all existing tiles
+            for(auto &[pos, tileObject] : tileLayer->getTileObjects()) //Loops through absolutely all existing tileObjects
             {
-                #ifndef DISABLE_CPP17_FILESYSTEM
-                fs::path imagePath;
-                std::string pathStr;
-                #else
-                std::string imagePath;
-                #endif
-                //With this, I know that it's related to the tileset above (though I only have one tileset)
-                if(tile->getId() >= firstId && tile->getId() <= lastId)
-                {
-                    #ifndef DISABLE_CPP17_FILESYSTEM
-                    imagePath = tileset->getImagePath();
-                    pathStr = imagePath.u8string();
-                    #else
-                    imagePath = tileset->getImagePath();
-                    #endif
-                }
-
-                //Get position in pixel units
-                tson::Vector2i position = {std::get<0>(pos) * map->getTileSize().x,std::get<1>(pos) * map->getTileSize().y};
-
-                int baseTilePosition = (tile->getId() - firstId); //This will determine the base position of the tile.
-
-                //The baseTilePosition can be used to calculate offset on its related tileset image.
-                int tileModX = (baseTilePosition % columns);
-                int currentRow = (baseTilePosition / columns);
-                int offsetX = (tileModX != 0) ? ((tileModX) * map->getTileSize().x) : (0 * map->getTileSize().x);
-                int offsetY =  (currentRow < rows-1) ? (currentRow * map->getTileSize().y) : ((rows-1) * map->getTileSize().y);
+                tson::Tileset *tileset = tileObject.getTile()->getTileset();
+                tson::Rect drawingRect = tileObject.getDrawingRect();
+                tson::Vector2f position = tileObject.getPosition();
 
                 //Here you can determine the offset that should be set on a sprite
                 //Example on how it would be done using SFML (where sprite presumably is a member of a generated game object):
-                //sprite.setTextureRect({offsetX, offsetY, map->getTileSize().x, map->getTileSize().y});
-                //sprite.setPosition({position.x, position.y});
+                //sf::Sprite *sprite = storeAndLoadImage(tileset->getImage().u8string(), {0, 0});
+                //if (sprite != nullptr)
+                //{
+                //    sprite->setTextureRect({drawingRect.x, drawingRect.y, drawingRect.width, drawingRect.height});
+                //    sprite->setPosition({position.x, position.y});
+                //    m_window.draw(*sprite);
+                //}
             }
         }
     }
