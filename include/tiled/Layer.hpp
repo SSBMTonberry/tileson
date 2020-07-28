@@ -10,9 +10,9 @@
 #include "../objects/Color.hpp"
 #include "Chunk.hpp"
 #include "Object.hpp"
+#include "../objects/TileObject.hpp"
 #include "../objects/Property.hpp"
 #include "../objects/PropertyCollection.hpp"
-//#include "Tile.h"
 #include "../common/Enums.hpp"
 
 namespace tson
@@ -23,16 +23,6 @@ namespace tson
     class Layer
     {
         public:
-            //'type': tilelayer, objectgroup, imagelayer or group
-            //enum class Type : uint8_t
-            //{
-            //        Undefined = 0,
-            //        TileLayer = 1,
-            //        ObjectGroup = 2,
-            //        ImageLayer = 3,
-            //        Group = 4
-            //};
-
             inline Layer() = default;
             inline Layer(const nlohmann::json &json, tson::Map *map);
             inline bool parse(const nlohmann::json &json, tson::Map *map);
@@ -78,7 +68,10 @@ namespace tson
             inline tson::Tile * getTileData(int x, int y);
 
             //v1.2.0-stuff
-            tson::Map *getMap() const;
+            inline tson::Map *getMap() const;
+
+            [[nodiscard]] inline const std::map<std::tuple<int, int>, tson::TileObject> &getTileObjects() const;
+            inline tson::TileObject * getTileObject(int x, int y);
 
         private:
             inline void setTypeByString();
@@ -113,7 +106,8 @@ namespace tson
             std::map<std::tuple<int, int>, tson::Tile*>    m_tileData;                        /*! Key: Tuple of x and y pos in tile units. */
 
             //v1.2.0-stuff
-            tson::Map *                                    m_map;                             /*! The map who owns this layer */
+            tson::Map *                                         m_map;                        /*! The map who owns this layer */
+            std::map<std::tuple<int, int>, tson::TileObject>    m_tileObjects;
     };
 
     /*!
@@ -479,29 +473,6 @@ void tson::Layer::assignTileMap(const std::map<int, tson::Tile *> &tileMap)
     m_tileMap = tileMap;
 }
 
-void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
-{
-    size_t x = 0;
-    size_t y = 0;
-    if(!isInfiniteMap)
-    {
-        std::for_each(m_data.begin(), m_data.end(), [&](int tileId)
-        {
-            if (x == mapSize.x)
-            {
-                ++y;
-                x = 0;
-            }
-
-            if (tileId > 0)
-            {
-                m_tileData[{x, y}] = m_tileMap[tileId];
-            }
-            x++;
-        });
-    }
-}
-
 /*!
  * Get tile data as some kind of map with x and y position with pointers to existing tiles.
  * Map only contains tiles that are not empty. x and y position is in tile units.
@@ -541,6 +512,47 @@ tson::Tile *tson::Layer::getTileData(int x, int y)
 tson::Map *tson::Layer::getMap() const
 {
     return m_map;
+}
+
+/*!
+ *
+ * This is only supported for non-infinte maps!
+ *
+ * @param mapSize The size of the map
+ * @param isInfiniteMap Whether or not the current map is infinte.
+ */
+void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
+{
+    size_t x = 0;
+    size_t y = 0;
+    if(!isInfiniteMap)
+    {
+        std::for_each(m_data.begin(), m_data.end(), [&](int tileId)
+        {
+            if (x == mapSize.x)
+            {
+                ++y;
+                x = 0;
+            }
+
+            if (tileId > 0)
+            {
+                m_tileData[{x, y}] = m_tileMap[tileId];
+                m_tileObjects[{x, y}] = {{x, y}, m_tileData[{x, y}]};
+            }
+            x++;
+        });
+    }
+}
+
+const std::map<std::tuple<int, int>, tson::TileObject> &tson::Layer::getTileObjects() const
+{
+    return m_tileObjects;
+}
+
+tson::TileObject *tson::Layer::getTileObject(int x, int y)
+{
+    return (m_tileObjects.count({x, y}) > 0) ? &m_tileObjects[{x,y}] : nullptr;
 }
 
 #endif //TILESON_LAYER_HPP

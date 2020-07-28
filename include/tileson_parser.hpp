@@ -9,7 +9,8 @@
 #include "misc/MemoryStream.hpp"
 #include <fstream>
 #include <sstream>
-
+#include <memory>
+#include "common/tileson_forward.hpp"
 
 namespace tson
 {
@@ -18,14 +19,14 @@ namespace tson
         public:
             Tileson() = default;
             #ifndef DISABLE_CPP17_FILESYSTEM
-            inline tson::Map parse(const fs::path &path);
+            inline std::unique_ptr<tson::Map> parse(const fs::path &path);
             #else
-            inline tson::Map parse(const std::string &path);
+            inline std::unique_ptr<tson::Map> parse(const std::string &path);
             #endif
-            inline tson::Map parse(const void * data, size_t size);
+            inline std::unique_ptr<tson::Map> parse(const void * data, size_t size);
 
         private:
-            inline tson::Map parseJson(const nlohmann::json &json);
+            inline std::unique_ptr<tson::Map> parseJson(const nlohmann::json &json);
     };
 }
 
@@ -35,7 +36,7 @@ namespace tson
  * @return parsed data as Map
  */
 #ifndef DISABLE_CPP17_FILESYSTEM
-tson::Map tson::Tileson::parse(const fs::path &path)
+std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
 {
     if(fs::exists(path) && fs::is_regular_file(path))
     {
@@ -50,17 +51,17 @@ tson::Map tson::Tileson::parse(const fs::path &path)
             std::string message = "Parse error: ";
             message += std::string(error.what());
             message += std::string("\n");
-            return tson::Map {tson::ParseStatus::ParseError, message};
+            return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, message);
         }
         return parseJson(json);
     }
 
     std::string msg = "File not found: ";
     msg += std::string(path.u8string());
-    return tson::Map {tson::ParseStatus::FileNotFound, msg};
+    return std::make_unique<tson::Map>(tson::ParseStatus::FileNotFound, msg);
 }
 #else
-tson::Map tson::Tileson::parse(const std::string &path)
+std::unique_ptr<tson::Map> tson::Tileson::parse(const std::string &path)
 {
 
     std::ifstream i(path);
@@ -74,10 +75,9 @@ tson::Map tson::Tileson::parse(const std::string &path)
         std::string message = "Parse error: ";
         message += std::string(error.what());
         message += std::string("\n");
-        return tson::Map {tson::ParseStatus::ParseError, message};
+        return std::make_unique<tson::Map> (tson::ParseStatus::ParseError, message);
     }
-    return parseJson(json);
-
+    return std::move(parseJson(json));
 }
 #endif
 /*!
@@ -86,7 +86,7 @@ tson::Map tson::Tileson::parse(const std::string &path)
  * @param size The size of the data to parse
  * @return parsed data as Map
  */
-tson::Map tson::Tileson::parse(const void *data, size_t size)
+std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size)
 {
     //std::istringstream i;
     //i.rdbuf()->pubsetbuf((char *)data, size);
@@ -103,10 +103,10 @@ tson::Map tson::Tileson::parse(const void *data, size_t size)
         std::string message = "Parse error: ";
         message += std::string(error.what());
         message += std::string("\n");
-        return tson::Map{ tson::ParseStatus::ParseError, message };
+        return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, message);
     }
 
-    return parseJson(json);
+    return std::move(parseJson(json));
 }
 
 /*!
@@ -114,13 +114,13 @@ tson::Map tson::Tileson::parse(const void *data, size_t size)
  * @param json Tiled json to parse
  * @return parsed data as Map
  */
-tson::Map tson::Tileson::parseJson(const nlohmann::json &json)
+std::unique_ptr<tson::Map> tson::Tileson::parseJson(const nlohmann::json &json)
 {
-    tson::Map map;
-    if(map.parse(json))
-        return map;
+    std::unique_ptr<tson::Map> map = std::make_unique<tson::Map>();
+    if(map->parse(json))
+        return std::move(map);
 
-    return tson::Map {tson::ParseStatus::MissingData, "Missing map data..."};
+    return std::make_unique<tson::Map> (tson::ParseStatus::MissingData, "Missing map data...");
 }
 
 #endif //TILESON_TILESON_PARSER_HPP

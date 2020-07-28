@@ -35,8 +35,10 @@ class SfmlDemoManager
         
         void drawMap();
 
+        static constexpr int CURRENT_VERSION = 120; //v1.2.0
+
         void drawLayer(tson::Layer& layer);
-        void drawTileLayer(tson::Layer& layer, tson::Tileset* tileset);
+        void drawTileLayer(const tson::Layer& layer);//, tson::Tileset* tileset);
         void drawImageLayer(tson::Layer& layer);
         void drawObjectLayer(tson::Layer& layer);
 
@@ -46,7 +48,7 @@ class SfmlDemoManager
 
         fs::path m_basePath {};
         sf::RenderWindow m_window;
-        tson::Map m_map;
+        std::unique_ptr<tson::Map> m_map;
 
         sf::Font m_font;
         sf::Text m_demoText;

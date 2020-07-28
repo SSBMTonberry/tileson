@@ -5,7 +5,8 @@
 #include "../external_libs/catch.hpp"
 //#include "../include/objects/Color.hpp"
 #include "../TilesonConfig.h"
-#include "../single_include/tileson.hpp"
+//#include "../single_include/tileson.hpp"
+#include "../include/tileson.h"
 //#include "../src/objects/Color.hpp"
 
 TEST_CASE( "Parse a color from Tiled color string with alpha - expect valid color", "[color][argb]" ) {

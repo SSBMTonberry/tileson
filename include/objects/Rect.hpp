@@ -11,11 +11,11 @@ namespace tson
     {
         public:
 
-            Rect();
-            Rect(int x_, int y_, int width_, int height_);
+            inline Rect();
+            inline Rect(int x_, int y_, int width_, int height_);
 
-            bool operator==(const Rect &rhs) const;
-            bool operator!=(const Rect &rhs) const;
+            inline bool operator==(const Rect &rhs) const;
+            inline bool operator!=(const Rect &rhs) const;
 
             int x;
             int y;

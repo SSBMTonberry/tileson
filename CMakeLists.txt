@@ -83,7 +83,7 @@ set(INCLUDE_FILES include/tileson.h include/tileson_parser.hpp include/misc/Memo
         include/objects/Property.hpp include/objects/PropertyCollection.hpp include/objects/Vector2.hpp include/tiled/Chunk.hpp include/tiled/Frame.hpp
         include/tiled/Grid.hpp include/tiled/Layer.hpp include/tiled/Map.hpp include/tiled/Object.hpp include/tiled/Terrain.hpp include/tiled/Text.hpp
         include/tiled/Tile.hpp include/tiled/Tileset.hpp include/tiled/WangColor.hpp include/tiled/WangSet.hpp include/tiled/WangTile.hpp
-        include/objects/Rect.hpp)
+        include/objects/Rect.hpp include/common/tileson_forward.hpp)
 
 # Only activated for code completion, must be uncommented before release!
 add_library(tileson ${SOURCE_FILES} ${INCLUDE_FILES})

@@ -60,7 +60,7 @@ namespace tson
             inline tson::Property * getProp(const std::string &name);
 
             //v1.2.0-stuff
-            tson::Map *getMap() const;
+            inline tson::Map *getMap() const;
 
         private:
             inline void generateMissingTiles();
@@ -378,9 +378,14 @@ void tson::Tileset::generateMissingTiles()
     }
 }
 
+/*!
+ * Used for getting the tson::Map who is the parent of this Tileset.
+ * @return a pointer to the tson::Map where this tileset is contained.
+ */
 tson::Map *tson::Tileset::getMap() const
 {
     return m_map;
 }
+
 
 #endif //TILESON_TILESET_HPP

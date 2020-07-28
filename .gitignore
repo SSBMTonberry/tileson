@@ -31,3 +31,5 @@ out/build/x86-Release/
 cmake-build-release/
 
 build/
+
+cmake-build-minsizerel/
