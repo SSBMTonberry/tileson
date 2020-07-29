@@ -5,6 +5,7 @@
 #ifndef TILESON_TILESON_PARSER_HPP
 #define TILESON_TILESON_PARSER_HPP
 
+#include "common/Base64Decompressor.hpp"
 #include "tiled/Map.hpp"
 #include "misc/MemoryStream.hpp"
 #include <fstream>
