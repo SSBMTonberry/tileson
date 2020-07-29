@@ -14,11 +14,14 @@ class Base64Decompressor : public IDecompressor
     public:
         [[nodiscard]] inline const std::string &name() const override;
         inline std::string decompress(std::string_view s) override;
+
+    private:
+        inline static const std::string NAME = "base64";
 };
 
 const std::string &Base64Decompressor::name() const
 {
-    static const std::string NAME = "base64";
+    //static const std::string NAME = "base64";
     return NAME;
 }
 
