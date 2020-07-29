@@ -1,0 +1,42 @@
+{ "backgroundcolor":"#007ebd",
+ "compressionlevel":-1,
+ "height":8,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 34, 2, 2, 36, 36, 36, 36, 36, 36, 36, 36, 2, 21, 21, 21, 41, 42, 2, 2, 44, 44, 44, 44, 44, 44, 44, 44, 2, 2, 2, 2, 2, 2],
+         "height":8,
+         "id":1,
+         "name":"Main Layer",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":16,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"left-down",
+ "tiledversion":"1.4.1",
+ "tileheight":16,
+ "tilesets":[
+        {
+         "columns":8,
+         "firstgid":1,
+         "image":"..\/..\/..\/demo-tileset-2.png",
+         "imageheight":96,
+         "imagewidth":128,
+         "margin":0,
+         "name":"demo-tileset-2",
+         "spacing":0,
+         "tilecount":48,
+         "tileheight":16,
+         "tilewidth":16
+        }],
+ "tilewidth":16,
+ "type":"map",
+ "version":1.4,
+ "width":16
+}
