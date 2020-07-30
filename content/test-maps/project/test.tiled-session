@@ -10,6 +10,9 @@
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "": {
+            "scaleInDock": 2
+        },
         "/home/robin/Projects/cpp/git/pixelmoundengine/content/demo/pme_shape_tests.json": {
             "scale": 3,
             "selectedLayer": 0,
@@ -50,6 +53,17 @@
                 "y": 25.75
             }
         },
+        "/home/robin/Projects/git/c++/tileson/content/test-maps/ultimate_test.json": {
+            "scale": 1.9445312499999998,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 256.1028525512254,
+                "y": 57.3402973081559
+            }
+        },
+        "/home/robin/Projects/git/c++/tileson/content/test-maps/ultimate_test.json#demo-tileset": {
+            "scaleInDock": 1
+        },
         "/home/robin/Projects/test/test2.tmx": {
             "scale": 8,
             "selectedLayer": 0,
@@ -59,26 +73,87 @@
             }
         },
         "maps/map1.json": {
-            "scale": 3,
+            "scale": 1.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": -197.49999999999997,
-                "y": 109.83333333333334
+                "x": 269.6666666666667,
+                "y": 80.33333333333334
             }
         },
         "maps/map1.json#demo-tileset": {
-            "scaleInDock": 1
+            "scaleInDock": 2
         },
         "maps/map2.json": {
-            "scale": 3,
+            "scale": 2,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 159.66666666666666,
-                "y": 133.5
+                "x": 178.75,
+                "y": 94.25
             }
         },
         "maps/map2.json#demo-tileset": {
             "scaleInDock": 2
+        },
+        "maps/map2.json#demo-tileset-2": {
+            "scaleInDock": 3
+        },
+        "maps/map3.json": {
+            "scale": 1.8856060606060605,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 251.11289674568098,
+                "y": 59.132181599035775
+            }
+        },
+        "maps/map3.json#demo-tileset": {
+            "scaleInDock": 2
+        },
+        "maps/map3.json#demo-tileset-2": {
+            "scaleInDock": 3
+        },
+        "world/w1.json": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 160.25,
+                "y": 78.75
+            }
+        },
+        "world/w1.json#demo-tileset": {
+            "scaleInDock": 1
+        },
+        "world/w2.json": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 22.5,
+                "y": 55.5
+            }
+        },
+        "world/w2.json#demo-tileset-2": {
+            "scaleInDock": 1
+        },
+        "world/w3.json": {
+            "scale": 2,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 222,
+                "y": -13.75
+            }
+        },
+        "world/w3.json#demo-tileset-2": {
+            "scaleInDock": 1
+        },
+        "world/w4.json": {
+            "scale": 1,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 22.5,
+                "y": -72.5
+            }
+        },
+        "world/w4.json#demo-tileset": {
+            "scaleInDock": 1
         }
     },
     "loadedWorlds": [

@@ -15,10 +15,12 @@ namespace tson
     class DecompressorContainer
     {
         public:
-            DecompressorContainer() = default;
+            inline DecompressorContainer() = default;
             template <typename T, typename... Args>
-            void add(Args &&... args);
-            bool contains(std::string_view name);
+            inline void add(Args &&... args);
+            inline void remove(std::string_view name);
+            inline bool contains(std::string_view name) const;
+            inline size_t size() const;
 
         private:
             //Key: name,
@@ -36,14 +38,28 @@ namespace tson
      * @param name The name of the decompressor to check whether exists.
      * @return Whether a decompressor with the given name exists or not.
      */
-    bool DecompressorContainer::contains(std::string_view name)
+    bool DecompressorContainer::contains(std::string_view name) const
     {
         auto iter = std::find_if(m_decompressors.begin(), m_decompressors.end(), [&](const auto &item)
         {
-            return item->name() != name;
+            return item->name() == name;
         });
 
         return iter != m_decompressors.end();
+    }
+
+    void DecompressorContainer::remove(std::string_view name)
+    {
+        auto iter = std::remove_if(m_decompressors.begin(), m_decompressors.end(), [&](const auto &item)
+        {
+            return item->name() == name;
+        });
+        m_decompressors.erase(iter);
+    }
+
+    size_t DecompressorContainer::size() const
+    {
+        return m_decompressors.size();
     }
 }
 #endif //TILESON_DECOMPRESSORCONTAINER_HPP
