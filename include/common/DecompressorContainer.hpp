@@ -20,8 +20,9 @@ namespace tson
             inline void add(Args &&... args);
             inline void remove(std::string_view name);
             inline bool contains(std::string_view name) const;
-            inline bool empty();
+            inline bool empty() const;
             inline size_t size() const;
+            inline void clear();
 
             inline IDecompressor *get(std::string_view name);
         private:
@@ -50,6 +51,10 @@ namespace tson
         return iter != m_decompressors.end();
     }
 
+    /*!
+     * Removed an element with the given name.
+     * @param name The name of the decompressor
+     */
     void DecompressorContainer::remove(std::string_view name)
     {
         auto iter = std::remove_if(m_decompressors.begin(), m_decompressors.end(), [&](const auto &item)
@@ -64,6 +69,11 @@ namespace tson
         return m_decompressors.size();
     }
 
+    /*!
+     *
+     * @param name The name of the container
+     * @return An ICompressor pointer if it exists. nullptr otherwise.
+     */
     IDecompressor *DecompressorContainer::get(std::string_view name)
     {
         auto iter = std::find_if(m_decompressors.begin(), m_decompressors.end(), [&](const auto &item)
@@ -74,9 +84,21 @@ namespace tson
         return (iter != m_decompressors.end()) ? iter->get() : nullptr;
     }
 
-    bool DecompressorContainer::empty()
+    /*!
+     * Check if container is empty
+     * @return Whether or not the container is empty
+     */
+    bool DecompressorContainer::empty() const
     {
         return m_decompressors.empty();
+    }
+
+    /*!
+     * Clears all IDecompressor elements in the container
+     */
+    void DecompressorContainer::clear()
+    {
+        m_decompressors.clear();
     }
 }
 #endif //TILESON_DECOMPRESSORCONTAINER_HPP
