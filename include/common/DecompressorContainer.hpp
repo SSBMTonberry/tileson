@@ -20,6 +20,7 @@ namespace tson
             inline void add(Args &&... args);
             inline void remove(std::string_view name);
             inline bool contains(std::string_view name) const;
+            inline bool empty();
             inline size_t size() const;
 
             inline IDecompressor *get(std::string_view name);
@@ -71,6 +72,11 @@ namespace tson
         });
 
         return (iter != m_decompressors.end()) ? iter->get() : nullptr;
+    }
+
+    bool DecompressorContainer::empty()
+    {
+        return m_decompressors.empty();
     }
 }
 #endif //TILESON_DECOMPRESSORCONTAINER_HPP

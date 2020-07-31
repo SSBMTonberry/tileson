@@ -6,6 +6,7 @@
 #define TILESON_IDECOMPRESSOR_H
 
 #include <string_view>
+
 namespace tson
 {
     class IDecompressor

@@ -89,4 +89,40 @@ const tson::Rect &tson::TileObject::getDrawingRect() const
     return m_tile->getDrawingRect();
 }
 
+// L a y e r . h p p
+// -------------------
+
+/*!
+ * Decompresses data if there are matching decompressors
+ */
+void tson::Layer::decompressData()
+{
+
+    tson::DecompressorContainer *container = m_map->getDecompressors();
+    if(container->empty())
+        return;
+
+    if(m_encoding.empty() && m_compression.empty())
+        return;
+
+    std::string data = m_base64Data;
+    bool hasBeenDecoded = false;
+    if(!m_encoding.empty() && container->contains(m_encoding))
+    {
+        data = container->get(m_encoding)->decompress(data);
+        hasBeenDecoded = true;
+    }
+
+    if(!m_compression.empty() && container->contains(m_compression))
+    {
+        data = container->get(m_compression)->decompress(data);
+    }
+
+    if(hasBeenDecoded)
+    {
+        std::vector<uint8_t> bytes = tson::Tools::Base64DecodedStringToBytes(data);
+        m_data = tson::Tools::BytesToInts(bytes);
+    }
+}
+
 #endif //TILESON_TILESON_FORWARD_HPP

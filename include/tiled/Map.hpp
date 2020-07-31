@@ -53,6 +53,9 @@ namespace tson
             inline T get(const std::string &name);
             inline tson::Property * getProp(const std::string &name);
 
+            //v1.2.0
+            inline DecompressorContainer *getDecompressors();
+
         private:
             inline void processData();
 
@@ -374,6 +377,11 @@ const std::string &tson::Map::getStatusMessage() const
 const std::map<int, tson::Tile *> &tson::Map::getTileMap() const
 {
     return m_tileMap;
+}
+
+tson::DecompressorContainer *tson::Map::getDecompressors()
+{
+    return m_decompressors;
 }
 
 #endif //TILESON_MAP_HPP
