@@ -66,8 +66,11 @@ TEST_CASE( "DecompressorContainer - Add three elements, remove one, expect two l
     container.remove("test2");
 
     REQUIRE(container.contains("test1"));
+    REQUIRE(container.get("test1") != nullptr);
     REQUIRE(!container.contains("test2"));
+    REQUIRE(container.get("test2") == nullptr);
     REQUIRE(container.contains("test3"));
+    REQUIRE(container.get("test3") != nullptr);
     REQUIRE(container.size() == 2);
 }
 

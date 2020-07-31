@@ -22,6 +22,7 @@ namespace tson
             inline bool contains(std::string_view name) const;
             inline size_t size() const;
 
+            inline IDecompressor *get(std::string_view name);
         private:
             //Key: name,
             std::vector<std::unique_ptr<IDecompressor>> m_decompressors;
@@ -60,6 +61,16 @@ namespace tson
     size_t DecompressorContainer::size() const
     {
         return m_decompressors.size();
+    }
+
+    IDecompressor *DecompressorContainer::get(std::string_view name)
+    {
+        auto iter = std::find_if(m_decompressors.begin(), m_decompressors.end(), [&](const auto &item)
+        {
+            return item->name() == name;
+        });
+
+        return (iter != m_decompressors.end()) ? iter->get() : nullptr;
     }
 }
 #endif //TILESON_DECOMPRESSORCONTAINER_HPP

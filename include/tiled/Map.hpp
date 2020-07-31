@@ -20,8 +20,8 @@ namespace tson
         public:
             inline Map() = default;
             inline Map(ParseStatus status, std::string description);
-            inline explicit Map(const nlohmann::json &json);
-            inline bool parse(const nlohmann::json &json);
+            inline explicit Map(const nlohmann::json &json, tson::DecompressorContainer *decompressors);
+            inline bool parse(const nlohmann::json &json, tson::DecompressorContainer *decompressors);
 
             [[nodiscard]] inline const Colori &getBackgroundColor() const;
             [[nodiscard]] inline const Vector2i &getSize() const;
@@ -78,6 +78,9 @@ namespace tson
             std::string                            m_statusMessage {"OK"};
 
             std::map<int, tson::Tile*>             m_tileMap;           /*! key: Tile ID. Value: Pointer to Tile*/
+
+            //v1.2.0
+            tson::DecompressorContainer *          m_decompressors;
     };
 
     /*!
@@ -108,9 +111,9 @@ tson::Map::Map(tson::ParseStatus status, std::string description) : m_status {st
  * @param json A json object with the format of Map
  * @return true if all mandatory fields was found. false otherwise.
  */
-tson::Map::Map(const nlohmann::json &json)
+tson::Map::Map(const nlohmann::json &json, tson::DecompressorContainer *decompressors)
 {
-    parse(json);
+    parse(json, decompressors);
 }
 
 /*!
@@ -118,8 +121,10 @@ tson::Map::Map(const nlohmann::json &json)
  * @param json A json object with the format of Map
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Map::parse(const nlohmann::json &json)
+bool tson::Map::parse(const nlohmann::json &json, tson::DecompressorContainer *decompressors)
 {
+    m_decompressors = decompressors;
+
     bool allFound = true;
     if(json.count("backgroundcolor") > 0) m_backgroundColor = Colori(json["backgroundcolor"].get<std::string>()); //Optional
     if(json.count("width") > 0 && json.count("height") > 0 )

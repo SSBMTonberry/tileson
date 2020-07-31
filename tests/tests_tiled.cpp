@@ -52,7 +52,7 @@ TEST_CASE( "Parse a Map from Tiled's documentation", "[tiled][map]" )
                        "}"_json;
 
     tson::Map map;
-    bool parseOk = map.parse(j);
+    bool parseOk = map.parse(j, nullptr);
     bool hasCorrectValues = (
                                 map.getBackgroundColor() == "#656667" &&
                                 map.getSize() == tson::Vector2i(4,4) &&
