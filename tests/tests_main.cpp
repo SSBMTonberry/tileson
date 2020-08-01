@@ -6,8 +6,14 @@
 #include "../external_libs/catch.hpp"
 
 #include "../TilesonConfig.h"
-#include "../include/tileson.h"
-//#include "../src/Tileson.h"
+
+//#define TILESON_UNIT_TEST_USE_SINGLE_HEADER
+
+#ifdef TILESON_UNIT_TEST_USE_SINGLE_HEADER
+    #include "../single_include/tileson.hpp"
+#else
+    #include "../include/tileson.h"
+#endif
 
 #include "tson_files_mapper.h"
 #include "../TilesonConfig.h"

@@ -22621,6 +22621,310 @@ return nlohmann::json::json_pointer(std::string(s, n));
 #define TILESON_TILESON_PARSER_HPP
 
 
+/*** Start of inlined file: Tools.hpp ***/
+//
+// Created by robin on 31.07.2020.
+//
+
+#ifndef TILESON_TOOLS_HPP
+#define TILESON_TOOLS_HPP
+
+#include <cstdint>
+#include <vector>
+#include <string_view>
+namespace tson
+{
+	class Tools
+	{
+
+		public:
+			Tools() = delete;
+			~Tools() = delete;
+			inline static std::vector<uint8_t> Base64DecodedStringToBytes(std::string_view str);
+			inline static std::vector<uint32_t> BytesToUnsignedInts(const std::vector<uint8_t> &bytes);
+			inline static std::vector<int> BytesToInts(const std::vector<uint8_t> &bytes);
+	};
+
+	/*!
+	 * When you have decoded a Base64 string, you'll get a string representing bytes. This function turns them into actual bytes.
+	 * @param str
+	 * @return
+	 */
+	std::vector<uint8_t> Tools::Base64DecodedStringToBytes(std::string_view str)
+	{
+		std::vector<uint8_t> bytes;
+		for(size_t i = 0; i < str.size(); ++i)
+		{
+			uint8_t u8 = static_cast<uint8_t>(str[i]);
+			bytes.push_back(u8);
+		}
+		return bytes;
+	}
+
+	/*!
+	 * Converts bytes into unsigned int values. The bytes are converted in the Little Endian byte order to fit Tiled's specs.
+	 * @param bytes A vector of bytes.
+	 * @return Bytes converted to unsigned ints
+	 */
+	std::vector<uint32_t> Tools::BytesToUnsignedInts(const std::vector<uint8_t> &bytes)
+	{
+		std::vector<uint32_t> uints;
+		std::vector<uint8_t> toConvert;
+		//uint32_t size8 = (compressed[55] << 24) | (compressed[56] << 16) | (compressed[57] << 8) | compressed[58]; //Should be 66000
+
+		for(size_t i = 0; i < bytes.size(); ++i)
+		{
+			toConvert.push_back(bytes[i]);
+			if(toConvert.size() == 4)
+			{
+				uint32_t u32 = (toConvert[3] << 24) | (toConvert[2] << 16) | (toConvert[1] << 8) | toConvert[0];
+				uints.push_back(u32);
+				toConvert.clear();
+			}
+		}
+
+		return uints;
+	}
+
+	/*!
+	 * While the Tiled specification uses unsigned ints for their tiles, Tileson uses regular ints.
+	 * This may be changed in the future, but should in reality never really become an issue.
+	 *
+	 * int differences:
+	 * int max:  2147483647
+	 * uint max: 4294967295
+	 *
+	 * @param bytes A vector of bytes.
+	 * @return Bytes converted to ints
+	 */
+	std::vector<int> Tools::BytesToInts(const std::vector<uint8_t> &bytes)
+	{
+		std::vector<int> ints;
+		std::vector<uint8_t> toConvert;
+		//uint32_t size8 = (compressed[55] << 24) | (compressed[56] << 16) | (compressed[57] << 8) | compressed[58]; //Should be 66000
+
+		for(size_t i = 0; i < bytes.size(); ++i)
+		{
+			toConvert.push_back(bytes[i]);
+			if(toConvert.size() == 4)
+			{
+				uint32_t u32 = (toConvert[3] << 24) | (toConvert[2] << 16) | (toConvert[1] << 8) | toConvert[0];
+				ints.push_back(u32);
+				toConvert.clear();
+			}
+		}
+
+		return ints;
+	}
+}
+
+#endif //TILESON_TOOLS_HPP
+
+/*** End of inlined file: Tools.hpp ***/
+
+
+/*** Start of inlined file: Base64Decompressor.hpp ***/
+//
+// Created by robin on 29.07.2020.
+// The Base64 decoding logic is heavily based on: https://github.com/ReneNyffenegger/cpp-base64
+//
+
+#ifndef TILESON_BASE64DECOMPRESSOR_HPP
+#define TILESON_BASE64DECOMPRESSOR_HPP
+
+#include "../include/common/IDecompressor.h"
+#include <string>
+
+namespace tson
+{
+	class Base64Decompressor : public IDecompressor
+	{
+		public:
+			[[nodiscard]] inline const std::string &name() const override;
+
+			inline std::string decompress(std::string_view s) override;
+
+		private:
+			inline unsigned int pos_of_char(const unsigned char chr);
+			inline static const std::string NAME = "base64";
+	};
+
+	const std::string &Base64Decompressor::name() const
+	{
+		return NAME;
+	}
+
+	std::string Base64Decompressor::decompress(std::string_view s)
+	{
+
+		size_t length_of_string = s.length();
+		if (!length_of_string) return std::string("");
+
+		size_t in_len = length_of_string;
+		size_t pos = 0;
+
+		//
+		// The approximate length (bytes) of the decoded string might be one ore
+		// two bytes smaller, depending on the amount of trailing equal signs
+		// in the encoded string. This approximation is needed to reserve
+		// enough space in the string to be returned.
+		//
+		size_t approx_length_of_decoded_string = length_of_string / 4 * 3;
+		std::string ret;
+		ret.reserve(approx_length_of_decoded_string);
+
+		while (pos < in_len) {
+
+			unsigned int pos_of_char_1 = pos_of_char(s[pos+1] );
+
+			ret.push_back(static_cast<std::string::value_type>( ( (pos_of_char(s[pos+0]) ) << 2 ) + ( (pos_of_char_1 & 0x30 ) >> 4)));
+
+			if (s[pos+2] != '=' && s[pos+2] != '.') { // accept URL-safe base 64 strings, too, so check for '.' also.
+
+				unsigned int pos_of_char_2 = pos_of_char(s[pos+2] );
+				ret.push_back(static_cast<std::string::value_type>( (( pos_of_char_1 & 0x0f) << 4) + (( pos_of_char_2 & 0x3c) >> 2)));
+
+				if (s[pos+3] != '=' && s[pos+3] != '.') {
+					ret.push_back(static_cast<std::string::value_type>( ( (pos_of_char_2 & 0x03 ) << 6 ) + pos_of_char(s[pos+3])   ));
+				}
+			}
+
+			pos += 4;
+		}
+
+		return ret;
+	}
+
+	unsigned int Base64Decompressor::pos_of_char(const unsigned char chr)
+	{
+		//
+		// Return the position of chr within base64_encode()
+		//
+
+		if      (chr >= 'A' && chr <= 'Z') return chr - 'A';
+		else if (chr >= 'a' && chr <= 'z') return chr - 'a' + ('Z' - 'A')               + 1;
+		else if (chr >= '0' && chr <= '9') return chr - '0' + ('Z' - 'A') + ('z' - 'a') + 2;
+		else if (chr == '+' || chr == '-') return 62; // Be liberal with input and accept both url ('-') and non-url ('+') base 64 characters (
+		else if (chr == '/' || chr == '_') return 63; // Ditto for '/' and '_'
+
+		throw "If input is correct, this line should never be reached.";
+	}
+}
+
+#endif //TILESON_BASE64DECOMPRESSOR_HPP
+
+/*** End of inlined file: Base64Decompressor.hpp ***/
+
+
+/*** Start of inlined file: DecompressorContainer.hpp ***/
+//
+// Created by robin on 30.07.2020.
+//
+
+#ifndef TILESON_DECOMPRESSORCONTAINER_HPP
+#define TILESON_DECOMPRESSORCONTAINER_HPP
+
+#include "../include/common/IDecompressor.h"
+#include <memory>
+#include <vector>
+#include <string_view>
+#include <functional>
+namespace tson
+{
+	class DecompressorContainer
+	{
+		public:
+			inline DecompressorContainer() = default;
+			template <typename T, typename... Args>
+			inline void add(Args &&... args);
+			inline void remove(std::string_view name);
+			inline bool contains(std::string_view name) const;
+			inline bool empty() const;
+			inline size_t size() const;
+			inline void clear();
+
+			inline IDecompressor *get(std::string_view name);
+		private:
+			//Key: name,
+			std::vector<std::unique_ptr<IDecompressor>> m_decompressors;
+	};
+
+	template<typename T, typename... Args>
+	void DecompressorContainer::add(Args &&... args)
+	{
+		m_decompressors.emplace_back(new T(args...));
+	}
+
+	/*!
+	 *
+	 * @param name The name of the decompressor to check whether exists.
+	 * @return Whether a decompressor with the given name exists or not.
+	 */
+	bool DecompressorContainer::contains(std::string_view name) const
+	{
+		auto iter = std::find_if(m_decompressors.begin(), m_decompressors.end(), [&](const auto &item)
+		{
+			return item->name() == name;
+		});
+
+		return iter != m_decompressors.end();
+	}
+
+	/*!
+	 * Removed an element with the given name.
+	 * @param name The name of the decompressor
+	 */
+	void DecompressorContainer::remove(std::string_view name)
+	{
+		auto iter = std::remove_if(m_decompressors.begin(), m_decompressors.end(), [&](const auto &item)
+		{
+			return item->name() == name;
+		});
+		m_decompressors.erase(iter);
+	}
+
+	size_t DecompressorContainer::size() const
+	{
+		return m_decompressors.size();
+	}
+
+	/*!
+	 *
+	 * @param name The name of the container
+	 * @return An ICompressor pointer if it exists. nullptr otherwise.
+	 */
+	IDecompressor *DecompressorContainer::get(std::string_view name)
+	{
+		auto iter = std::find_if(m_decompressors.begin(), m_decompressors.end(), [&](const auto &item)
+		{
+			return item->name() == name;
+		});
+
+		return (iter != m_decompressors.end()) ? iter->get() : nullptr;
+	}
+
+	/*!
+	 * Check if container is empty
+	 * @return Whether or not the container is empty
+	 */
+	bool DecompressorContainer::empty() const
+	{
+		return m_decompressors.empty();
+	}
+
+	/*!
+	 * Clears all IDecompressor elements in the container
+	 */
+	void DecompressorContainer::clear()
+	{
+		m_decompressors.clear();
+	}
+}
+#endif //TILESON_DECOMPRESSORCONTAINER_HPP
+
+/*** End of inlined file: DecompressorContainer.hpp ***/
+
+
 /*** Start of inlined file: Map.hpp ***/
 //
 // Created by robin on 22.03.2020.
@@ -24012,6 +24316,7 @@ namespace tson
 			std::map<std::tuple<int, int>, tson::Tile*>    m_tileData;                        /*! Key: Tuple of x and y pos in tile units. */
 
 			//v1.2.0-stuff
+			inline void decompressData();                                                     /*! Defined in tileson_forward.hpp */
 			tson::Map *                                         m_map;                        /*! The map who owns this layer */
 			std::map<std::tuple<int, int>, tson::TileObject>    m_tileObjects;
 	};
@@ -24073,7 +24378,10 @@ bool tson::Layer::parse(const nlohmann::json &json, tson::Map *map)
 			std::for_each(json["data"].begin(), json["data"].end(), [&](const nlohmann::json &item) { m_data.push_back(item.get<int>()); });
 		}
 		else
+		{
 			m_base64Data = json["data"].get<std::string>();
+			decompressData();
+		}
 	}
 
 	//More advanced data
@@ -25744,8 +26052,8 @@ namespace tson
 		public:
 			inline Map() = default;
 			inline Map(ParseStatus status, std::string description);
-			inline explicit Map(const nlohmann::json &json);
-			inline bool parse(const nlohmann::json &json);
+			inline explicit Map(const nlohmann::json &json, tson::DecompressorContainer *decompressors);
+			inline bool parse(const nlohmann::json &json, tson::DecompressorContainer *decompressors);
 
 			[[nodiscard]] inline const Colori &getBackgroundColor() const;
 			[[nodiscard]] inline const Vector2i &getSize() const;
@@ -25777,6 +26085,9 @@ namespace tson
 			inline T get(const std::string &name);
 			inline tson::Property * getProp(const std::string &name);
 
+			//v1.2.0
+			inline DecompressorContainer *getDecompressors();
+
 		private:
 			inline void processData();
 
@@ -25802,6 +26113,9 @@ namespace tson
 			std::string                            m_statusMessage {"OK"};
 
 			std::map<int, tson::Tile*>             m_tileMap;           /*! key: Tile ID. Value: Pointer to Tile*/
+
+			//v1.2.0
+			tson::DecompressorContainer *          m_decompressors;
 	};
 
 	/*!
@@ -25832,9 +26146,9 @@ tson::Map::Map(tson::ParseStatus status, std::string description) : m_status {st
  * @param json A json object with the format of Map
  * @return true if all mandatory fields was found. false otherwise.
  */
-tson::Map::Map(const nlohmann::json &json)
+tson::Map::Map(const nlohmann::json &json, tson::DecompressorContainer *decompressors)
 {
-	parse(json);
+	parse(json, decompressors);
 }
 
 /*!
@@ -25842,8 +26156,10 @@ tson::Map::Map(const nlohmann::json &json)
  * @param json A json object with the format of Map
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Map::parse(const nlohmann::json &json)
+bool tson::Map::parse(const nlohmann::json &json, tson::DecompressorContainer *decompressors)
 {
+	m_decompressors = decompressors;
+
 	bool allFound = true;
 	if(json.count("backgroundcolor") > 0) m_backgroundColor = Colori(json["backgroundcolor"].get<std::string>()); //Optional
 	if(json.count("width") > 0 && json.count("height") > 0 )
@@ -26094,6 +26410,11 @@ const std::map<int, tson::Tile *> &tson::Map::getTileMap() const
 	return m_tileMap;
 }
 
+tson::DecompressorContainer *tson::Map::getDecompressors()
+{
+	return m_decompressors;
+}
+
 #endif //TILESON_MAP_HPP
 
 /*** End of inlined file: Map.hpp ***/
@@ -26246,6 +26567,42 @@ const tson::Rect &tson::TileObject::getDrawingRect() const
 	return m_tile->getDrawingRect();
 }
 
+// L a y e r . h p p
+// -------------------
+
+/*!
+ * Decompresses data if there are matching decompressors
+ */
+void tson::Layer::decompressData()
+{
+
+	tson::DecompressorContainer *container = m_map->getDecompressors();
+	if(container->empty())
+		return;
+
+	if(m_encoding.empty() && m_compression.empty())
+		return;
+
+	std::string data = m_base64Data;
+	bool hasBeenDecoded = false;
+	if(!m_encoding.empty() && container->contains(m_encoding))
+	{
+		data = container->get(m_encoding)->decompress(data);
+		hasBeenDecoded = true;
+	}
+
+	if(!m_compression.empty() && container->contains(m_compression))
+	{
+		data = container->get(m_compression)->decompress(data);
+	}
+
+	if(hasBeenDecoded)
+	{
+		std::vector<uint8_t> bytes = tson::Tools::Base64DecodedStringToBytes(data);
+		m_data = tson::Tools::BytesToInts(bytes);
+	}
+}
+
 #endif //TILESON_TILESON_FORWARD_HPP
 
 /*** End of inlined file: tileson_forward.hpp ***/
@@ -26256,17 +26613,29 @@ namespace tson
 	class Tileson
 	{
 		public:
-			Tileson() = default;
+			inline explicit Tileson(bool includeBase64Decoder = true);
 			#ifndef DISABLE_CPP17_FILESYSTEM
 			inline std::unique_ptr<tson::Map> parse(const fs::path &path);
 			#else
 			inline std::unique_ptr<tson::Map> parse(const std::string &path);
 			#endif
 			inline std::unique_ptr<tson::Map> parse(const void * data, size_t size);
-
+			inline tson::DecompressorContainer *decompressors();
 		private:
 			inline std::unique_ptr<tson::Map> parseJson(const nlohmann::json &json);
+			tson::DecompressorContainer m_decompressors;
 	};
+}
+
+/*!
+ *
+ * @param includeBase64Decoder Includes the base64-decoder from "Base64Decompressor.hpp" if true.
+ * Otherwise no other decompressors/decoders than whatever the user itself have added will be used.
+ */
+tson::Tileson::Tileson(bool includeBase64Decoder)
+{
+	if(includeBase64Decoder)
+		m_decompressors.add<Base64Decompressor>();
 }
 
 /*!
@@ -26356,10 +26725,22 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size)
 std::unique_ptr<tson::Map> tson::Tileson::parseJson(const nlohmann::json &json)
 {
 	std::unique_ptr<tson::Map> map = std::make_unique<tson::Map>();
-	if(map->parse(json))
+	if(map->parse(json, &m_decompressors))
 		return std::move(map);
 
 	return std::make_unique<tson::Map> (tson::ParseStatus::MissingData, "Missing map data...");
+}
+
+/*!
+ * Gets the decompressor container used when something is either encoded or compressed (regardless: IDecompressor is used as base).
+ * These are used specifically for tile layers, and are connected by checking the name of the IDecompressor. If the name of a decompressor
+ * matches with an encoding or a compression, its decompress() function will be used.
+ *
+ * @return The container including all decompressors.
+ */
+tson::DecompressorContainer *tson::Tileson::decompressors()
+{
+	return &m_decompressors;
 }
 
 #endif //TILESON_TILESON_PARSER_HPP
