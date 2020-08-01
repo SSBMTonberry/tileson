@@ -12,13 +12,14 @@ namespace tson
     class ProjectData
     {
         public:
+            ProjectData() = default;
             std::string automappingRulesFile;
             std::vector<std::string> commands;
             std::string extensionsPath;
             std::vector<std::string> folders;
 
             //Tileson specific
-            fs::path &basePath;
+            fs::path basePath;
             std::vector<fs::path> folderPaths;
     };
 }

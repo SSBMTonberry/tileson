@@ -16,13 +16,20 @@ namespace tson
             inline Project() = default;
             inline bool parse(const fs::path &path);
 
-        private:
+            inline const ProjectData &getData() const;
 
+        private:
+            ProjectData m_data;
     };
 
     bool Project::parse(const fs::path &path)
     {
         return false;
+    }
+
+    const ProjectData &Project::getData() const
+    {
+        return m_data;
     }
 }
 
