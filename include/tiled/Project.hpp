@@ -7,7 +7,13 @@
 #ifndef TILESON_PROJECT_HPP
 #define TILESON_PROJECT_HPP
 
+#include <fstream>
+#include <sstream>
+#include <memory>
 #include "../objects/ProjectData.hpp"
+#include "../objects/ProjectFolder.hpp"
+#include "World.hpp"
+
 namespace tson
 {
     class Project
@@ -16,20 +22,66 @@ namespace tson
             inline Project() = default;
             inline bool parse(const fs::path &path);
 
-            inline const ProjectData &getData() const;
+            [[nodiscard]] inline const ProjectData &getData() const;
 
         private:
+            void parseJson(const nlohmann::json &json);
+            fs::path m_path;
             ProjectData m_data;
     };
 
     bool Project::parse(const fs::path &path)
     {
-        return false;
+        m_path = path;
+        std::ifstream i(m_path.u8string());
+        nlohmann::json json;
+        try
+        {
+            i >> json;
+        }
+        catch(const nlohmann::json::parse_error &error)
+        {
+            std::string message = "Parse error: ";
+            message += std::string(error.what());
+            message += std::string("\n");
+            return false;
+        }
+        parseJson(json);
+        return true;
     }
 
     const ProjectData &Project::getData() const
     {
         return m_data;
+    }
+
+    void Project::parseJson(const nlohmann::json &json)
+    {
+        m_data.basePath = m_path.parent_path(); //The directory of the project file
+
+        if(json.count("automappingRulesFile")) m_data.automappingRulesFile = json["automappingRulesFile"].get<std::string>();
+        if(json.count("commands"))
+        {
+            m_data.commands.clear();
+            std::for_each(json["commands"].begin(), json["commands"].end(), [&](const nlohmann::json &item)
+            {
+                m_data.commands.emplace_back(item.get<std::string>());
+            });
+        }
+        if(json.count("extensionsPath")) m_data.extensionsPath = json["extensionsPath"].get<std::string>();
+        if(json.count("folders"))
+        {
+            m_data.folders.clear();
+            m_data.folderPaths.clear();
+            std::for_each(json["folders"].begin(), json["folders"].end(), [&](const nlohmann::json &item)
+            {
+                std::string folder = item.get<std::string>();
+                m_data.folders.emplace_back(folder);
+                m_data.folderPaths.emplace_back(m_data.basePath / folder);
+            });
+        }
+        if(json.count("objectTypesFile")) m_data.objectTypesFile = json["objectTypesFile"].get<std::string>();
+
     }
 }
 
