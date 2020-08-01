@@ -9,6 +9,7 @@
 #include "common/Base64Decompressor.hpp"
 #include "common/DecompressorContainer.hpp"
 #include "tiled/Map.hpp"
+#include "tiled/Project.hpp"
 #include "misc/MemoryStream.hpp"
 #include <fstream>
 #include <sstream>
@@ -46,7 +47,7 @@ tson::Tileson::Tileson(bool includeBase64Decoder)
 }
 
 /*!
- * Parses Tiled json data by file
+ * Parses Tiled json map data by file
  * @param path path to file
  * @return parsed data as Map
  */
@@ -76,6 +77,7 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
     return std::make_unique<tson::Map>(tson::ParseStatus::FileNotFound, msg);
 }
 #else
+[[deprecated("std::filesystem will be required in future versions and DISABLE_CPP17_FILESYSTEM will be removed")]]
 std::unique_ptr<tson::Map> tson::Tileson::parse(const std::string &path)
 {
 
@@ -96,7 +98,7 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const std::string &path)
 }
 #endif
 /*!
- * Parses Tiled json data by memory
+ * Parses Tiled json map data by memory
  * @param data The data to parse
  * @param size The size of the data to parse
  * @return parsed data as Map
