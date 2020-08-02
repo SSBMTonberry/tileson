@@ -14,7 +14,6 @@
 #include <fstream>
 #include <sstream>
 #include <memory>
-#include "common/tileson_forward.hpp"
 
 namespace tson
 {

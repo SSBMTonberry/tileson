@@ -125,4 +125,27 @@ void tson::Layer::decompressData()
     }
 }
 
+// W o r l d . h p p
+// ------------------
+
+/*!
+ * Loads the actual maps based on the world data.
+ * @param parser A Tileson object used for parsing the maps of the world.
+ * @return How many maps who were parsed. Remember to call getStatus() for the actual map to find out if everything went okay.
+ */
+int tson::World::loadMaps(tson::Tileson *parser)
+{
+    m_maps.clear();
+    std::for_each(m_mapData.begin(), m_mapData.end(), [&](const tson::WorldMapData &data)
+    {
+        if(fs::exists(data.path))
+        {
+            std::unique_ptr<tson::Map> map = parser->parse(data.path);
+            m_maps.push_back(std::move(map));
+        }
+    });
+
+    return m_maps.size();
+}
+
 #endif //TILESON_TILESON_FORWARD_HPP

@@ -10,8 +10,8 @@
 #include <fstream>
 #include <sstream>
 #include <memory>
-#include "../objects/ProjectData.hpp"
 #include "../objects/ProjectFolder.hpp"
+#include "../objects/ProjectData.hpp"
 #include "World.hpp"
 
 namespace tson
@@ -25,7 +25,7 @@ namespace tson
             [[nodiscard]] inline const ProjectData &getData() const;
 
         private:
-            void parseJson(const nlohmann::json &json);
+            inline void parseJson(const nlohmann::json &json);
             fs::path m_path;
             ProjectData m_data;
     };
@@ -59,8 +59,8 @@ namespace tson
     {
         m_data.basePath = m_path.parent_path(); //The directory of the project file
 
-        if(json.count("automappingRulesFile")) m_data.automappingRulesFile = json["automappingRulesFile"].get<std::string>();
-        if(json.count("commands"))
+        if(json.count("automappingRulesFile") > 0) m_data.automappingRulesFile = json["automappingRulesFile"].get<std::string>();
+        if(json.count("commands") > 0)
         {
             m_data.commands.clear();
             std::for_each(json["commands"].begin(), json["commands"].end(), [&](const nlohmann::json &item)
@@ -68,8 +68,8 @@ namespace tson
                 m_data.commands.emplace_back(item.get<std::string>());
             });
         }
-        if(json.count("extensionsPath")) m_data.extensionsPath = json["extensionsPath"].get<std::string>();
-        if(json.count("folders"))
+        if(json.count("extensionsPath") > 0) m_data.extensionsPath = json["extensionsPath"].get<std::string>();
+        if(json.count("folders") > 0)
         {
             m_data.folders.clear();
             m_data.folderPaths.clear();
@@ -80,7 +80,7 @@ namespace tson
                 m_data.folderPaths.emplace_back(m_data.basePath / folder);
             });
         }
-        if(json.count("objectTypesFile")) m_data.objectTypesFile = json["objectTypesFile"].get<std::string>();
+        if(json.count("objectTypesFile") > 0) m_data.objectTypesFile = json["objectTypesFile"].get<std::string>();
 
     }
 }

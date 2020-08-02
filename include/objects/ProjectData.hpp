@@ -21,7 +21,7 @@ namespace tson
 
             //Tileson specific
             fs::path basePath;
-            std::vector<fs::path> folderPaths;
+            std::vector<tson::ProjectFolder> folderPaths;
     };
 }
 
