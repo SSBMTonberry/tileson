@@ -10,9 +10,9 @@
 #include <fstream>
 #include <sstream>
 #include <memory>
+#include "World.hpp"
 #include "../objects/ProjectFolder.hpp"
 #include "../objects/ProjectData.hpp"
-#include "World.hpp"
 
 namespace tson
 {
@@ -20,6 +20,7 @@ namespace tson
     {
         public:
             inline Project() = default;
+            inline explicit Project(const fs::path &path);
             inline bool parse(const fs::path &path);
 
             [[nodiscard]] inline const ProjectData &getData() const;
@@ -29,6 +30,11 @@ namespace tson
             fs::path m_path;
             ProjectData m_data;
     };
+
+    Project::Project(const fs::path &path)
+    {
+        parse(path);
+    }
 
     bool Project::parse(const fs::path &path)
     {
@@ -83,6 +89,8 @@ namespace tson
         if(json.count("objectTypesFile") > 0) m_data.objectTypesFile = json["objectTypesFile"].get<std::string>();
 
     }
+
+
 }
 
 #endif //TILESON_PROJECT_HPP

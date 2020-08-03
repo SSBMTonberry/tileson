@@ -19,6 +19,7 @@ namespace tson
             inline explicit World(const fs::path &path);
             inline bool parse(const fs::path &path);
             inline int loadMaps(tson::Tileson *parser); //tileson_forward.hpp
+            inline bool contains(std::string_view filename);
 
             [[nodiscard]] inline const fs::path &getPath() const;
             [[nodiscard]] inline const fs::path &getFolder() const;
@@ -97,6 +98,17 @@ namespace tson
     const fs::path &World::getFolder() const
     {
         return m_folder;
+    }
+
+    /*!
+     * Check if there is WorldMapData in the world that contains the current filename.
+     * Filename = <file>.<extension>
+     * @param filename
+     * @return
+     */
+    bool World::contains(std::string_view filename)
+    {
+        return false;
     }
 
 }
