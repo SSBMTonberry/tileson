@@ -18,6 +18,7 @@ namespace tson
             inline bool hasWorldFile() const;
             inline const std::vector<ProjectFolder> &getSubFolders() const;
             inline const std::vector<fs::path> &getFiles() const;
+            inline const World &getWorld() const;
 
         private:
             inline void loadData();
@@ -86,6 +87,15 @@ namespace tson
     const std::vector<fs::path> &ProjectFolder::getFiles() const
     {
         return m_files;
+    }
+
+    /*!
+     * Only gives useful data if hasWorldFile() is true!
+     * @return
+     */
+    const World &ProjectFolder::getWorld() const
+    {
+        return m_world;
     }
 }
 

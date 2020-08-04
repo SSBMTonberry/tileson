@@ -24,10 +24,13 @@ namespace tson
             inline bool parse(const fs::path &path);
 
             [[nodiscard]] inline const ProjectData &getData() const;
+            [[nodiscard]] inline const fs::path &getPath() const;
+            [[nodiscard]] inline const std::vector<ProjectFolder> &getFolders() const;
 
         private:
             inline void parseJson(const nlohmann::json &json);
             fs::path m_path;
+            std::vector<ProjectFolder> m_folders;
             ProjectData m_data;
     };
 
@@ -84,10 +87,21 @@ namespace tson
                 std::string folder = item.get<std::string>();
                 m_data.folders.emplace_back(folder);
                 m_data.folderPaths.emplace_back(m_data.basePath / folder);
+                m_folders.emplace_back(m_data.basePath / folder);
             });
         }
         if(json.count("objectTypesFile") > 0) m_data.objectTypesFile = json["objectTypesFile"].get<std::string>();
 
+    }
+
+    const fs::path &Project::getPath() const
+    {
+        return m_path;
+    }
+
+    const std::vector<ProjectFolder> &Project::getFolders() const
+    {
+        return m_folders;
     }
 
 
