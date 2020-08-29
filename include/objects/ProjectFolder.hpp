@@ -37,6 +37,9 @@ namespace tson
 
     void ProjectFolder::loadData()
     {
+        m_hasWorldFile = false;
+        m_subFolders.clear();
+        m_files.clear();
         //Search and see if there is a World file .world file
         fs::path worldPath;
         for (const auto & entry : fs::directory_iterator(m_path))
@@ -57,7 +60,7 @@ namespace tson
         for (const auto & entry : fs::directory_iterator(m_path))
         {
             if (fs::is_directory(entry.path()))
-                m_subFolders.emplace_back(entry.path()).loadData();
+                m_subFolders.emplace_back(entry.path());//.loadData(); - loadData() is called in the constructor, so don't call again.
             else if (fs::is_regular_file(entry.path()))
             {
                 if(m_hasWorldFile && m_world.contains(entry.path().filename().u8string()))

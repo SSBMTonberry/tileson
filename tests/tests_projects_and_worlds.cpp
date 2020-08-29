@@ -6,7 +6,7 @@
 #include "../external_libs/catch.hpp"
 #include "tileson.h"
 
-TEST_CASE( "Parse world - Expect 4 maps", "[project][world]" )
+TEST_CASE( "Parse world - Expect 4 maps and parsed data", "[project][world]" )
 {
     fs::path pathLocal {"../../content/test-maps/project/world/test.world"};
     fs::path pathTravis {"../content/test-maps/project/world/test.world"};
@@ -14,9 +14,13 @@ TEST_CASE( "Parse world - Expect 4 maps", "[project][world]" )
 
     tson::World world {pathToUse};
     REQUIRE(world.getMapData().size() == 4);
+    REQUIRE(world.get("not_exists") == nullptr);
+    REQUIRE(world.get("w1.json") != nullptr);
+    REQUIRE(world.get("w1.json")->size == tson::Vector2i (256, 128));
+    REQUIRE(world.get("w1.json")->position == tson::Vector2i (-256, -128));
 }
 
-TEST_CASE( "Parse project - expect no crash", "[project][world]" )
+TEST_CASE( "Parse project - expect right number of files and folders", "[project][world]" )
 {
     fs::path pathLocal {"../../content/test-maps/project/test.tiled-project"};
     fs::path pathTravis {"../content/test-maps/project/test.tiled-project"};

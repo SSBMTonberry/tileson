@@ -20,6 +20,7 @@ namespace tson
             inline bool parse(const fs::path &path);
             inline int loadMaps(tson::Tileson *parser); //tileson_forward.hpp
             inline bool contains(std::string_view filename);
+            inline const WorldMapData *get(std::string_view filename) const;
 
             [[nodiscard]] inline const fs::path &getPath() const;
             [[nodiscard]] inline const fs::path &getFolder() const;
@@ -108,7 +109,14 @@ namespace tson
      */
     bool World::contains(std::string_view filename)
     {
-        return false;
+        //Note: might be moved to std::ranges from C++20.
+        return std::any_of(m_mapData.begin(), m_mapData.end(), [&](const auto &item) { return item.fileName == filename; });
+    }
+
+    const WorldMapData * World::get(std::string_view filename) const
+    {
+        auto iter = std::find_if(m_mapData.begin(), m_mapData.end(), [&](const auto &item) { return item.fileName == filename; });
+        return (iter == m_mapData.end()) ? nullptr : iter.operator->();
     }
 
 }
