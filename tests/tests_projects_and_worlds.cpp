@@ -18,6 +18,8 @@ TEST_CASE( "Parse world - Expect 4 maps and parsed data", "[project][world]" )
     REQUIRE(world.get("w1.json") != nullptr);
     REQUIRE(world.get("w1.json")->size == tson::Vector2i (256, 128));
     REQUIRE(world.get("w1.json")->position == tson::Vector2i (-256, -128));
+    REQUIRE(!world.onlyShowAdjacentMaps());
+    REQUIRE(world.getType() == "world");
 }
 
 TEST_CASE( "Parse project - expect right number of files and folders", "[project][world]" )
