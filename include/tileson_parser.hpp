@@ -5,33 +5,48 @@
 #ifndef TILESON_TILESON_PARSER_HPP
 #define TILESON_TILESON_PARSER_HPP
 
+#include "common/Tools.hpp"
+#include "common/Base64Decompressor.hpp"
+#include "common/DecompressorContainer.hpp"
 #include "tiled/Map.hpp"
+#include "tiled/Project.hpp"
 #include "misc/MemoryStream.hpp"
 #include <fstream>
 #include <sstream>
 #include <memory>
-#include "common/tileson_forward.hpp"
 
 namespace tson
 {
     class Tileson
     {
         public:
-            Tileson() = default;
+            inline explicit Tileson(bool includeBase64Decoder = true);
             #ifndef DISABLE_CPP17_FILESYSTEM
             inline std::unique_ptr<tson::Map> parse(const fs::path &path);
             #else
             inline std::unique_ptr<tson::Map> parse(const std::string &path);
             #endif
             inline std::unique_ptr<tson::Map> parse(const void * data, size_t size);
-
+            inline tson::DecompressorContainer *decompressors();
         private:
             inline std::unique_ptr<tson::Map> parseJson(const nlohmann::json &json);
+            tson::DecompressorContainer m_decompressors;
     };
 }
 
 /*!
- * Parses Tiled json data by file
+ *
+ * @param includeBase64Decoder Includes the base64-decoder from "Base64Decompressor.hpp" if true.
+ * Otherwise no other decompressors/decoders than whatever the user itself have added will be used.
+ */
+tson::Tileson::Tileson(bool includeBase64Decoder)
+{
+    if(includeBase64Decoder)
+        m_decompressors.add<Base64Decompressor>();
+}
+
+/*!
+ * Parses Tiled json map data by file
  * @param path path to file
  * @return parsed data as Map
  */
@@ -61,6 +76,7 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
     return std::make_unique<tson::Map>(tson::ParseStatus::FileNotFound, msg);
 }
 #else
+[[deprecated("std::filesystem will be required in future versions and DISABLE_CPP17_FILESYSTEM will be removed")]]
 std::unique_ptr<tson::Map> tson::Tileson::parse(const std::string &path)
 {
 
@@ -81,7 +97,7 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const std::string &path)
 }
 #endif
 /*!
- * Parses Tiled json data by memory
+ * Parses Tiled json map data by memory
  * @param data The data to parse
  * @param size The size of the data to parse
  * @return parsed data as Map
@@ -117,10 +133,24 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size)
 std::unique_ptr<tson::Map> tson::Tileson::parseJson(const nlohmann::json &json)
 {
     std::unique_ptr<tson::Map> map = std::make_unique<tson::Map>();
-    if(map->parse(json))
+    if(map->parse(json, &m_decompressors))
         return std::move(map);
 
     return std::make_unique<tson::Map> (tson::ParseStatus::MissingData, "Missing map data...");
 }
+
+/*!
+ * Gets the decompressor container used when something is either encoded or compressed (regardless: IDecompressor is used as base).
+ * These are used specifically for tile layers, and are connected by checking the name of the IDecompressor. If the name of a decompressor
+ * matches with an encoding or a compression, its decompress() function will be used.
+ *
+ * @return The container including all decompressors.
+ */
+tson::DecompressorContainer *tson::Tileson::decompressors()
+{
+    return &m_decompressors;
+}
+
+
 
 #endif //TILESON_TILESON_PARSER_HPP

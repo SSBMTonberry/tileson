@@ -106,6 +106,7 @@ namespace tson
             std::map<std::tuple<int, int>, tson::Tile*>    m_tileData;                        /*! Key: Tuple of x and y pos in tile units. */
 
             //v1.2.0-stuff
+            inline void decompressData();                                                     /*! Defined in tileson_forward.hpp */
             tson::Map *                                         m_map;                        /*! The map who owns this layer */
             std::map<std::tuple<int, int>, tson::TileObject>    m_tileObjects;
     };
@@ -167,7 +168,10 @@ bool tson::Layer::parse(const nlohmann::json &json, tson::Map *map)
             std::for_each(json["data"].begin(), json["data"].end(), [&](const nlohmann::json &item) { m_data.push_back(item.get<int>()); });
         }
         else
+        {
             m_base64Data = json["data"].get<std::string>();
+            decompressData();
+        }
     }
 
     //More advanced data
@@ -554,5 +558,7 @@ tson::TileObject *tson::Layer::getTileObject(int x, int y)
 {
     return (m_tileObjects.count({x, y}) > 0) ? &m_tileObjects[{x,y}] : nullptr;
 }
+
+
 
 #endif //TILESON_LAYER_HPP

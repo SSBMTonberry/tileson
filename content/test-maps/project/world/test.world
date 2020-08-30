@@ -1,0 +1,34 @@
+{
+    "maps": [
+        {
+            "fileName": "w1.json",
+            "height": 128,
+            "width": 256,
+            "x": -256,
+            "y": -128
+        },
+        {
+            "fileName": "w2.json",
+            "height": 128,
+            "width": 256,
+            "x": 0,
+            "y": -128
+        },
+        {
+            "fileName": "w3.json",
+            "height": 128,
+            "width": 256,
+            "x": -256,
+            "y": 0
+        },
+        {
+            "fileName": "w4.json",
+            "height": 128,
+            "width": 256,
+            "x": 0,
+            "y": 0
+        }
+    ],
+    "onlyShowAdjacentMaps": false,
+    "type": "world"
+}

@@ -30,5 +30,6 @@
 
 #include "external/json.hpp"
 #include "tileson_parser.hpp"
+#include "common/tileson_forward.hpp"
 
 #endif //TILESON_TILESON_H

@@ -47,7 +47,7 @@ matrix:
     - os: windows
 
     - os: osx
-      osx_image: xcode10.2
+      osx_image: xcode11.6
       compiler: clang
       homebrew:
         packages:

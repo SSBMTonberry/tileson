@@ -6,8 +6,14 @@
 #include "../external_libs/catch.hpp"
 
 #include "../TilesonConfig.h"
-#include "../include/tileson.h"
-//#include "../src/Tileson.h"
+
+//#define TILESON_UNIT_TEST_USE_SINGLE_HEADER
+
+#ifdef TILESON_UNIT_TEST_USE_SINGLE_HEADER
+    #include "../single_include/tileson.hpp"
+#else
+    #include "../include/tileson.h"
+#endif
 
 #include "tson_files_mapper.h"
 #include "../TilesonConfig.h"
@@ -93,7 +99,8 @@ std::vector<int> getFailingMapTests(tson::Map *map)
 }
 
 
-TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" ) {
+TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" )
+{
     tson::Tileson t;
     #ifndef DISABLE_CPP17_FILESYSTEM
     fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
@@ -117,7 +124,36 @@ TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" ) {
     }
 }
 
-TEST_CASE( "Parse a whole map by memory", "[complete][parse][memory]" ) {
+TEST_CASE( "Parse a whole map with base64 data by file", "[complete][parse][file][base64]" )
+{
+
+    tson::Tileson t;
+    #ifndef DISABLE_CPP17_FILESYSTEM
+    fs::path pathLocal {"../../content/test-maps/ultimate_test_base64.json"};
+    fs::path pathTravis {"../content/test-maps/ultimate_test_base64.json"};
+    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    #else
+    std::string pathToUse = "../../content/test-maps/ultimate_test_base64.json";
+    #endif
+    std::unique_ptr<tson::Map> map = t.parse({pathToUse});
+    if(map->getStatus() == tson::ParseStatus::OK)
+    {
+        std::vector<int> failing = getFailingMapTests(map.get());
+        if(!failing.empty())
+            FAIL(getFailingTestsMessage(failing));
+        REQUIRE(failing.empty());
+    }
+    else
+    {
+        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
+        REQUIRE(true);
+    }
+
+
+}
+
+TEST_CASE( "Parse a whole map by memory", "[complete][parse][memory]" )
+{
     tson::Tileson t;
     std::unique_ptr<tson::Map> map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
     if (map->getStatus() == tson::ParseStatus::OK)
@@ -135,7 +171,27 @@ TEST_CASE( "Parse a whole map by memory", "[complete][parse][memory]" ) {
     }
 }
 
-TEST_CASE( "Parse a simple map by memory - tiles without any properties (issue #4)", "[simple][parse][memory]" ) {
+TEST_CASE( "Parse a whole base64 encoded map by memory", "[complete][parse][memory][base64]" )
+{
+    tson::Tileson t;
+    std::unique_ptr<tson::Map> map = t.parse(tson_files::_ULTIMATE_TEST_BASE64_JSON, tson_files::_ULTIMATE_TEST_BASE64_JSON_SIZE);
+    if (map->getStatus() == tson::ParseStatus::OK)
+    {
+        std::vector<int> failing = getFailingMapTests(map.get());
+        if(!failing.empty())
+            FAIL(getFailingTestsMessage(failing));
+        REQUIRE(failing.empty());
+    }
+    else
+    {
+        std::cout << "Memory parse error - " << map->getStatusMessage() << std::endl;
+        //REQUIRE(true);
+        FAIL("Unexpected memory read failure!");
+    }
+}
+
+TEST_CASE( "Parse a simple map by memory - tiles without any properties (issue #4)", "[simple][parse][memory]" )
+{
     tson::Tileson t;
     std::unique_ptr<tson::Map> map = t.parse(tson_files_mapper::_SIMPLE_MAP_JSON, tson_files_mapper::_SIMPLE_MAP_JSON_SIZE);
     if (map->getStatus() == tson::ParseStatus::OK)
@@ -154,7 +210,8 @@ TEST_CASE( "Parse a simple map by memory - tiles without any properties (issue #
     }
 }
 
-TEST_CASE( "Parse a minimal version of whole map by memory", "[complete][parse][memory]" ) {
+TEST_CASE( "Parse a minimal version of whole map by memory", "[complete][parse][memory]" )
+{
     tson::Tileson t;
     std::unique_ptr<tson::Map> map = t.parse(tson_files::_ULTIMATE_TEST_MIN_JSON, tson_files::_ULTIMATE_TEST_MIN_JSON_SIZE);
     if (map->getStatus() == tson::ParseStatus::OK)
@@ -174,7 +231,8 @@ TEST_CASE( "Parse a minimal version of whole map by memory", "[complete][parse][
 
 
 
-TEST_CASE( "Go through demo code - get success", "[demo]" ) {
+TEST_CASE( "Go through demo code - get success", "[demo]" )
+{
     tson::Tileson t;
     std::unique_ptr<tson::Map> map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
 

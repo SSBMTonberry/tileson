@@ -59,17 +59,19 @@ option(BUILD_TESTS "Build unit tests." ON)
 option(BUILD_EXAMPLES "Build examples." OFF)
 option(CLEAR_TSON_CMAKE_CACHE "Clear CMake cache for variables. Activate if you are working on the code. Otherwise: keep it off" OFF)
 
-if(APPLE)
-    option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" ON)
-else()
-    option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" OFF)
-endif()
+#if(APPLE)
+#    option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" ON)
+#else()
+#    option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" OFF)
+#endif()
 
-if(DISABLE_CPP17_FILESYSTEM)
-    set(DISABLE_CPP17_FILESYSTEM 1)
-else()
-    set(DISABLE_CPP17_FILESYSTEM 0)
-endif()
+option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" OFF)
+
+#if(DISABLE_CPP17_FILESYSTEM)
+#    set(DISABLE_CPP17_FILESYSTEM 1)
+#else()
+#    set(DISABLE_CPP17_FILESYSTEM 0)
+#endif()
 
 configure_file (
         "${PROJECT_SOURCE_DIR}/TilesonConfig.h.in"
@@ -83,7 +85,8 @@ set(INCLUDE_FILES include/tileson.h include/tileson_parser.hpp include/misc/Memo
         include/objects/Property.hpp include/objects/PropertyCollection.hpp include/objects/Vector2.hpp include/tiled/Chunk.hpp include/tiled/Frame.hpp
         include/tiled/Grid.hpp include/tiled/Layer.hpp include/tiled/Map.hpp include/tiled/Object.hpp include/tiled/Terrain.hpp include/tiled/Text.hpp
         include/tiled/Tile.hpp include/tiled/Tileset.hpp include/tiled/WangColor.hpp include/tiled/WangSet.hpp include/tiled/WangTile.hpp
-        include/objects/Rect.hpp include/common/tileson_forward.hpp)
+        include/objects/Rect.hpp include/common/tileson_forward.hpp include/common/IDecompressor.h include/common/Base64Decompressor.hpp
+        include/common/DecompressorContainer.hpp include/common/Tools.hpp include/tiled/Project.hpp include/objects/ProjectData.hpp include/objects/ProjectFolder.hpp include/tiled/World.hpp include/objects/WorldMapData.hpp)
 
 # Only activated for code completion, must be uncommented before release!
 # add_library(tileson ${SOURCE_FILES} ${INCLUDE_FILES})
