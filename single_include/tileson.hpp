@@ -24747,7 +24747,7 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
 				x = 0;
 			}
 
-			if (tileId > 0)
+			if (tileId > 0 && m_tileMap.count(tileId) > 0)
 			{
 				m_tileData[{x, y}] = m_tileMap[tileId];
 				m_tileObjects[{x, y}] = {{x, y}, m_tileData[{x, y}]};
@@ -26420,6 +26420,444 @@ tson::DecompressorContainer *tson::Map::getDecompressors()
 /*** End of inlined file: Map.hpp ***/
 
 
+/*** Start of inlined file: Project.hpp ***/
+//
+// Created by robin on 01.08.2020.
+//
+
+#ifndef DISABLE_CPP17_FILESYSTEM
+
+#ifndef TILESON_PROJECT_HPP
+#define TILESON_PROJECT_HPP
+
+#include <fstream>
+#include <sstream>
+#include <memory>
+
+/*** Start of inlined file: World.hpp ***/
+//
+// Created by robin on 01.08.2020.
+//
+
+#ifndef DISABLE_CPP17_FILESYSTEM
+
+#ifndef TILESON_WORLD_HPP
+#define TILESON_WORLD_HPP
+
+
+/*** Start of inlined file: WorldMapData.hpp ***/
+//
+// Created by robin on 01.08.2020.
+//
+
+#ifndef DISABLE_CPP17_FILESYSTEM
+
+#ifndef TILESON_WORLDMAPDATA_HPP
+#define TILESON_WORLDMAPDATA_HPP
+
+namespace tson
+{
+	class WorldMapData
+	{
+		public:
+			inline WorldMapData(const fs::path &folder_, const nlohmann::json &json);
+			inline void parse(const fs::path &folder_, const nlohmann::json &json);
+			//inline WorldMapData(fs::path folder_, std::string fileName_) : folder {std::move(folder_)}, fileName {fileName_}
+			//{
+			//    path = folder / fileName;
+			//}
+
+			fs::path folder;
+			fs::path path;
+			std::string fileName;
+			tson::Vector2i size;
+			tson::Vector2i position;
+	};
+
+	WorldMapData::WorldMapData(const fs::path &folder_, const nlohmann::json &json)
+	{
+		parse(folder_, json);
+	}
+
+	void WorldMapData::parse(const fs::path &folder_, const nlohmann::json &json)
+	{
+		folder = folder_;
+		if(json.count("fileName") > 0) fileName = json["fileName"].get<std::string>();
+		if(json.count("height") > 0) size = {json["width"].get<int>(), json["height"].get<int>()};
+		if(json.count("x") > 0) position = {json["x"].get<int>(), json["y"].get<int>()};
+
+		path = (!fileName.empty()) ? folder / fileName : folder;
+	}
+}
+
+#endif //TILESON_WORLDMAPDATA_HPP
+
+#endif //DISABLE_CPP17_FILESYSTEM
+/*** End of inlined file: WorldMapData.hpp ***/
+
+#include <memory>
+namespace tson
+{
+	class Tileson;
+	class World
+	{
+		public:
+			inline World() = default;
+			inline explicit World(const fs::path &path);
+			inline bool parse(const fs::path &path);
+			inline int loadMaps(tson::Tileson *parser); //tileson_forward.hpp
+			inline bool contains(std::string_view filename);
+			inline const WorldMapData *get(std::string_view filename) const;
+
+			[[nodiscard]] inline const fs::path &getPath() const;
+			[[nodiscard]] inline const fs::path &getFolder() const;
+			[[nodiscard]] inline const std::vector<WorldMapData> &getMapData() const;
+			[[nodiscard]] inline bool onlyShowAdjacentMaps() const;
+			[[nodiscard]] inline const std::string &getType() const;
+
+		private:
+			inline void parseJson(const nlohmann::json &json);
+
+			fs::path m_path;
+			fs::path m_folder;
+			std::vector<WorldMapData> m_mapData;
+			std::vector<std::unique_ptr<tson::Map>> m_maps;
+			bool m_onlyShowAdjacentMaps;
+			std::string m_type;
+	};
+
+	World::World(const fs::path &path)
+	{
+		parse(path);
+	}
+
+	bool World::parse(const fs::path &path)
+	{
+		m_path = path;
+		m_folder = m_path.parent_path();
+		std::ifstream i(m_path.u8string());
+		nlohmann::json json;
+		try
+		{
+			i >> json;
+		}
+		catch(const nlohmann::json::parse_error &error)
+		{
+			std::string message = "Parse error: ";
+			message += std::string(error.what());
+			message += std::string("\n");
+			return false;
+		}
+		parseJson(json);
+		return true;
+	}
+
+	const fs::path &World::getPath() const
+	{
+		return m_path;
+	}
+
+	const std::vector<WorldMapData> &World::getMapData() const
+	{
+		return m_mapData;
+	}
+
+	bool World::onlyShowAdjacentMaps() const
+	{
+		return m_onlyShowAdjacentMaps;
+	}
+
+	const std::string &World::getType() const
+	{
+		return m_type;
+	}
+
+	void World::parseJson(const nlohmann::json &json)
+	{
+		if(json.count("onlyShowAdjacentMaps") > 0) m_onlyShowAdjacentMaps = json["onlyShowAdjacentMaps"].get<bool>();
+		if(json.count("type") > 0) m_type = json["type"].get<std::string>();
+
+		if(json["maps"].is_array())
+		{
+			std::for_each(json["maps"].begin(), json["maps"].end(), [&](const nlohmann::json &item) { m_mapData.emplace_back(m_folder, item); });
+		}
+	}
+
+	const fs::path &World::getFolder() const
+	{
+		return m_folder;
+	}
+
+	/*!
+	 * Check if there is WorldMapData in the world that contains the current filename.
+	 * Filename = <file>.<extension>
+	 * @param filename
+	 * @return
+	 */
+	bool World::contains(std::string_view filename)
+	{
+		//Note: might be moved to std::ranges from C++20.
+		return std::any_of(m_mapData.begin(), m_mapData.end(), [&](const auto &item) { return item.fileName == filename; });
+	}
+
+	const WorldMapData * World::get(std::string_view filename) const
+	{
+		auto iter = std::find_if(m_mapData.begin(), m_mapData.end(), [&](const auto &item) { return item.fileName == filename; });
+		return (iter == m_mapData.end()) ? nullptr : iter.operator->();
+	}
+
+}
+
+#endif //TILESON_WORLD_HPP
+
+#endif //DISABLE_CPP17_FILESYSTEM
+/*** End of inlined file: World.hpp ***/
+
+
+
+/*** Start of inlined file: ProjectFolder.hpp ***/
+//
+// Created by robin on 01.08.2020.
+//
+
+#ifndef DISABLE_CPP17_FILESYSTEM
+
+#ifndef TILESON_PROJECTFOLDER_HPP
+#define TILESON_PROJECTFOLDER_HPP
+
+namespace tson
+{
+	class ProjectFolder
+	{
+		public:
+			inline ProjectFolder(const fs::path &path);
+
+			inline const fs::path &getPath() const;
+			inline bool hasWorldFile() const;
+			inline const std::vector<ProjectFolder> &getSubFolders() const;
+			inline const std::vector<fs::path> &getFiles() const;
+			inline const World &getWorld() const;
+
+		private:
+			inline void loadData();
+			fs::path                    m_path;
+			bool                        m_hasWorldFile;
+			tson::World                 m_world;
+			std::vector<ProjectFolder>  m_subFolders;
+			std::vector<fs::path>       m_files;
+
+	};
+
+	ProjectFolder::ProjectFolder(const fs::path &path) : m_path {path}
+	{
+		loadData();
+	}
+
+	void ProjectFolder::loadData()
+	{
+		m_hasWorldFile = false;
+		m_subFolders.clear();
+		m_files.clear();
+		//Search and see if there is a World file .world file
+		fs::path worldPath;
+		for (const auto & entry : fs::directory_iterator(m_path))
+		{
+			if(fs::is_regular_file(entry.path()))
+			{
+				if(entry.path().extension() == ".world")
+				{
+					m_hasWorldFile = true;
+					worldPath = entry.path();
+				}
+			}
+		}
+
+		if(m_hasWorldFile)
+			m_world.parse(worldPath);
+
+		for (const auto & entry : fs::directory_iterator(m_path))
+		{
+			if (fs::is_directory(entry.path()))
+				m_subFolders.emplace_back(entry.path());//.loadData(); - loadData() is called in the constructor, so don't call again.
+			else if (fs::is_regular_file(entry.path()))
+			{
+				if(m_hasWorldFile && m_world.contains(entry.path().filename().u8string()))
+					m_files.emplace_back(entry.path());
+				else if(!m_hasWorldFile)
+					m_files.emplace_back(entry.path());
+			}
+		}
+
+	}
+
+	const fs::path &ProjectFolder::getPath() const
+	{
+		return m_path;
+	}
+
+	bool ProjectFolder::hasWorldFile() const
+	{
+		return m_hasWorldFile;
+	}
+
+	const std::vector<ProjectFolder> &ProjectFolder::getSubFolders() const
+	{
+		return m_subFolders;
+	}
+
+	const std::vector<fs::path> &ProjectFolder::getFiles() const
+	{
+		return m_files;
+	}
+
+	/*!
+	 * Only gives useful data if hasWorldFile() is true!
+	 * @return
+	 */
+	const World &ProjectFolder::getWorld() const
+	{
+		return m_world;
+	}
+}
+
+#endif //TILESON_PROJECTFOLDER_HPP
+
+#endif //DISABLE_CPP17_FILESYSTEM
+/*** End of inlined file: ProjectFolder.hpp ***/
+
+
+/*** Start of inlined file: ProjectData.hpp ***/
+//
+// Created by robin on 01.08.2020.
+//
+
+#ifndef DISABLE_CPP17_FILESYSTEM
+
+#ifndef TILESON_PROJECTDATA_HPP
+#define TILESON_PROJECTDATA_HPP
+
+namespace tson
+{
+	class ProjectData
+	{
+		public:
+			ProjectData() = default;
+			std::string automappingRulesFile;
+			std::vector<std::string> commands;
+			std::string extensionsPath;
+			std::vector<std::string> folders;
+			std::string objectTypesFile;
+
+			//Tileson specific
+			fs::path basePath;
+			std::vector<tson::ProjectFolder> folderPaths;
+	};
+}
+
+#endif //TILESON_PROJECTDATA_HPP
+
+#endif //DISABLE_CPP17_FILESYSTEM
+/*** End of inlined file: ProjectData.hpp ***/
+
+namespace tson
+{
+	class Project
+	{
+		public:
+			inline Project() = default;
+			inline explicit Project(const fs::path &path);
+			inline bool parse(const fs::path &path);
+
+			[[nodiscard]] inline const ProjectData &getData() const;
+			[[nodiscard]] inline const fs::path &getPath() const;
+			[[nodiscard]] inline const std::vector<ProjectFolder> &getFolders() const;
+
+		private:
+			inline void parseJson(const nlohmann::json &json);
+			fs::path m_path;
+			std::vector<ProjectFolder> m_folders;
+			ProjectData m_data;
+	};
+
+	Project::Project(const fs::path &path)
+	{
+		parse(path);
+	}
+
+	bool Project::parse(const fs::path &path)
+	{
+		m_path = path;
+		std::ifstream i(m_path.u8string());
+		nlohmann::json json;
+		try
+		{
+			i >> json;
+		}
+		catch(const nlohmann::json::parse_error &error)
+		{
+			std::string message = "Parse error: ";
+			message += std::string(error.what());
+			message += std::string("\n");
+			return false;
+		}
+		parseJson(json);
+		return true;
+	}
+
+	const ProjectData &Project::getData() const
+	{
+		return m_data;
+	}
+
+	void Project::parseJson(const nlohmann::json &json)
+	{
+		m_data.basePath = m_path.parent_path(); //The directory of the project file
+
+		if(json.count("automappingRulesFile") > 0) m_data.automappingRulesFile = json["automappingRulesFile"].get<std::string>();
+		if(json.count("commands") > 0)
+		{
+			m_data.commands.clear();
+			std::for_each(json["commands"].begin(), json["commands"].end(), [&](const nlohmann::json &item)
+			{
+				m_data.commands.emplace_back(item.get<std::string>());
+			});
+		}
+		if(json.count("extensionsPath") > 0) m_data.extensionsPath = json["extensionsPath"].get<std::string>();
+		if(json.count("folders") > 0)
+		{
+			m_data.folders.clear();
+			m_data.folderPaths.clear();
+			std::for_each(json["folders"].begin(), json["folders"].end(), [&](const nlohmann::json &item)
+			{
+				std::string folder = item.get<std::string>();
+				m_data.folders.emplace_back(folder);
+				m_data.folderPaths.emplace_back(m_data.basePath / folder);
+				m_folders.emplace_back(m_data.basePath / folder);
+			});
+		}
+		if(json.count("objectTypesFile") > 0) m_data.objectTypesFile = json["objectTypesFile"].get<std::string>();
+
+	}
+
+	const fs::path &Project::getPath() const
+	{
+		return m_path;
+	}
+
+	const std::vector<ProjectFolder> &Project::getFolders() const
+	{
+		return m_folders;
+	}
+
+}
+
+#endif //TILESON_PROJECT_HPP
+
+#endif //DISABLE_CPP17_FILESYSTEM
+
+/*** End of inlined file: Project.hpp ***/
+
+
 /*** Start of inlined file: MemoryStream.hpp ***/
 //
 // Created by robin on 22.03.2020.
@@ -26475,6 +26913,147 @@ namespace tson
 #include <fstream>
 #include <sstream>
 #include <memory>
+
+namespace tson
+{
+	class Tileson
+	{
+		public:
+			inline explicit Tileson(bool includeBase64Decoder = true);
+			#ifndef DISABLE_CPP17_FILESYSTEM
+			inline std::unique_ptr<tson::Map> parse(const fs::path &path);
+			#else
+			inline std::unique_ptr<tson::Map> parse(const std::string &path);
+			#endif
+			inline std::unique_ptr<tson::Map> parse(const void * data, size_t size);
+			inline tson::DecompressorContainer *decompressors();
+		private:
+			inline std::unique_ptr<tson::Map> parseJson(const nlohmann::json &json);
+			tson::DecompressorContainer m_decompressors;
+	};
+}
+
+/*!
+ *
+ * @param includeBase64Decoder Includes the base64-decoder from "Base64Decompressor.hpp" if true.
+ * Otherwise no other decompressors/decoders than whatever the user itself have added will be used.
+ */
+tson::Tileson::Tileson(bool includeBase64Decoder)
+{
+	if(includeBase64Decoder)
+		m_decompressors.add<Base64Decompressor>();
+}
+
+/*!
+ * Parses Tiled json map data by file
+ * @param path path to file
+ * @return parsed data as Map
+ */
+#ifndef DISABLE_CPP17_FILESYSTEM
+std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
+{
+	if(fs::exists(path) && fs::is_regular_file(path))
+	{
+		std::ifstream i(path.u8string());
+		nlohmann::json json;
+		try
+		{
+			i >> json;
+		}
+		catch(const nlohmann::json::parse_error &error)
+		{
+			std::string message = "Parse error: ";
+			message += std::string(error.what());
+			message += std::string("\n");
+			return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, message);
+		}
+		return parseJson(json);
+	}
+
+	std::string msg = "File not found: ";
+	msg += std::string(path.u8string());
+	return std::make_unique<tson::Map>(tson::ParseStatus::FileNotFound, msg);
+}
+#else
+[[deprecated("std::filesystem will be required in future versions and DISABLE_CPP17_FILESYSTEM will be removed")]]
+std::unique_ptr<tson::Map> tson::Tileson::parse(const std::string &path)
+{
+
+	std::ifstream i(path);
+	nlohmann::json json;
+	try
+	{
+		i >> json;
+	}
+	catch(const nlohmann::json::parse_error &error)
+	{
+		std::string message = "Parse error: ";
+		message += std::string(error.what());
+		message += std::string("\n");
+		return std::make_unique<tson::Map> (tson::ParseStatus::ParseError, message);
+	}
+	return std::move(parseJson(json));
+}
+#endif
+/*!
+ * Parses Tiled json map data by memory
+ * @param data The data to parse
+ * @param size The size of the data to parse
+ * @return parsed data as Map
+ */
+std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size)
+{
+	//std::istringstream i;
+	//i.rdbuf()->pubsetbuf((char *)data, size);
+
+	tson::MemoryStream mem {(uint8_t *)data, size};
+
+	nlohmann::json json;
+	try
+	{
+		mem >> json;
+	}
+	catch (const nlohmann::json::parse_error& error)
+	{
+		std::string message = "Parse error: ";
+		message += std::string(error.what());
+		message += std::string("\n");
+		return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, message);
+	}
+
+	return std::move(parseJson(json));
+}
+
+/*!
+ * Common parsing functionality for doing the json parsing
+ * @param json Tiled json to parse
+ * @return parsed data as Map
+ */
+std::unique_ptr<tson::Map> tson::Tileson::parseJson(const nlohmann::json &json)
+{
+	std::unique_ptr<tson::Map> map = std::make_unique<tson::Map>();
+	if(map->parse(json, &m_decompressors))
+		return std::move(map);
+
+	return std::make_unique<tson::Map> (tson::ParseStatus::MissingData, "Missing map data...");
+}
+
+/*!
+ * Gets the decompressor container used when something is either encoded or compressed (regardless: IDecompressor is used as base).
+ * These are used specifically for tile layers, and are connected by checking the name of the IDecompressor. If the name of a decompressor
+ * matches with an encoding or a compression, its decompress() function will be used.
+ *
+ * @return The container including all decompressors.
+ */
+tson::DecompressorContainer *tson::Tileson::decompressors()
+{
+	return &m_decompressors;
+}
+
+#endif //TILESON_TILESON_PARSER_HPP
+
+/*** End of inlined file: tileson_parser.hpp ***/
+
 
 /*** Start of inlined file: tileson_forward.hpp ***/
 //
@@ -26603,149 +27182,32 @@ void tson::Layer::decompressData()
 	}
 }
 
+// W o r l d . h p p
+// ------------------
+
+/*!
+ * Loads the actual maps based on the world data.
+ * @param parser A Tileson object used for parsing the maps of the world.
+ * @return How many maps who were parsed. Remember to call getStatus() for the actual map to find out if everything went okay.
+ */
+int tson::World::loadMaps(tson::Tileson *parser)
+{
+	m_maps.clear();
+	std::for_each(m_mapData.begin(), m_mapData.end(), [&](const tson::WorldMapData &data)
+	{
+		if(fs::exists(data.path))
+		{
+			std::unique_ptr<tson::Map> map = parser->parse(data.path);
+			m_maps.push_back(std::move(map));
+		}
+	});
+
+	return m_maps.size();
+}
+
 #endif //TILESON_TILESON_FORWARD_HPP
 
 /*** End of inlined file: tileson_forward.hpp ***/
-
-
-namespace tson
-{
-	class Tileson
-	{
-		public:
-			inline explicit Tileson(bool includeBase64Decoder = true);
-			#ifndef DISABLE_CPP17_FILESYSTEM
-			inline std::unique_ptr<tson::Map> parse(const fs::path &path);
-			#else
-			inline std::unique_ptr<tson::Map> parse(const std::string &path);
-			#endif
-			inline std::unique_ptr<tson::Map> parse(const void * data, size_t size);
-			inline tson::DecompressorContainer *decompressors();
-		private:
-			inline std::unique_ptr<tson::Map> parseJson(const nlohmann::json &json);
-			tson::DecompressorContainer m_decompressors;
-	};
-}
-
-/*!
- *
- * @param includeBase64Decoder Includes the base64-decoder from "Base64Decompressor.hpp" if true.
- * Otherwise no other decompressors/decoders than whatever the user itself have added will be used.
- */
-tson::Tileson::Tileson(bool includeBase64Decoder)
-{
-	if(includeBase64Decoder)
-		m_decompressors.add<Base64Decompressor>();
-}
-
-/*!
- * Parses Tiled json data by file
- * @param path path to file
- * @return parsed data as Map
- */
-#ifndef DISABLE_CPP17_FILESYSTEM
-std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
-{
-	if(fs::exists(path) && fs::is_regular_file(path))
-	{
-		std::ifstream i(path.u8string());
-		nlohmann::json json;
-		try
-		{
-			i >> json;
-		}
-		catch(const nlohmann::json::parse_error &error)
-		{
-			std::string message = "Parse error: ";
-			message += std::string(error.what());
-			message += std::string("\n");
-			return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, message);
-		}
-		return parseJson(json);
-	}
-
-	std::string msg = "File not found: ";
-	msg += std::string(path.u8string());
-	return std::make_unique<tson::Map>(tson::ParseStatus::FileNotFound, msg);
-}
-#else
-std::unique_ptr<tson::Map> tson::Tileson::parse(const std::string &path)
-{
-
-	std::ifstream i(path);
-	nlohmann::json json;
-	try
-	{
-		i >> json;
-	}
-	catch(const nlohmann::json::parse_error &error)
-	{
-		std::string message = "Parse error: ";
-		message += std::string(error.what());
-		message += std::string("\n");
-		return std::make_unique<tson::Map> (tson::ParseStatus::ParseError, message);
-	}
-	return std::move(parseJson(json));
-}
-#endif
-/*!
- * Parses Tiled json data by memory
- * @param data The data to parse
- * @param size The size of the data to parse
- * @return parsed data as Map
- */
-std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size)
-{
-	//std::istringstream i;
-	//i.rdbuf()->pubsetbuf((char *)data, size);
-
-	tson::MemoryStream mem {(uint8_t *)data, size};
-
-	nlohmann::json json;
-	try
-	{
-		mem >> json;
-	}
-	catch (const nlohmann::json::parse_error& error)
-	{
-		std::string message = "Parse error: ";
-		message += std::string(error.what());
-		message += std::string("\n");
-		return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, message);
-	}
-
-	return std::move(parseJson(json));
-}
-
-/*!
- * Common parsing functionality for doing the json parsing
- * @param json Tiled json to parse
- * @return parsed data as Map
- */
-std::unique_ptr<tson::Map> tson::Tileson::parseJson(const nlohmann::json &json)
-{
-	std::unique_ptr<tson::Map> map = std::make_unique<tson::Map>();
-	if(map->parse(json, &m_decompressors))
-		return std::move(map);
-
-	return std::make_unique<tson::Map> (tson::ParseStatus::MissingData, "Missing map data...");
-}
-
-/*!
- * Gets the decompressor container used when something is either encoded or compressed (regardless: IDecompressor is used as base).
- * These are used specifically for tile layers, and are connected by checking the name of the IDecompressor. If the name of a decompressor
- * matches with an encoding or a compression, its decompress() function will be used.
- *
- * @return The container including all decompressors.
- */
-tson::DecompressorContainer *tson::Tileson::decompressors()
-{
-	return &m_decompressors;
-}
-
-#endif //TILESON_TILESON_PARSER_HPP
-
-/*** End of inlined file: tileson_parser.hpp ***/
 
 #endif //TILESON_TILESON_H
 

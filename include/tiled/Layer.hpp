@@ -539,7 +539,7 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
                 x = 0;
             }
 
-            if (tileId > 0)
+            if (tileId > 0 && m_tileMap.count(tileId) > 0)
             {
                 m_tileData[{x, y}] = m_tileMap[tileId];
                 m_tileObjects[{x, y}] = {{x, y}, m_tileData[{x, y}]};

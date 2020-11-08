@@ -6,11 +6,43 @@
 //#include "../src/Tileson.h"
 //#include "../include/tileson.hpp"
 #include "../TilesonConfig.h"
-//#include "../single_include/tileson.hpp"
-#include "../include/tileson.h"
+#include "../single_include/tileson.hpp"
+//#include "../include/tileson.h"
 
 #include "tson_files_mapper.h"
 #include "../TilesonConfig.h"
+
+TEST_CASE( "Nullptr error on getposition when parsing json (Issue #17)", "[help][issue]")
+{
+    tson::Tileson t;
+    #ifndef DISABLE_CPP17_FILESYSTEM
+    fs::path path {"../../content/test-maps/issues/issue_17.json"};
+    #else
+    std::string path {"../../content/test-maps/issues/issue_17.json"};
+    #endif
+    std::unique_ptr<tson::Map> map = t.parse(path); // <== this is where I get the nullptr error
+
+    if (map->getStatus() == tson::ParseStatus::OK)
+    {
+        for (auto& layer : map->getLayers())
+        {
+            if(layer.getType() == tson::LayerType::TileLayer)
+            {
+                for (const auto &[id, obj] : layer.getTileObjects())
+                {
+                    tson::Vector2f groundPos = tson::Vector2f(obj.getPosition().x, obj.getPosition().y);
+                    tson::Vector2f groundSize = tson::Vector2f(obj.getTile()->getTileSize().x, obj.getTile()->getTileSize().y);
+
+                    //platforms.push_back(Platform(&groundtexture, groundSize, groundPos));
+                }
+            }
+        }
+    }
+    else
+    {
+        std::cout << map->getStatusMessage() << std::endl;
+    }
+}
 
 TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[help][issue]")
 {

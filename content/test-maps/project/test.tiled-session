@@ -34,6 +34,17 @@
                 "y": 130.5
             }
         },
+        "/home/robin/Projects/cpp/git/tileson/content/test-maps/ultimate_test.json": {
+            "scale": 2.09482421875,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 256.1074075800662,
+                "y": 128.1730455456622
+            }
+        },
+        "/home/robin/Projects/cpp/git/tileson/content/test-maps/ultimate_test.json#demo-tileset": {
+            "scaleInDock": 1
+        },
         "/home/robin/Projects/cpp/git/tileson/content/test-maps/ultimate_test.tmx": {
             "scale": 3,
             "selectedLayer": 2,
@@ -109,6 +120,7 @@
     "project": "test.tiled-project",
     "property.type": "color",
     "recentFiles": [
+        "/home/robin/Projects/cpp/git/tileson/content/test-maps/ultimate_test.json",
         "maps/sub/map4.json",
         "maps/map1.json"
     ],
