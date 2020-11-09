@@ -96,7 +96,7 @@ TEST_CASE( "Decode a base64 string with tiledata and compare with csv based data
     tson::Base64Decompressor decompressor;
     std::string decoded = decompressor.decompress(base64_str);
     std::vector<uint8_t> bytes = tson::Tools::Base64DecodedStringToBytes(decoded);
-    std::vector<int> result = tson::Tools::BytesToInts(bytes);
-    std::vector<int> originalData = layer.getData();
+    std::vector<uint32_t> result = tson::Tools::BytesToUnsignedInts(bytes);
+    std::vector<uint32_t> originalData = layer.getData();
     REQUIRE(result == originalData);
 }

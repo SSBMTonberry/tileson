@@ -121,7 +121,7 @@ void tson::Layer::decompressData()
     if(hasBeenDecoded)
     {
         std::vector<uint8_t> bytes = tson::Tools::Base64DecodedStringToBytes(data);
-        m_data = tson::Tools::BytesToInts(bytes);
+        m_data = tson::Tools::BytesToUnsignedInts(bytes);
     }
 }
 

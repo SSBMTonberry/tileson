@@ -5,7 +5,7 @@
 #ifndef TILESON_DECOMPRESSORCONTAINER_HPP
 #define TILESON_DECOMPRESSORCONTAINER_HPP
 
-#include "IDecompressor.h"
+#include "IDecompressor.hpp"
 #include <memory>
 #include <vector>
 #include <string_view>

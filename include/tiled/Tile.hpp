@@ -51,9 +51,10 @@ namespace tson
             inline const tson::Vector2i getPositionInTileUnits(const std::tuple<int, int> &tileDataPos);
             inline const tson::Vector2i getTileSize() const;                       /*! Declared in tileson_forward.hpp */
 
+            //v1.2.0-stuff
             [[nodiscard]] inline TileFlipFlags getFlipFlags() const;
             inline bool hasFlipFlags(TileFlipFlags flags);
-
+            [[nodiscard]] inline uint32_t getGid() const;
 
         private:
             std::vector<tson::Frame>    m_animation; 	    /*! 'animation': Array of Frames */
@@ -70,12 +71,13 @@ namespace tson
             std::string                 m_type;             /*! 'type': The type of the tile (optional) */
 
             //v1.2.0-stuff
+            uint32_t                    m_gid {};                                    /*! id without flip flags */
             tson::Tileset *             m_tileset;                                   /*! A pointer to the tileset where this Tile comes from */
             tson::Map *                 m_map;                                       /*! A pointer to the map where this tile is contained */
             tson::Rect                  m_drawingRect;                               /*! A rect that shows which part of the tileset that is used for this tile */
             tson::TileFlipFlags         m_flipFlags = TileFlipFlags::None;           /*! Resolved using bit 32, 31 and 30 from gid */
             inline void performDataCalculations();                                   /*! Declared in tileson_forward.hpp - Calculate all the values used in the tile class. */
-            inline void manageFlipFlagsById(uint32_t &id);
+            inline void manageFlipFlagsByIdThenRemoveFlags(uint32_t &id);
             friend class Layer;
     };
 
@@ -101,11 +103,11 @@ tson::Tile::Tile(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *
  * Used in cases where you have a tile without any property
  * @param id
  */
-tson::Tile::Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map) : m_id {id}
+tson::Tile::Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map) : m_id {id}, m_gid {id}
 {
     m_tileset = tileset;
     m_map = map;
-    manageFlipFlagsById(m_id);
+    manageFlipFlagsByIdThenRemoveFlags(m_gid);
     performDataCalculations();
 }
 
@@ -128,7 +130,8 @@ bool tson::Tile::parse(const nlohmann::json &json, tson::Tileset *tileset, tson:
     if(json.count("id") > 0)
     {
         m_id = json["id"].get<uint32_t>() + 1;
-        manageFlipFlagsById(m_id);
+        m_gid = m_id;
+        manageFlipFlagsByIdThenRemoveFlags(m_gid);
     }
     else
         allFound = false;
@@ -280,7 +283,7 @@ const tson::Vector2i tson::Tile::getPositionInTileUnits(const std::tuple<int, in
     return {std::get<0>(tileDataPos), std::get<1>(tileDataPos)};
 }
 
-void tson::Tile::manageFlipFlagsById(uint32_t &id)
+void tson::Tile::manageFlipFlagsByIdThenRemoveFlags(uint32_t &id)
 {
     if (id & FLIPPED_HORIZONTALLY_FLAG) m_flipFlags |= TileFlipFlags::Horizontally;
     if (id & FLIPPED_VERTICALLY_FLAG) m_flipFlags |= TileFlipFlags::Vertically;
@@ -305,6 +308,11 @@ tson::TileFlipFlags tson::Tile::getFlipFlags() const
 bool tson::Tile::hasFlipFlags(tson::TileFlipFlags flags)
 {
     return ((m_flipFlags & flags) == flags) ? true : false;
+}
+
+uint32_t tson::Tile::getGid() const
+{
+    return m_gid;
 }
 
 

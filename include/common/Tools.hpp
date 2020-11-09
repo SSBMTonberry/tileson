@@ -18,7 +18,7 @@ namespace tson
             ~Tools() = delete;
             inline static std::vector<uint8_t> Base64DecodedStringToBytes(std::string_view str);
             inline static std::vector<uint32_t> BytesToUnsignedInts(const std::vector<uint8_t> &bytes);
-            inline static std::vector<int> BytesToInts(const std::vector<uint8_t> &bytes);
+            //inline static std::vector<int> BytesToInts(const std::vector<uint8_t> &bytes);
     };
 
     /*!
@@ -66,6 +66,8 @@ namespace tson
      * While the Tiled specification uses unsigned ints for their tiles, Tileson uses regular ints.
      * This may be changed in the future, but should in reality never really become an issue.
      *
+     * Update 2020-11-09: This will cause problems when tiles has flip flags!
+     *
      * int differences:
      * int max:  2147483647
      * uint max: 4294967295
@@ -73,7 +75,7 @@ namespace tson
      * @param bytes A vector of bytes.
      * @return Bytes converted to ints
      */
-    std::vector<int> Tools::BytesToInts(const std::vector<uint8_t> &bytes)
+    /*std::vector<int> Tools::BytesToInts(const std::vector<uint8_t> &bytes)
     {
         std::vector<int> ints;
         std::vector<uint8_t> toConvert;
@@ -91,7 +93,7 @@ namespace tson
         }
 
         return ints;
-    }
+    }*/
 }
 
 #endif //TILESON_TOOLS_HPP

@@ -28,7 +28,7 @@ namespace tson
             inline bool parse(const nlohmann::json &json, tson::Map *map);
 
             [[nodiscard]] inline const std::string &getCompression() const;
-            [[nodiscard]] inline const std::vector<int> &getData() const;
+            [[nodiscard]] inline const std::vector<uint32_t> &getData() const;
             [[nodiscard]] inline const std::string &getBase64Data() const;
             [[nodiscard]] inline const std::string &getDrawOrder() const;
             [[nodiscard]] inline const std::string &getEncoding() const;
@@ -61,7 +61,7 @@ namespace tson
             inline T get(const std::string &name);
             inline tson::Property * getProp(const std::string &name);
 
-            inline void assignTileMap(const std::map<int, tson::Tile*> &tileMap);
+            inline void assignTileMap(const std::map<uint32_t, tson::Tile*> &tileMap);
             inline void createTileData(const Vector2i &mapSize, bool isInfiniteMap);
 
             [[nodiscard]] inline const std::map<std::tuple<int, int>, tson::Tile *> &getTileData() const;
@@ -78,7 +78,7 @@ namespace tson
 
             std::vector<tson::Chunk>                       m_chunks; 	                      /*! 'chunks': Array of chunks (optional). tilelayer only. */
             std::string                                    m_compression;                     /*! 'compression': zlib, gzip or empty (default). tilelayer only. */
-            std::vector<int>                               m_data;                            /*! 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded
+            std::vector<uint32_t>                          m_data;                            /*! 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded
                                                                                                *   data. tilelayer only. */
             std::string                                    m_base64Data;                      /*! 'data' (when string):     Array of unsigned int (GIDs) or base64-encoded
                                                                                                *   data. tilelayer only. */
@@ -102,7 +102,7 @@ namespace tson
             int                                            m_x{};                             /*! 'x': Horizontal layer offset in tiles. Always 0. */
             int                                            m_y{};                             /*! 'y': Vertical layer offset in tiles. Always 0. */
 
-            std::map<int, tson::Tile*>                     m_tileMap;
+            std::map<uint32_t, tson::Tile*>                m_tileMap;
             std::map<std::tuple<int, int>, tson::Tile*>    m_tileData;                        /*! Key: Tuple of x and y pos in tile units. */
 
             //v1.2.0-stuff
@@ -165,7 +165,7 @@ bool tson::Layer::parse(const nlohmann::json &json, tson::Map *map)
     {
         if(json["data"].is_array())
         {
-            std::for_each(json["data"].begin(), json["data"].end(), [&](const nlohmann::json &item) { m_data.push_back(item.get<int>()); });
+            std::for_each(json["data"].begin(), json["data"].end(), [&](const nlohmann::json &item) { m_data.push_back(item.get<uint32_t>()); });
         }
         else
         {
@@ -279,7 +279,7 @@ const std::string &tson::Layer::getCompression() const
  * 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded data. tilelayer only.
  * @return
  */
-const std::vector<int> &tson::Layer::getData() const
+const std::vector<uint32_t> &tson::Layer::getData() const
 {
     return m_data;
 }
@@ -472,7 +472,7 @@ tson::LayerType tson::Layer::getType() const
  * Assigns a tilemap of pointers to existing tiles.
  * @param tileMap The tilemap. key: tile id, value: pointer to Tile.
  */
-void tson::Layer::assignTileMap(const std::map<int, tson::Tile *> &tileMap)
+void tson::Layer::assignTileMap(const std::map<uint32_t, tson::Tile *> &tileMap)
 {
     m_tileMap = tileMap;
 }
@@ -539,7 +539,7 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
                 x = 0;
             }
 
-            if (tileId > 0)
+            if (tileId > 0 && m_tileMap.count(tileId) > 0)
             {
                 m_tileData[{x, y}] = m_tileMap[tileId];
                 m_tileObjects[{x, y}] = {{x, y}, m_tileData[{x, y}]};
