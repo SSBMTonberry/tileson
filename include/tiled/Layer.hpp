@@ -531,7 +531,7 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
     size_t y = 0;
     if(!isInfiniteMap)
     {
-        std::for_each(m_data.begin(), m_data.end(), [&](int tileId)
+        std::for_each(m_data.begin(), m_data.end(), [&](uint32_t tileId)
         {
             if (x == mapSize.x)
             {
@@ -543,6 +543,10 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
             {
                 m_tileData[{x, y}] = m_tileMap[tileId];
                 m_tileObjects[{x, y}] = {{x, y}, m_tileData[{x, y}]};
+            }
+            else if(tileId > 0 && m_tileMap.count(tileId) == 0) //Tile with flip flags!
+            {
+                //RBP: Handle tiles with flip flags!
             }
             x++;
         });

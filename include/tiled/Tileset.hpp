@@ -365,11 +365,11 @@ tson::Property *tson::Tileset::getProp(const std::string &name)
  */
 void tson::Tileset::generateMissingTiles()
 {
-    std::vector<int> tileIds;
+    std::vector<uint32_t> tileIds;
     for(auto &tile : m_tiles)
         tileIds.push_back(tile.getId());
 
-    for(int i = m_firstgid; i < m_firstgid + m_tileCount; ++i)
+    for(uint32_t i = m_firstgid; i < m_firstgid + m_tileCount; ++i)
     {
         if(std::count(tileIds.begin(), tileIds.end(), i) == 0)
         {
