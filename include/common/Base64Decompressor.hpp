@@ -6,7 +6,7 @@
 #ifndef TILESON_BASE64DECOMPRESSOR_HPP
 #define TILESON_BASE64DECOMPRESSOR_HPP
 
-#include "IDecompressor.h"
+#include "IDecompressor.hpp"
 #include <string>
 
 namespace tson

@@ -2,8 +2,8 @@
 // Created by robin on 29.07.2020.
 //
 
-#ifndef TILESON_IDECOMPRESSOR_H
-#define TILESON_IDECOMPRESSOR_H
+#ifndef TILESON_IDECOMPRESSOR_HPP
+#define TILESON_IDECOMPRESSOR_HPP
 
 #include <string_view>
 
@@ -29,4 +29,4 @@ namespace tson
     };
 }
 
-#endif //TILESON_IDECOMPRESSOR_H
+#endif //TILESON_IDECOMPRESSOR_HPP
