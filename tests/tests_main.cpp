@@ -100,6 +100,18 @@ TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" )
     }
 }
 
+TEST_CASE( "Test set", "[set]" )
+{
+    std::set<uint32_t> s;
+    s.insert(34);
+    s.insert(12);
+    s.insert(93);
+    s.insert(34); //Should be ignored
+    s.insert(34); //Should be ignored
+
+    REQUIRE(s.size() == 3);
+}
+
 TEST_CASE( "Parse map - expect correct flip flags", "[parse][file]" )
 {
     tson::Tileson t;

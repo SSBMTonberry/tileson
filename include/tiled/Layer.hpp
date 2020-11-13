@@ -5,6 +5,7 @@
 #ifndef TILESON_LAYER_HPP
 #define TILESON_LAYER_HPP
 
+#include <set>
 #include "../external/json.hpp"
 #include "../objects/Vector2.hpp"
 #include "../objects/Color.hpp"
@@ -14,6 +15,7 @@
 #include "../objects/Property.hpp"
 #include "../objects/PropertyCollection.hpp"
 #include "../common/Enums.hpp"
+#include "../objects/FlaggedTile.hpp"
 
 namespace tson
 {
@@ -107,8 +109,14 @@ namespace tson
 
             //v1.2.0-stuff
             inline void decompressData();                                                     /*! Defined in tileson_forward.hpp */
+            inline void queueFlaggedTile(size_t x, size_t y, uint32_t id);                    /*! Queue a flagged tile */
+
             tson::Map *                                         m_map;                        /*! The map who owns this layer */
             std::map<std::tuple<int, int>, tson::TileObject>    m_tileObjects;
+            std::set<uint32_t>                                  m_uniqueFlaggedTiles;
+            std::set<uint32_t, tson::FlaggedTile>               m_flaggedTiles;
+            //std::map<uint32_t, std::unique_ptr<tson::Tile>>     m_flaggedTileMap;
+
     };
 
     /*!
@@ -131,6 +139,13 @@ namespace tson
 tson::Layer::Layer(const nlohmann::json &json, tson::Map *map)
 {
     parse(json, map);
+}
+
+void tson::Layer::queueFlaggedTile(size_t x, size_t y, uint32_t id)
+{
+    uint32_t tileId = id;
+    tileId &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
+    //RBP: Add unique tiles to m_flaggedTiles and m_uniqueFlaggedTiles
 }
 
 /*!
@@ -520,7 +535,7 @@ tson::Map *tson::Layer::getMap() const
 
 /*!
  *
- * This is only supported for non-infinte maps!
+ * This is only supported for non-infinite maps!
  *
  * @param mapSize The size of the map
  * @param isInfiniteMap Whether or not the current map is infinte.
@@ -547,9 +562,11 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
             else if(tileId > 0 && m_tileMap.count(tileId) == 0) //Tile with flip flags!
             {
                 //RBP: Handle tiles with flip flags!
+                queueFlaggedTile(x, y, tileId);
             }
             x++;
         });
+
     }
 }
 
@@ -562,7 +579,6 @@ tson::TileObject *tson::Layer::getTileObject(int x, int y)
 {
     return (m_tileObjects.count({x, y}) > 0) ? &m_tileObjects[{x,y}] : nullptr;
 }
-
 
 
 #endif //TILESON_LAYER_HPP

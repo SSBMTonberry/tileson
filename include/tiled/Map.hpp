@@ -174,6 +174,7 @@ void tson::Map::processData()
     {
         layer.assignTileMap(m_tileMap);
         layer.createTileData(m_size, m_isInfinite);
+
     });
 }
 

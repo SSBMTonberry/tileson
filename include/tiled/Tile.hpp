@@ -21,9 +21,12 @@ namespace tson
     {
         public:
             inline Tile() = default;
-            inline explicit Tile(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
-            inline explicit Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map);
+            inline Tile(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
+            inline Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map);
+            inline Tile(uint32_t id, tson::Map *map);
             inline bool parse(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
+
+            inline void addTilesetAndPerformCalculations(tson::Tileset *tileset);
 
             [[nodiscard]] inline uint32_t getId() const;
             #ifndef DISABLE_CPP17_FILESYSTEM
@@ -108,6 +111,26 @@ tson::Tile::Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map) : m_id {id
     m_tileset = tileset;
     m_map = map;
     manageFlipFlagsByIdThenRemoveFlags(m_gid);
+    performDataCalculations();
+}
+
+/*!
+ * Used in cases where you have a FLIP FLAGGED tile
+ * @param id
+ */
+tson::Tile::Tile(uint32_t id, tson::Map *map) : m_id {id}, m_gid {id}
+{
+    m_map = map;
+    manageFlipFlagsByIdThenRemoveFlags(m_gid);
+}
+
+/*!
+ * For flip flagged tiles, tilesets must be resolved later.
+ * @param tileset
+ */
+void tson::Tile::addTilesetAndPerformCalculations(tson::Tileset *tileset)
+{
+    m_tileset = tileset;
     performDataCalculations();
 }
 
@@ -314,6 +337,8 @@ uint32_t tson::Tile::getGid() const
 {
     return m_gid;
 }
+
+
 
 
 #endif //TILESON_TILE_HPP
