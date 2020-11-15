@@ -63,7 +63,7 @@ namespace tson
             inline T get(const std::string &name);
             inline tson::Property * getProp(const std::string &name);
 
-            inline void assignTileMap(const std::map<uint32_t, tson::Tile*> &tileMap);
+            inline void assignTileMap(std::map<uint32_t, tson::Tile*> *tileMap);
             inline void createTileData(const Vector2i &mapSize, bool isInfiniteMap);
 
             [[nodiscard]] inline const std::map<std::tuple<int, int>, tson::Tile *> &getTileData() const;
@@ -74,6 +74,8 @@ namespace tson
 
             [[nodiscard]] inline const std::map<std::tuple<int, int>, tson::TileObject> &getTileObjects() const;
             inline tson::TileObject * getTileObject(int x, int y);
+            [[nodiscard]] inline const std::set<uint32_t> &getUniqueFlaggedTiles() const;
+            inline void resolveFlaggedTiles();
 
         private:
             inline void setTypeByString();
@@ -104,7 +106,7 @@ namespace tson
             int                                            m_x{};                             /*! 'x': Horizontal layer offset in tiles. Always 0. */
             int                                            m_y{};                             /*! 'y': Vertical layer offset in tiles. Always 0. */
 
-            std::map<uint32_t, tson::Tile*>                m_tileMap;
+            std::map<uint32_t, tson::Tile*>                *m_tileMap;
             std::map<std::tuple<int, int>, tson::Tile*>    m_tileData;                        /*! Key: Tuple of x and y pos in tile units. */
 
             //v1.2.0-stuff
@@ -114,8 +116,7 @@ namespace tson
             tson::Map *                                         m_map;                        /*! The map who owns this layer */
             std::map<std::tuple<int, int>, tson::TileObject>    m_tileObjects;
             std::set<uint32_t>                                  m_uniqueFlaggedTiles;
-            std::set<uint32_t, tson::FlaggedTile>               m_flaggedTiles;
-            //std::map<uint32_t, std::unique_ptr<tson::Tile>>     m_flaggedTileMap;
+            std::vector<tson::FlaggedTile>                      m_flaggedTiles;
 
     };
 
@@ -145,7 +146,8 @@ void tson::Layer::queueFlaggedTile(size_t x, size_t y, uint32_t id)
 {
     uint32_t tileId = id;
     tileId &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
-    //RBP: Add unique tiles to m_flaggedTiles and m_uniqueFlaggedTiles
+    m_uniqueFlaggedTiles.insert(id);
+    m_flaggedTiles.emplace_back(x, y, id, tileId);
 }
 
 /*!
@@ -487,7 +489,7 @@ tson::LayerType tson::Layer::getType() const
  * Assigns a tilemap of pointers to existing tiles.
  * @param tileMap The tilemap. key: tile id, value: pointer to Tile.
  */
-void tson::Layer::assignTileMap(const std::map<uint32_t, tson::Tile *> &tileMap)
+void tson::Layer::assignTileMap(std::map<uint32_t, tson::Tile *> *tileMap)
 {
     m_tileMap = tileMap;
 }
@@ -554,14 +556,13 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
                 x = 0;
             }
 
-            if (tileId > 0 && m_tileMap.count(tileId) > 0)
+            if (tileId > 0 && m_tileMap->count(tileId) > 0)
             {
-                m_tileData[{x, y}] = m_tileMap[tileId];
+                m_tileData[{x, y}] = m_tileMap->at(tileId);
                 m_tileObjects[{x, y}] = {{x, y}, m_tileData[{x, y}]};
             }
-            else if(tileId > 0 && m_tileMap.count(tileId) == 0) //Tile with flip flags!
+            else if(tileId > 0 && m_tileMap->count(tileId) == 0) //Tile with flip flags!
             {
-                //RBP: Handle tiles with flip flags!
                 queueFlaggedTile(x, y, tileId);
             }
             x++;
@@ -578,6 +579,23 @@ const std::map<std::tuple<int, int>, tson::TileObject> &tson::Layer::getTileObje
 tson::TileObject *tson::Layer::getTileObject(int x, int y)
 {
     return (m_tileObjects.count({x, y}) > 0) ? &m_tileObjects[{x,y}] : nullptr;
+}
+
+const std::set<uint32_t> &tson::Layer::getUniqueFlaggedTiles() const
+{
+    return m_uniqueFlaggedTiles;
+}
+
+void tson::Layer::resolveFlaggedTiles()
+{
+    std::for_each(m_flaggedTiles.begin(), m_flaggedTiles.end(), [&](const tson::FlaggedTile &tile)
+    {
+        if (tile.id > 0 && m_tileMap->count(tile.id) > 0)
+        {
+            m_tileData[{tile.x, tile.y}] = m_tileMap->at(tile.id);
+            m_tileObjects[{tile.x, tile.y}] = {{tile.x, tile.y}, m_tileData[{tile.x, tile.y}]};
+        }
+    });
 }
 
 

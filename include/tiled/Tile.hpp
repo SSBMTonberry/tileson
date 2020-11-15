@@ -23,10 +23,10 @@ namespace tson
             inline Tile() = default;
             inline Tile(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
             inline Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map);
-            inline Tile(uint32_t id, tson::Map *map);
+            inline Tile(uint32_t id, tson::Map *map); //v1.2.0
             inline bool parse(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
 
-            inline void addTilesetAndPerformCalculations(tson::Tileset *tileset);
+
 
             [[nodiscard]] inline uint32_t getId() const;
             #ifndef DISABLE_CPP17_FILESYSTEM
@@ -47,6 +47,8 @@ namespace tson
             inline tson::Property * getProp(const std::string &name);
 
             //v1.2.0-stuff
+            inline void setProperties(const tson::PropertyCollection &properties);
+
             inline tson::Tileset * getTileset() const;
             inline tson::Map * getMap() const;
             inline const tson::Rect &getDrawingRect() const;
@@ -54,10 +56,12 @@ namespace tson
             inline const tson::Vector2i getPositionInTileUnits(const std::tuple<int, int> &tileDataPos);
             inline const tson::Vector2i getTileSize() const;                       /*! Declared in tileson_forward.hpp */
 
-            //v1.2.0-stuff
             [[nodiscard]] inline TileFlipFlags getFlipFlags() const;
             inline bool hasFlipFlags(TileFlipFlags flags);
             [[nodiscard]] inline uint32_t getGid() const;
+
+            inline void addTilesetAndPerformCalculations(tson::Tileset *tileset); //v1.2.0
+
 
         private:
             std::vector<tson::Frame>    m_animation; 	    /*! 'animation': Array of Frames */
@@ -338,7 +342,10 @@ uint32_t tson::Tile::getGid() const
     return m_gid;
 }
 
-
+void tson::Tile::setProperties(const tson::PropertyCollection &properties)
+{
+    m_properties = properties;
+}
 
 
 #endif //TILESON_TILE_HPP

@@ -7,7 +7,7 @@
 
 #include "../TilesonConfig.h"
 
-//#define TILESON_UNIT_TEST_USE_SINGLE_HEADER
+#define TILESON_UNIT_TEST_USE_SINGLE_HEADER
 
 #ifdef TILESON_UNIT_TEST_USE_SINGLE_HEADER
     #include "../single_include/tileson.hpp"
@@ -112,7 +112,7 @@ TEST_CASE( "Test set", "[set]" )
     REQUIRE(s.size() == 3);
 }
 
-TEST_CASE( "Parse map - expect correct flip flags", "[parse][file]" )
+TEST_CASE( "Parse map - expect correct flip flags", "[parse][file][flip]" )
 {
     tson::Tileson t;
     #ifndef DISABLE_CPP17_FILESYSTEM
@@ -125,31 +125,64 @@ TEST_CASE( "Parse map - expect correct flip flags", "[parse][file]" )
     std::unique_ptr<tson::Map> map = t.parse({pathToUse});
     if(map->getStatus() == tson::ParseStatus::OK)
     {
-        auto *obj_ver_flip = map->getLayer("Object Layer")->firstObj("mario_ver_flip");
-        auto *obj_hor_flip = map->getLayer("Object Layer")->firstObj("mario_hor_flip");
-        auto *obj_all_flip = map->getLayer("Object Layer")->firstObj("mario_all_flipped");
-        auto *obj_no_flip = map->getLayer("Object Layer")->firstObj("mario_no_flip");
+        tson::Object *obj_ver_flip = map->getLayer("Object Layer")->firstObj("mario_ver_flip");
+        tson::Object *obj_hor_flip = map->getLayer("Object Layer")->firstObj("mario_hor_flip");
+        tson::Object *obj_all_flip = map->getLayer("Object Layer")->firstObj("mario_all_flipped");
+        tson::Object *obj_no_flip = map->getLayer("Object Layer")->firstObj("mario_no_flip");
 
         tson::Tile *tile_ver_flip = map->getLayer("Main Layer")->getTileData(28, 15);
         tson::Tile *tile_hor_flip = map->getLayer("Main Layer")->getTileData(28, 14);
-        tson::Tile *tile_all_flip = map->getLayer("Main Layer")->getTileData(29, 15);
-        tson::Tile *tile_no_flip = map->getLayer("Main Layer")->getTileData(29, 14);
+        tson::Tile *tile_diagvert_flip = map->getLayer("Main Layer")->getTileData(29, 15);
+        tson::Tile *tile_diaghori_flip = map->getLayer("Main Layer")->getTileData(29, 14);
+        tson::Tile *tile_no_flip = map->getLayer("Main Layer")->getTileData(25, 14);
+
+        tson::TileObject *tileobj_hor_flip = map->getLayer("Main Layer")->getTileObject(28, 14);
+        tson::TileObject *tileobj_diagvert_flip = map->getLayer("Main Layer")->getTileObject(29, 15);
 
         //Objects
         REQUIRE(obj_ver_flip != nullptr);
-        REQUIRE(obj_hor_flip != nullptr);
-        REQUIRE(obj_all_flip != nullptr);
-        REQUIRE(obj_no_flip != nullptr);
         REQUIRE(obj_ver_flip->hasFlipFlags(tson::TileFlipFlags::Vertically));
+        REQUIRE(obj_hor_flip != nullptr);
         REQUIRE(obj_hor_flip->hasFlipFlags(tson::TileFlipFlags::Horizontally));
+        REQUIRE(obj_all_flip != nullptr);
         REQUIRE(obj_all_flip->hasFlipFlags(tson::TileFlipFlags::Vertically | tson::TileFlipFlags::Horizontally));
+        REQUIRE(obj_no_flip != nullptr);
         REQUIRE(obj_no_flip->hasFlipFlags(tson::TileFlipFlags::None));
 
         //Tiles
         REQUIRE(tile_ver_flip != nullptr);
+        REQUIRE(tile_ver_flip->get<std::string>("name") == "cloudyboy");
+        REQUIRE(tile_ver_flip->hasFlipFlags(tson::TileFlipFlags::Vertically));
+        REQUIRE(tile_ver_flip->getId() == 3221225484); //Id including the flags
+        REQUIRE(tile_ver_flip->getGid() == 12); //Id of the tile
+
         REQUIRE(tile_hor_flip != nullptr);
-        REQUIRE(tile_all_flip != nullptr);
+        REQUIRE(tile_hor_flip->get<std::string>("name") == "cloudyboy");
+        REQUIRE(tile_hor_flip->hasFlipFlags(tson::TileFlipFlags::Horizontally));
+        REQUIRE(tile_diagvert_flip != nullptr);
+        REQUIRE(tile_diagvert_flip->get<std::string>("name") == "cloudyboy");
+        REQUIRE(tile_diagvert_flip->hasFlipFlags(tson::TileFlipFlags::Vertically | tson::TileFlipFlags::Diagonally));
+        REQUIRE(tile_diaghori_flip != nullptr);
+        REQUIRE(tile_diaghori_flip->get<std::string>("name") == "cloudyboy");
+        REQUIRE(tile_diaghori_flip->hasFlipFlags(tson::TileFlipFlags::Horizontally | tson::TileFlipFlags::Diagonally));
         REQUIRE(tile_no_flip != nullptr);
+        REQUIRE(tile_no_flip->get<std::string>("name") == "cloudyboy");
+        REQUIRE(tile_no_flip->hasFlipFlags(tson::TileFlipFlags::None));
+
+        //TileObjects
+        auto rect = tileobj_hor_flip->getDrawingRect();
+        REQUIRE(tileobj_hor_flip != nullptr);
+        REQUIRE(tileobj_hor_flip->getTile() != nullptr);
+        REQUIRE(tileobj_hor_flip->getPositionInTileUnits() == tson::Vector2i(28, 14));
+        REQUIRE(tileobj_hor_flip->getPosition() == tson::Vector2f(448, 224));
+        REQUIRE(tileobj_hor_flip->getTile()->get<std::string>("name") == "cloudyboy");
+        REQUIRE(tileobj_hor_flip->getTile()->hasFlipFlags(tson::TileFlipFlags::Horizontally));
+        REQUIRE(tileobj_diagvert_flip != nullptr);
+        REQUIRE(tileobj_diagvert_flip->getTile() != nullptr);
+        REQUIRE(tileobj_diagvert_flip->getPositionInTileUnits() == tson::Vector2i(29, 15));
+        REQUIRE(tileobj_diagvert_flip->getPosition() == tson::Vector2f(464, 240));
+        REQUIRE(tileobj_diagvert_flip->getTile()->get<std::string>("name") == "cloudyboy");
+        REQUIRE(tileobj_diagvert_flip->getTile()->hasFlipFlags(tson::TileFlipFlags::Vertically | tson::TileFlipFlags::Diagonally));
     }
     else
     {

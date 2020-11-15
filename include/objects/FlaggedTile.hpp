@@ -9,7 +9,12 @@ namespace tson
 {
     class FlaggedTile
     {
+
         public:
+            FlaggedTile(size_t x_, size_t y_, uint32_t id_, uint32_t tileId_) : x {x_}, y {y_}, id {id_}, tileId {tileId_}
+            {
+
+            }
             size_t x;
             size_t y;
             /*! Full ID, including flag */

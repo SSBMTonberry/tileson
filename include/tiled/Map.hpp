@@ -84,6 +84,7 @@ namespace tson
 
             //v1.2.0
             tson::DecompressorContainer *          m_decompressors;
+            std::map<uint32_t, tson::Tile>         m_flaggedTileMap;    /*! key: Tile ID. Value: Tile*/
     };
 
     /*!
@@ -172,9 +173,22 @@ void tson::Map::processData()
     }
     std::for_each(m_layers.begin(), m_layers.end(), [&](tson::Layer &layer)
     {
-        layer.assignTileMap(m_tileMap);
+        layer.assignTileMap(&m_tileMap);
         layer.createTileData(m_size, m_isInfinite);
-
+        const std::set<uint32_t> &flaggedTiles = layer.getUniqueFlaggedTiles();
+        for(uint32_t ftile : flaggedTiles)
+        {
+            tson::Tile tile {ftile, layer.getMap()};
+            if(m_tileMap.count(tile.getGid()))
+            {
+                tson::Tile *originalTile = m_tileMap[tile.getGid()];
+                tile.addTilesetAndPerformCalculations(originalTile->getTileset());
+                tile.setProperties(originalTile->getProperties());
+                m_flaggedTileMap[ftile] = tile;
+                m_tileMap[ftile] = &m_flaggedTileMap[ftile];
+            }
+        }
+        layer.resolveFlaggedTiles();
     });
 }
 
