@@ -7,7 +7,7 @@
 
 #include "../TilesonConfig.h"
 
-//#define TILESON_UNIT_TEST_USE_SINGLE_HEADER
+#define TILESON_UNIT_TEST_USE_SINGLE_HEADER
 
 #ifdef TILESON_UNIT_TEST_USE_SINGLE_HEADER
     #include "../single_include/tileson.hpp"
@@ -22,80 +22,59 @@
 #include <map>
 #include <functional>
 
-std::string getFailingTestsMessage(const std::vector<int> &failingTests)
+void performMainAsserts(tson::Map *map)
 {
-    if(failingTests.empty())
-        return "";
-
-    std::string msg = "Tests failed (by ID): ";
-    bool first = true;
-    for(const auto &id : failingTests)
-    {
-        if(!first)
-            msg.append(", ");
-        msg.append(std::to_string(id));
-        first = false;
-    }
-    return msg;
-}
-
-std::vector<int> getFailingMapTests(tson::Map *map)
-{
-    std::vector<int> failingTests;
     std::map<int, bool> tests;
     auto main = map->getLayer("Main Layer");
     auto tileData = main->getTileData();
     tson::Rect rect = main->getTileData(8,14)->getDrawingRect();
 
-    tests[0] = map->getLayers().size() == 6;
-    tests[1] = !map->isInfinite();
-    tests[2] = map->getSize() == tson::Vector2i(32, 16);
-    tests[3] = map->getBackgroundColor() == tson::Colori("#3288c1");
-    tests[4] = map->getLayers()[0].getProperties().getSize() > 0;
-    tests[5] = map->getLayers()[0].getProperties().get()[0]->getType() != tson::Type::Undefined;
-    tests[6] = map->getLayers()[2].getName() == "Object Layer";
-    tests[7] = map->getLayers()[2].getObjects().size() > 1;
-    tests[8] = map->getLayers()[2].getObjects()[0].getName() == "coin";
-    tests[9] = map->getLayers()[2].getObjects()[0].getProperties().getSize() > 0;
-    tests[10] = map->getLayer("Main Layer") != nullptr;
-    tests[11] = map->getLayer("Main Layer")->getType() == tson::LayerType::TileLayer;
-    tests[12] = map->getLayer("Background Image")->getType() == tson::LayerType::ImageLayer;
-    tests[13] = map->getLayer("Background Image")->get<float>("scroll_speed") == 1.f;
-    tests[14] = map->getLayer("Background Image")->getProp("repeat_bg")->getType() == tson::Type::Boolean;
-    tests[15] = map->getLayer("Object Layer")->getType() == tson::LayerType::ObjectGroup;
-    tests[16] = map->getLayer("Object Layer")->firstObj("coin") != nullptr;
-    tests[17] = map->getLayer("Object Layer")->getObjectsByName("goomba").size() == 2;
-    tests[18] = !map->getLayer("Object Layer")->getObjectsByType(tson::ObjectType::Object).empty();
-    tests[19] = map->getLayer("Object Layer")->getObj(2)->getName() == "coin";
-    tests[20] = map->getTileset("demo-tileset") != nullptr;
-    tests[21] = map->getTileset("demo-tileset")->getTile(36) != nullptr;
-    tests[22] = map->getTileset("demo-tileset")->getTile(36)->getAnimation().size() == 2;
-    tests[23] = map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProperties().getSize() == 2;
-    tests[24] = map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProp("i_like_this")->getType() == tson::Type::Boolean;
-    tests[25] = !map->getTileset("demo-tileset")->getTerrain("test_terrain")->get<std::string>("description").empty();
-    tests[26] = map->getTileMap().size() > 10;
-    tests[27] = tileData[{4,4}] != nullptr && tileData[{4,4}]->getId() == 1;
-    tests[28] = tileData[{5,4}] != nullptr && tileData[{5,4}]->getId() == 3;
-    tests[29] = main->getTileData(8,14) != nullptr && main->getTileData(8,14)->getId() == 2;
-    tests[30] = main->getTileData(17,5) != nullptr && main->getTileData(17,5)->getId() == 5;
+    REQUIRE(map->getLayers().size() == 6);
+    REQUIRE(!map->isInfinite());
+    REQUIRE(map->getSize() == tson::Vector2i(32, 16));
+    REQUIRE(map->getBackgroundColor() == tson::Colori("#3288c1"));
+    REQUIRE(map->getLayers()[0].getProperties().getSize() > 0);
+    REQUIRE(map->getLayers()[0].getProperties().get()[0]->getType() != tson::Type::Undefined);
+    REQUIRE(map->getLayers()[2].getName() == "Object Layer");
+    REQUIRE(map->getLayers()[2].getObjects().size() > 1);
+    REQUIRE(map->getLayers()[2].getObjects()[0].getName() == "coin");
+    REQUIRE(map->getLayers()[2].getObjects()[0].getProperties().getSize() > 0);
+    REQUIRE(map->getLayer("Main Layer") != nullptr);
+    REQUIRE(map->getLayer("Main Layer")->getType() == tson::LayerType::TileLayer);
+    REQUIRE(map->getLayer("Background Image")->getType() == tson::LayerType::ImageLayer);
+    REQUIRE(map->getLayer("Background Image")->get<float>("scroll_speed") == 1.f);
+    REQUIRE(map->getLayer("Background Image")->getProp("repeat_bg")->getType() == tson::Type::Boolean);
+    REQUIRE(map->getLayer("Object Layer")->getType() == tson::LayerType::ObjectGroup);
+    REQUIRE(map->getLayer("Object Layer")->firstObj("coin") != nullptr);
+    REQUIRE(map->getLayer("Object Layer")->getObjectsByName("goomba").size() == 2);
+    REQUIRE(!map->getLayer("Object Layer")->getObjectsByType(tson::ObjectType::Object).empty());
+    REQUIRE(map->getLayer("Object Layer")->getObj(2)->getName() == "coin");
+    REQUIRE(map->getTileset("demo-tileset") != nullptr);
+    REQUIRE(map->getTileset("demo-tileset")->getTile(36) != nullptr);
+    REQUIRE(map->getTileset("demo-tileset")->getTile(36)->getAnimation().size() == 2);
+    REQUIRE(map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProperties().getSize() == 2);
+    REQUIRE(map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProp("i_like_this")->getType() == tson::Type::Boolean);
+    REQUIRE(!map->getTileset("demo-tileset")->getTerrain("test_terrain")->get<std::string>("description").empty());
+    REQUIRE(map->getTileMap().size() > 10);
+    REQUIRE(tileData[{4,4}] != nullptr);
+    REQUIRE(tileData[{4,4}]->getId() == 1);
+    REQUIRE(tileData[{5,4}] != nullptr);
+    REQUIRE(tileData[{5,4}]->getId() == 3);
+    REQUIRE(main->getTileData(8,14) != nullptr);
+    REQUIRE(main->getTileData(8,14)->getId() == 2);
+    REQUIRE(main->getTileData(17,5) != nullptr);
+    REQUIRE(main->getTileData(17,5)->getId() == 5);
+
     //v1.2.0-tests
-    tests[31] = main->getTileData(8,14)->getPositionInTileUnits({8,14}) == tson::Vector2i(8, 14);
-    tests[32] = main->getTileData(8,14)->getPosition({8,14}) == tson::Vector2f(8.f * 16.f, 14.f * 16.f);
-    tests[33] = main->getMap() != nullptr;
-    tests[34] = main->getMap() == map;
-    tests[35] = main->getTileData(8,14)->getMap() != nullptr;
-    tests[36] = main->getTileData(8,14)->getMap() == map;
-    tests[37] = main->getTileData(8,14)->getTileset() != nullptr;
-    tests[38] = main->getTileData(8,14)->getPosition({8,14}) == main->getTileObject(8,14)->getPosition();
-    tests[39] = main->getTileData().size() == main->getTileObjects().size();
-
-    for(const auto & [id, result] : tests)
-    {
-        if(!result)
-            failingTests.push_back(id);
-    }
-
-    return failingTests;
+    REQUIRE(main->getTileData(8,14)->getPositionInTileUnits({8,14}) == tson::Vector2i(8, 14));
+    REQUIRE(main->getTileData(8,14)->getPosition({8,14}) == tson::Vector2f(8.f * 16.f, 14.f * 16.f));
+    REQUIRE(main->getMap() != nullptr);
+    REQUIRE(main->getMap() == map);
+    REQUIRE(main->getTileData(8,14)->getMap() != nullptr);
+    REQUIRE(main->getTileData(8,14)->getMap() == map);
+    REQUIRE(main->getTileData(8,14)->getTileset() != nullptr);
+    REQUIRE(main->getTileData(8,14)->getPosition({8,14}) == main->getTileObject(8,14)->getPosition());
+    REQUIRE(main->getTileData().size() == main->getTileObjects().size());
 }
 
 
@@ -112,10 +91,98 @@ TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" )
     std::unique_ptr<tson::Map> map = t.parse({pathToUse});
     if(map->getStatus() == tson::ParseStatus::OK)
     {
-        std::vector<int> failing = getFailingMapTests(map.get());
-        if(!failing.empty())
-            FAIL(getFailingTestsMessage(failing));
-        REQUIRE(failing.empty());
+        performMainAsserts(map.get());
+    }
+    else
+    {
+        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
+        REQUIRE(true);
+    }
+}
+
+TEST_CASE( "Test set", "[set]" )
+{
+    std::set<uint32_t> s;
+    s.insert(34);
+    s.insert(12);
+    s.insert(93);
+    s.insert(34); //Should be ignored
+    s.insert(34); //Should be ignored
+
+    REQUIRE(s.size() == 3);
+}
+
+TEST_CASE( "Parse map - expect correct flip flags", "[parse][file][flip]" )
+{
+    tson::Tileson t;
+    #ifndef DISABLE_CPP17_FILESYSTEM
+    fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
+    fs::path pathTravis {"../content/test-maps/ultimate_test.json"};
+    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    #else
+    std::string pathToUse = "../../content/test-maps/ultimate_test.json";
+    #endif
+    std::unique_ptr<tson::Map> map = t.parse({pathToUse});
+    if(map->getStatus() == tson::ParseStatus::OK)
+    {
+        tson::Object *obj_ver_flip = map->getLayer("Object Layer")->firstObj("mario_ver_flip");
+        tson::Object *obj_hor_flip = map->getLayer("Object Layer")->firstObj("mario_hor_flip");
+        tson::Object *obj_all_flip = map->getLayer("Object Layer")->firstObj("mario_all_flipped");
+        tson::Object *obj_no_flip = map->getLayer("Object Layer")->firstObj("mario_no_flip");
+
+        tson::Tile *tile_ver_flip = map->getLayer("Main Layer")->getTileData(28, 15);
+        tson::Tile *tile_hor_flip = map->getLayer("Main Layer")->getTileData(28, 14);
+        tson::Tile *tile_diagvert_flip = map->getLayer("Main Layer")->getTileData(29, 15);
+        tson::Tile *tile_diaghori_flip = map->getLayer("Main Layer")->getTileData(29, 14);
+        tson::Tile *tile_no_flip = map->getLayer("Main Layer")->getTileData(25, 14);
+
+        tson::TileObject *tileobj_hor_flip = map->getLayer("Main Layer")->getTileObject(28, 14);
+        tson::TileObject *tileobj_diagvert_flip = map->getLayer("Main Layer")->getTileObject(29, 15);
+
+        //Objects
+        REQUIRE(obj_ver_flip != nullptr);
+        REQUIRE(obj_ver_flip->hasFlipFlags(tson::TileFlipFlags::Vertically));
+        REQUIRE(obj_hor_flip != nullptr);
+        REQUIRE(obj_hor_flip->hasFlipFlags(tson::TileFlipFlags::Horizontally));
+        REQUIRE(obj_all_flip != nullptr);
+        REQUIRE(obj_all_flip->hasFlipFlags(tson::TileFlipFlags::Vertically | tson::TileFlipFlags::Horizontally));
+        REQUIRE(obj_no_flip != nullptr);
+        REQUIRE(obj_no_flip->hasFlipFlags(tson::TileFlipFlags::None));
+
+        //Tiles
+        REQUIRE(tile_ver_flip != nullptr);
+        REQUIRE(tile_ver_flip->get<std::string>("name") == "cloudyboy");
+        REQUIRE(tile_ver_flip->hasFlipFlags(tson::TileFlipFlags::Vertically));
+        REQUIRE(tile_ver_flip->getId() == 3221225484); //Id including the flags
+        REQUIRE(tile_ver_flip->getGid() == 12); //Id of the tile
+
+        REQUIRE(tile_hor_flip != nullptr);
+        REQUIRE(tile_hor_flip->get<std::string>("name") == "cloudyboy");
+        REQUIRE(tile_hor_flip->hasFlipFlags(tson::TileFlipFlags::Horizontally));
+        REQUIRE(tile_diagvert_flip != nullptr);
+        REQUIRE(tile_diagvert_flip->get<std::string>("name") == "cloudyboy");
+        REQUIRE(tile_diagvert_flip->hasFlipFlags(tson::TileFlipFlags::Vertically | tson::TileFlipFlags::Diagonally));
+        REQUIRE(tile_diaghori_flip != nullptr);
+        REQUIRE(tile_diaghori_flip->get<std::string>("name") == "cloudyboy");
+        REQUIRE(tile_diaghori_flip->hasFlipFlags(tson::TileFlipFlags::Horizontally | tson::TileFlipFlags::Diagonally));
+        REQUIRE(tile_no_flip != nullptr);
+        REQUIRE(tile_no_flip->get<std::string>("name") == "cloudyboy");
+        REQUIRE(tile_no_flip->hasFlipFlags(tson::TileFlipFlags::None));
+
+        //TileObjects
+        auto rect = tileobj_hor_flip->getDrawingRect();
+        REQUIRE(tileobj_hor_flip != nullptr);
+        REQUIRE(tileobj_hor_flip->getTile() != nullptr);
+        REQUIRE(tileobj_hor_flip->getPositionInTileUnits() == tson::Vector2i(28, 14));
+        REQUIRE(tileobj_hor_flip->getPosition() == tson::Vector2f(448, 224));
+        REQUIRE(tileobj_hor_flip->getTile()->get<std::string>("name") == "cloudyboy");
+        REQUIRE(tileobj_hor_flip->getTile()->hasFlipFlags(tson::TileFlipFlags::Horizontally));
+        REQUIRE(tileobj_diagvert_flip != nullptr);
+        REQUIRE(tileobj_diagvert_flip->getTile() != nullptr);
+        REQUIRE(tileobj_diagvert_flip->getPositionInTileUnits() == tson::Vector2i(29, 15));
+        REQUIRE(tileobj_diagvert_flip->getPosition() == tson::Vector2f(464, 240));
+        REQUIRE(tileobj_diagvert_flip->getTile()->get<std::string>("name") == "cloudyboy");
+        REQUIRE(tileobj_diagvert_flip->getTile()->hasFlipFlags(tson::TileFlipFlags::Vertically | tson::TileFlipFlags::Diagonally));
     }
     else
     {
@@ -138,10 +205,7 @@ TEST_CASE( "Parse a whole map with base64 data by file", "[complete][parse][file
     std::unique_ptr<tson::Map> map = t.parse({pathToUse});
     if(map->getStatus() == tson::ParseStatus::OK)
     {
-        std::vector<int> failing = getFailingMapTests(map.get());
-        if(!failing.empty())
-            FAIL(getFailingTestsMessage(failing));
-        REQUIRE(failing.empty());
+        performMainAsserts(map.get());
     }
     else
     {
@@ -158,10 +222,7 @@ TEST_CASE( "Parse a whole map by memory", "[complete][parse][memory]" )
     std::unique_ptr<tson::Map> map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
     if (map->getStatus() == tson::ParseStatus::OK)
     {
-        std::vector<int> failing = getFailingMapTests(map.get());
-        if(!failing.empty())
-            FAIL(getFailingTestsMessage(failing));
-        REQUIRE(failing.empty());
+        performMainAsserts(map.get());
     }
     else
     {
@@ -177,10 +238,7 @@ TEST_CASE( "Parse a whole base64 encoded map by memory", "[complete][parse][memo
     std::unique_ptr<tson::Map> map = t.parse(tson_files::_ULTIMATE_TEST_BASE64_JSON, tson_files::_ULTIMATE_TEST_BASE64_JSON_SIZE);
     if (map->getStatus() == tson::ParseStatus::OK)
     {
-        std::vector<int> failing = getFailingMapTests(map.get());
-        if(!failing.empty())
-            FAIL(getFailingTestsMessage(failing));
-        REQUIRE(failing.empty());
+        performMainAsserts(map.get());
     }
     else
     {
@@ -216,10 +274,7 @@ TEST_CASE( "Parse a minimal version of whole map by memory", "[complete][parse][
     std::unique_ptr<tson::Map> map = t.parse(tson_files::_ULTIMATE_TEST_MIN_JSON, tson_files::_ULTIMATE_TEST_MIN_JSON_SIZE);
     if (map->getStatus() == tson::ParseStatus::OK)
     {
-        std::vector<int> failing = getFailingMapTests(map.get());
-        if(!failing.empty())
-            FAIL(getFailingTestsMessage(failing));
-        REQUIRE(failing.empty());
+        performMainAsserts(map.get());
     }
     else
     {

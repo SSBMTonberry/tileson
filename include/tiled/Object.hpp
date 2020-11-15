@@ -37,7 +37,7 @@ namespace tson
 
             [[nodiscard]] inline ObjectType getObjectType() const;
             [[nodiscard]] inline bool isEllipse() const;
-            [[nodiscard]] inline int getGid() const;
+            [[nodiscard]] inline uint32_t getGid() const;
             [[nodiscard]] inline const Vector2i &getSize() const;
             [[nodiscard]] inline int getId() const;
             [[nodiscard]] inline const std::string &getName() const;
@@ -57,12 +57,17 @@ namespace tson
             inline T get(const std::string &name);
             inline tson::Property * getProp(const std::string &name);
 
+            //v1.2.0-stuff
+            [[nodiscard]] inline TileFlipFlags getFlipFlags() const;
+            inline bool hasFlipFlags(TileFlipFlags flags);
+
+
         private:
             inline void setObjectTypeByJson(const nlohmann::json &json);
 
             ObjectType                        m_objectType = ObjectType::Undefined;    /*! Says with object type this is */
             bool                              m_ellipse {};                            /*! 'ellipse': Used to mark an object as an ellipse */
-            int                               m_gid {};                                /*! 'gid': GID, only if object comes from a Tilemap */
+            uint32_t                          m_gid {};                                /*! 'gid': GID, only if object comes from a Tilemap */
             tson::Vector2i                    m_size;                                  /*! x = 'width' (Width in pixels), y = 'height' (Height in pixels). Ignored if using a gid.)*/
             int                               m_id{};                                  /*! 'id': Incremental id - unique across all objects */
             std::string                       m_name;                                  /*! 'name':  String assigned to name field in editor*/
@@ -76,6 +81,9 @@ namespace tson
             std::string                       m_type;                                  /*! 'type': String assigned to type field in editor */
             bool                              m_visible {};                            /*! 'visible': Whether object is shown in editor. */
             tson::Vector2i                    m_position;                              /*! 'x' and 'y': coordinate in pixels */
+
+            //v1.2.0-stuff
+            tson::TileFlipFlags               m_flipFlags = TileFlipFlags::None;       /*! Resolved using bit 32, 31 and 30 from gid */
     };
 
     /*!
@@ -111,7 +119,18 @@ bool tson::Object::parse(const nlohmann::json &json)
     bool allFound = true;
 
     if(json.count("ellipse") > 0) m_ellipse = json["ellipse"].get<bool>(); //Optional
-    if(json.count("gid") > 0) m_gid = json["gid"].get<int>(); //Optional
+    if(json.count("gid") > 0)
+    {
+        uint32_t gid = json["gid"].get<uint32_t>(); //Optional
+        if (gid & FLIPPED_HORIZONTALLY_FLAG) m_flipFlags |= TileFlipFlags::Horizontally;
+        if (gid & FLIPPED_VERTICALLY_FLAG) m_flipFlags |= TileFlipFlags::Vertically;
+        if (gid & FLIPPED_DIAGONALLY_FLAG) m_flipFlags |= TileFlipFlags::Diagonally;
+
+        // Clear flags
+        gid &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
+
+        m_gid = gid;
+    }
     if(json.count("id") > 0) m_id = json["id"].get<int>(); else allFound = false;
     if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
     if(json.count("point") > 0) m_point = json["point"].get<bool>(); //Optional
@@ -197,7 +216,7 @@ bool tson::Object::isEllipse() const
  * 'gid': GID, only if object comes from a Tilemap
  * @return
  */
-int tson::Object::getGid() const
+uint32_t tson::Object::getGid() const
 {
     return m_gid;
 }
@@ -331,6 +350,28 @@ tson::Property *tson::Object::getProp(const std::string &name)
     if(m_properties.hasProperty(name))
         return m_properties.getProperty(name);
     return nullptr;
+}
+
+/*!
+ * Get all flip flags
+ * @return
+ */
+tson::TileFlipFlags tson::Object::getFlipFlags() const
+{
+    return m_flipFlags;
+}
+
+/*!
+ *
+ * @param flags Which flags to check for. Several flags can be checked at once using the bitwise or operator.
+ * Example:
+ * hasFlipFlags(TileFlipFlags::Vertically | TileFlipFlags::Horizontally)
+ *
+ * @return true if the flag(s) specified are set
+ */
+bool tson::Object::hasFlipFlags(TileFlipFlags flags)
+{
+    return ((m_flipFlags & flags) == flags) ? true : false;
 }
 
 #endif //TILESON_OBJECT_HPP

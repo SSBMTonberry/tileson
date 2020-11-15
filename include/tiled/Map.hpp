@@ -44,7 +44,7 @@ namespace tson
 
             [[nodiscard]] inline ParseStatus getStatus() const;
             [[nodiscard]] inline const std::string &getStatusMessage() const;
-            [[nodiscard]] inline const std::map<int, tson::Tile *> &getTileMap() const;
+            [[nodiscard]] inline const std::map<uint32_t, tson::Tile *> &getTileMap() const;
 
             inline Layer * getLayer(const std::string &name);
             inline Tileset * getTileset(const std::string &name);
@@ -80,10 +80,11 @@ namespace tson
             ParseStatus                            m_status {ParseStatus::OK};
             std::string                            m_statusMessage {"OK"};
 
-            std::map<int, tson::Tile*>             m_tileMap;           /*! key: Tile ID. Value: Pointer to Tile*/
+            std::map<uint32_t, tson::Tile*>        m_tileMap;           /*! key: Tile ID. Value: Pointer to Tile*/
 
             //v1.2.0
             tson::DecompressorContainer *          m_decompressors;
+            std::map<uint32_t, tson::Tile>         m_flaggedTileMap;    /*! key: Tile ID. Value: Tile*/
     };
 
     /*!
@@ -172,8 +173,22 @@ void tson::Map::processData()
     }
     std::for_each(m_layers.begin(), m_layers.end(), [&](tson::Layer &layer)
     {
-        layer.assignTileMap(m_tileMap);
+        layer.assignTileMap(&m_tileMap);
         layer.createTileData(m_size, m_isInfinite);
+        const std::set<uint32_t> &flaggedTiles = layer.getUniqueFlaggedTiles();
+        for(uint32_t ftile : flaggedTiles)
+        {
+            tson::Tile tile {ftile, layer.getMap()};
+            if(m_tileMap.count(tile.getGid()))
+            {
+                tson::Tile *originalTile = m_tileMap[tile.getGid()];
+                tile.addTilesetAndPerformCalculations(originalTile->getTileset());
+                tile.setProperties(originalTile->getProperties());
+                m_flaggedTileMap[ftile] = tile;
+                m_tileMap[ftile] = &m_flaggedTileMap[ftile];
+            }
+        }
+        layer.resolveFlaggedTiles();
     });
 }
 
@@ -374,7 +389,7 @@ const std::string &tson::Map::getStatusMessage() const
  * Get a tile map with pointers to every existing tile.
  * @return
  */
-const std::map<int, tson::Tile *> &tson::Map::getTileMap() const
+const std::map<uint32_t, tson::Tile *> &tson::Map::getTileMap() const
 {
     return m_tileMap;
 }

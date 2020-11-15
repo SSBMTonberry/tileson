@@ -44,9 +44,9 @@ void tson::Tile::performDataCalculations()
     int rows = m_tileset->getTileCount() / columns;
     int lastId = (m_tileset->getFirstgid() + m_tileset->getTileCount()) - 1;
 
-    if (getId() >= firstId && getId() <= lastId)
+    if (getGid() >= firstId && getGid() <= lastId)
     {
-        int baseTilePosition = (getId() - firstId);
+        int baseTilePosition = ((int)getGid() - firstId);
 
         int tileModX = (baseTilePosition % columns);
         int currentRow = (baseTilePosition / columns);
@@ -121,7 +121,7 @@ void tson::Layer::decompressData()
     if(hasBeenDecoded)
     {
         std::vector<uint8_t> bytes = tson::Tools::Base64DecodedStringToBytes(data);
-        m_data = tson::Tools::BytesToInts(bytes);
+        m_data = tson::Tools::BytesToUnsignedInts(bytes);
     }
 }
 

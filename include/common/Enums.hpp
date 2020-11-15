@@ -5,6 +5,7 @@
 #ifndef TILESON_ENUMS_HPP
 #define TILESON_ENUMS_HPP
 #include <cstdint>
+#include "EnumBitflags.hpp"
 
 namespace tson
 {
@@ -61,6 +62,22 @@ namespace tson
             Text = 7,
             Template = 8
     };
+
+    static constexpr uint32_t FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
+    static constexpr uint32_t FLIPPED_VERTICALLY_FLAG   = 0x40000000;
+    static constexpr uint32_t FLIPPED_DIAGONALLY_FLAG   = 0x20000000;
+    /*!
+     * Object.hpp - ObjectFlipFlags
+     */
+    enum class TileFlipFlags : uint32_t
+    {
+            None = 0,
+            Diagonally = FLIPPED_DIAGONALLY_FLAG,
+            Vertically = FLIPPED_VERTICALLY_FLAG,
+            Horizontally = FLIPPED_HORIZONTALLY_FLAG
+    };
+
+    ENABLE_BITMASK_OPERATORS(TileFlipFlags)
 }
 
 #endif //TILESON_ENUMS_HPP

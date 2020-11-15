@@ -33,3 +33,5 @@ cmake-build-release/
 build/
 
 cmake-build-minsizerel/
+
+*.tiled-session

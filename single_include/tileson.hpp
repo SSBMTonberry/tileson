@@ -22642,7 +22642,7 @@ namespace tson
 			~Tools() = delete;
 			inline static std::vector<uint8_t> Base64DecodedStringToBytes(std::string_view str);
 			inline static std::vector<uint32_t> BytesToUnsignedInts(const std::vector<uint8_t> &bytes);
-			inline static std::vector<int> BytesToInts(const std::vector<uint8_t> &bytes);
+			//inline static std::vector<int> BytesToInts(const std::vector<uint8_t> &bytes);
 	};
 
 	/*!
@@ -22690,6 +22690,8 @@ namespace tson
 	 * While the Tiled specification uses unsigned ints for their tiles, Tileson uses regular ints.
 	 * This may be changed in the future, but should in reality never really become an issue.
 	 *
+	 * Update 2020-11-09: This will cause problems when tiles has flip flags!
+	 *
 	 * int differences:
 	 * int max:  2147483647
 	 * uint max: 4294967295
@@ -22697,7 +22699,7 @@ namespace tson
 	 * @param bytes A vector of bytes.
 	 * @return Bytes converted to ints
 	 */
-	std::vector<int> Tools::BytesToInts(const std::vector<uint8_t> &bytes)
+	/*std::vector<int> Tools::BytesToInts(const std::vector<uint8_t> &bytes)
 	{
 		std::vector<int> ints;
 		std::vector<uint8_t> toConvert;
@@ -22715,7 +22717,7 @@ namespace tson
 		}
 
 		return ints;
-	}
+	}*/
 }
 
 #endif //TILESON_TOOLS_HPP
@@ -23204,6 +23206,8 @@ namespace tson
 #ifndef TILESON_LAYER_HPP
 #define TILESON_LAYER_HPP
 
+#include <set>
+
 
 /*** Start of inlined file: Chunk.hpp ***/
 //
@@ -23385,6 +23389,154 @@ const tson::Vector2i &tson::Chunk::getPosition() const
 #define TILESON_ENUMS_HPP
 #include <cstdint>
 
+/*** Start of inlined file: EnumBitflags.hpp ***/
+//
+// Created by robin on 08.11.2020.
+//
+
+#ifndef TILESON_ENUMBITFLAGS_HPP
+#define TILESON_ENUMBITFLAGS_HPP
+
+#include <type_traits>
+#include <iostream>
+
+namespace tson
+{
+	#define ENABLE_BITMASK_OPERATORS(x)  \
+	template<>                           \
+	struct EnableBitMaskOperators<x>     \
+	{                                    \
+		static const bool enable = true; \
+	};
+
+	template<typename Enum>
+	struct EnableBitMaskOperators
+	{
+		static const bool enable = false;
+	};
+
+	template<typename Enum>
+	typename std::enable_if<EnableBitMaskOperators<Enum>::enable, Enum>::type
+	operator |(Enum lhs, Enum rhs)
+	{
+		static_assert(std::is_enum<Enum>::value,
+					  "template parameter is not an enum type");
+
+		using underlying = typename std::underlying_type<Enum>::type;
+
+		return static_cast<Enum> (
+				static_cast<underlying>(lhs) |
+				static_cast<underlying>(rhs)
+		);
+	}
+
+	//Permissions operator &(Permissions lhs, Permissions rhs)
+	template<typename Enum>
+	typename std::enable_if<EnableBitMaskOperators<Enum>::enable, Enum>::type
+	operator &(Enum lhs, Enum rhs)
+	{
+		static_assert(std::is_enum<Enum>::value,
+					  "template parameter is not an enum type");
+
+		using underlying = typename std::underlying_type<Enum>::type;
+
+		return static_cast<Enum> (
+				static_cast<underlying>(lhs) &
+				static_cast<underlying>(rhs)
+		);
+	}
+
+	//Permissions operator ^(Permissions lhs, Permissions rhs)
+	template<typename Enum>
+	typename std::enable_if<EnableBitMaskOperators<Enum>::enable, Enum>::type
+	operator ^(Enum lhs, Enum rhs)
+	{
+		static_assert(std::is_enum<Enum>::value,
+					  "template parameter is not an enum type");
+
+		using underlying = typename std::underlying_type<Enum>::type;
+
+		return static_cast<Enum> (
+				static_cast<underlying>(lhs) ^
+				static_cast<underlying>(rhs)
+		);
+	}
+
+	//Permissions operator ~(Permissions rhs)
+	template<typename Enum>
+	typename std::enable_if<EnableBitMaskOperators<Enum>::enable, Enum>::type
+	operator ~(Enum rhs)
+	{
+		static_assert(std::is_enum<Enum>::value,
+					  "template parameter is not an enum type");
+
+		using underlying = typename std::underlying_type<Enum>::type;
+
+		return static_cast<Enum> (
+				~static_cast<underlying>(rhs)
+		);
+	}
+
+	//Permissions& operator |=(Permissions &lhs, Permissions rhs)
+	template<typename Enum>
+	typename std::enable_if<EnableBitMaskOperators<Enum>::enable, Enum>::type
+	&operator |=(Enum &lhs, Enum rhs)
+	{
+		static_assert(std::is_enum<Enum>::value,
+					  "template parameter is not an enum type");
+
+		using underlying = typename std::underlying_type<Enum>::type;
+
+		lhs = static_cast<Enum> (
+				static_cast<underlying>(lhs) |
+				static_cast<underlying>(rhs)
+		);
+
+		return lhs;
+	}
+
+	//Permissions& operator &=(Permissions &lhs, Permissions rhs)
+	template<typename Enum>
+	typename std::enable_if<EnableBitMaskOperators<Enum>::enable, Enum>::type
+	&operator &=(Enum &lhs, Enum rhs)
+	{
+		static_assert(std::is_enum<Enum>::value,
+					  "template parameter is not an enum type");
+
+		using underlying = typename std::underlying_type<Enum>::type;
+
+		lhs = static_cast<Enum> (
+				static_cast<underlying>(lhs) &
+				static_cast<underlying>(rhs)
+		);
+
+		return lhs;
+	}
+
+	//Permissions& operator ^=(Permissions &lhs, Permissions rhs)
+	template<typename Enum>
+	typename std::enable_if<EnableBitMaskOperators<Enum>::enable, Enum>::type
+	&operator ^=(Enum &lhs, Enum rhs)
+	{
+		static_assert(std::is_enum<Enum>::value,
+					  "template parameter is not an enum type");
+
+		using underlying = typename std::underlying_type<Enum>::type;
+
+		lhs = static_cast<Enum> (
+				static_cast<underlying>(lhs) ^
+				static_cast<underlying>(rhs)
+		);
+
+		return lhs;
+	}
+}
+
+#endif //TILESON_ENUMBITFLAGS_HPP
+
+/*** End of inlined file: EnumBitflags.hpp ***/
+
+
 namespace tson
 {
 	/*!
@@ -23440,6 +23592,22 @@ namespace tson
 			Text = 7,
 			Template = 8
 	};
+
+	static constexpr uint32_t FLIPPED_HORIZONTALLY_FLAG = 0x80000000;
+	static constexpr uint32_t FLIPPED_VERTICALLY_FLAG   = 0x40000000;
+	static constexpr uint32_t FLIPPED_DIAGONALLY_FLAG   = 0x20000000;
+	/*!
+	 * Object.hpp - ObjectFlipFlags
+	 */
+	enum class TileFlipFlags : uint32_t
+	{
+			None = 0,
+			Diagonally = FLIPPED_DIAGONALLY_FLAG,
+			Vertically = FLIPPED_VERTICALLY_FLAG,
+			Horizontally = FLIPPED_HORIZONTALLY_FLAG
+	};
+
+	ENABLE_BITMASK_OPERATORS(TileFlipFlags)
 }
 
 #endif //TILESON_ENUMS_HPP
@@ -23834,7 +24002,7 @@ namespace tson
 
 			[[nodiscard]] inline ObjectType getObjectType() const;
 			[[nodiscard]] inline bool isEllipse() const;
-			[[nodiscard]] inline int getGid() const;
+			[[nodiscard]] inline uint32_t getGid() const;
 			[[nodiscard]] inline const Vector2i &getSize() const;
 			[[nodiscard]] inline int getId() const;
 			[[nodiscard]] inline const std::string &getName() const;
@@ -23854,12 +24022,16 @@ namespace tson
 			inline T get(const std::string &name);
 			inline tson::Property * getProp(const std::string &name);
 
+			//v1.2.0-stuff
+			[[nodiscard]] inline TileFlipFlags getFlipFlags() const;
+			inline bool hasFlipFlags(TileFlipFlags flags);
+
 		private:
 			inline void setObjectTypeByJson(const nlohmann::json &json);
 
 			ObjectType                        m_objectType = ObjectType::Undefined;    /*! Says with object type this is */
 			bool                              m_ellipse {};                            /*! 'ellipse': Used to mark an object as an ellipse */
-			int                               m_gid {};                                /*! 'gid': GID, only if object comes from a Tilemap */
+			uint32_t                          m_gid {};                                /*! 'gid': GID, only if object comes from a Tilemap */
 			tson::Vector2i                    m_size;                                  /*! x = 'width' (Width in pixels), y = 'height' (Height in pixels). Ignored if using a gid.)*/
 			int                               m_id{};                                  /*! 'id': Incremental id - unique across all objects */
 			std::string                       m_name;                                  /*! 'name':  String assigned to name field in editor*/
@@ -23873,6 +24045,9 @@ namespace tson
 			std::string                       m_type;                                  /*! 'type': String assigned to type field in editor */
 			bool                              m_visible {};                            /*! 'visible': Whether object is shown in editor. */
 			tson::Vector2i                    m_position;                              /*! 'x' and 'y': coordinate in pixels */
+
+			//v1.2.0-stuff
+			tson::TileFlipFlags               m_flipFlags = TileFlipFlags::None;       /*! Resolved using bit 32, 31 and 30 from gid */
 	};
 
 	/*!
@@ -23908,7 +24083,18 @@ bool tson::Object::parse(const nlohmann::json &json)
 	bool allFound = true;
 
 	if(json.count("ellipse") > 0) m_ellipse = json["ellipse"].get<bool>(); //Optional
-	if(json.count("gid") > 0) m_gid = json["gid"].get<int>(); //Optional
+	if(json.count("gid") > 0)
+	{
+		uint32_t gid = json["gid"].get<uint32_t>(); //Optional
+		if (gid & FLIPPED_HORIZONTALLY_FLAG) m_flipFlags |= TileFlipFlags::Horizontally;
+		if (gid & FLIPPED_VERTICALLY_FLAG) m_flipFlags |= TileFlipFlags::Vertically;
+		if (gid & FLIPPED_DIAGONALLY_FLAG) m_flipFlags |= TileFlipFlags::Diagonally;
+
+		// Clear flags
+		gid &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
+
+		m_gid = gid;
+	}
 	if(json.count("id") > 0) m_id = json["id"].get<int>(); else allFound = false;
 	if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
 	if(json.count("point") > 0) m_point = json["point"].get<bool>(); //Optional
@@ -23993,7 +24179,7 @@ bool tson::Object::isEllipse() const
  * 'gid': GID, only if object comes from a Tilemap
  * @return
  */
-int tson::Object::getGid() const
+uint32_t tson::Object::getGid() const
 {
 	return m_gid;
 }
@@ -24129,6 +24315,28 @@ tson::Property *tson::Object::getProp(const std::string &name)
 	return nullptr;
 }
 
+/*!
+ * Get all flip flags
+ * @return
+ */
+tson::TileFlipFlags tson::Object::getFlipFlags() const
+{
+	return m_flipFlags;
+}
+
+/*!
+ *
+ * @param flags Which flags to check for. Several flags can be checked at once using the bitwise or operator.
+ * Example:
+ * hasFlipFlags(TileFlipFlags::Vertically | TileFlipFlags::Horizontally)
+ *
+ * @return true if the flag(s) specified are set
+ */
+bool tson::Object::hasFlipFlags(TileFlipFlags flags)
+{
+	return ((m_flipFlags & flags) == flags) ? true : false;
+}
+
 #endif //TILESON_OBJECT_HPP
 
 /*** End of inlined file: Object.hpp ***/
@@ -24260,6 +24468,37 @@ namespace tson
 
 /*** End of inlined file: TileObject.hpp ***/
 
+
+/*** Start of inlined file: FlaggedTile.hpp ***/
+//
+// Created by robin on 13.11.2020.
+//
+
+#ifndef TILESON_FLAGGEDTILE_HPP
+#define TILESON_FLAGGEDTILE_HPP
+
+namespace tson
+{
+	class FlaggedTile
+	{
+
+		public:
+			FlaggedTile(size_t x_, size_t y_, uint32_t id_, uint32_t tileId_) : x {x_}, y {y_}, id {id_}, tileId {tileId_}
+			{
+
+			}
+			size_t x;
+			size_t y;
+			/*! Full ID, including flag */
+			uint32_t id;
+			/*! ID of the flagged tile */
+			uint32_t tileId;
+	};
+}
+#endif //TILESON_FLAGGEDTILE_HPP
+
+/*** End of inlined file: FlaggedTile.hpp ***/
+
 namespace tson
 {
 	class Tile;
@@ -24273,7 +24512,7 @@ namespace tson
 			inline bool parse(const nlohmann::json &json, tson::Map *map);
 
 			[[nodiscard]] inline const std::string &getCompression() const;
-			[[nodiscard]] inline const std::vector<int> &getData() const;
+			[[nodiscard]] inline const std::vector<uint32_t> &getData() const;
 			[[nodiscard]] inline const std::string &getBase64Data() const;
 			[[nodiscard]] inline const std::string &getDrawOrder() const;
 			[[nodiscard]] inline const std::string &getEncoding() const;
@@ -24306,7 +24545,7 @@ namespace tson
 			inline T get(const std::string &name);
 			inline tson::Property * getProp(const std::string &name);
 
-			inline void assignTileMap(const std::map<int, tson::Tile*> &tileMap);
+			inline void assignTileMap(std::map<uint32_t, tson::Tile*> *tileMap);
 			inline void createTileData(const Vector2i &mapSize, bool isInfiniteMap);
 
 			[[nodiscard]] inline const std::map<std::tuple<int, int>, tson::Tile *> &getTileData() const;
@@ -24317,13 +24556,15 @@ namespace tson
 
 			[[nodiscard]] inline const std::map<std::tuple<int, int>, tson::TileObject> &getTileObjects() const;
 			inline tson::TileObject * getTileObject(int x, int y);
+			[[nodiscard]] inline const std::set<uint32_t> &getUniqueFlaggedTiles() const;
+			inline void resolveFlaggedTiles();
 
 		private:
 			inline void setTypeByString();
 
 			std::vector<tson::Chunk>                       m_chunks; 	                      /*! 'chunks': Array of chunks (optional). tilelayer only. */
 			std::string                                    m_compression;                     /*! 'compression': zlib, gzip or empty (default). tilelayer only. */
-			std::vector<int>                               m_data;                            /*! 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded
+			std::vector<uint32_t>                          m_data;                            /*! 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded
 																							   *   data. tilelayer only. */
 			std::string                                    m_base64Data;                      /*! 'data' (when string):     Array of unsigned int (GIDs) or base64-encoded
 																							   *   data. tilelayer only. */
@@ -24347,13 +24588,18 @@ namespace tson
 			int                                            m_x{};                             /*! 'x': Horizontal layer offset in tiles. Always 0. */
 			int                                            m_y{};                             /*! 'y': Vertical layer offset in tiles. Always 0. */
 
-			std::map<int, tson::Tile*>                     m_tileMap;
+			std::map<uint32_t, tson::Tile*>                *m_tileMap;
 			std::map<std::tuple<int, int>, tson::Tile*>    m_tileData;                        /*! Key: Tuple of x and y pos in tile units. */
 
 			//v1.2.0-stuff
 			inline void decompressData();                                                     /*! Defined in tileson_forward.hpp */
+			inline void queueFlaggedTile(size_t x, size_t y, uint32_t id);                    /*! Queue a flagged tile */
+
 			tson::Map *                                         m_map;                        /*! The map who owns this layer */
 			std::map<std::tuple<int, int>, tson::TileObject>    m_tileObjects;
+			std::set<uint32_t>                                  m_uniqueFlaggedTiles;
+			std::vector<tson::FlaggedTile>                      m_flaggedTiles;
+
 	};
 
 	/*!
@@ -24376,6 +24622,14 @@ namespace tson
 tson::Layer::Layer(const nlohmann::json &json, tson::Map *map)
 {
 	parse(json, map);
+}
+
+void tson::Layer::queueFlaggedTile(size_t x, size_t y, uint32_t id)
+{
+	uint32_t tileId = id;
+	tileId &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
+	m_uniqueFlaggedTiles.insert(id);
+	m_flaggedTiles.emplace_back(x, y, id, tileId);
 }
 
 /*!
@@ -24410,7 +24664,7 @@ bool tson::Layer::parse(const nlohmann::json &json, tson::Map *map)
 	{
 		if(json["data"].is_array())
 		{
-			std::for_each(json["data"].begin(), json["data"].end(), [&](const nlohmann::json &item) { m_data.push_back(item.get<int>()); });
+			std::for_each(json["data"].begin(), json["data"].end(), [&](const nlohmann::json &item) { m_data.push_back(item.get<uint32_t>()); });
 		}
 		else
 		{
@@ -24522,7 +24776,7 @@ const std::string &tson::Layer::getCompression() const
  * 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded data. tilelayer only.
  * @return
  */
-const std::vector<int> &tson::Layer::getData() const
+const std::vector<uint32_t> &tson::Layer::getData() const
 {
 	return m_data;
 }
@@ -24715,7 +24969,7 @@ tson::LayerType tson::Layer::getType() const
  * Assigns a tilemap of pointers to existing tiles.
  * @param tileMap The tilemap. key: tile id, value: pointer to Tile.
  */
-void tson::Layer::assignTileMap(const std::map<int, tson::Tile *> &tileMap)
+void tson::Layer::assignTileMap(std::map<uint32_t, tson::Tile *> *tileMap)
 {
 	m_tileMap = tileMap;
 }
@@ -24763,7 +25017,7 @@ tson::Map *tson::Layer::getMap() const
 
 /*!
  *
- * This is only supported for non-infinte maps!
+ * This is only supported for non-infinite maps!
  *
  * @param mapSize The size of the map
  * @param isInfiniteMap Whether or not the current map is infinte.
@@ -24774,7 +25028,7 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
 	size_t y = 0;
 	if(!isInfiniteMap)
 	{
-		std::for_each(m_data.begin(), m_data.end(), [&](int tileId)
+		std::for_each(m_data.begin(), m_data.end(), [&](uint32_t tileId)
 		{
 			if (x == mapSize.x)
 			{
@@ -24782,13 +25036,18 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
 				x = 0;
 			}
 
-			if (tileId > 0 && m_tileMap.count(tileId) > 0)
+			if (tileId > 0 && m_tileMap->count(tileId) > 0)
 			{
-				m_tileData[{x, y}] = m_tileMap[tileId];
+				m_tileData[{x, y}] = m_tileMap->at(tileId);
 				m_tileObjects[{x, y}] = {{x, y}, m_tileData[{x, y}]};
+			}
+			else if(tileId > 0 && m_tileMap->count(tileId) == 0) //Tile with flip flags!
+			{
+				queueFlaggedTile(x, y, tileId);
 			}
 			x++;
 		});
+
 	}
 }
 
@@ -24800,6 +25059,23 @@ const std::map<std::tuple<int, int>, tson::TileObject> &tson::Layer::getTileObje
 tson::TileObject *tson::Layer::getTileObject(int x, int y)
 {
 	return (m_tileObjects.count({x, y}) > 0) ? &m_tileObjects[{x,y}] : nullptr;
+}
+
+const std::set<uint32_t> &tson::Layer::getUniqueFlaggedTiles() const
+{
+	return m_uniqueFlaggedTiles;
+}
+
+void tson::Layer::resolveFlaggedTiles()
+{
+	std::for_each(m_flaggedTiles.begin(), m_flaggedTiles.end(), [&](const tson::FlaggedTile &tile)
+	{
+		if (tile.id > 0 && m_tileMap->count(tile.id) > 0)
+		{
+			m_tileData[{tile.x, tile.y}] = m_tileMap->at(tile.id);
+			m_tileObjects[{tile.x, tile.y}] = {{tile.x, tile.y}, m_tileData[{tile.x, tile.y}]};
+		}
+	});
 }
 
 #endif //TILESON_LAYER_HPP
@@ -25263,11 +25539,12 @@ namespace tson
 	{
 		public:
 			inline Tile() = default;
-			inline explicit Tile(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
-			inline explicit Tile(int id, tson::Tileset *tileset, tson::Map *map);
+			inline Tile(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
+			inline Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map);
+			inline Tile(uint32_t id, tson::Map *map); //v1.2.0
 			inline bool parse(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
 
-			[[nodiscard]] inline int getId() const;
+			[[nodiscard]] inline uint32_t getId() const;
 			#ifndef DISABLE_CPP17_FILESYSTEM
 			[[nodiscard]] inline const fs::path &getImage() const;
 			#else
@@ -25286,6 +25563,8 @@ namespace tson
 			inline tson::Property * getProp(const std::string &name);
 
 			//v1.2.0-stuff
+			inline void setProperties(const tson::PropertyCollection &properties);
+
 			inline tson::Tileset * getTileset() const;
 			inline tson::Map * getMap() const;
 			inline const tson::Rect &getDrawingRect() const;
@@ -25293,9 +25572,15 @@ namespace tson
 			inline const tson::Vector2i getPositionInTileUnits(const std::tuple<int, int> &tileDataPos);
 			inline const tson::Vector2i getTileSize() const;                       /*! Declared in tileson_forward.hpp */
 
+			[[nodiscard]] inline TileFlipFlags getFlipFlags() const;
+			inline bool hasFlipFlags(TileFlipFlags flags);
+			[[nodiscard]] inline uint32_t getGid() const;
+
+			inline void addTilesetAndPerformCalculations(tson::Tileset *tileset); //v1.2.0
+
 		private:
 			std::vector<tson::Frame>    m_animation; 	    /*! 'animation': Array of Frames */
-			int                         m_id {};            /*! 'id': Local ID of the tile */
+			uint32_t                    m_id {};            /*! 'id': Local ID of the tile */
 			#ifndef DISABLE_CPP17_FILESYSTEM
 			fs::path                    m_image;            /*! 'image': Image representing this tile (optional)*/
 			#else
@@ -25308,11 +25593,13 @@ namespace tson
 			std::string                 m_type;             /*! 'type': The type of the tile (optional) */
 
 			//v1.2.0-stuff
+			uint32_t                    m_gid {};                                    /*! id without flip flags */
 			tson::Tileset *             m_tileset;                                   /*! A pointer to the tileset where this Tile comes from */
 			tson::Map *                 m_map;                                       /*! A pointer to the map where this tile is contained */
 			tson::Rect                  m_drawingRect;                               /*! A rect that shows which part of the tileset that is used for this tile */
+			tson::TileFlipFlags         m_flipFlags = TileFlipFlags::None;           /*! Resolved using bit 32, 31 and 30 from gid */
 			inline void performDataCalculations();                                   /*! Declared in tileson_forward.hpp - Calculate all the values used in the tile class. */
-
+			inline void manageFlipFlagsByIdThenRemoveFlags(uint32_t &id);
 			friend class Layer;
 	};
 
@@ -25338,10 +25625,31 @@ tson::Tile::Tile(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *
  * Used in cases where you have a tile without any property
  * @param id
  */
-tson::Tile::Tile(int id, tson::Tileset *tileset, tson::Map *map) : m_id {id}
+tson::Tile::Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map) : m_id {id}, m_gid {id}
 {
 	m_tileset = tileset;
 	m_map = map;
+	manageFlipFlagsByIdThenRemoveFlags(m_gid);
+	performDataCalculations();
+}
+
+/*!
+ * Used in cases where you have a FLIP FLAGGED tile
+ * @param id
+ */
+tson::Tile::Tile(uint32_t id, tson::Map *map) : m_id {id}, m_gid {id}
+{
+	m_map = map;
+	manageFlipFlagsByIdThenRemoveFlags(m_gid);
+}
+
+/*!
+ * For flip flagged tiles, tilesets must be resolved later.
+ * @param tileset
+ */
+void tson::Tile::addTilesetAndPerformCalculations(tson::Tileset *tileset)
+{
+	m_tileset = tileset;
 	performDataCalculations();
 }
 
@@ -25361,7 +25669,15 @@ bool tson::Tile::parse(const nlohmann::json &json, tson::Tileset *tileset, tson:
 	#else
 	if(json.count("image") > 0) m_image = json["image"].get<std::string>(); //Optional
 	#endif
-	if(json.count("id") > 0) m_id = json["id"].get<int>() + 1; else allFound = false;
+	if(json.count("id") > 0)
+	{
+		m_id = json["id"].get<uint32_t>() + 1;
+		m_gid = m_id;
+		manageFlipFlagsByIdThenRemoveFlags(m_gid);
+	}
+	else
+		allFound = false;
+
 	if(json.count("type") > 0) m_type = json["type"].get<std::string>(); //Optional
 	if(json.count("objectgroup") > 0) m_objectgroup = tson::Layer(json["objectgroup"], m_map); //Optional
 
@@ -25386,7 +25702,7 @@ bool tson::Tile::parse(const nlohmann::json &json, tson::Tileset *tileset, tson:
  * 'id': Local ID of the tile
  * @return
  */
-int tson::Tile::getId() const
+uint32_t tson::Tile::getId() const
 {
 	return m_id;
 }
@@ -25507,6 +25823,43 @@ const tson::Rect &tson::Tile::getDrawingRect() const
 const tson::Vector2i tson::Tile::getPositionInTileUnits(const std::tuple<int, int> &tileDataPos)
 {
 	return {std::get<0>(tileDataPos), std::get<1>(tileDataPos)};
+}
+
+void tson::Tile::manageFlipFlagsByIdThenRemoveFlags(uint32_t &id)
+{
+	if (id & FLIPPED_HORIZONTALLY_FLAG) m_flipFlags |= TileFlipFlags::Horizontally;
+	if (id & FLIPPED_VERTICALLY_FLAG) m_flipFlags |= TileFlipFlags::Vertically;
+	if (id & FLIPPED_DIAGONALLY_FLAG) m_flipFlags |= TileFlipFlags::Diagonally;
+
+	id &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
+}
+
+tson::TileFlipFlags tson::Tile::getFlipFlags() const
+{
+	return m_flipFlags;
+}
+
+/*!
+ *
+ * @param flags Which flags to check for. Several flags can be checked at once using the bitwise or operator.
+ * Example:
+ * hasFlipFlags(TileFlipFlags::Vertically | TileFlipFlags::Horizontally)
+ *
+ * @return true if the flag(s) specified are set
+ */
+bool tson::Tile::hasFlipFlags(tson::TileFlipFlags flags)
+{
+	return ((m_flipFlags & flags) == flags) ? true : false;
+}
+
+uint32_t tson::Tile::getGid() const
+{
+	return m_gid;
+}
+
+void tson::Tile::setProperties(const tson::PropertyCollection &properties)
+{
+	m_properties = properties;
 }
 
 #endif //TILESON_TILE_HPP
@@ -26055,11 +26408,11 @@ tson::Property *tson::Tileset::getProp(const std::string &name)
  */
 void tson::Tileset::generateMissingTiles()
 {
-	std::vector<int> tileIds;
+	std::vector<uint32_t> tileIds;
 	for(auto &tile : m_tiles)
 		tileIds.push_back(tile.getId());
 
-	for(int i = m_firstgid; i < m_firstgid + m_tileCount; ++i)
+	for(uint32_t i = m_firstgid; i < m_firstgid + m_tileCount; ++i)
 	{
 		if(std::count(tileIds.begin(), tileIds.end(), i) == 0)
 		{
@@ -26111,7 +26464,7 @@ namespace tson
 
 			[[nodiscard]] inline ParseStatus getStatus() const;
 			[[nodiscard]] inline const std::string &getStatusMessage() const;
-			[[nodiscard]] inline const std::map<int, tson::Tile *> &getTileMap() const;
+			[[nodiscard]] inline const std::map<uint32_t, tson::Tile *> &getTileMap() const;
 
 			inline Layer * getLayer(const std::string &name);
 			inline Tileset * getTileset(const std::string &name);
@@ -26147,10 +26500,11 @@ namespace tson
 			ParseStatus                            m_status {ParseStatus::OK};
 			std::string                            m_statusMessage {"OK"};
 
-			std::map<int, tson::Tile*>             m_tileMap;           /*! key: Tile ID. Value: Pointer to Tile*/
+			std::map<uint32_t, tson::Tile*>        m_tileMap;           /*! key: Tile ID. Value: Pointer to Tile*/
 
 			//v1.2.0
 			tson::DecompressorContainer *          m_decompressors;
+			std::map<uint32_t, tson::Tile>         m_flaggedTileMap;    /*! key: Tile ID. Value: Tile*/
 	};
 
 	/*!
@@ -26238,8 +26592,22 @@ void tson::Map::processData()
 	}
 	std::for_each(m_layers.begin(), m_layers.end(), [&](tson::Layer &layer)
 	{
-		layer.assignTileMap(m_tileMap);
+		layer.assignTileMap(&m_tileMap);
 		layer.createTileData(m_size, m_isInfinite);
+		const std::set<uint32_t> &flaggedTiles = layer.getUniqueFlaggedTiles();
+		for(uint32_t ftile : flaggedTiles)
+		{
+			tson::Tile tile {ftile, layer.getMap()};
+			if(m_tileMap.count(tile.getGid()))
+			{
+				tson::Tile *originalTile = m_tileMap[tile.getGid()];
+				tile.addTilesetAndPerformCalculations(originalTile->getTileset());
+				tile.setProperties(originalTile->getProperties());
+				m_flaggedTileMap[ftile] = tile;
+				m_tileMap[ftile] = &m_flaggedTileMap[ftile];
+			}
+		}
+		layer.resolveFlaggedTiles();
 	});
 }
 
@@ -26440,7 +26808,7 @@ const std::string &tson::Map::getStatusMessage() const
  * Get a tile map with pointers to every existing tile.
  * @return
  */
-const std::map<int, tson::Tile *> &tson::Map::getTileMap() const
+const std::map<uint32_t, tson::Tile *> &tson::Map::getTileMap() const
 {
 	return m_tileMap;
 }
@@ -27136,9 +27504,9 @@ void tson::Tile::performDataCalculations()
 	int rows = m_tileset->getTileCount() / columns;
 	int lastId = (m_tileset->getFirstgid() + m_tileset->getTileCount()) - 1;
 
-	if (getId() >= firstId && getId() <= lastId)
+	if (getGid() >= firstId && getGid() <= lastId)
 	{
-		int baseTilePosition = (getId() - firstId);
+		int baseTilePosition = ((int)getGid() - firstId);
 
 		int tileModX = (baseTilePosition % columns);
 		int currentRow = (baseTilePosition / columns);
@@ -27213,7 +27581,7 @@ void tson::Layer::decompressData()
 	if(hasBeenDecoded)
 	{
 		std::vector<uint8_t> bytes = tson::Tools::Base64DecodedStringToBytes(data);
-		m_data = tson::Tools::BytesToInts(bytes);
+		m_data = tson::Tools::BytesToUnsignedInts(bytes);
 	}
 }
 

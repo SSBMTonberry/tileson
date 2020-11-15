@@ -5,6 +5,7 @@
 #ifndef TILESON_LAYER_HPP
 #define TILESON_LAYER_HPP
 
+#include <set>
 #include "../external/json.hpp"
 #include "../objects/Vector2.hpp"
 #include "../objects/Color.hpp"
@@ -14,6 +15,7 @@
 #include "../objects/Property.hpp"
 #include "../objects/PropertyCollection.hpp"
 #include "../common/Enums.hpp"
+#include "../objects/FlaggedTile.hpp"
 
 namespace tson
 {
@@ -28,7 +30,7 @@ namespace tson
             inline bool parse(const nlohmann::json &json, tson::Map *map);
 
             [[nodiscard]] inline const std::string &getCompression() const;
-            [[nodiscard]] inline const std::vector<int> &getData() const;
+            [[nodiscard]] inline const std::vector<uint32_t> &getData() const;
             [[nodiscard]] inline const std::string &getBase64Data() const;
             [[nodiscard]] inline const std::string &getDrawOrder() const;
             [[nodiscard]] inline const std::string &getEncoding() const;
@@ -61,7 +63,7 @@ namespace tson
             inline T get(const std::string &name);
             inline tson::Property * getProp(const std::string &name);
 
-            inline void assignTileMap(const std::map<int, tson::Tile*> &tileMap);
+            inline void assignTileMap(std::map<uint32_t, tson::Tile*> *tileMap);
             inline void createTileData(const Vector2i &mapSize, bool isInfiniteMap);
 
             [[nodiscard]] inline const std::map<std::tuple<int, int>, tson::Tile *> &getTileData() const;
@@ -72,13 +74,15 @@ namespace tson
 
             [[nodiscard]] inline const std::map<std::tuple<int, int>, tson::TileObject> &getTileObjects() const;
             inline tson::TileObject * getTileObject(int x, int y);
+            [[nodiscard]] inline const std::set<uint32_t> &getUniqueFlaggedTiles() const;
+            inline void resolveFlaggedTiles();
 
         private:
             inline void setTypeByString();
 
             std::vector<tson::Chunk>                       m_chunks; 	                      /*! 'chunks': Array of chunks (optional). tilelayer only. */
             std::string                                    m_compression;                     /*! 'compression': zlib, gzip or empty (default). tilelayer only. */
-            std::vector<int>                               m_data;                            /*! 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded
+            std::vector<uint32_t>                          m_data;                            /*! 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded
                                                                                                *   data. tilelayer only. */
             std::string                                    m_base64Data;                      /*! 'data' (when string):     Array of unsigned int (GIDs) or base64-encoded
                                                                                                *   data. tilelayer only. */
@@ -102,13 +106,18 @@ namespace tson
             int                                            m_x{};                             /*! 'x': Horizontal layer offset in tiles. Always 0. */
             int                                            m_y{};                             /*! 'y': Vertical layer offset in tiles. Always 0. */
 
-            std::map<int, tson::Tile*>                     m_tileMap;
+            std::map<uint32_t, tson::Tile*>                *m_tileMap;
             std::map<std::tuple<int, int>, tson::Tile*>    m_tileData;                        /*! Key: Tuple of x and y pos in tile units. */
 
             //v1.2.0-stuff
             inline void decompressData();                                                     /*! Defined in tileson_forward.hpp */
+            inline void queueFlaggedTile(size_t x, size_t y, uint32_t id);                    /*! Queue a flagged tile */
+
             tson::Map *                                         m_map;                        /*! The map who owns this layer */
             std::map<std::tuple<int, int>, tson::TileObject>    m_tileObjects;
+            std::set<uint32_t>                                  m_uniqueFlaggedTiles;
+            std::vector<tson::FlaggedTile>                      m_flaggedTiles;
+
     };
 
     /*!
@@ -131,6 +140,14 @@ namespace tson
 tson::Layer::Layer(const nlohmann::json &json, tson::Map *map)
 {
     parse(json, map);
+}
+
+void tson::Layer::queueFlaggedTile(size_t x, size_t y, uint32_t id)
+{
+    uint32_t tileId = id;
+    tileId &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
+    m_uniqueFlaggedTiles.insert(id);
+    m_flaggedTiles.emplace_back(x, y, id, tileId);
 }
 
 /*!
@@ -165,7 +182,7 @@ bool tson::Layer::parse(const nlohmann::json &json, tson::Map *map)
     {
         if(json["data"].is_array())
         {
-            std::for_each(json["data"].begin(), json["data"].end(), [&](const nlohmann::json &item) { m_data.push_back(item.get<int>()); });
+            std::for_each(json["data"].begin(), json["data"].end(), [&](const nlohmann::json &item) { m_data.push_back(item.get<uint32_t>()); });
         }
         else
         {
@@ -279,7 +296,7 @@ const std::string &tson::Layer::getCompression() const
  * 'data' (when uint array): Array of unsigned int (GIDs) or base64-encoded data. tilelayer only.
  * @return
  */
-const std::vector<int> &tson::Layer::getData() const
+const std::vector<uint32_t> &tson::Layer::getData() const
 {
     return m_data;
 }
@@ -472,7 +489,7 @@ tson::LayerType tson::Layer::getType() const
  * Assigns a tilemap of pointers to existing tiles.
  * @param tileMap The tilemap. key: tile id, value: pointer to Tile.
  */
-void tson::Layer::assignTileMap(const std::map<int, tson::Tile *> &tileMap)
+void tson::Layer::assignTileMap(std::map<uint32_t, tson::Tile *> *tileMap)
 {
     m_tileMap = tileMap;
 }
@@ -520,7 +537,7 @@ tson::Map *tson::Layer::getMap() const
 
 /*!
  *
- * This is only supported for non-infinte maps!
+ * This is only supported for non-infinite maps!
  *
  * @param mapSize The size of the map
  * @param isInfiniteMap Whether or not the current map is infinte.
@@ -531,7 +548,7 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
     size_t y = 0;
     if(!isInfiniteMap)
     {
-        std::for_each(m_data.begin(), m_data.end(), [&](int tileId)
+        std::for_each(m_data.begin(), m_data.end(), [&](uint32_t tileId)
         {
             if (x == mapSize.x)
             {
@@ -539,13 +556,18 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
                 x = 0;
             }
 
-            if (tileId > 0 && m_tileMap.count(tileId) > 0)
+            if (tileId > 0 && m_tileMap->count(tileId) > 0)
             {
-                m_tileData[{x, y}] = m_tileMap[tileId];
+                m_tileData[{x, y}] = m_tileMap->at(tileId);
                 m_tileObjects[{x, y}] = {{x, y}, m_tileData[{x, y}]};
+            }
+            else if(tileId > 0 && m_tileMap->count(tileId) == 0) //Tile with flip flags!
+            {
+                queueFlaggedTile(x, y, tileId);
             }
             x++;
         });
+
     }
 }
 
@@ -559,6 +581,22 @@ tson::TileObject *tson::Layer::getTileObject(int x, int y)
     return (m_tileObjects.count({x, y}) > 0) ? &m_tileObjects[{x,y}] : nullptr;
 }
 
+const std::set<uint32_t> &tson::Layer::getUniqueFlaggedTiles() const
+{
+    return m_uniqueFlaggedTiles;
+}
+
+void tson::Layer::resolveFlaggedTiles()
+{
+    std::for_each(m_flaggedTiles.begin(), m_flaggedTiles.end(), [&](const tson::FlaggedTile &tile)
+    {
+        if (tile.id > 0 && m_tileMap->count(tile.id) > 0)
+        {
+            m_tileData[{tile.x, tile.y}] = m_tileMap->at(tile.id);
+            m_tileObjects[{tile.x, tile.y}] = {{tile.x, tile.y}, m_tileData[{tile.x, tile.y}]};
+        }
+    });
+}
 
 
 #endif //TILESON_LAYER_HPP
