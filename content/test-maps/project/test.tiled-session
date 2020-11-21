@@ -34,16 +34,42 @@
                 "y": 130.5
             }
         },
+        "/home/robin/Projects/cpp/git/tileson/Level/TestTileSet.tsx": {
+            "dynamicWrapping": true,
+            "scaleInEditor": 1
+        },
+        "/home/robin/Projects/cpp/git/tileson/content/test-maps/infinite.json": {
+            "scale": 2.09482421875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 0.23868351125821619,
+                "y": 0.23868351125821619
+            }
+        },
+        "/home/robin/Projects/cpp/git/tileson/content/test-maps/infinite.json#demo-tileset": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "/home/robin/Projects/cpp/git/tileson/content/test-maps/issues/issue_17.json": {
+            "scale": 0.0829633353960396,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 6346.176868211272,
+                "y": 6400.417696144701
+            }
+        },
         "/home/robin/Projects/cpp/git/tileson/content/test-maps/ultimate_test.json": {
             "scale": 2.09482421875,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 256.1074075800662,
-                "y": 128.1730455456622
+                "x": 269.4736842105263,
+                "y": 44.63381660528643
             }
         },
         "/home/robin/Projects/cpp/git/tileson/content/test-maps/ultimate_test.json#demo-tileset": {
-            "scaleInDock": 1
+            "dynamicWrapping": false,
+            "scaleInDock": 2,
+            "scaleInEditor": 1
         },
         "/home/robin/Projects/cpp/git/tileson/content/test-maps/ultimate_test.tmx": {
             "scale": 3,
@@ -120,6 +146,7 @@
     "project": "test.tiled-project",
     "property.type": "color",
     "recentFiles": [
+        "/home/robin/Projects/cpp/git/tileson/Level/TestTileSet.tsx",
         "/home/robin/Projects/cpp/git/tileson/content/test-maps/ultimate_test.json",
         "maps/sub/map4.json",
         "maps/map1.json"

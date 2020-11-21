@@ -54,7 +54,9 @@ namespace tson
             inline tson::Property * getProp(const std::string &name);
 
             //v1.2.0
+            [[nodiscard]] inline int getCompressionLevel() const;
             inline DecompressorContainer *getDecompressors();
+
 
         private:
             inline void processData();
@@ -83,6 +85,9 @@ namespace tson
             std::map<uint32_t, tson::Tile*>        m_tileMap;           /*! key: Tile ID. Value: Pointer to Tile*/
 
             //v1.2.0
+            int                                    m_compressionLevel {-1};  /*! 'compressionlevel': The compression level to use for tile layer
+                                                                              *     data (defaults to -1, which means to use the algorithm default)
+                                                                              *     Introduced in Tiled 1.3*/
             tson::DecompressorContainer *          m_decompressors;
             std::map<uint32_t, tson::Tile>         m_flaggedTileMap;    /*! key: Tile ID. Value: Tile*/
     };
@@ -130,6 +135,7 @@ bool tson::Map::parse(const nlohmann::json &json, tson::DecompressorContainer *d
     m_decompressors = decompressors;
 
     bool allFound = true;
+    if(json.count("compressionlevel") > 0) m_compressionLevel = json["compressionlevel"].get<int>(); //Tiled 1.3 - Optional
     if(json.count("backgroundcolor") > 0) m_backgroundColor = Colori(json["backgroundcolor"].get<std::string>()); //Optional
     if(json.count("width") > 0 && json.count("height") > 0 )
         m_size = {json["width"].get<int>(), json["height"].get<int>()}; else allFound = false;
@@ -397,6 +403,16 @@ const std::map<uint32_t, tson::Tile *> &tson::Map::getTileMap() const
 tson::DecompressorContainer *tson::Map::getDecompressors()
 {
     return m_decompressors;
+}
+
+/*!
+ * 'compressionlevel': The compression level to use for tile layer data (defaults to -1, which means to use the algorithm default)
+ *
+ * @return The compression level
+ */
+int tson::Map::getCompressionLevel() const
+{
+    return m_compressionLevel;
 }
 
 #endif //TILESON_MAP_HPP

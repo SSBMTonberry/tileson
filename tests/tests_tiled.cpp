@@ -489,6 +489,7 @@ TEST_CASE( "Parse a Tileset from Tiled's documentation - read simple values", "[
                        " \"columns\":19,\n"
                        " \"firstgid\":1,\n"
                        " \"image\":\"..\\/image\\/fishbaddie_parts.png\",\n"
+                       " \"objectalignment\":\"bottomleft\",\n"
                        " \"imageheight\":480,\n"
                        " \"imagewidth\":640,\n"
                        " \"margin\":3,\n"
@@ -519,7 +520,8 @@ TEST_CASE( "Parse a Tileset from Tiled's documentation - read simple values", "[
         tileset.getSpacing() == 1 &&
         tileset.getTileCount() == 266 &&
         tileset.getTileSize() == tson::Vector2i(32,32) &&
-        tileset.getProperties().getValue<std::string>("myProperty1") == "myProperty1_value"
+        tileset.getProperties().getValue<std::string>("myProperty1") == "myProperty1_value" &&
+        tileset.getObjectAlignment() == tson::ObjectAlignment::BottomLeft
     );
 
     REQUIRE((parseOk && hasCorrectValues));
@@ -830,4 +832,20 @@ TEST_CASE( "Property-tests - Set properties from json", "[tiled][wang]" )
     );
 
     REQUIRE(hasCorrectValues);
+}
+
+TEST_CASE( "Tileset - Set object alignment by string - expect right value", "[tiled][tileset][alignment]" )
+{
+
+    REQUIRE(tson::Tileset::StringToAlignment("unspecified") == tson::ObjectAlignment::Unspecified);
+    REQUIRE(tson::Tileset::StringToAlignment("somethingnonexistant") == tson::ObjectAlignment::Unspecified);
+    REQUIRE(tson::Tileset::StringToAlignment("topleft") == tson::ObjectAlignment::TopLeft);
+    REQUIRE(tson::Tileset::StringToAlignment("top") == tson::ObjectAlignment::Top);
+    REQUIRE(tson::Tileset::StringToAlignment("topright") == tson::ObjectAlignment::TopRight);
+    REQUIRE(tson::Tileset::StringToAlignment("left") == tson::ObjectAlignment::Left);
+    REQUIRE(tson::Tileset::StringToAlignment("center") == tson::ObjectAlignment::Center);
+    REQUIRE(tson::Tileset::StringToAlignment("right") == tson::ObjectAlignment::Right);
+    REQUIRE(tson::Tileset::StringToAlignment("bottomleft") == tson::ObjectAlignment::BottomLeft);
+    REQUIRE(tson::Tileset::StringToAlignment("bottom") == tson::ObjectAlignment::Bottom);
+    REQUIRE(tson::Tileset::StringToAlignment("bottomright") == tson::ObjectAlignment::BottomRight);
 }
