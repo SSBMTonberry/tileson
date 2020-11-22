@@ -44,6 +44,19 @@ matrix:
 
       after_script: ./tileson_tests
 
+
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-10
+      env:
+        - MATRIX_EVAL="CC=gcc-10 CXX=g++-10"
+
+      after_script: ./tileson_tests
+
     - os: windows
 
     - os: osx
