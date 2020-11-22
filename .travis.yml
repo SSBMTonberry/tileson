@@ -46,12 +46,16 @@ matrix:
 
 
     - os: linux
+      dist: bionic
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - gcc-10
+            - gcc-10-multilib
+            - g++-10
+            - g++-10-multilib
       env:
         - MATRIX_EVAL="CC=gcc-10 CXX=g++-10"
 
