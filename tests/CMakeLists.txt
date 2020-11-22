@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(${PROJECT_SOURCE_DIR}/../external_libs/ ${PROJECT_SOURCE_DIR}/../include)
 
-add_executable(tileson_tests tests_main.cpp tests_objects.cpp tests_tiled.cpp tests_reported_issues.cpp tests_compression_or_encoding.cpp ../include/common/Enums.hpp tests_projects_and_worlds.cpp)
+add_executable(tileson_tests tests_main.cpp tests_objects.cpp tests_tiled.cpp tests_reported_issues.cpp tests_compression_or_encoding.cpp tests_projects_and_worlds.cpp)
 
 if(LINUX)
     message("LINUX!")

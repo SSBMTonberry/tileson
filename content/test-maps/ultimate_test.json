@@ -382,6 +382,7 @@
          "id":6,
          "name":"Front Layer",
          "opacity":1,
+         "tintcolor":"#ff0000",
          "type":"tilelayer",
          "visible":true,
          "width":32,

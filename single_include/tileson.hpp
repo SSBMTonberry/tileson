@@ -23607,6 +23607,23 @@ namespace tson
 			Horizontally = FLIPPED_HORIZONTALLY_FLAG
 	};
 
+	/*!
+	 * Tileset.hpp - ObjectAlignment
+	 */
+	enum class ObjectAlignment : uint8_t
+	{
+			Unspecified = 0,    //unspecified
+			TopLeft = 1,        //topleft
+			Top = 2,            //top
+			TopRight = 3,       //topright
+			Left = 4,           //left
+			Center = 5,         //center
+			Right = 6,          //right
+			BottomLeft = 7,     //bottomleft
+			Bottom = 8,         //bottom
+			BottomRight = 9     //bottomright
+	};
+
 	ENABLE_BITMASK_OPERATORS(TileFlipFlags)
 }
 
@@ -24552,7 +24569,8 @@ namespace tson
 			inline tson::Tile * getTileData(int x, int y);
 
 			//v1.2.0-stuff
-			inline tson::Map *getMap() const;
+			[[nodiscard]] inline const Colori &getTintColor() const;
+			[[nodiscard]] inline tson::Map *getMap() const;
 
 			[[nodiscard]] inline const std::map<std::tuple<int, int>, tson::TileObject> &getTileObjects() const;
 			inline tson::TileObject * getTileObject(int x, int y);
@@ -24592,6 +24610,8 @@ namespace tson
 			std::map<std::tuple<int, int>, tson::Tile*>    m_tileData;                        /*! Key: Tuple of x and y pos in tile units. */
 
 			//v1.2.0-stuff
+			tson::Colori                                        m_tintcolor;                  /*! 'tintcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) that is multiplied with
+																							   *        any graphics drawn by this layer or any child layers (optional). */
 			inline void decompressData();                                                     /*! Defined in tileson_forward.hpp */
 			inline void queueFlaggedTile(size_t x, size_t y, uint32_t id);                    /*! Queue a flagged tile */
 
@@ -24642,6 +24662,7 @@ bool tson::Layer::parse(const nlohmann::json &json, tson::Map *map)
 	m_map = map;
 
 	bool allFound = true;
+	if(json.count("tintcolor") > 0) m_tintcolor = tson::Colori(json["tintcolor"].get<std::string>()); //Optional
 	if(json.count("compression") > 0) m_compression = json["compression"].get<std::string>(); //Optional
 	if(json.count("draworder") > 0) m_drawOrder = json["draworder"].get<std::string>(); //Optional
 	if(json.count("encoding") > 0) m_encoding = json["encoding"].get<std::string>(); //Optional
@@ -25076,6 +25097,16 @@ void tson::Layer::resolveFlaggedTiles()
 			m_tileObjects[{tile.x, tile.y}] = {{tile.x, tile.y}, m_tileData[{tile.x, tile.y}]};
 		}
 	});
+}
+
+/*!
+ * 'tintcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) that is multiplied with any graphics drawn by this layer or any child layers (optional).
+ *
+ * @return tintcolor
+ */
+const tson::Colori &tson::Layer::getTintColor() const
+{
+	return m_tintcolor;
 }
 
 #endif //TILESON_LAYER_HPP
@@ -26103,7 +26134,10 @@ namespace tson
 			inline tson::Property * getProp(const std::string &name);
 
 			//v1.2.0-stuff
-			inline tson::Map *getMap() const;
+			[[nodiscard]] inline tson::Map *getMap() const;
+			[[nodiscard]] inline ObjectAlignment getObjectAlignment() const;
+
+			inline static tson::ObjectAlignment StringToAlignment(std::string_view str);
 
 		private:
 			inline void generateMissingTiles();
@@ -26134,6 +26168,7 @@ namespace tson
 																   how tile overlays for terrain and collision information are rendered. */
 
 			//v1.2.0-stuff
+			tson::ObjectAlignment         m_objectAlignment{tson::ObjectAlignment::Unspecified};  /*! 'objectalignment': Alignment to use for tile objects. Tiled 1.4.*/
 			tson::Map *                   m_map;              /*! The map who owns this tileset */
 	};
 
@@ -26192,6 +26227,12 @@ bool tson::Tileset::parse(const nlohmann::json &json, tson::Map *map)
 
 	if(json.count("properties") > 0 && json["properties"].is_array())
 		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+
+	if(json.count("objectalignment") > 0)
+	{
+		std::string alignment = json["objectalignment"].get<std::string>();
+		m_objectAlignment = StringToAlignment(alignment);
+	}
 
 	generateMissingTiles();
 
@@ -26430,6 +26471,32 @@ tson::Map *tson::Tileset::getMap() const
 	return m_map;
 }
 
+/*!
+ *
+ * @param str The string you want to convert
+ * @return Alignment enum based on the string from the input.
+ */
+tson::ObjectAlignment tson::Tileset::StringToAlignment(std::string_view str)
+{
+	if(str == "unspecified") return tson::ObjectAlignment::Unspecified;
+	else if(str == "topleft") return tson::ObjectAlignment::TopLeft;
+	else if(str == "top") return tson::ObjectAlignment::Top;
+	else if(str == "topright") return tson::ObjectAlignment::TopRight;
+	else if(str == "left") return tson::ObjectAlignment::Left;
+	else if(str == "center") return tson::ObjectAlignment::Center;
+	else if(str == "right") return tson::ObjectAlignment::Right;
+	else if(str == "bottomleft") return tson::ObjectAlignment::BottomLeft;
+	else if(str == "bottom") return tson::ObjectAlignment::Bottom;
+	else if(str == "bottomright") return tson::ObjectAlignment::BottomRight;
+	else
+		return tson::ObjectAlignment::Unspecified;
+}
+
+tson::ObjectAlignment tson::Tileset::getObjectAlignment() const
+{
+	return m_objectAlignment;
+}
+
 #endif //TILESON_TILESET_HPP
 /*** End of inlined file: Tileset.hpp ***/
 
@@ -26474,6 +26541,7 @@ namespace tson
 			inline tson::Property * getProp(const std::string &name);
 
 			//v1.2.0
+			[[nodiscard]] inline int getCompressionLevel() const;
 			inline DecompressorContainer *getDecompressors();
 
 		private:
@@ -26503,6 +26571,9 @@ namespace tson
 			std::map<uint32_t, tson::Tile*>        m_tileMap;           /*! key: Tile ID. Value: Pointer to Tile*/
 
 			//v1.2.0
+			int                                    m_compressionLevel {-1};  /*! 'compressionlevel': The compression level to use for tile layer
+																			  *     data (defaults to -1, which means to use the algorithm default)
+																			  *     Introduced in Tiled 1.3*/
 			tson::DecompressorContainer *          m_decompressors;
 			std::map<uint32_t, tson::Tile>         m_flaggedTileMap;    /*! key: Tile ID. Value: Tile*/
 	};
@@ -26550,6 +26621,7 @@ bool tson::Map::parse(const nlohmann::json &json, tson::DecompressorContainer *d
 	m_decompressors = decompressors;
 
 	bool allFound = true;
+	if(json.count("compressionlevel") > 0) m_compressionLevel = json["compressionlevel"].get<int>(); //Tiled 1.3 - Optional
 	if(json.count("backgroundcolor") > 0) m_backgroundColor = Colori(json["backgroundcolor"].get<std::string>()); //Optional
 	if(json.count("width") > 0 && json.count("height") > 0 )
 		m_size = {json["width"].get<int>(), json["height"].get<int>()}; else allFound = false;
@@ -26816,6 +26888,16 @@ const std::map<uint32_t, tson::Tile *> &tson::Map::getTileMap() const
 tson::DecompressorContainer *tson::Map::getDecompressors()
 {
 	return m_decompressors;
+}
+
+/*!
+ * 'compressionlevel': The compression level to use for tile layer data (defaults to -1, which means to use the algorithm default)
+ *
+ * @return The compression level
+ */
+int tson::Map::getCompressionLevel() const
+{
+	return m_compressionLevel;
 }
 
 #endif //TILESON_MAP_HPP

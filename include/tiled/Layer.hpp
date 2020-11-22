@@ -70,7 +70,7 @@ namespace tson
             inline tson::Tile * getTileData(int x, int y);
 
             //v1.2.0-stuff
-            [[nodiscard]] inline const Colori &getTintcolor() const;
+            [[nodiscard]] inline const Colori &getTintColor() const;
             [[nodiscard]] inline tson::Map *getMap() const;
 
             [[nodiscard]] inline const std::map<std::tuple<int, int>, tson::TileObject> &getTileObjects() const;
@@ -607,7 +607,7 @@ void tson::Layer::resolveFlaggedTiles()
  *
  * @return tintcolor
  */
-const tson::Colori &tson::Layer::getTintcolor() const
+const tson::Colori &tson::Layer::getTintColor() const
 {
     return m_tintcolor;
 }
