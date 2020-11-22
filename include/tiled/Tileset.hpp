@@ -60,7 +60,10 @@ namespace tson
             inline tson::Property * getProp(const std::string &name);
 
             //v1.2.0-stuff
-            inline tson::Map *getMap() const;
+            [[nodiscard]] inline tson::Map *getMap() const;
+            [[nodiscard]] inline ObjectAlignment getObjectAlignment() const;
+
+            inline static tson::ObjectAlignment StringToAlignment(std::string_view str);
 
         private:
             inline void generateMissingTiles();
@@ -91,6 +94,7 @@ namespace tson
                                                                    how tile overlays for terrain and collision information are rendered. */
 
             //v1.2.0-stuff
+            tson::ObjectAlignment         m_objectAlignment{tson::ObjectAlignment::Unspecified};  /*! 'objectalignment': Alignment to use for tile objects. Tiled 1.4.*/
             tson::Map *                   m_map;              /*! The map who owns this tileset */
     };
 
@@ -149,6 +153,12 @@ bool tson::Tileset::parse(const nlohmann::json &json, tson::Map *map)
 
     if(json.count("properties") > 0 && json["properties"].is_array())
         std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+
+    if(json.count("objectalignment") > 0)
+    {
+        std::string alignment = json["objectalignment"].get<std::string>();
+        m_objectAlignment = StringToAlignment(alignment);
+    }
 
     generateMissingTiles();
 
@@ -385,6 +395,32 @@ void tson::Tileset::generateMissingTiles()
 tson::Map *tson::Tileset::getMap() const
 {
     return m_map;
+}
+
+/*!
+ *
+ * @param str The string you want to convert
+ * @return Alignment enum based on the string from the input.
+ */
+tson::ObjectAlignment tson::Tileset::StringToAlignment(std::string_view str)
+{
+    if(str == "unspecified") return tson::ObjectAlignment::Unspecified;
+    else if(str == "topleft") return tson::ObjectAlignment::TopLeft;
+    else if(str == "top") return tson::ObjectAlignment::Top;
+    else if(str == "topright") return tson::ObjectAlignment::TopRight;
+    else if(str == "left") return tson::ObjectAlignment::Left;
+    else if(str == "center") return tson::ObjectAlignment::Center;
+    else if(str == "right") return tson::ObjectAlignment::Right;
+    else if(str == "bottomleft") return tson::ObjectAlignment::BottomLeft;
+    else if(str == "bottom") return tson::ObjectAlignment::Bottom;
+    else if(str == "bottomright") return tson::ObjectAlignment::BottomRight;
+    else
+        return tson::ObjectAlignment::Unspecified;
+}
+
+tson::ObjectAlignment tson::Tileset::getObjectAlignment() const
+{
+    return m_objectAlignment;
 }
 
 

@@ -17,8 +17,12 @@
 //#include "../include/tileson.hpp"
 
 #include "../TilesonConfig.h"
-//#include "../single_include/tileson.hpp"
-#include "../include/tileson.h"
+
+#ifdef TILESON_UNIT_TEST_USE_SINGLE_HEADER
+    #include "../single_include/tileson.hpp"
+#else
+    #include "../include/tileson.h"
+#endif
 
 #include "../external_libs/catch.hpp"
 
@@ -27,6 +31,7 @@ TEST_CASE( "Parse a Map from Tiled's documentation", "[tiled][map]" )
 
     nlohmann::json j = "{\n"
                        "  \"backgroundcolor\":\"#656667\",\n"
+                       "  \"compressionlevel\":2,\n"
                        "  \"height\":4,\n"
                        "  \"layers\":[ ],\n"
                        "  \"nextobjectid\":1,\n"
@@ -67,7 +72,8 @@ TEST_CASE( "Parse a Map from Tiled's documentation", "[tiled][map]" )
                                 map.getProperties().getValue<std::string>("mapProperty1") == "string" &&
                                 map.getProperties().getProperty("mapProperty2")->getType() == tson::Type::Undefined && //The doc got some errors
                                 map.get<std::string>("mapProperty1") == "string" &&
-                                map.getProp("mapProperty1")->getType() == tson::Type::Undefined
+                                map.getProp("mapProperty1")->getType() == tson::Type::Undefined &&
+                                map.getCompressionLevel() == 2
                             );
 
     REQUIRE( (parseOk && hasCorrectValues) );
@@ -89,6 +95,7 @@ TEST_CASE( "Parse a Layer from Tiled's documentation - read simple values", "[ti
                            "      \"type\":\"int\",\n"
                            "      \"value\":1\n"
                            "    }],\n"
+                           "  \"tintcolor\":\"#656667\",\n"
                            "  \"type\":\"tilelayer\",\n"
                            "  \"visible\":true,\n"
                            "  \"width\":4,\n"
@@ -103,10 +110,11 @@ TEST_CASE( "Parse a Layer from Tiled's documentation - read simple values", "[ti
                 layer.getSize() == tson::Vector2i(4, 4) &&
                 layer.getName() == "ground" &&
                 layer.getOpacity() == 1 &&
-                        layer.getTypeStr() == "tilelayer" &&
+                layer.getTypeStr() == "tilelayer" &&
                 layer.isVisible() &&
                 layer.getX() == 0 &&
                 layer.getY() == 0 &&
+                layer.getTintColor() == "#656667" &&
                 layer.getProperties().getSize() > 0 &&
                 layer.getProperties().getValue<int>("tileLayerProp") == 1 &&
                 layer.getProperties().getProperty("tileLayerProp")->getType() == tson::Type::Int
@@ -489,6 +497,7 @@ TEST_CASE( "Parse a Tileset from Tiled's documentation - read simple values", "[
                        " \"columns\":19,\n"
                        " \"firstgid\":1,\n"
                        " \"image\":\"..\\/image\\/fishbaddie_parts.png\",\n"
+                       " \"objectalignment\":\"bottomleft\",\n"
                        " \"imageheight\":480,\n"
                        " \"imagewidth\":640,\n"
                        " \"margin\":3,\n"
@@ -519,7 +528,8 @@ TEST_CASE( "Parse a Tileset from Tiled's documentation - read simple values", "[
         tileset.getSpacing() == 1 &&
         tileset.getTileCount() == 266 &&
         tileset.getTileSize() == tson::Vector2i(32,32) &&
-        tileset.getProperties().getValue<std::string>("myProperty1") == "myProperty1_value"
+        tileset.getProperties().getValue<std::string>("myProperty1") == "myProperty1_value" &&
+        tileset.getObjectAlignment() == tson::ObjectAlignment::BottomLeft
     );
 
     REQUIRE((parseOk && hasCorrectValues));
@@ -540,17 +550,15 @@ TEST_CASE( "Parse a Tile from Tiled's documentation - read simple values", "[til
 
     tson::Tile tile;
     bool parseOk = tile.parse(j, nullptr, nullptr);
-    bool hasCorrectValues = (
-        tile.getId() == 12 &&
-        tile.getTerrain().size() == 4 &&
-        tile.getTerrain()[2] == 0 &&
-        tile.getProperties().getValue<std::string>("myProperty2") == "myProperty2_value" &&
-        tile.get<std::string>("myProperty2") == "myProperty2_value" &&
-        tile.getProp("myProperty2") != nullptr &&
-        tile.getProp("dummy") == nullptr
-    );
+    REQUIRE(parseOk);
+    REQUIRE(tile.getId() == 12);
+    REQUIRE(tile.getTerrain().size() == 4);
+    REQUIRE(tile.getTerrain()[2] == 0);
+    REQUIRE(tile.getProperties().getValue<std::string>("myProperty2") == "myProperty2_value");
+    REQUIRE(tile.get<std::string>("myProperty2") == "myProperty2_value");
+    REQUIRE(tile.getProp("myProperty2") != nullptr);
+    REQUIRE(tile.getProp("dummy") == nullptr);
 
-    REQUIRE((parseOk && hasCorrectValues));
 }
 
 TEST_CASE( "Parse a Frame", "[tiled][frame]" )
@@ -830,4 +838,20 @@ TEST_CASE( "Property-tests - Set properties from json", "[tiled][wang]" )
     );
 
     REQUIRE(hasCorrectValues);
+}
+
+TEST_CASE( "Tileset - Set object alignment by string - expect right value", "[tiled][tileset][alignment]" )
+{
+
+    REQUIRE(tson::Tileset::StringToAlignment("unspecified") == tson::ObjectAlignment::Unspecified);
+    REQUIRE(tson::Tileset::StringToAlignment("somethingnonexistant") == tson::ObjectAlignment::Unspecified);
+    REQUIRE(tson::Tileset::StringToAlignment("topleft") == tson::ObjectAlignment::TopLeft);
+    REQUIRE(tson::Tileset::StringToAlignment("top") == tson::ObjectAlignment::Top);
+    REQUIRE(tson::Tileset::StringToAlignment("topright") == tson::ObjectAlignment::TopRight);
+    REQUIRE(tson::Tileset::StringToAlignment("left") == tson::ObjectAlignment::Left);
+    REQUIRE(tson::Tileset::StringToAlignment("center") == tson::ObjectAlignment::Center);
+    REQUIRE(tson::Tileset::StringToAlignment("right") == tson::ObjectAlignment::Right);
+    REQUIRE(tson::Tileset::StringToAlignment("bottomleft") == tson::ObjectAlignment::BottomLeft);
+    REQUIRE(tson::Tileset::StringToAlignment("bottom") == tson::ObjectAlignment::Bottom);
+    REQUIRE(tson::Tileset::StringToAlignment("bottomright") == tson::ObjectAlignment::BottomRight);
 }

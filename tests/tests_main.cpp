@@ -7,7 +7,7 @@
 
 #include "../TilesonConfig.h"
 
-#define TILESON_UNIT_TEST_USE_SINGLE_HEADER
+//#define TILESON_UNIT_TEST_USE_SINGLE_HEADER
 
 #ifdef TILESON_UNIT_TEST_USE_SINGLE_HEADER
     #include "../single_include/tileson.hpp"
@@ -77,6 +77,11 @@ void performMainAsserts(tson::Map *map)
     REQUIRE(main->getTileData().size() == main->getTileObjects().size());
 }
 
+void checkChangesAfterTiledVersion124(tson::Map *map)
+{
+    REQUIRE(map->getLayer("Front Layer")->getTintColor() == tson::Colori(255, 0, 0, 255));
+}
+
 
 TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" )
 {
@@ -92,6 +97,7 @@ TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" )
     if(map->getStatus() == tson::ParseStatus::OK)
     {
         performMainAsserts(map.get());
+        checkChangesAfterTiledVersion124(map.get());
     }
     else
     {

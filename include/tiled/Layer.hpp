@@ -70,7 +70,8 @@ namespace tson
             inline tson::Tile * getTileData(int x, int y);
 
             //v1.2.0-stuff
-            inline tson::Map *getMap() const;
+            [[nodiscard]] inline const Colori &getTintColor() const;
+            [[nodiscard]] inline tson::Map *getMap() const;
 
             [[nodiscard]] inline const std::map<std::tuple<int, int>, tson::TileObject> &getTileObjects() const;
             inline tson::TileObject * getTileObject(int x, int y);
@@ -110,6 +111,8 @@ namespace tson
             std::map<std::tuple<int, int>, tson::Tile*>    m_tileData;                        /*! Key: Tuple of x and y pos in tile units. */
 
             //v1.2.0-stuff
+            tson::Colori                                        m_tintcolor;                  /*! 'tintcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) that is multiplied with
+                                                                                               *        any graphics drawn by this layer or any child layers (optional). */
             inline void decompressData();                                                     /*! Defined in tileson_forward.hpp */
             inline void queueFlaggedTile(size_t x, size_t y, uint32_t id);                    /*! Queue a flagged tile */
 
@@ -160,6 +163,7 @@ bool tson::Layer::parse(const nlohmann::json &json, tson::Map *map)
     m_map = map;
 
     bool allFound = true;
+    if(json.count("tintcolor") > 0) m_tintcolor = tson::Colori(json["tintcolor"].get<std::string>()); //Optional
     if(json.count("compression") > 0) m_compression = json["compression"].get<std::string>(); //Optional
     if(json.count("draworder") > 0) m_drawOrder = json["draworder"].get<std::string>(); //Optional
     if(json.count("encoding") > 0) m_encoding = json["encoding"].get<std::string>(); //Optional
@@ -596,6 +600,16 @@ void tson::Layer::resolveFlaggedTiles()
             m_tileObjects[{tile.x, tile.y}] = {{tile.x, tile.y}, m_tileData[{tile.x, tile.y}]};
         }
     });
+}
+
+/*!
+ * 'tintcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) that is multiplied with any graphics drawn by this layer or any child layers (optional).
+ *
+ * @return tintcolor
+ */
+const tson::Colori &tson::Layer::getTintColor() const
+{
+    return m_tintcolor;
 }
 
 

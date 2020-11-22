@@ -77,6 +77,23 @@ namespace tson
             Horizontally = FLIPPED_HORIZONTALLY_FLAG
     };
 
+    /*!
+     * Tileset.hpp - ObjectAlignment
+     */
+    enum class ObjectAlignment : uint8_t
+    {
+            Unspecified = 0,    //unspecified
+            TopLeft = 1,        //topleft
+            Top = 2,            //top
+            TopRight = 3,       //topright
+            Left = 4,           //left
+            Center = 5,         //center
+            Right = 6,          //right
+            BottomLeft = 7,     //bottomleft
+            Bottom = 8,         //bottom
+            BottomRight = 9     //bottomright
+    };
+
     ENABLE_BITMASK_OPERATORS(TileFlipFlags)
 }
 
