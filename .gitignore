@@ -35,3 +35,5 @@ build/
 cmake-build-minsizerel/
 
 *.tiled-session
+
+cmake-build-debug-x64/
