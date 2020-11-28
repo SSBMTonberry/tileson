@@ -54,9 +54,10 @@ else()
     set(MINGW 0)
 endif()
 
+
 #option(BUILD_SHARED_LIBS "Build shared libraries." OFF)
 option(BUILD_TESTS "Build unit tests." ON)
-option(BUILD_EXAMPLES "Build examples." OFF)
+option(BUILD_EXAMPLES "Build examples." ON)
 option(CLEAR_TSON_CMAKE_CACHE "Clear CMake cache for variables. Activate if you are working on the code. Otherwise: keep it off" OFF)
 
 #if(APPLE)
@@ -97,6 +98,10 @@ if(BUILD_TESTS)
 endif()
 
 if(BUILD_EXAMPLES)
+    set(BUILD_SHARED_LIBS OFF) #build SFML with static libs
+    #set(SFML_BUILD_AUDIO OFF)
+
+    add_subdirectory(external_libs/source/sfml)
     add_subdirectory(examples)
 endif()
 
