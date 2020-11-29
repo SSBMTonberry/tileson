@@ -76,9 +76,31 @@ void SfmlDemoManager::drawTileLayer(const tson::Layer& layer)//, tson::Tileset* 
         sf::Sprite *sprite = storeAndLoadImage(tileset->getImage().u8string(), {0, 0});
         if (sprite != nullptr)
         {
+            sf::Vector2f scale = sprite->getScale();
+            sf::Vector2f originalScale = scale;
+            float rotation = sprite->getRotation();
+            float originalRotation = rotation;
+            sf::Vector2f origin {((float)drawingRect.width) / 2, ((float)drawingRect.height) / 2};
+
+            if(tileObject.getTile()->hasFlipFlags(tson::TileFlipFlags::Horizontally))
+                scale.x = -scale.x;
+            if(tileObject.getTile()->hasFlipFlags(tson::TileFlipFlags::Vertically))
+                scale.y = -scale.y;
+            if(tileObject.getTile()->hasFlipFlags(tson::TileFlipFlags::Diagonally))
+                rotation += 90.f;
+
+            position = {position.x + origin.x, position.y + origin.y};
+            sprite->setOrigin(origin);
             sprite->setTextureRect({drawingRect.x, drawingRect.y, drawingRect.width, drawingRect.height});
             sprite->setPosition({position.x, position.y});
+
+            sprite->setScale(scale);
+            sprite->setRotation(rotation);
+
             m_window.draw(*sprite);
+
+            sprite->setScale(originalScale);       //Since we used a shared sprite for this example, we must reset the scale.
+            sprite->setRotation(originalRotation); //Since we used a shared sprite for this example, we must reset the rotation.
         }
     }
 }
@@ -103,11 +125,35 @@ void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
                 sf::Vector2f offset = getTileOffset(obj.getGid());
                 sf::Sprite *sprite = storeAndLoadImage(tileset->getImage().u8string(), {0,0});
                 std::string name = obj.getName();
+                sf::Vector2f position = {(float)obj.getPosition().x, (float)obj.getPosition().y};
                 if(sprite != nullptr)
                 {
+                    sf::Vector2f scale = sprite->getScale();
+                    sf::Vector2f originalScale = scale;
+                    float rotation = sprite->getRotation();
+                    float originalRotation = rotation;
+                    sf::Vector2f origin {((float)m_map->getTileSize().x) / 2, ((float)m_map->getTileSize().y) / 2};
+
+                    if(obj.hasFlipFlags(tson::TileFlipFlags::Horizontally))
+                        scale.x = -scale.x;
+                    if(obj.hasFlipFlags(tson::TileFlipFlags::Vertically))
+                        scale.y = -scale.y;
+                    if(obj.hasFlipFlags(tson::TileFlipFlags::Diagonally))
+                        rotation += 90.f;
+
+                    position = {position.x + origin.x, position.y + origin.y};
+                    sprite->setOrigin(origin);
+
                     sprite->setTextureRect({(int)offset.x, (int)offset.y, m_map->getTileSize().x, m_map->getTileSize().y});
-                    sprite->setPosition({(float)obj.getPosition().x, (float)obj.getPosition().y - m_map->getTileSize().y});
+                    sprite->setPosition({position.x, position.y - m_map->getTileSize().y});
+
+                    sprite->setScale(scale);
+                    sprite->setRotation(rotation);
+
                     m_window.draw(*sprite);
+
+                    sprite->setScale(originalScale);       //Since we used a shared sprite for this example, we must reset the scale.
+                    sprite->setRotation(originalRotation); //Since we used a shared sprite for this example, we must reset the rotation.
                 }
             }
             break;
