@@ -34,6 +34,70 @@ bool SfmlDemoManager::parseMap(const std::string &filename)
     return false;
 }
 
+bool SfmlDemoManager::parseProject(const std::string &filename)
+{
+    tson::Tileson t;
+    fs::path projectBase = fs::path(m_basePath / "project");
+    int projectCount {0};
+    int worldCount {0};
+    if(m_project.parse(fs::path(projectBase / filename)))
+    {
+        for(const auto &folder : m_project.getFolders())
+        {
+            if(folder.hasWorldFile())
+            {
+                const auto &world = folder.getWorld();
+                for(const auto &data : world.getMapData())
+                {
+                    std::unique_ptr<tson::Map> map = t.parse(fs::path(world.getFolder() / data.fileName));
+                    if(map->getStatus() == tson::ParseStatus::OK)
+                    {
+                        ++worldCount;
+                        //RBP: Properly implement logic to handle these maps
+                        //for(auto &tileset : map->getTilesets())
+                        //    storeAndLoadImage(tileset.getImage().u8string(), {0,0});
+//
+                        //return true;
+                    }
+                    else
+                    {
+                        std::cout << "Parse error: " << map->getStatusMessage() << std::endl;
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                for(const auto &file : folder.getFiles())
+                {
+                    std::unique_ptr<tson::Map> map = t.parse(fs::path(folder.getPath() / file.filename()));
+                    if(map->getStatus() == tson::ParseStatus::OK)
+                    {
+                        ++projectCount;
+                        //RBP: Properly implement logic to handle these maps
+                        //for(auto &tileset : map->getTilesets())
+                        //    storeAndLoadImage(tileset.getImage().u8string(), {0,0});
+//
+                        //return true;
+                    }
+                    else
+                    {
+                        std::cout << "Parse error: " << map->getStatusMessage() << std::endl;
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        std::cout << "Project parse error! " << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
 void SfmlDemoManager::drawMap()
 {
 

@@ -96,11 +96,11 @@
             }
         },
         "maps/map1.json": {
-            "scale": 3,
+            "scale": 1.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": -197.49999999999997,
-                "y": -67.83333333333334
+                "x": 301,
+                "y": 126.33333333333337
             }
         },
         "maps/map1.json#demo-tileset": {
@@ -110,12 +110,15 @@
             "scale": 3,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 159.66666666666666,
-                "y": 133.5
+                "x": 159.83333333333331,
+                "y": 133.16666666666669
             }
         },
         "maps/map2.json#demo-tileset": {
             "scaleInDock": 2
+        },
+        "maps/map2.json#demo-tileset-2": {
+            "scaleInDock": 1
         },
         "maps/sub/map4.json": {
             "scale": 2.09482421875,
@@ -126,6 +129,17 @@
             }
         },
         "maps/sub/map4.json#demo-tileset": {
+            "scaleInDock": 1
+        },
+        "maps/sub/sub.json": {
+            "scale": 2.09482421875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 256.1074075800662,
+                "y": 128.41172905692042
+            }
+        },
+        "maps/sub/sub.json#demo-tileset": {
             "scaleInDock": 1
         }
     },
@@ -146,8 +160,9 @@
     "project": "test.tiled-project",
     "property.type": "color",
     "recentFiles": [
-        "/home/robin/Projects/cpp/git/tileson/Level/TestTileSet.tsx",
         "/home/robin/Projects/cpp/git/tileson/content/test-maps/ultimate_test.json",
+        "/home/robin/Projects/cpp/git/tileson/content/test-maps/infinite.json",
+        "/home/robin/Projects/cpp/git/tileson/Level/TestTileSet.tsx",
         "maps/sub/map4.json",
         "maps/map1.json"
     ],

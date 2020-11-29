@@ -26,6 +26,7 @@ class SfmlDemoManager
                          const std::string &title = "SFML Tileson demo",
                          const fs::path &basePath = fs::path("../../../content/test-maps/"));
         bool parseMap(const std::string &filename = "ultimate_test.json");
+        bool parseProject(const std::string &filename = "test.tiled-project");
         void run();
 
     private:
@@ -49,6 +50,11 @@ class SfmlDemoManager
         fs::path m_basePath {};
         sf::RenderWindow m_window;
         std::unique_ptr<tson::Map> m_map;
+
+        std::vector<std::unique_ptr<tson::Map>> m_projectMaps; //Non-world maps in project
+        std::vector<std::unique_ptr<tson::Map>> m_worldMaps; //World-related maps in project
+
+        tson::Project m_project;
 
         sf::Font m_font;
         sf::Text m_demoText;
