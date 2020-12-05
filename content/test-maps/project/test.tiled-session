@@ -104,6 +104,7 @@
             }
         },
         "maps/map1.json#demo-tileset": {
+            "dynamicWrapping": false,
             "scaleInDock": 1
         },
         "maps/map2.json": {
@@ -118,6 +119,21 @@
             "scaleInDock": 2
         },
         "maps/map2.json#demo-tileset-2": {
+            "scaleInDock": 1
+        },
+        "maps/map3.json": {
+            "scale": 2.09482421875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 256.1074075800662,
+                "y": 128.1730455456622
+            }
+        },
+        "maps/map3.json#demo-tileset": {
+            "scaleInDock": 1
+        },
+        "maps/map3.json#demo-tileset-2": {
+            "dynamicWrapping": false,
             "scaleInDock": 1
         },
         "maps/sub/map4.json": {

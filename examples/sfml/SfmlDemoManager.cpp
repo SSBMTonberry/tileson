@@ -24,7 +24,10 @@ bool SfmlDemoManager::parseMap(const std::string &filename)
     if(m_map->getStatus() == tson::ParseStatus::OK)
     {
         for(auto &tileset : m_map->getTilesets())
-            storeAndLoadImage(tileset.getImage().u8string(), {0,0});
+        {
+            fs::path tilesetPath = getTilesetImagePath(tileset); //tileset.getImage().u8string()
+            storeAndLoadImage(tilesetPath, {0, 0});
+        }
 
         return true;
     }
@@ -53,11 +56,14 @@ bool SfmlDemoManager::parseProject(const std::string &filename)
                     if(map->getStatus() == tson::ParseStatus::OK)
                     {
                         ++worldCount;
-                        //RBP: Properly implement logic to handle these maps
-                        //for(auto &tileset : map->getTilesets())
-                        //    storeAndLoadImage(tileset.getImage().u8string(), {0,0});
-//
-                        //return true;
+                        for(auto &tileset : map->getTilesets())
+                        {
+                            fs::path tilesetPath = getTilesetImagePath(tileset); //fs::path(fs::path("../") / tileset.getImage().filename().u8string());
+                            storeAndLoadImage(tilesetPath, {0, 0});
+                        }
+
+                        m_worldMaps.push_back(std::move(map));
+
                     }
                     else
                     {
@@ -74,11 +80,14 @@ bool SfmlDemoManager::parseProject(const std::string &filename)
                     if(map->getStatus() == tson::ParseStatus::OK)
                     {
                         ++projectCount;
-                        //RBP: Properly implement logic to handle these maps
-                        //for(auto &tileset : map->getTilesets())
-                        //    storeAndLoadImage(tileset.getImage().u8string(), {0,0});
-//
-                        //return true;
+
+                        for(auto &tileset : map->getTilesets())
+                        {
+                            fs::path tilesetPath = getTilesetImagePath(tileset); //fs::path(fs::path("../") / tileset.getImage().filename().u8string());
+                            storeAndLoadImage(tilesetPath, {0, 0});
+                        }
+                        m_projectMaps.push_back(std::move(map));
+
                     }
                     else
                     {
@@ -101,11 +110,14 @@ bool SfmlDemoManager::parseProject(const std::string &filename)
 void SfmlDemoManager::drawMap()
 {
 
-
-    for(auto &layer : m_map->getLayers())
-    {
+    auto &map = m_projectMaps.at(2);
+    for(auto &layer : map->getLayers())
         drawLayer(layer);
-    }
+
+    //for(auto &layer : m_map->getLayers())
+    //{
+    //    drawLayer(layer);
+    //}
 }
 
 void SfmlDemoManager::run()
@@ -137,7 +149,7 @@ void SfmlDemoManager::drawTileLayer(const tson::Layer& layer)//, tson::Tileset* 
         tson::Rect drawingRect = tileObject.getDrawingRect();
         tson::Vector2f position = tileObject.getPosition();
 
-        sf::Sprite *sprite = storeAndLoadImage(tileset->getImage().u8string(), {0, 0});
+        sf::Sprite *sprite = storeAndLoadImage(getTilesetImagePath(*tileset), {0, 0});
         if (sprite != nullptr)
         {
             sf::Vector2f scale = sprite->getScale();
@@ -176,18 +188,19 @@ void SfmlDemoManager::drawImageLayer(tson::Layer &layer)
         m_window.draw(*sprite);
 }
 
-void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
+void SfmlDemoManager::drawObjectLayer(tson::Layer &layer,tson::Tileset* tileset)
 {
-    tson::Tileset* tileset = m_map->getTileset("demo-tileset");
-
+    //tson::Tileset* tileset = m_map->getTileset("demo-tileset");
+    auto *map = layer.getMap();
     for(auto &obj : layer.getObjects())
     {
         switch(obj.getObjectType())
         {
             case tson::ObjectType::Object:
             {
-                sf::Vector2f offset = getTileOffset(obj.getGid());
-                sf::Sprite *sprite = storeAndLoadImage(tileset->getImage().u8string(), {0,0});
+                sf::Vector2f offset = getTileOffset(obj.getGid(), map, tileset);
+
+                sf::Sprite *sprite = storeAndLoadImage(getTilesetImagePath(*tileset), {0,0});
                 std::string name = obj.getName();
                 sf::Vector2f position = {(float)obj.getPosition().x, (float)obj.getPosition().y};
                 if(sprite != nullptr)
@@ -196,7 +209,7 @@ void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
                     sf::Vector2f originalScale = scale;
                     float rotation = sprite->getRotation();
                     float originalRotation = rotation;
-                    sf::Vector2f origin {((float)m_map->getTileSize().x) / 2, ((float)m_map->getTileSize().y) / 2};
+                    sf::Vector2f origin {((float)m_map->getTileSize().x) / 2, ((float)map->getTileSize().y) / 2};
 
                     if(obj.hasFlipFlags(tson::TileFlipFlags::Horizontally))
                         scale.x = -scale.x;
@@ -208,8 +221,8 @@ void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
                     position = {position.x + origin.x, position.y + origin.y};
                     sprite->setOrigin(origin);
 
-                    sprite->setTextureRect({(int)offset.x, (int)offset.y, m_map->getTileSize().x, m_map->getTileSize().y});
-                    sprite->setPosition({position.x, position.y - m_map->getTileSize().y});
+                    sprite->setTextureRect({(int)offset.x, (int)offset.y, map->getTileSize().x, map->getTileSize().y});
+                    sprite->setPosition({position.x, position.y - map->getTileSize().y});
 
                     sprite->setScale(scale);
                     sprite->setRotation(rotation);
@@ -300,10 +313,10 @@ sf::Sprite *SfmlDemoManager::storeAndLoadImage(const std::string &image, const s
     return nullptr;
 }
 
-sf::Vector2f SfmlDemoManager::getTileOffset(int tileId)
+sf::Vector2f SfmlDemoManager::getTileOffset(int tileId, tson::Map *map, tson::Tileset* tileset)
 {
 
-    tson::Tileset* tileset = m_map->getTileset("demo-tileset");
+    //tson::Tileset* tileset = map->getTileset("demo-tileset");
 
     int firstId = tileset->getFirstgid(); //First tile id of the tileset
     int columns = tileset->getColumns(); //For the demo map it is 8.
@@ -317,8 +330,8 @@ sf::Vector2f SfmlDemoManager::getTileOffset(int tileId)
 
         int tileModX = (baseTilePosition % columns);
         int currentRow = (baseTilePosition / columns);
-        int offsetX = (tileModX != 0) ? ((tileModX) * m_map->getTileSize().x) : (0 * m_map->getTileSize().x);
-        int offsetY = (currentRow < rows - 1) ? (currentRow * m_map->getTileSize().y) : ((rows - 1) * m_map->getTileSize().y);
+        int offsetX = (tileModX != 0) ? ((tileModX) * map->getTileSize().x) : (0 * map->getTileSize().x);
+        int offsetY = (currentRow < rows - 1) ? (currentRow * map->getTileSize().y) : ((rows - 1) * map->getTileSize().y);
         return sf::Vector2f((float) offsetX, (float) offsetY);
     }
 
@@ -327,15 +340,15 @@ sf::Vector2f SfmlDemoManager::getTileOffset(int tileId)
 
 void SfmlDemoManager::drawLayer(tson::Layer &layer)
 {
-    tson::Tileset* tileset = m_map->getTileset("demo-tileset");
+
     switch (layer.getType())
     {
         case tson::LayerType::TileLayer:
-            drawTileLayer(layer);//, tileset);
+            drawTileLayer(layer);
             break;
 
         case tson::LayerType::ObjectGroup:
-            drawObjectLayer(layer);
+            drawObjectLayer(layer, layer.getMap()->getTileset("demo-tileset"));
             break;
 
         case tson::LayerType::ImageLayer:
@@ -353,6 +366,17 @@ void SfmlDemoManager::drawLayer(tson::Layer &layer)
         default:
             break;
     }
+}
+
+/*!
+ * Just a helper function to get the common path to the actual image files
+ * @param tileset
+ * @return
+ */
+fs::path SfmlDemoManager::getTilesetImagePath(const tson::Tileset &tileset)
+{
+    fs::path path = fs::path(fs::path("../") / tileset.getImage().filename().u8string());
+    return path;
 }
 
 #if __clang__

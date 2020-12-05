@@ -41,11 +41,12 @@ class SfmlDemoManager
         void drawLayer(tson::Layer& layer);
         void drawTileLayer(const tson::Layer& layer);//, tson::Tileset* tileset);
         void drawImageLayer(tson::Layer& layer);
-        void drawObjectLayer(tson::Layer& layer);
+        void drawObjectLayer(tson::Layer& layer, tson::Tileset* tileset);
 
-        sf::Vector2f getTileOffset(int tileId);
+        sf::Vector2f getTileOffset(int tileId, tson::Map *map, tson::Tileset* tileset);
 
         sf::Sprite * storeAndLoadImage(const std::string &image, const sf::Vector2f &position);
+        fs::path getTilesetImagePath(const tson::Tileset &tileset);
 
         fs::path m_basePath {};
         sf::RenderWindow m_window;
