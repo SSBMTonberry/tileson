@@ -63,6 +63,9 @@ class SfmlDemoManager
         sf::Font m_font;
         sf::Text m_demoText;
 
+        int m_mapIndex {0};
+        const int m_maxMapIndex {3};
+
         std::map<std::string, std::unique_ptr<sf::Texture>> m_textures;
         std::map<std::string, std::unique_ptr<sf::Sprite>> m_sprites;
 };

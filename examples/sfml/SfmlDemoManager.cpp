@@ -111,9 +111,19 @@ bool SfmlDemoManager::parseProject(const std::string &filename)
 void SfmlDemoManager::drawMap()
 {
 
-    auto &map = m_projectMaps.at(2);
-    for(auto &layer : map->getLayers())
-        drawLayer(layer);
+    tson::Map *map = nullptr;
+
+    if(m_mapIndex == 0) map = m_map.get();
+    else if(m_mapIndex == 1) map = m_projectMaps.at(1).get();
+    else if(m_mapIndex == 2) map = m_projectMaps.at(0).get();
+    else if(m_mapIndex == 3) map = m_projectMaps.at(2).get();
+
+
+    if(map != nullptr)
+    {
+        for (auto &layer : map->getLayers())
+            drawLayer(layer);
+    }
 
     //for(auto &layer : m_map->getLayers())
     //{
@@ -123,8 +133,27 @@ void SfmlDemoManager::drawMap()
 
 void SfmlDemoManager::drawImgui()
 {
-    ImGui::Begin("Simple form");
-    ImGui::Button("Just a regular button!");
+
+    ImGui::Begin("Maps");
+    std::string mapsStr = std::to_string(m_mapIndex) + " of " + std::to_string(m_maxMapIndex);
+    ImGui::PushItemWidth(45);
+    ImGui::LabelText(mapsStr.c_str(), "Map: ");
+    //ImGui::PopItemWidth();
+    //ImGui::SameLine();
+    //ImGui::LabelText("###second", );
+    if(ImGui::Button("<<"))
+    {
+        --m_mapIndex;
+        if(m_mapIndex < 0)
+            m_mapIndex = m_maxMapIndex;
+    }
+    ImGui::SameLine();
+    if(ImGui::Button(">>"))
+    {
+        ++m_mapIndex;
+        if(m_mapIndex > m_maxMapIndex)
+            m_mapIndex = 0;
+    }
     ImGui::End();
 }
 
