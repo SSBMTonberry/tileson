@@ -6,6 +6,8 @@
 #define TILESON_SFMLDEMOMANAGER_H
 
 
+#include "imgui.h"
+#include "imgui-SFML.h"
 #include "SFML/Audio.hpp"
 #include "SFML/Graphics.hpp"
 
@@ -35,6 +37,7 @@ class SfmlDemoManager
         #endif
         
         void drawMap();
+        void drawImgui();
 
         static constexpr int CURRENT_VERSION = 120; //v1.2.0
 

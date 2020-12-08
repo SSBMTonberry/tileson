@@ -14,6 +14,7 @@ void SfmlDemoManager::initialize(const sf::Vector2i &windowSize, const sf::Vecto
     m_basePath = appRoot / m_basePath;
     #endif
     m_font.loadFromMemory(vera_font::_VERA_TTF, vera_font::_VERA_TTF_SIZE);
+    ImGui::SFML::Init(m_window);
 }
 
 bool SfmlDemoManager::parseMap(const std::string &filename)
@@ -120,21 +121,34 @@ void SfmlDemoManager::drawMap()
     //}
 }
 
+void SfmlDemoManager::drawImgui()
+{
+    ImGui::Begin("Simple form");
+    ImGui::Button("Just a regular button!");
+    ImGui::End();
+}
+
 void SfmlDemoManager::run()
 {
+    sf::Clock deltaClock;
     while (m_window.isOpen())
     {
         // Process events
         sf::Event event;
         while (m_window.pollEvent(event))
         {
+            ImGui::SFML::ProcessEvent(event);
             // Close m_window: exit
             if (event.type == sf::Event::Closed)
                 m_window.close();
         }
+        ImGui::SFML::Update(m_window, deltaClock.restart());
+
         // Clear screen
         m_window.clear({35, 65, 90, 255});
         drawMap();
+        drawImgui();
+        ImGui::SFML::Render(m_window);
         m_window.display();
     }
 }
@@ -378,6 +392,8 @@ fs::path SfmlDemoManager::getTilesetImagePath(const tson::Tileset &tileset)
     fs::path path = fs::path(fs::path("../") / tileset.getImage().filename().u8string());
     return path;
 }
+
+
 
 #if __clang__
 fs::path SfmlDemoManager::getMacApplicationFolder(bool isAppPath)

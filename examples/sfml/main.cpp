@@ -1,3 +1,4 @@
+
 #include "SfmlDemoManager.h"
 
 int main()
