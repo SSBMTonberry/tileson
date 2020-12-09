@@ -65,6 +65,7 @@ bool SfmlDemoManager::parseProject(const std::string &filename)
 
                         m_worldMaps.push_back(std::move(map));
                         m_worldData.emplace_back(data);
+                        m_worldVisibilityFlags.push_back(true);
                     }
                     else
                     {
@@ -133,8 +134,13 @@ void SfmlDemoManager::drawMap()
 
             const tson::WorldMapData &data = m_worldData.at(i);
             m_positionOffset = {(data.position.x + data.size.x), (data.position.y + data.size.y)};
-            for (auto &layer : m_currentMap->getLayers())
-                drawLayer(layer);
+            bool isVisible = m_worldVisibilityFlags[i];
+            if(isVisible)
+            {
+                for (auto &layer : m_currentMap->getLayers())
+                    drawLayer(layer);
+            }
+
         }
     }
 
@@ -159,6 +165,13 @@ void SfmlDemoManager::drawImgui()
     if(m_mapIndex > 3 && m_currentMap != nullptr)
     {
         //RBP: Add info here
+        for(int i = 0; i < m_worldVisibilityFlags.size(); ++i)
+        {
+            std::string id = "Show world - part " + std::to_string(i+1) + "###visibility" + std::to_string(i);
+            bool checked = m_worldVisibilityFlags[i];
+            if(ImGui::Checkbox(id.c_str(), &checked))
+                m_worldVisibilityFlags[i] = checked;
+        }
     }
     if(ImGui::Button("<<"))
     {

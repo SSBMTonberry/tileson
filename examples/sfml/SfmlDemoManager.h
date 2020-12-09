@@ -56,8 +56,11 @@ class SfmlDemoManager
         std::unique_ptr<tson::Map> m_map;
 
         std::vector<std::unique_ptr<tson::Map>> m_projectMaps; //Non-world maps in project
+
         std::vector<std::unique_ptr<tson::Map>> m_worldMaps; //World-related maps in project
         std::vector<tson::WorldMapData> m_worldData; //World-related data in project
+        std::vector<bool> m_worldVisibilityFlags; //World-related data in project
+
         tson::Map *m_currentMap;
 
         tson::Project m_project;
