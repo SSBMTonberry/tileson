@@ -7,7 +7,7 @@
 
 #include "../objects/Color.hpp"
 #include "../objects/Vector2.hpp"
-#include "../external/json.hpp"
+//#include "../external/json.hpp"
 #include "Layer.hpp"
 #include "Tileset.hpp"
 
@@ -361,6 +361,12 @@ tson::Layer *tson::Map::getLayer(const std::string &name)
     return &result.operator*();
 }
 
+/*!
+ * Gets a tileset by name
+ *
+ * @param name Name of the tileset
+ * @return tileset with the matching name
+ */
 tson::Tileset *tson::Map::getTileset(const std::string &name)
 {
     auto result = std::find_if(m_tilesets.begin(), m_tilesets.end(), [&](const tson::Tileset &item) {return item.getName() == name; });
@@ -370,6 +376,12 @@ tson::Tileset *tson::Map::getTileset(const std::string &name)
     return &result.operator*();
 }
 
+/*!
+ * Gets a tileset by gid (graphical ID of a tile). These are always unique, no matter how many tilesets you have
+ *
+ * @param gid Graphical ID of a tile
+ * @return tileset related to the actual gid
+ */
 tson::Tileset *tson::Map::getTilesetByGid(uint32_t gid)
 {
     auto result = std::find_if(m_tilesets.begin(), m_tilesets.end(), [&](const tson::Tileset &tileset)

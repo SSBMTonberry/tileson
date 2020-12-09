@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['ignore_1373',['ignore',['../namespacenlohmann_1_1detail.html#a5a76b60b26dc8c47256a996d18d967dfa567bc1d268f135496de3d5b946b691f3',1,'nlohmann::detail']]],
-  ['imagelayer_1374',['ImageLayer',['../namespacetson.html#ac06ac2288d940483c17a83daf587780da4f1851a3abdf8696a00a4e22d5ec178c',1,'tson']]],
-  ['int_1375',['Int',['../namespacetson.html#a072f9f86eaa4189282ed315ddfde0094a1686a6c336b71b36d77354cea19a8b52',1,'tson']]]
+  ['horizontally_1714',['Horizontally',['../namespacetson.html#abcd37c33daaa7579bf76831bc470113da82d96265a801bd741cb308aea729e587',1,'tson']]]
 ];

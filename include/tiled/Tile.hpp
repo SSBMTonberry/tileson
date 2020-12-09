@@ -5,7 +5,7 @@
 #ifndef TILESON_TILE_HPP
 #define TILESON_TILE_HPP
 
-#include "../external/json.hpp"
+//#include "../external/json.hpp"
 #include "../objects/Vector2.hpp"
 #include "../objects/Color.hpp"
 #include "Frame.hpp"

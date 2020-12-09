@@ -5,7 +5,7 @@
 #ifndef TILESON_OBJECT_HPP
 #define TILESON_OBJECT_HPP
 
-#include "../external/json.hpp"
+//#include "../external/json.hpp"
 #include "../objects/Vector2.hpp"
 #include "../objects/PropertyCollection.hpp"
 #include "Text.hpp"

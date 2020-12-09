@@ -5,7 +5,7 @@
 #ifndef TILESON_WANGTILE_HPP
 #define TILESON_WANGTILE_HPP
 
-#include "../external/json.hpp"
+//#include "../external/json.hpp"
 
 namespace tson
 {

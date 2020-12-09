@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['ubjson_1406',['ubjson',['../namespacenlohmann_1_1detail.html#aa554fc6a11519e4f347deb25a9f0db40a4537f20910e85437f6d07701864084e8',1,'nlohmann::detail']]],
-  ['undefined_1407',['Undefined',['../namespacetson.html#a072f9f86eaa4189282ed315ddfde0094aec0fc0100c4fc1ce4eea230c3dc10360',1,'tson::Undefined()'],['../namespacetson.html#ac06ac2288d940483c17a83daf587780daec0fc0100c4fc1ce4eea230c3dc10360',1,'tson::Undefined()'],['../namespacetson.html#a7316610048678651b4f11a7319bee3f8aec0fc0100c4fc1ce4eea230c3dc10360',1,'tson::Undefined()']]],
-  ['uninitialized_1408',['uninitialized',['../classnlohmann_1_1detail_1_1lexer.html#a3f313cdbe187cababfc5e06f0b69b098a42dd1a73d072bb6bf3f494f22b15db8e',1,'nlohmann::detail::lexer']]]
+  ['template_1753',['Template',['../namespacetson.html#a7316610048678651b4f11a7319bee3f8a278c491bdd8a53618c149c4ac790da34',1,'tson']]],
+  ['text_1754',['Text',['../namespacetson.html#a7316610048678651b4f11a7319bee3f8a9dffbf69ffba8bc38bc4e01abf4b1675',1,'tson']]],
+  ['tilelayer_1755',['TileLayer',['../namespacetson.html#ac06ac2288d940483c17a83daf587780da7e18e515be43f6e6b19b591782303669',1,'tson']]],
+  ['top_1756',['Top',['../namespacetson.html#ada2375f45be683cd0407a7b43ad8e5e7aa4ffdcf0dc1f31b9acaf295d75b51d00',1,'tson']]],
+  ['topleft_1757',['TopLeft',['../namespacetson.html#ada2375f45be683cd0407a7b43ad8e5e7ab32beb056fbfe36afbabc6c88c81ab36',1,'tson']]],
+  ['topright_1758',['TopRight',['../namespacetson.html#ada2375f45be683cd0407a7b43ad8e5e7a1d85a557894c340c318493f33bfa8efb',1,'tson']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['include_5fnlohmann_5fjson_5ffwd_5fhpp_5f_1433',['INCLUDE_NLOHMANN_JSON_FWD_HPP_',['../json_8hpp.html#ae7fdc438c6d6cb1f17c4373bce5a802d',1,'json.hpp']]]
+  ['deinit_1789',['DEINIT',['../picojson_8hpp.html#ad4d0f823143fdfb63c59633d1603c7f3',1,'picojson.hpp']]]
 ];

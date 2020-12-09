@@ -5,7 +5,7 @@
 #ifndef TILESON_CHUNK_HPP
 #define TILESON_CHUNK_HPP
 
-#include "../external/json.hpp"
+//#include "../external/json.hpp"
 #include "../objects/Vector2.hpp"
 
 namespace tson
