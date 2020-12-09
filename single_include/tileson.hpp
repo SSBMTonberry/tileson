@@ -26535,6 +26535,7 @@ namespace tson
 
 			inline Layer * getLayer(const std::string &name);
 			inline Tileset * getTileset(const std::string &name);
+			inline Tileset * getTilesetByGid(uint32_t gid);
 
 			template <typename T>
 			inline T get(const std::string &name);
@@ -26848,6 +26849,21 @@ tson::Layer *tson::Map::getLayer(const std::string &name)
 tson::Tileset *tson::Map::getTileset(const std::string &name)
 {
 	auto result = std::find_if(m_tilesets.begin(), m_tilesets.end(), [&](const tson::Tileset &item) {return item.getName() == name; });
+	if(result == m_tilesets.end())
+		return nullptr;
+
+	return &result.operator*();
+}
+
+tson::Tileset *tson::Map::getTilesetByGid(uint32_t gid)
+{
+	auto result = std::find_if(m_tilesets.begin(), m_tilesets.end(), [&](const tson::Tileset &tileset)
+	{
+		int firstId = tileset.getFirstgid(); //First tile id of the tileset
+		int lastId = (firstId + tileset.getTileCount()) - 1;
+
+		return (gid >= firstId && gid <= lastId);
+	});
 	if(result == m_tilesets.end())
 		return nullptr;
 

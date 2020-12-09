@@ -64,7 +64,7 @@ bool SfmlDemoManager::parseProject(const std::string &filename)
                         }
 
                         m_worldMaps.push_back(std::move(map));
-
+                        m_worldData.emplace_back(data);
                     }
                     else
                     {
@@ -111,18 +111,28 @@ bool SfmlDemoManager::parseProject(const std::string &filename)
 void SfmlDemoManager::drawMap()
 {
 
-    tson::Map *map = nullptr;
+    if(m_mapIndex == 0) m_currentMap = m_map.get();
+    else if(m_mapIndex == 1) m_currentMap = m_projectMaps.at(1).get();
+    else if(m_mapIndex == 2) m_currentMap = m_projectMaps.at(0).get();
+    else if(m_mapIndex == 3) m_currentMap = m_projectMaps.at(2).get();
 
-    if(m_mapIndex == 0) map = m_map.get();
-    else if(m_mapIndex == 1) map = m_projectMaps.at(1).get();
-    else if(m_mapIndex == 2) map = m_projectMaps.at(0).get();
-    else if(m_mapIndex == 3) map = m_projectMaps.at(2).get();
-
-
-    if(map != nullptr)
+    if(m_mapIndex < 4)
     {
-        for (auto &layer : map->getLayers())
-            drawLayer(layer);
+        if (m_currentMap != nullptr)
+        {
+            for (auto &layer : m_currentMap->getLayers())
+                drawLayer(layer);
+        }
+    }
+    else //WORLD
+    {
+        for(int i = 0; i < m_worldMaps.size(); ++i)
+        {
+            m_currentMap = m_worldMaps.at(i).get();
+            const tson::WorldMapData &data = m_worldData.at(i);
+            for (auto &layer : m_currentMap->getLayers())
+                drawLayer(layer);
+        }
     }
 
     //for(auto &layer : m_map->getLayers())
@@ -141,6 +151,12 @@ void SfmlDemoManager::drawImgui()
     //ImGui::PopItemWidth();
     //ImGui::SameLine();
     //ImGui::LabelText("###second", );
+
+    //World related data
+    if(m_mapIndex > 3 && m_currentMap != nullptr)
+    {
+        //RBP: Add info here
+    }
     if(ImGui::Button("<<"))
     {
         --m_mapIndex;
@@ -231,7 +247,7 @@ void SfmlDemoManager::drawImageLayer(tson::Layer &layer)
         m_window.draw(*sprite);
 }
 
-void SfmlDemoManager::drawObjectLayer(tson::Layer &layer,tson::Tileset* tileset)
+void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
 {
     //tson::Tileset* tileset = m_map->getTileset("demo-tileset");
     auto *map = layer.getMap();
@@ -241,6 +257,7 @@ void SfmlDemoManager::drawObjectLayer(tson::Layer &layer,tson::Tileset* tileset)
         {
             case tson::ObjectType::Object:
             {
+                tson::Tileset *tileset = layer.getMap()->getTilesetByGid(obj.getGid());
                 sf::Vector2f offset = getTileOffset(obj.getGid(), map, tileset);
 
                 sf::Sprite *sprite = storeAndLoadImage(getTilesetImagePath(*tileset), {0,0});
@@ -391,7 +408,7 @@ void SfmlDemoManager::drawLayer(tson::Layer &layer)
             break;
 
         case tson::LayerType::ObjectGroup:
-            drawObjectLayer(layer, layer.getMap()->getTileset("demo-tileset"));
+            drawObjectLayer(layer);
             break;
 
         case tson::LayerType::ImageLayer:

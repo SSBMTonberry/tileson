@@ -44,7 +44,7 @@ class SfmlDemoManager
         void drawLayer(tson::Layer& layer);
         void drawTileLayer(const tson::Layer& layer);//, tson::Tileset* tileset);
         void drawImageLayer(tson::Layer& layer);
-        void drawObjectLayer(tson::Layer& layer, tson::Tileset* tileset);
+        void drawObjectLayer(tson::Layer& layer);
 
         sf::Vector2f getTileOffset(int tileId, tson::Map *map, tson::Tileset* tileset);
 
@@ -57,6 +57,8 @@ class SfmlDemoManager
 
         std::vector<std::unique_ptr<tson::Map>> m_projectMaps; //Non-world maps in project
         std::vector<std::unique_ptr<tson::Map>> m_worldMaps; //World-related maps in project
+        std::vector<tson::WorldMapData> m_worldData; //World-related data in project
+        tson::Map *m_currentMap;
 
         tson::Project m_project;
 
@@ -64,7 +66,7 @@ class SfmlDemoManager
         sf::Text m_demoText;
 
         int m_mapIndex {0};
-        const int m_maxMapIndex {3};
+        const int m_maxMapIndex {4};
 
         std::map<std::string, std::unique_ptr<sf::Texture>> m_textures;
         std::map<std::string, std::unique_ptr<sf::Sprite>> m_sprites;

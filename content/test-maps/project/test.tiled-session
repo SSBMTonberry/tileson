@@ -123,7 +123,7 @@
         },
         "maps/map3.json": {
             "scale": 2.09482421875,
-            "selectedLayer": 0,
+            "selectedLayer": 2,
             "viewCenter": {
                 "x": 256.1074075800662,
                 "y": 128.1730455456622
@@ -157,10 +157,55 @@
         },
         "maps/sub/sub.json#demo-tileset": {
             "scaleInDock": 1
+        },
+        "world/w1.json": {
+            "scale": 4.1896484375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 18.02060509999535,
+                "y": 64.0865227728311
+            }
+        },
+        "world/w1.json#demo-tileset": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "world/w2.json": {
+            "scale": 4.1896484375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 128.0537037900331,
+                "y": 64.0865227728311
+            }
+        },
+        "world/w2.json#demo-tileset-2": {
+            "scaleInDock": 1
+        },
+        "world/w3.json": {
+            "scale": 3.9431985294117644,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 120.0801827420633,
+                "y": 64.03431075474336
+            }
+        },
+        "world/w3.json#demo-tileset-2": {
+            "scaleInDock": 1
+        },
+        "world/w4.json": {
+            "scale": 4.1896484375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 128.0537037900331,
+                "y": 64.0865227728311
+            }
+        },
+        "world/w4.json#demo-tileset": {
+            "scaleInDock": 1
         }
     },
     "loadedWorlds": [
-        "/home/robin/Projects/git/c++/tileson/content/test-maps/project/world/test.world"
+        "/home/robin/Projects/cpp/git/tileson/content/test-maps/project/world/test.world"
     ],
     "map.fixedSize": true,
     "map.height": 8,
