@@ -67,6 +67,7 @@ class SfmlDemoManager
 
         int m_mapIndex {0};
         const int m_maxMapIndex {4};
+        tson::Vector2i m_positionOffset {0,0}; //Used for world related stuff
 
         std::map<std::string, std::unique_ptr<sf::Texture>> m_textures;
         std::map<std::string, std::unique_ptr<sf::Sprite>> m_sprites;

@@ -110,7 +110,7 @@ bool SfmlDemoManager::parseProject(const std::string &filename)
 
 void SfmlDemoManager::drawMap()
 {
-
+    m_positionOffset = {0,0};
     if(m_mapIndex == 0) m_currentMap = m_map.get();
     else if(m_mapIndex == 1) m_currentMap = m_projectMaps.at(1).get();
     else if(m_mapIndex == 2) m_currentMap = m_projectMaps.at(0).get();
@@ -129,7 +129,10 @@ void SfmlDemoManager::drawMap()
         for(int i = 0; i < m_worldMaps.size(); ++i)
         {
             m_currentMap = m_worldMaps.at(i).get();
+            tson::Vector2i tileSize = m_currentMap->getTileSize();
+
             const tson::WorldMapData &data = m_worldData.at(i);
+            m_positionOffset = {(data.position.x + data.size.x), (data.position.y + data.size.y)};
             for (auto &layer : m_currentMap->getLayers())
                 drawLayer(layer);
         }
@@ -207,6 +210,8 @@ void SfmlDemoManager::drawTileLayer(const tson::Layer& layer)//, tson::Tileset* 
         tson::Tileset *tileset = tileObject.getTile()->getTileset();
         tson::Rect drawingRect = tileObject.getDrawingRect();
         tson::Vector2f position = tileObject.getPosition();
+        position = {position.x + (float)m_positionOffset.x, position.y + (float)m_positionOffset.y};
+        //sf::Vector2f position = {(float)obj.getPosition().x + (float)m_positionOffset.x, (float)obj.getPosition().y + (float)m_positionOffset.y};
 
         sf::Sprite *sprite = storeAndLoadImage(getTilesetImagePath(*tileset), {0, 0});
         if (sprite != nullptr)
@@ -262,7 +267,7 @@ void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
 
                 sf::Sprite *sprite = storeAndLoadImage(getTilesetImagePath(*tileset), {0,0});
                 std::string name = obj.getName();
-                sf::Vector2f position = {(float)obj.getPosition().x, (float)obj.getPosition().y};
+                sf::Vector2f position = {(float)obj.getPosition().x + (float)m_positionOffset.x, (float)obj.getPosition().y + (float)m_positionOffset.y};
                 if(sprite != nullptr)
                 {
                     sf::Vector2f scale = sprite->getScale();
