@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['object_1385',['object',['../classnlohmann_1_1basic__json.html#a31f84ee15c4690ff705bed74736d04c6',1,'nlohmann::basic_json::object()'],['../classtson_1_1Object.html#a21457f0596184e36e69852a730bda829',1,'tson::Object::Object()=default'],['../classtson_1_1Object.html#a378b41736c0a66e63e37f7f386daa7fb',1,'tson::Object::Object(const nlohmann::json &amp;json)']]],
+  ['object_1385',['Object',['../classtson_1_1Object.html#a21457f0596184e36e69852a730bda829',1,'tson::Object::Object()=default'],['../classtson_1_1Object.html#a378b41736c0a66e63e37f7f386daa7fb',1,'tson::Object::Object(const nlohmann::json &amp;json)'],['../classnlohmann_1_1basic__json.html#a31f84ee15c4690ff705bed74736d04c6',1,'nlohmann::basic_json::object()']]],
   ['onlyshowadjacentmaps_1386',['onlyShowAdjacentMaps',['../classtson_1_1World.html#a11323f68497548bfe1eb29ed5d2f05c9',1,'tson::World']]],
   ['operator_20input_5fadapter_5ft_1387',['operator input_adapter_t',['../classnlohmann_1_1detail_1_1input__adapter.html#a4ef04b9490247fc38f3d1c2a9e18789b',1,'nlohmann::detail::input_adapter']]],
   ['operator_20output_5fadapter_5ft_3c_20chartype_20_3e_1388',['operator output_adapter_t&lt; CharType &gt;',['../classnlohmann_1_1detail_1_1output__adapter.html#a5fdac7aec8ade2f4bb0b5df30550d90c',1,'nlohmann::detail::output_adapter']]],
