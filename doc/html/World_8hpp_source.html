@@ -180,17 +180,17 @@ $(function() {
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        <span class="keywordflow">return</span> std::any_of(m_mapData.begin(), m_mapData.end(), [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;item) { return item.fileName == filename; });</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    }</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
-<div class="line"><a name="l00116"></a><span class="lineno"><a class="line" href="classtson_1_1World.html#a101acc9c8cd09c5ba0bde73f8a16368d">  116</a></span>&#160;    <span class="keyword">const</span> <a class="code" href="classtson_1_1WorldMapData.html">WorldMapData</a> * <a class="code" href="classtson_1_1World.html#a101acc9c8cd09c5ba0bde73f8a16368d">World::get</a>(std::string_view filename)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="keyword">auto</span> iter = std::find_if(m_mapData.begin(), m_mapData.end(), [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;item) { return item.fileName == filename; });</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="keywordflow">return</span> (iter == m_mapData.end()) ? nullptr : iter.operator-&gt;();</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    }</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;}</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#endif //TILESON_WORLD_HPP</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#endif //DISABLE_CPP17_FILESYSTEM</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="classtson_1_1World.html#a101acc9c8cd09c5ba0bde73f8a16368d">  121</a></span>&#160;    <span class="keyword">const</span> <a class="code" href="classtson_1_1WorldMapData.html">WorldMapData</a> * <a class="code" href="classtson_1_1World.html#a101acc9c8cd09c5ba0bde73f8a16368d">World::get</a>(std::string_view filename)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="keyword">auto</span> iter = std::find_if(m_mapData.begin(), m_mapData.end(), [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;item) { return item.fileName == filename; });</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        <span class="keywordflow">return</span> (iter == m_mapData.end()) ? nullptr : iter.operator-&gt;();</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    }</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;}</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="preprocessor">#endif //TILESON_WORLD_HPP</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;<span class="preprocessor">#endif //DISABLE_CPP17_FILESYSTEM</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclasstson_1_1World_html_a11323f68497548bfe1eb29ed5d2f05c9"><div class="ttname"><a href="classtson_1_1World.html#a11323f68497548bfe1eb29ed5d2f05c9">tson::World::onlyShowAdjacentMaps</a></div><div class="ttdeci">bool onlyShowAdjacentMaps() const</div><div class="ttdef"><b>Definition:</b> World.hpp:78</div></div>
 <div class="ttc" id="aclasstson_1_1World_html_adad4d1e5457194160df3b1ba78ff7793"><div class="ttname"><a href="classtson_1_1World.html#adad4d1e5457194160df3b1ba78ff7793">tson::World::getMapData</a></div><div class="ttdeci">const std::vector&lt; WorldMapData &gt; &amp; getMapData() const</div><div class="ttdef"><b>Definition:</b> World.hpp:73</div></div>
@@ -202,7 +202,7 @@ $(function() {
 <div class="ttc" id="aclassnlohmann_1_1detail_1_1parse__error_html"><div class="ttname"><a href="classnlohmann_1_1detail_1_1parse__error.html">nlohmann::detail::parse_error</a></div><div class="ttdoc">exception indicating a parse error</div><div class="ttdef"><b>Definition:</b> json.hpp:1846</div></div>
 <div class="ttc" id="aclasstson_1_1World_html_aae6b409693f51f76fb9bd57145a29180"><div class="ttname"><a href="classtson_1_1World.html#aae6b409693f51f76fb9bd57145a29180">tson::World::getFolder</a></div><div class="ttdeci">const fs::path &amp; getFolder() const</div><div class="ttdef"><b>Definition:</b> World.hpp:99</div></div>
 <div class="ttc" id="aclasstson_1_1World_html_a013ba94da8ae973705365456abee9dfa"><div class="ttname"><a href="classtson_1_1World.html#a013ba94da8ae973705365456abee9dfa">tson::World::loadMaps</a></div><div class="ttdeci">int loadMaps(tson::Tileson *parser)</div><div class="ttdef"><b>Definition:</b> tileson_forward.hpp:137</div></div>
-<div class="ttc" id="aclasstson_1_1World_html_a101acc9c8cd09c5ba0bde73f8a16368d"><div class="ttname"><a href="classtson_1_1World.html#a101acc9c8cd09c5ba0bde73f8a16368d">tson::World::get</a></div><div class="ttdeci">const WorldMapData * get(std::string_view filename) const</div><div class="ttdef"><b>Definition:</b> World.hpp:116</div></div>
+<div class="ttc" id="aclasstson_1_1World_html_a101acc9c8cd09c5ba0bde73f8a16368d"><div class="ttname"><a href="classtson_1_1World.html#a101acc9c8cd09c5ba0bde73f8a16368d">tson::World::get</a></div><div class="ttdeci">const WorldMapData * get(std::string_view filename) const</div><div class="ttdef"><b>Definition:</b> World.hpp:121</div></div>
 <div class="ttc" id="aclasstson_1_1World_html_a19f4166a5379af3b4190fef6f5bc7b4b"><div class="ttname"><a href="classtson_1_1World.html#a19f4166a5379af3b4190fef6f5bc7b4b">tson::World::getPath</a></div><div class="ttdeci">const fs::path &amp; getPath() const</div><div class="ttdef"><b>Definition:</b> World.hpp:68</div></div>
 <div class="ttc" id="aclassnlohmann_1_1basic__json_html"><div class="ttname"><a href="classnlohmann_1_1basic__json.html">nlohmann::basic_json</a></div><div class="ttdoc">a class to store JSON values</div><div class="ttdef"><b>Definition:</b> json.hpp:14572</div></div>
 <div class="ttc" id="aclasstson_1_1World_html"><div class="ttname"><a href="classtson_1_1World.html">tson::World</a></div><div class="ttdef"><b>Definition:</b> World.hpp:16</div></div>

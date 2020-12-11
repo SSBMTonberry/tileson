@@ -48,7 +48,6 @@ namespace tson
 
             inline Layer * getLayer(const std::string &name);
             inline Tileset * getTileset(const std::string &name);
-            inline Tileset * getTilesetByGid(uint32_t gid);
 
             template <typename T>
             inline T get(const std::string &name);
@@ -57,6 +56,7 @@ namespace tson
             //v1.2.0
             [[nodiscard]] inline int getCompressionLevel() const;
             inline DecompressorContainer *getDecompressors();
+            inline Tileset * getTilesetByGid(uint32_t gid);
 
 
         private:

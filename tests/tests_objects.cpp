@@ -2,12 +2,37 @@
 // Created by robin on 31.07.2019.
 //
 
+#include <ostream>
 #include "../external_libs/catch.hpp"
 //#include "../include/objects/Color.hpp"
 #include "../TilesonConfig.h"
 //#include "../single_include/tileson.hpp"
 #include "../include/tileson.h"
 //#include "../src/objects/Color.hpp"
+
+class CustomProperty
+{
+    public:
+        CustomProperty() = default;
+        explicit CustomProperty(std::string str) : m_str{std::move(str)}
+        {
+
+        };
+
+        [[nodiscard]] const std::string &getStr() const
+        {
+            return m_str;
+        }
+
+        friend std::ostream &operator<<(std::ostream &os, const CustomProperty &aProperty)
+        {
+            os << "m_str: " << aProperty.m_str;
+            return os;
+        }
+
+    private:
+        std::string m_str{};
+};
 
 TEST_CASE( "Parse a color from Tiled color string with alpha - expect valid color", "[color][argb]" ) {
     tson::Colori color {"#ffaa07ff"};
@@ -38,3 +63,12 @@ TEST_CASE( "Compare color and its related hex as sting - expect success", "[colo
     tson::Colori color {170, 7, 255, 255 };
     REQUIRE( color == "#ffaa07ff" );
 }
+
+TEST_CASE( "Add custom property - expect working", "[property][custom]" ) {
+    tson::PropertyCollection props;
+    props.add("james", CustomProperty("CustomValue"), tson::Type::Undefined);
+    CustomProperty custom = props.getValue<CustomProperty>("james");
+    std::cout << custom;
+    REQUIRE( custom.getStr() == "CustomValue" );
+}
+

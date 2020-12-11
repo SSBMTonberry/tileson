@@ -26561,7 +26561,6 @@ namespace tson
 
 			inline Layer * getLayer(const std::string &name);
 			inline Tileset * getTileset(const std::string &name);
-			inline Tileset * getTilesetByGid(uint32_t gid);
 
 			template <typename T>
 			inline T get(const std::string &name);
@@ -26570,6 +26569,7 @@ namespace tson
 			//v1.2.0
 			[[nodiscard]] inline int getCompressionLevel() const;
 			inline DecompressorContainer *getDecompressors();
+			inline Tileset * getTilesetByGid(uint32_t gid);
 
 		private:
 			inline void processData();
@@ -27139,6 +27139,11 @@ namespace tson
 		return std::any_of(m_mapData.begin(), m_mapData.end(), [&](const auto &item) { return item.fileName == filename; });
 	}
 
+	/*!
+	 * Get a map by its filename
+	 * @param filename Filename (including extension) - (example: file.json)
+	 * @return pointer to WorldMapData or nullptr if not exists
+	 */
 	const WorldMapData * World::get(std::string_view filename) const
 	{
 		auto iter = std::find_if(m_mapData.begin(), m_mapData.end(), [&](const auto &item) { return item.fileName == filename; });

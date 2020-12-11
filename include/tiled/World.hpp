@@ -113,6 +113,11 @@ namespace tson
         return std::any_of(m_mapData.begin(), m_mapData.end(), [&](const auto &item) { return item.fileName == filename; });
     }
 
+    /*!
+     * Get a map by its filename
+     * @param filename Filename (including extension) - (example: file.json)
+     * @return pointer to WorldMapData or nullptr if not exists
+     */
     const WorldMapData * World::get(std::string_view filename) const
     {
         auto iter = std::find_if(m_mapData.begin(), m_mapData.end(), [&](const auto &item) { return item.fileName == filename; });
