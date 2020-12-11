@@ -60,8 +60,12 @@ class SfmlDemoManager
         std::vector<std::unique_ptr<tson::Map>> m_worldMaps; //World-related maps in project
         std::vector<tson::WorldMapData> m_worldData; //World-related data in project
         std::vector<bool> m_worldVisibilityFlags; //World-related data in project
+        std::vector<std::string> m_worldMapInfo;
+        std::vector<std::string> m_projectMapInfo;
 
         tson::Map *m_currentMap;
+        std::string m_currentInfo;
+        bool m_isImguiSizeSet = false;
 
         tson::Project m_project;
 

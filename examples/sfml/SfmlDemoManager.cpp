@@ -15,6 +15,7 @@ void SfmlDemoManager::initialize(const sf::Vector2i &windowSize, const sf::Vecto
     #endif
     m_font.loadFromMemory(vera_font::_VERA_TTF, vera_font::_VERA_TTF_SIZE);
     ImGui::SFML::Init(m_window);
+    ImGui::GetIO().IniFilename = nullptr;
 }
 
 bool SfmlDemoManager::parseMap(const std::string &filename)
@@ -40,6 +41,7 @@ bool SfmlDemoManager::parseMap(const std::string &filename)
 
 bool SfmlDemoManager::parseProject(const std::string &filename)
 {
+    using namespace std::string_literals; //Used for s-suffix
     tson::Tileson t;
     fs::path projectBase = fs::path(m_basePath / "project");
     int projectCount {0};
@@ -66,6 +68,8 @@ bool SfmlDemoManager::parseProject(const std::string &filename)
                         m_worldMaps.push_back(std::move(map));
                         m_worldData.emplace_back(data);
                         m_worldVisibilityFlags.push_back(true);
+                        std::string info = "Part of .world file (inside a project) '"s + world.getPath().filename().string() + "': " + data.fileName;
+                        m_worldMapInfo.emplace_back(info);
                     }
                     else
                     {
@@ -89,7 +93,8 @@ bool SfmlDemoManager::parseProject(const std::string &filename)
                             storeAndLoadImage(tilesetPath, {0, 0});
                         }
                         m_projectMaps.push_back(std::move(map));
-
+                        std::string info = "Part of project file '"s + m_project.getPath().filename().string() + "': " + file.filename().string();
+                        m_projectMapInfo.emplace_back(info);
                     }
                     else
                     {
@@ -112,10 +117,23 @@ bool SfmlDemoManager::parseProject(const std::string &filename)
 void SfmlDemoManager::drawMap()
 {
     m_positionOffset = {0,0};
+    m_currentInfo = (m_mapIndex == 0) ? "This is just a regular Tiled json-map" : "";
     if(m_mapIndex == 0) m_currentMap = m_map.get();
-    else if(m_mapIndex == 1) m_currentMap = m_projectMaps.at(1).get();
-    else if(m_mapIndex == 2) m_currentMap = m_projectMaps.at(0).get();
-    else if(m_mapIndex == 3) m_currentMap = m_projectMaps.at(2).get();
+    else if(m_mapIndex == 1)
+    {
+        m_currentMap = m_projectMaps.at(1).get();
+        m_currentInfo = m_projectMapInfo.at(1);
+    }
+    else if(m_mapIndex == 2)
+    {
+        m_currentMap = m_projectMaps.at(0).get();
+        m_currentInfo = m_projectMapInfo.at(0);
+    }
+    else if(m_mapIndex == 3)
+    {
+        m_currentMap = m_projectMaps.at(2).get();
+        m_currentInfo = m_projectMapInfo.at(2);
+    }
 
     if(m_mapIndex < 4)
     {
@@ -153,10 +171,34 @@ void SfmlDemoManager::drawMap()
 void SfmlDemoManager::drawImgui()
 {
 
+    if(!m_isImguiSizeSet)
+    {
+        ImGui::SetNextWindowSize({300, 400});
+        m_isImguiSizeSet = true;
+    }
     ImGui::Begin("Maps");
     std::string mapsStr = std::to_string(m_mapIndex) + " of " + std::to_string(m_maxMapIndex);
     ImGui::PushItemWidth(45);
     ImGui::LabelText(mapsStr.c_str(), "Map: ");
+
+    if(ImGui::Button("<-"))
+    {
+        --m_mapIndex;
+        if(m_mapIndex < 0)
+            m_mapIndex = m_maxMapIndex;
+    }
+    if(ImGui::IsItemHovered())
+        ImGui::SetTooltip("Previous");
+    ImGui::SameLine();
+
+    if(ImGui::Button("->"))
+    {
+        ++m_mapIndex;
+        if(m_mapIndex > m_maxMapIndex)
+            m_mapIndex = 0;
+    }
+    if(ImGui::IsItemHovered())
+        ImGui::SetTooltip("Next");
     //ImGui::PopItemWidth();
     //ImGui::SameLine();
     //ImGui::LabelText("###second", );
@@ -169,23 +211,16 @@ void SfmlDemoManager::drawImgui()
         {
             std::string id = "Show world - part " + std::to_string(i+1) + "###visibility" + std::to_string(i);
             bool checked = m_worldVisibilityFlags[i];
+            ImGui::TextWrapped("%s", m_worldMapInfo.at(i).c_str());
             if(ImGui::Checkbox(id.c_str(), &checked))
                 m_worldVisibilityFlags[i] = checked;
         }
     }
-    if(ImGui::Button("<<"))
+    else
     {
-        --m_mapIndex;
-        if(m_mapIndex < 0)
-            m_mapIndex = m_maxMapIndex;
+        ImGui::TextWrapped("%s", m_currentInfo.c_str());
     }
-    ImGui::SameLine();
-    if(ImGui::Button(">>"))
-    {
-        ++m_mapIndex;
-        if(m_mapIndex > m_maxMapIndex)
-            m_mapIndex = 0;
-    }
+
     ImGui::End();
 }
 
