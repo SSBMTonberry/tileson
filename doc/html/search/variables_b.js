@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['plus_1256',['plus',['../structnlohmann_1_1detail_1_1dtoa__impl_1_1boundaries.html#a3321ae2816a6ec5250a0d8e29f798232',1,'nlohmann::detail::dtoa_impl::boundaries']]],
-  ['primitive_5fiterator_1257',['primitive_iterator',['../structnlohmann_1_1detail_1_1internal__iterator.html#a2b3bb45f968210e42c282017eeeb63a8',1,'nlohmann::detail::internal_iterator']]]
+  ['number_5f_1571',['number_',['../unionpicojson_1_1value_1_1__storage.html#a4fc799f222c28156f943a891e510e438',1,'picojson::value::_storage']]]
 ];

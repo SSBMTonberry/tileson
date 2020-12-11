@@ -1,8 +1,11 @@
 var searchData=
 [
-  ['object_1389',['object',['../namespacenlohmann_1_1detail.html#a1ed8fc6239da25abcaf681d30ace4985aa8cfde6331bd59eb2ac96f8911c4b666',1,'nlohmann::detail::object()'],['../namespacetson.html#a7316610048678651b4f11a7319bee3f8a497031794414a552435f90151ac3b54b',1,'tson::Object()']]],
-  ['object_5fend_1390',['object_end',['../classnlohmann_1_1detail_1_1parser.html#a37ac88c864dda495f72cb62776b0bebeaf63e2a2468a37aa4f394fcc3bcb8249c',1,'nlohmann::detail::parser']]],
-  ['object_5fstart_1391',['object_start',['../classnlohmann_1_1detail_1_1parser.html#a37ac88c864dda495f72cb62776b0bebeae73f17027cb0acbb537f29d0a6944b26',1,'nlohmann::detail::parser']]],
-  ['objectgroup_1392',['ObjectGroup',['../namespacetson.html#ac06ac2288d940483c17a83daf587780da03d81c8b3dfdf88091a261d6a92f75a6',1,'tson']]],
-  ['ok_1393',['OK',['../namespacetson.html#a7e7be825d3bd60100bb41677df44168bae0aa021e21dddbd6d8cecec71e9cf564',1,'tson']]]
+  ['name_5fseparator_1728',['name_separator',['../classnlohmann_1_1detail_1_1lexer.html#a3f313cdbe187cababfc5e06f0b69b098acc3c64f8ae08c00de1b33f19a4d2913a',1,'nlohmann::detail::lexer']]],
+  ['none_1729',['None',['../namespacetson.html#abcd37c33daaa7579bf76831bc470113da6adf97f83acf6453d4a6a4b1070f3754',1,'tson']]],
+  ['null_1730',['null',['../namespacenlohmann_1_1detail.html#a1ed8fc6239da25abcaf681d30ace4985a37a6259cc0c1dae299a7866489dff0bd',1,'nlohmann::detail']]],
+  ['null_5ftype_1731',['null_type',['../namespacepicojson.html#acbcfb4072b62a8a097a2aaf7a8f8cc02a656199e709e1aaa684dc9b19f6d25f62',1,'picojson']]],
+  ['number_5ffloat_1732',['number_float',['../namespacenlohmann_1_1detail.html#a1ed8fc6239da25abcaf681d30ace4985ad9966ecb59667235a57b4b999a649eef',1,'nlohmann::detail']]],
+  ['number_5finteger_1733',['number_integer',['../namespacenlohmann_1_1detail.html#a1ed8fc6239da25abcaf681d30ace4985a5763da164f8659d94a56e29df64b4bcc',1,'nlohmann::detail']]],
+  ['number_5ftype_1734',['number_type',['../namespacepicojson.html#acbcfb4072b62a8a097a2aaf7a8f8cc02a258b8cac17e3039fe54eadb2f3ebde96',1,'picojson']]],
+  ['number_5funsigned_1735',['number_unsigned',['../namespacenlohmann_1_1detail.html#a1ed8fc6239da25abcaf681d30ace4985adce7cc8ec29055c4158828921f2f265e',1,'nlohmann::detail']]]
 ];

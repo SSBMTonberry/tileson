@@ -5,7 +5,7 @@
 #ifndef TILESON_TILESET_HPP
 #define TILESON_TILESET_HPP
 
-#include "../external/json.hpp"
+//#include "../external/json.hpp"
 
 #include "../objects/Vector2.hpp"
 #include "../objects/Color.hpp"

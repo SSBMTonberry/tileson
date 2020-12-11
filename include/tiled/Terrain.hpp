@@ -5,7 +5,7 @@
 #ifndef TILESON_TERRAIN_HPP
 #define TILESON_TERRAIN_HPP
 
-#include "../external/json.hpp"
+//#include "../external/json.hpp"
 #include "../objects/PropertyCollection.hpp"
 
 namespace tson

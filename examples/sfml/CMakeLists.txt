@@ -3,7 +3,9 @@ project(tileson-sfml-example)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS -DSFML_STATIC) #required to build SFML statically with Windows
 
-set(SOURCE_FILES main.cpp SfmlDemoManager.cpp SfmlDemoManager.h)
+set(IMGUI_PATH ${PROJECT_SOURCE_DIR}/../../external_libs/source/imgui/)
+set(SOURCE_FILES main.cpp SfmlDemoManager.cpp SfmlDemoManager.h ${IMGUI_PATH}/imgui.cpp ${IMGUI_PATH}/imgui_draw.cpp ${IMGUI_PATH}/imgui_demo.cpp
+        ${IMGUI_PATH}/imgui-SFML.cpp ${IMGUI_PATH}/imgui_widgets.cpp)
 set(MY_SFML_LIBS sfml-network sfml-audio sfml-graphics sfml-window sfml-system)
 
 if(LINUX)

@@ -6,7 +6,7 @@
 #define TILESON_LAYER_HPP
 
 #include <set>
-#include "../external/json.hpp"
+//#include "../external/json.hpp"
 #include "../objects/Vector2.hpp"
 #include "../objects/Color.hpp"
 #include "Chunk.hpp"

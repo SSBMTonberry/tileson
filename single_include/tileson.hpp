@@ -23197,6 +23197,7 @@ namespace tson
 
 /*** End of inlined file: Vector2.hpp ***/
 
+//#include "../external/json.hpp"
 
 /*** Start of inlined file: Layer.hpp ***/
 //
@@ -23207,6 +23208,7 @@ namespace tson
 #define TILESON_LAYER_HPP
 
 #include <set>
+//#include "../external/json.hpp"
 
 
 /*** Start of inlined file: Chunk.hpp ***/
@@ -23216,6 +23218,8 @@ namespace tson
 
 #ifndef TILESON_CHUNK_HPP
 #define TILESON_CHUNK_HPP
+
+//#include "../external/json.hpp"
 
 namespace tson
 {
@@ -23323,6 +23327,8 @@ const tson::Vector2i &tson::Chunk::getPosition() const
 
 #ifndef TILESON_OBJECT_HPP
 #define TILESON_OBJECT_HPP
+
+//#include "../external/json.hpp"
 
 
 /*** Start of inlined file: PropertyCollection.hpp ***/
@@ -23632,6 +23638,8 @@ namespace tson
 /*** End of inlined file: Enums.hpp ***/
 
 
+//#include "../external/json.hpp"
+
 namespace tson
 {
 	class Property
@@ -23831,6 +23839,7 @@ void tson::Property::setValueByType(const nlohmann::json &json)
 
 /*** End of inlined file: Property.hpp ***/
 
+//#include "../external/json.hpp"
 #include <map>
 
 namespace tson
@@ -25114,6 +25123,7 @@ const tson::Colori &tson::Layer::getTintColor() const
 /*** End of inlined file: Layer.hpp ***/
 
 
+
 /*** Start of inlined file: Tileset.hpp ***/
 //
 // Created by robin on 22.03.2020.
@@ -25121,6 +25131,8 @@ const tson::Colori &tson::Layer::getTintColor() const
 
 #ifndef TILESON_TILESET_HPP
 #define TILESON_TILESET_HPP
+
+//#include "../external/json.hpp"
 
 
 /*** Start of inlined file: WangSet.hpp ***/
@@ -25131,6 +25143,7 @@ const tson::Colori &tson::Layer::getTintColor() const
 #ifndef TILESON_WANGSET_HPP
 #define TILESON_WANGSET_HPP
 
+//#include "../external/json.hpp"
 
 /*** Start of inlined file: WangColor.hpp ***/
 //
@@ -25139,6 +25152,8 @@ const tson::Colori &tson::Layer::getTintColor() const
 
 #ifndef TILESON_WANGCOLOR_HPP
 #define TILESON_WANGCOLOR_HPP
+
+//#include "../external/json.hpp"
 
 namespace tson
 {
@@ -25220,6 +25235,7 @@ int tson::WangColor::getTile() const
 /*** End of inlined file: WangColor.hpp ***/
 
 
+
 /*** Start of inlined file: WangTile.hpp ***/
 //
 // Created by robin on 22.03.2020.
@@ -25227,6 +25243,8 @@ int tson::WangColor::getTile() const
 
 #ifndef TILESON_WANGTILE_HPP
 #define TILESON_WANGTILE_HPP
+
+//#include "../external/json.hpp"
 
 namespace tson
 {
@@ -25477,6 +25495,8 @@ tson::Property *tson::WangSet::getProp(const std::string &name)
 #ifndef TILESON_TILE_HPP
 #define TILESON_TILE_HPP
 
+//#include "../external/json.hpp"
+
 
 /*** Start of inlined file: Frame.hpp ***/
 //
@@ -25485,6 +25505,8 @@ tson::Property *tson::WangSet::getProp(const std::string &name)
 
 #ifndef TILESON_FRAME_HPP
 #define TILESON_FRAME_HPP
+
+//#include "../external/json.hpp"
 
 namespace tson
 {
@@ -25906,6 +25928,8 @@ void tson::Tile::setProperties(const tson::PropertyCollection &properties)
 #ifndef TILESON_TERRAIN_HPP
 #define TILESON_TERRAIN_HPP
 
+//#include "../external/json.hpp"
+
 namespace tson
 {
 	class Terrain
@@ -26020,6 +26044,7 @@ tson::Property *tson::Terrain::getProp(const std::string &name)
 #define TILESON_GRID_HPP
 
 #include <string>
+//#include "../external/json.hpp"
 
 namespace tson
 {
@@ -26535,6 +26560,7 @@ namespace tson
 
 			inline Layer * getLayer(const std::string &name);
 			inline Tileset * getTileset(const std::string &name);
+			inline Tileset * getTilesetByGid(uint32_t gid);
 
 			template <typename T>
 			inline T get(const std::string &name);
@@ -26845,9 +26871,36 @@ tson::Layer *tson::Map::getLayer(const std::string &name)
 	return &result.operator*();
 }
 
+/*!
+ * Gets a tileset by name
+ *
+ * @param name Name of the tileset
+ * @return tileset with the matching name
+ */
 tson::Tileset *tson::Map::getTileset(const std::string &name)
 {
 	auto result = std::find_if(m_tilesets.begin(), m_tilesets.end(), [&](const tson::Tileset &item) {return item.getName() == name; });
+	if(result == m_tilesets.end())
+		return nullptr;
+
+	return &result.operator*();
+}
+
+/*!
+ * Gets a tileset by gid (graphical ID of a tile). These are always unique, no matter how many tilesets you have
+ *
+ * @param gid Graphical ID of a tile
+ * @return tileset related to the actual gid
+ */
+tson::Tileset *tson::Map::getTilesetByGid(uint32_t gid)
+{
+	auto result = std::find_if(m_tilesets.begin(), m_tilesets.end(), [&](const tson::Tileset &tileset)
+	{
+		int firstId = tileset.getFirstgid(); //First tile id of the tileset
+		int lastId = (firstId + tileset.getTileCount()) - 1;
+
+		return (gid >= firstId && gid <= lastId);
+	});
 	if(result == m_tilesets.end())
 		return nullptr;
 

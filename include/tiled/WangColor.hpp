@@ -5,7 +5,7 @@
 #ifndef TILESON_WANGCOLOR_HPP
 #define TILESON_WANGCOLOR_HPP
 
-#include "../external/json.hpp"
+//#include "../external/json.hpp"
 #include "../objects/Color.hpp"
 
 namespace tson

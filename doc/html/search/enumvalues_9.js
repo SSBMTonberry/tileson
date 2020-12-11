@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['key_1377',['key',['../classnlohmann_1_1detail_1_1parser.html#a37ac88c864dda495f72cb62776b0bebea3c6e0b8a9c15224a8228b9a98ca1531d',1,'nlohmann::detail::parser']]]
+  ['json_1719',['json',['../namespacenlohmann_1_1detail.html#aa554fc6a11519e4f347deb25a9f0db40a466deec76ecdf5fca6d38571f6324d54',1,'nlohmann::detail']]]
 ];

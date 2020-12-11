@@ -6,7 +6,7 @@
 #define TILESON_PROPERTYCOLLECTION_HPP
 
 #include "Property.hpp"
-#include "../external/json.hpp"
+//#include "../external/json.hpp"
 #include <map>
 
 namespace tson

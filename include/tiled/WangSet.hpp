@@ -5,7 +5,7 @@
 #ifndef TILESON_WANGSET_HPP
 #define TILESON_WANGSET_HPP
 
-#include "../external/json.hpp"
+//#include "../external/json.hpp"
 #include "WangColor.hpp"
 #include "WangTile.hpp"
 #include "../objects/PropertyCollection.hpp"
