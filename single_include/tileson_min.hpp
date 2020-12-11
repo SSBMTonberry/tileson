@@ -1413,9 +1413,10 @@ namespace tson
 			 * @param _text Text
 			 * @param _wrap If the text is marked as wrapped
 			 */
-			inline Text(std::string _text, bool _wrap) : text {std::move(_text)}, wrap {_wrap} {};
+			inline Text(std::string _text, bool _wrap, tson::Colori _color) : text {std::move(_text)}, wrap {_wrap}, color {_color} {};
 			//Just make it simple
 			std::string text;
+			tson::Colori color;
 			bool wrap{};
 	};
 }
@@ -1555,7 +1556,7 @@ bool tson::Object::parse(const nlohmann::json &json)
 		m_position = {json["x"].get<int>(), json["y"].get<int>()}; else allFound = false;
 
 	if(json.count("text") > 0)
-		m_text = {json["text"]["text"].get<std::string>(), json["text"]["wrap"].get<bool>()}; //Optional
+		m_text = {json["text"]["text"].get<std::string>(), json["text"]["wrap"].get<bool>(), tson::Colori(json["text"]["color"].get<std::string>())}; //Optional
 
 	setObjectTypeByJson(json);
 
@@ -5148,6 +5149,7 @@ void tson::Layer::decompressData()
  * @param parser A Tileson object used for parsing the maps of the world.
  * @return How many maps who were parsed. Remember to call getStatus() for the actual map to find out if everything went okay.
  */
+#ifndef DISABLE_CPP17_FILESYSTEM
 int tson::World::loadMaps(tson::Tileson *parser)
 {
 	m_maps.clear();
@@ -5162,6 +5164,7 @@ int tson::World::loadMaps(tson::Tileson *parser)
 
 	return m_maps.size();
 }
+#endif
 
 #endif //TILESON_TILESON_FORWARD_HPP
 

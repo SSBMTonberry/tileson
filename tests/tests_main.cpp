@@ -8,6 +8,7 @@
 #include "../TilesonConfig.h"
 
 //#define TILESON_UNIT_TEST_USE_SINGLE_HEADER
+//#define DISABLE_CPP17_FILESYSTEM
 
 #ifdef TILESON_UNIT_TEST_USE_SINGLE_HEADER
     #include "../single_include/tileson.hpp"
@@ -75,6 +76,12 @@ void performMainAsserts(tson::Map *map)
     REQUIRE(main->getTileData(8,14)->getTileset() != nullptr);
     REQUIRE(main->getTileData(8,14)->getPosition({8,14}) == main->getTileObject(8,14)->getPosition());
     REQUIRE(main->getTileData().size() == main->getTileObjects().size());
+
+    tson::Colori color = map->getLayer("Object Layer")->firstObj("text")->getText().color;
+    REQUIRE(color.r == 254);
+    REQUIRE(color.g == 254);
+    REQUIRE(color.b == 254);
+    REQUIRE(color.a == 255);
 }
 
 void checkChangesAfterTiledVersion124(tson::Map *map)

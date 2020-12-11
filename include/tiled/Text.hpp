@@ -18,9 +18,10 @@ namespace tson
              * @param _text Text
              * @param _wrap If the text is marked as wrapped
              */
-            inline Text(std::string _text, bool _wrap) : text {std::move(_text)}, wrap {_wrap} {};
+            inline Text(std::string _text, bool _wrap, tson::Colori _color) : text {std::move(_text)}, wrap {_wrap}, color {_color} {};
             //Just make it simple
             std::string text;
+            tson::Colori color;
             bool wrap{};
     };
 }

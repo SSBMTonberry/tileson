@@ -145,7 +145,7 @@ bool tson::Object::parse(const nlohmann::json &json)
         m_position = {json["x"].get<int>(), json["y"].get<int>()}; else allFound = false;
 
     if(json.count("text") > 0)
-        m_text = {json["text"]["text"].get<std::string>(), json["text"]["wrap"].get<bool>()}; //Optional
+        m_text = {json["text"]["text"].get<std::string>(), json["text"]["wrap"].get<bool>(), tson::Colori(json["text"]["color"].get<std::string>())}; //Optional
 
     setObjectTypeByJson(json);
 
