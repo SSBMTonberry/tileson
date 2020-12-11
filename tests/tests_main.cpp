@@ -8,6 +8,7 @@
 #include "../TilesonConfig.h"
 
 //#define TILESON_UNIT_TEST_USE_SINGLE_HEADER
+//#define DISABLE_CPP17_FILESYSTEM
 
 #ifdef TILESON_UNIT_TEST_USE_SINGLE_HEADER
     #include "../single_include/tileson.hpp"

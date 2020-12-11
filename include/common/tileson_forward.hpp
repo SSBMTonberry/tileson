@@ -133,6 +133,7 @@ void tson::Layer::decompressData()
  * @param parser A Tileson object used for parsing the maps of the world.
  * @return How many maps who were parsed. Remember to call getStatus() for the actual map to find out if everything went okay.
  */
+#ifndef DISABLE_CPP17_FILESYSTEM
 int tson::World::loadMaps(tson::Tileson *parser)
 {
     m_maps.clear();
@@ -147,5 +148,6 @@ int tson::World::loadMaps(tson::Tileson *parser)
 
     return m_maps.size();
 }
+#endif
 
 #endif //TILESON_TILESON_FORWARD_HPP
