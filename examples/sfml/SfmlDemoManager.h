@@ -55,7 +55,7 @@ class SfmlDemoManager
         sf::RenderWindow m_window;
         std::unique_ptr<tson::Map> m_map;
 
-        std::vector<std::unique_ptr<tson::Map>> m_projectMaps; //Non-world maps in project
+        std::map<std::string, std::unique_ptr<tson::Map>> m_projectMaps; //Non-world maps in project
 
         std::vector<std::unique_ptr<tson::Map>> m_worldMaps; //World-related maps in project
         std::vector<tson::WorldMapData> m_worldData; //World-related data in project
