@@ -297,6 +297,52 @@ TEST_CASE( "Parse a minimal version of whole map by memory", "[complete][parse][
     }
 }
 
+TEST_CASE( "Parse map3.json - expect correct tileset data for all TileObjects", "[complete][parse][map3]" )
+{
+    tson::Tileson t;
+    #ifndef DISABLE_CPP17_FILESYSTEM
+    fs::path pathLocal {"../../content/test-maps/project/maps/map3.json"};
+    fs::path pathTravis {"../content/test-maps/project/maps/map3.json"};
+    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    #else
+    std::string pathToUse = "../../content/test-maps/ultimate_test_base64.json";
+    #endif
+    std::unique_ptr<tson::Map> map = t.parse({pathToUse});
+    size_t numberOfEmptyTilesets = 0;
+    size_t numberOfOkTilesets = 0;
+    if (map->getStatus() == tson::ParseStatus::OK)
+    {
+        for(const auto &layer : map->getLayers())
+        {
+            if(layer.getType() == tson::LayerType::TileLayer)
+            {
+                for (const auto& [pos, tileObject] : layer.getTileObjects())
+                {
+                    tson::Tileset *tileset = tileObject.getTile()->getTileset();
+                    tson::Rect drawingRect = tileObject.getDrawingRect();
+                    tson::Vector2f position = tileObject.getPosition();
+                    REQUIRE(tileset != nullptr);
+                    //fs::path p = pathToUse.parent_path() / tileset->getImage();
+                    //if (!fs::is_regular_file(p))
+                    //    ++numberOfEmptyTilesets;
+                    if (tileset->getColumns() < 0)
+                        ++numberOfEmptyTilesets;
+                    else
+                        ++numberOfOkTilesets;
+                }
+            }
+        }
+
+    }
+    else
+    {
+        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
+        REQUIRE(true);
+    }
+
+    REQUIRE(numberOfEmptyTilesets == 0);
+}
+
 
 
 TEST_CASE( "Go through demo code - get success", "[demo]" )
