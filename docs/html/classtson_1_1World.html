@@ -101,6 +101,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a11323f68497548bfe1eb29ed5d2f05c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49b367236f68573cc17697d92c633cc7"><td class="memItemLeft" align="right" valign="top">const std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1World.html#a49b367236f68573cc17697d92c633cc7">getType</a> () const</td></tr>
 <tr class="separator:a49b367236f68573cc17697d92c633cc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab640b7f04f0c3f8f3b38cf3cdec174ca"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; std::unique_ptr&lt; <a class="el" href="classtson_1_1Map.html">tson::Map</a> &gt; &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1World.html#ab640b7f04f0c3f8f3b38cf3cdec174ca">getMaps</a> () const</td></tr>
+<tr class="separator:ab640b7f04f0c3f8f3b38cf3cdec174ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a4366d0218ca27808ea941d40f9f1643a"></a>
@@ -268,6 +270,32 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab640b7f04f0c3f8f3b38cf3cdec174ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab640b7f04f0c3f8f3b38cf3cdec174ca">&#9670;&nbsp;</a></span>getMaps()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt; std::unique_ptr&lt; <a class="el" href="classtson_1_1Map.html">tson::Map</a> &gt; &gt; &amp; tson::World::getMaps </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get all maps that have been loaded by <a class="el" href="classtson_1_1World.html#a013ba94da8ae973705365456abee9dfa">loadMaps()</a>. NOTE: This is untested, and was a last second addition to <a class="el" href="classtson_1_1Tileson.html">Tileson</a> 1.2.0, as I had forgot about the <a class="el" href="classtson_1_1World.html#a013ba94da8ae973705365456abee9dfa">loadMaps()</a> functionality (also untested) If you find anything malfunctioning - please report. </p><dl class="section return"><dt>Returns</dt><dd>All maps loaded by <a class="el" href="classtson_1_1World.html#a013ba94da8ae973705365456abee9dfa">loadMaps()</a> </dd></dl>
 
 </div>
 </div>

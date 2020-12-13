@@ -27081,6 +27081,7 @@ namespace tson
 			[[nodiscard]] inline const std::vector<WorldMapData> &getMapData() const;
 			[[nodiscard]] inline bool onlyShowAdjacentMaps() const;
 			[[nodiscard]] inline const std::string &getType() const;
+			[[nodiscard]] inline const std::vector<std::unique_ptr<tson::Map>> &getMaps() const;
 
 		private:
 			inline void parseJson(const nlohmann::json &json);
@@ -27176,6 +27177,17 @@ namespace tson
 	{
 		auto iter = std::find_if(m_mapData.begin(), m_mapData.end(), [&](const auto &item) { return item.fileName == filename; });
 		return (iter == m_mapData.end()) ? nullptr : iter.operator->();
+	}
+
+	/*!
+	 * Get all maps that have been loaded by loadMaps().
+	 * NOTE: This is untested, and was a last second addition to Tileson 1.2.0, as I had forgot about the loadMaps() functionality (also untested)
+	 * If you find anything malfunctioning - please report.
+	 * @return All maps loaded by loadMaps()
+	 */
+	const std::vector<std::unique_ptr<tson::Map>> &World::getMaps() const
+	{
+		return m_maps;
 	}
 
 }
