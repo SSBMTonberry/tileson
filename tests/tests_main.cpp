@@ -76,12 +76,6 @@ void performMainAsserts(tson::Map *map)
     REQUIRE(main->getTileData(8,14)->getTileset() != nullptr);
     REQUIRE(main->getTileData(8,14)->getPosition({8,14}) == main->getTileObject(8,14)->getPosition());
     REQUIRE(main->getTileData().size() == main->getTileObjects().size());
-
-    tson::Colori color = map->getLayer("Object Layer")->firstObj("text")->getText().color;
-    REQUIRE(color.r == 254);
-    REQUIRE(color.g == 254);
-    REQUIRE(color.b == 254);
-    REQUIRE(color.a == 255);
 }
 
 void checkChangesAfterTiledVersion124(tson::Map *map)
@@ -105,6 +99,12 @@ TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" )
     {
         performMainAsserts(map.get());
         checkChangesAfterTiledVersion124(map.get());
+        //Just check the colors here
+        tson::Colori color = map->getLayer("Object Layer")->firstObj("text")->getText().color;
+        REQUIRE(color.r == 254);
+        REQUIRE(color.g == 254);
+        REQUIRE(color.b == 254);
+        REQUIRE(color.a == 255);
     }
     else
     {
