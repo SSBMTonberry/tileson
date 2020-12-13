@@ -11,8 +11,6 @@ maps made with newer versions of Tiled just as well.
 
 Be sure to take a look at the release notes to see what's new!
 
-https://ssbmtonberry.github.io/tileson/html
-
 ## Documentation
 
 There is a `Doxygen` generated documentation of Tileson that can be found [HERE](https://ssbmtonberry.github.io/tileson/html)
