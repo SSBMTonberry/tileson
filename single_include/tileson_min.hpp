@@ -1556,7 +1556,11 @@ bool tson::Object::parse(const nlohmann::json &json)
 		m_position = {json["x"].get<int>(), json["y"].get<int>()}; else allFound = false;
 
 	if(json.count("text") > 0)
-		m_text = {json["text"]["text"].get<std::string>(), json["text"]["wrap"].get<bool>(), tson::Colori(json["text"]["color"].get<std::string>())}; //Optional
+	{
+		bool hasColor = json["text"].count("color") > 0;
+		tson::Color c = (hasColor) ? tson::Colori(json["text"]["color"].get<std::string>()) : tson::Colori();
+		m_text = {json["text"]["text"].get<std::string>(), json["text"]["wrap"].get<bool>(), c}; //Optional
+	}
 
 	setObjectTypeByJson(json);
 
@@ -3992,6 +3996,7 @@ namespace tson
 			inline Tileset * getTilesetByGid(uint32_t gid);
 
 		private:
+			inline void createTilesetData(const nlohmann::json &json);
 			inline void processData();
 
 			Colori                                 m_backgroundColor;   /*! 'backgroundcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)*/;
@@ -4089,14 +4094,37 @@ bool tson::Map::parse(const nlohmann::json &json, tson::DecompressorContainer *d
 	//More advanced data
 	if(json.count("layers") > 0 && json["layers"].is_array())
 		std::for_each(json["layers"].begin(), json["layers"].end(), [&](const nlohmann::json &item) { m_layers.emplace_back(item, this); });
-	if(json.count("tilesets") > 0 && json["tilesets"].is_array())
-		std::for_each(json["tilesets"].begin(), json["tilesets"].end(), [&](const nlohmann::json &item) { m_tilesets.emplace_back(item, this); });
+
 	if(json.count("properties") > 0 && json["properties"].is_array())
 		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
 
+	createTilesetData(json);
 	processData();
 
 	return allFound;
+}
+
+/*!
+ * Tileset data must be created in two steps to prevent malformed tson::Tileset pointers inside tson::Tile
+ */
+void tson::Map::createTilesetData(const nlohmann::json &json)
+{
+	if(json.count("tilesets") > 0 && json["tilesets"].is_array())
+	{
+		//First created tileset objects
+		std::for_each(json["tilesets"].begin(), json["tilesets"].end(), [&](const nlohmann::json &item)
+		{
+			m_tilesets.emplace_back();
+		});
+
+		int i = 0;
+		//Then do the parsing
+		std::for_each(json["tilesets"].begin(), json["tilesets"].end(), [&](const nlohmann::json &item)
+		{
+			m_tilesets[i].parse(item, this);
+			++i;
+		});
+	}
 }
 
 /*!
