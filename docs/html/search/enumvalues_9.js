@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['json_1720',['json',['../namespacenlohmann_1_1detail.html#aa554fc6a11519e4f347deb25a9f0db40a466deec76ecdf5fca6d38571f6324d54',1,'nlohmann::detail']]]
+  ['missingdata_612',['MissingData',['../namespacetson.html#a7e7be825d3bd60100bb41677df44168bafe155956e8f33e5cffa82cc86a36afbd',1,'tson']]]
 ];

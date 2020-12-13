@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['k_1560',['k',['../structnlohmann_1_1detail_1_1dtoa__impl_1_1cached__power.html#a8c1f2efed643eeaa8fae83c697a29c6a',1,'nlohmann::detail::dtoa_impl::cached_power']]],
-  ['kalpha_1561',['kAlpha',['../namespacenlohmann_1_1detail_1_1dtoa__impl.html#ac1ea1316de0b4a219f707c76b1db1966',1,'nlohmann::detail::dtoa_impl']]],
-  ['kgamma_1562',['kGamma',['../namespacenlohmann_1_1detail_1_1dtoa__impl.html#a4a750fcc38da1ce68b7e25ab3a230e20',1,'nlohmann::detail::dtoa_impl']]],
-  ['kprecision_1563',['kPrecision',['../structnlohmann_1_1detail_1_1dtoa__impl_1_1diyfp.html#a03682754b06ed4f30b263119eecc2d52',1,'nlohmann::detail::dtoa_impl::diyfp']]]
+  ['m_5fid_570',['m_id',['../classtson_1_1PropertyCollection.html#a4a4f991ba691cbdb54e9e81a79ef2c61',1,'tson::PropertyCollection']]],
+  ['m_5fname_571',['m_name',['../classtson_1_1Property.html#af1f97b6afdeed73db4f5d2a533be2e5f',1,'tson::Property']]],
+  ['m_5fproperties_572',['m_properties',['../classtson_1_1PropertyCollection.html#aa24d8fa316c823910db6de42a6b90b5c',1,'tson::PropertyCollection']]],
+  ['m_5ftype_573',['m_type',['../classtson_1_1Property.html#aafe3dea9b34ca4223443453a2d853691',1,'tson::Property']]],
+  ['m_5fvalue_574',['m_value',['../classtson_1_1Property.html#a7c4094c49c3b10e0698d3f96f6695c68',1,'tson::Property']]]
 ];

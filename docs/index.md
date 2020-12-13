@@ -9,6 +9,10 @@ maps made with newer versions of Tiled just as well.
 
 Be sure to take a look at the release notes to see what's new!
 
+## Documentation
+
+There is a `Doxygen` generated documentation of Tileson that can be found [HERE](https://ssbmtonberry.github.io/tileson/html)
+
 # Tileson is header-only!
 This means that all you need is one file, `single_include/tileson.hpp` to have Tileson going
 in your project! The single-file is generated, and is quite large, as it uses the nlohmann/json as a built-in dependency,

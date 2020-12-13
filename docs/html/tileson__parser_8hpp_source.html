@@ -102,7 +102,7 @@ $(function() {
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;            <span class="keyword">inline</span> std::unique_ptr&lt;tson::Map&gt; <a class="code" href="classtson_1_1Tileson.html#a3fdc6f2de698f1831414a092f76930f5">parse</a>(<span class="keyword">const</span> <span class="keywordtype">void</span> * data, <span class="keywordtype">size_t</span> size);</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;            <span class="keyword">inline</span> <a class="code" href="classtson_1_1DecompressorContainer.html">tson::DecompressorContainer</a> *<a class="code" href="classtson_1_1Tileson.html#ac0d8f569178b0c718a8a32351ab7c06a">decompressors</a>();</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;            <span class="keyword">inline</span> std::unique_ptr&lt;tson::Map&gt; parseJson(<span class="keyword">const</span> <a class="code" href="classnlohmann_1_1basic__json.html">nlohmann::json</a> &amp;<a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;            <span class="keyword">inline</span> std::unique_ptr&lt;tson::Map&gt; parseJson(<span class="keyword">const</span> nlohmann::json &amp;json);</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;            <a class="code" href="classtson_1_1DecompressorContainer.html">tson::DecompressorContainer</a> m_decompressors;</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    };</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;}</div>
@@ -119,19 +119,19 @@ $(function() {
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">if</span>(fs::exists(path) &amp;&amp; fs::is_regular_file(path))</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    {</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        std::ifstream i(path.u8string());</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <a class="code" href="classnlohmann_1_1basic__json.html">nlohmann::json</a> <a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        nlohmann::json json;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        <span class="keywordflow">try</span></div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        {</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            i &gt;&gt; <a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;            i &gt;&gt; json;</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        }</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordflow">catch</span>(<span class="keyword">const</span> <a class="code" href="classnlohmann_1_1detail_1_1parse__error.html">nlohmann::json::parse_error</a> &amp;error)</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        <span class="keywordflow">catch</span>(<span class="keyword">const</span> nlohmann::json::parse_error &amp;error)</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        {</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;            std::string message = <span class="stringliteral">&quot;Parse error: &quot;</span>;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            message += std::string(error.<a class="code" href="classnlohmann_1_1detail_1_1exception.html#a2ecff34cee144f843644a252a07cdadc">what</a>());</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            message += std::string(error.what());</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            message += std::string(<span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keywordflow">return</span> std::make_unique&lt;tson::Map&gt;(tson::ParseStatus::ParseError, message);</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        }</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordflow">return</span> parseJson(<a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;        <span class="keywordflow">return</span> parseJson(json);</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    }</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    std::string msg = <span class="stringliteral">&quot;File not found: &quot;</span>;</div>
@@ -144,19 +144,19 @@ $(function() {
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;{</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    std::ifstream i(path);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <a class="code" href="classnlohmann_1_1basic__json.html">nlohmann::json</a> <a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    nlohmann::json json;</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">try</span></div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    {</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        i &gt;&gt; <a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        i &gt;&gt; json;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    }</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">catch</span>(<span class="keyword">const</span> <a class="code" href="classnlohmann_1_1detail_1_1parse__error.html">nlohmann::json::parse_error</a> &amp;error)</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">catch</span>(<span class="keyword">const</span> nlohmann::json::parse_error &amp;error)</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    {</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        std::string message = <span class="stringliteral">&quot;Parse error: &quot;</span>;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        message += std::string(error.<a class="code" href="classnlohmann_1_1detail_1_1exception.html#a2ecff34cee144f843644a252a07cdadc">what</a>());</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        message += std::string(error.what());</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        message += std::string(<span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordflow">return</span> std::make_unique&lt;tson::Map&gt; (tson::ParseStatus::ParseError, message);</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    }</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordflow">return</span> std::move(parseJson(<a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>));</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordflow">return</span> std::move(parseJson(json));</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;}</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
@@ -167,26 +167,26 @@ $(function() {
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160; </div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <a class="code" href="classtson_1_1MemoryStream.html">tson::MemoryStream</a> mem {(uint8_t *)data, size};</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <a class="code" href="classnlohmann_1_1basic__json.html">nlohmann::json</a> <a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>;</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    nlohmann::json json;</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordflow">try</span></div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    {</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        mem &gt;&gt; <a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        mem &gt;&gt; json;</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    }</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordflow">catch</span> (<span class="keyword">const</span> <a class="code" href="classnlohmann_1_1detail_1_1parse__error.html">nlohmann::json::parse_error</a>&amp; error)</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordflow">catch</span> (<span class="keyword">const</span> nlohmann::json::parse_error&amp; error)</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    {</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        std::string message = <span class="stringliteral">&quot;Parse error: &quot;</span>;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        message += std::string(error.<a class="code" href="classnlohmann_1_1detail_1_1exception.html#a2ecff34cee144f843644a252a07cdadc">what</a>());</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        message += std::string(error.what());</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        message += std::string(<span class="stringliteral">&quot;\n&quot;</span>);</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;        <span class="keywordflow">return</span> std::make_unique&lt;tson::Map&gt;(tson::ParseStatus::ParseError, message);</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    }</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keywordflow">return</span> std::move(parseJson(<a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>));</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keywordflow">return</span> std::move(parseJson(json));</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;}</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;std::unique_ptr&lt;tson::Map&gt; tson::Tileson::parseJson(<span class="keyword">const</span> <a class="code" href="classnlohmann_1_1basic__json.html">nlohmann::json</a> &amp;<a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>)</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;std::unique_ptr&lt;tson::Map&gt; tson::Tileson::parseJson(<span class="keyword">const</span> nlohmann::json &amp;json)</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;{</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    std::unique_ptr&lt;tson::Map&gt; map = std::make_unique&lt;tson::Map&gt;();</div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keywordflow">if</span>(map-&gt;<a class="code" href="classtson_1_1Map.html#a5195d76bcefa1994b491e6252567deb7">parse</a>(<a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>, &amp;m_decompressors))</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keywordflow">if</span>(map-&gt;<a class="code" href="classtson_1_1Map.html#a5195d76bcefa1994b491e6252567deb7">parse</a>(json, &amp;m_decompressors))</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        <span class="keywordflow">return</span> std::move(map);</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    <span class="keywordflow">return</span> std::make_unique&lt;tson::Map&gt; (<a class="code" href="namespacetson.html#a7e7be825d3bd60100bb41677df44168bae0aa021e21dddbd6d8cecec71e9cf564">tson::ParseStatus::MissingData</a>, <span class="stringliteral">&quot;Missing map data...&quot;</span>);</div>
@@ -202,12 +202,9 @@ $(function() {
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="preprocessor">#endif //TILESON_TILESON_PARSER_HPP</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aMemoryStream_8hpp_html"><div class="ttname"><a href="MemoryStream_8hpp.html">MemoryStream.hpp</a></div></div>
-<div class="ttc" id="anamespacenlohmann_html_a2bfd99e845a2e5cd90aeaf1b1431f474"><div class="ttname"><a href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">nlohmann::json</a></div><div class="ttdeci">basic_json&lt;&gt; json</div><div class="ttdoc">default JSON class</div><div class="ttdef"><b>Definition:</b> json.hpp:2355</div></div>
 <div class="ttc" id="aclasstson_1_1DecompressorContainer_html"><div class="ttname"><a href="classtson_1_1DecompressorContainer.html">tson::DecompressorContainer</a></div><div class="ttdef"><b>Definition:</b> DecompressorContainer.hpp:16</div></div>
 <div class="ttc" id="aclasstson_1_1Tileson_html_ac0d8f569178b0c718a8a32351ab7c06a"><div class="ttname"><a href="classtson_1_1Tileson.html#ac0d8f569178b0c718a8a32351ab7c06a">tson::Tileson::decompressors</a></div><div class="ttdeci">tson::DecompressorContainer * decompressors()</div><div class="ttdef"><b>Definition:</b> tileson_parser.hpp:149</div></div>
-<div class="ttc" id="aclassnlohmann_1_1detail_1_1exception_html_a2ecff34cee144f843644a252a07cdadc"><div class="ttname"><a href="classnlohmann_1_1detail_1_1exception.html#a2ecff34cee144f843644a252a07cdadc">nlohmann::detail::exception::what</a></div><div class="ttdeci">JSON_HEDLEY_RETURNS_NON_NULL const char * what() const noexcept override</div><div class="ttdoc">returns the explanatory string</div><div class="ttdef"><b>Definition:</b> json.hpp:1779</div></div>
 <div class="ttc" id="aMap_8hpp_html"><div class="ttname"><a href="Map_8hpp.html">Map.hpp</a></div></div>
-<div class="ttc" id="aclassnlohmann_1_1detail_1_1parse__error_html"><div class="ttname"><a href="classnlohmann_1_1detail_1_1parse__error.html">nlohmann::detail::parse_error</a></div><div class="ttdoc">exception indicating a parse error</div><div class="ttdef"><b>Definition:</b> json.hpp:1846</div></div>
 <div class="ttc" id="aclasstson_1_1Tileson_html_a3fdc6f2de698f1831414a092f76930f5"><div class="ttname"><a href="classtson_1_1Tileson.html#a3fdc6f2de698f1831414a092f76930f5">tson::Tileson::parse</a></div><div class="ttdeci">std::unique_ptr&lt; tson::Map &gt; parse(const fs::path &amp;path)</div><div class="ttdef"><b>Definition:</b> tileson_parser.hpp:54</div></div>
 <div class="ttc" id="aTools_8hpp_html"><div class="ttname"><a href="Tools_8hpp.html">Tools.hpp</a></div></div>
 <div class="ttc" id="aDecompressorContainer_8hpp_html"><div class="ttname"><a href="DecompressorContainer_8hpp.html">DecompressorContainer.hpp</a></div></div>
@@ -216,7 +213,6 @@ $(function() {
 <div class="ttc" id="aProject_8hpp_html"><div class="ttname"><a href="Project_8hpp.html">Project.hpp</a></div></div>
 <div class="ttc" id="aclasstson_1_1Map_html_a5195d76bcefa1994b491e6252567deb7"><div class="ttname"><a href="classtson_1_1Map.html#a5195d76bcefa1994b491e6252567deb7">tson::Map::parse</a></div><div class="ttdeci">bool parse(const nlohmann::json &amp;json, tson::DecompressorContainer *decompressors)</div><div class="ttdef"><b>Definition:</b> Map.hpp:135</div></div>
 <div class="ttc" id="aclasstson_1_1Base64Decompressor_html"><div class="ttname"><a href="classtson_1_1Base64Decompressor.html">tson::Base64Decompressor</a></div><div class="ttdef"><b>Definition:</b> Base64Decompressor.hpp:15</div></div>
-<div class="ttc" id="aclassnlohmann_1_1basic__json_html"><div class="ttname"><a href="classnlohmann_1_1basic__json.html">nlohmann::basic_json</a></div><div class="ttdoc">a class to store JSON values</div><div class="ttdef"><b>Definition:</b> json.hpp:14572</div></div>
 <div class="ttc" id="aclasstson_1_1MemoryStream_html"><div class="ttname"><a href="classtson_1_1MemoryStream.html">tson::MemoryStream</a></div><div class="ttdef"><b>Definition:</b> MemoryStream.hpp:12</div></div>
 <div class="ttc" id="aclasstson_1_1Tileson_html_a0e28083c5cd0c86e466a02ba1cc1ba7b"><div class="ttname"><a href="classtson_1_1Tileson.html#a0e28083c5cd0c86e466a02ba1cc1ba7b">tson::Tileson::Tileson</a></div><div class="ttdeci">Tileson(bool includeBase64Decoder=true)</div><div class="ttdef"><b>Definition:</b> tileson_parser.hpp:42</div></div>
 <div class="ttc" id="aclasstson_1_1DecompressorContainer_html_a5d13e3f29f043acc9f6622743d136cd9"><div class="ttname"><a href="classtson_1_1DecompressorContainer.html#a5d13e3f29f043acc9f6622743d136cd9">tson::DecompressorContainer::add</a></div><div class="ttdeci">void add(Args &amp;&amp;... args)</div><div class="ttdef"><b>Definition:</b> DecompressorContainer.hpp:34</div></div>

@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['rectangle_1748',['Rectangle',['../namespacetson.html#a7316610048678651b4f11a7319bee3f8ace9291906a4c3b042650b70d7f3b152e',1,'tson']]],
-  ['replace_1749',['replace',['../namespacenlohmann_1_1detail.html#a5a76b60b26dc8c47256a996d18d967dfa9dde360102c103867bd2f45872f1129c',1,'nlohmann::detail']]],
-  ['right_1750',['Right',['../namespacetson.html#ada2375f45be683cd0407a7b43ad8e5e7a92b09c7c48c520c3c55e497875da437c',1,'tson']]]
+  ['undefined_630',['Undefined',['../namespacetson.html#ac06ac2288d940483c17a83daf587780daec0fc0100c4fc1ce4eea230c3dc10360',1,'tson::Undefined()'],['../namespacetson.html#a072f9f86eaa4189282ed315ddfde0094aec0fc0100c4fc1ce4eea230c3dc10360',1,'tson::Undefined()'],['../namespacetson.html#a7316610048678651b4f11a7319bee3f8aec0fc0100c4fc1ce4eea230c3dc10360',1,'tson::Undefined()']]],
+  ['unspecified_631',['Unspecified',['../namespacetson.html#ada2375f45be683cd0407a7b43ad8e5e7a6fcdc090caeade09d0efd6253932b6f5',1,'tson']]]
 ];

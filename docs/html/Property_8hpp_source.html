@@ -138,7 +138,7 @@ $(function() {
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;            <span class="comment">//};</span></div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            <span class="keyword">inline</span> <a class="code" href="classtson_1_1Property.html#a0356d5371725aa7f0cc03b13abb4e320">Property</a>();</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <span class="keyword">inline</span> <a class="code" href="classtson_1_1Property.html#a0356d5371725aa7f0cc03b13abb4e320">Property</a>(<span class="keyword">const</span> <a class="code" href="classnlohmann_1_1basic__json.html">nlohmann::json</a> &amp;<a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            <span class="keyword">inline</span> <a class="code" href="classtson_1_1Property.html#a0356d5371725aa7f0cc03b13abb4e320">Property</a>(<span class="keyword">const</span> nlohmann::json &amp;json);</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keyword">inline</span> <a class="code" href="classtson_1_1Property.html#a0356d5371725aa7f0cc03b13abb4e320">Property</a>(std::string name, std::any value, <a class="code" href="namespacetson.html#a072f9f86eaa4189282ed315ddfde0094">Type</a> type);</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classtson_1_1Property.html#a8ff1dae4110fac51d024407303552b1b">setValue</a>(<span class="keyword">const</span> std::any &amp;value);</div>
@@ -155,7 +155,7 @@ $(function() {
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keyword">protected</span>:</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classtson_1_1Property.html#a69849575fcc65abcfed6ea0e3990c367">setTypeByString</a>(<span class="keyword">const</span> std::string &amp;str);</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classtson_1_1Property.html#aab4439cdd26d7ab8b99be58b219558a5">setValueByType</a>(<span class="keyword">const</span> <a class="code" href="classnlohmann_1_1basic__json.html">nlohmann::json</a> &amp;<a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="classtson_1_1Property.html#aab4439cdd26d7ab8b99be58b219558a5">setValueByType</a>(<span class="keyword">const</span> nlohmann::json &amp;json);</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
 <div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="classtson_1_1Property.html#aafe3dea9b34ca4223443453a2d853691">   87</a></span>&#160;            <a class="code" href="namespacetson.html#a072f9f86eaa4189282ed315ddfde0094">Type</a> <a class="code" href="classtson_1_1Property.html#aafe3dea9b34ca4223443453a2d853691">m_type</a> = Type::Undefined;</div>
 <div class="line"><a name="l00088"></a><span class="lineno"><a class="line" href="classtson_1_1Property.html#af1f97b6afdeed73db4f5d2a533be2e5f">   88</a></span>&#160;            std::string <a class="code" href="classtson_1_1Property.html#af1f97b6afdeed73db4f5d2a533be2e5f">m_name</a>;</div>
@@ -185,11 +185,11 @@ $(function() {
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;}</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="classtson_1_1Property.html#a1535104ab7b74a5083d9d3d4cd01ca64">  115</a></span>&#160;<a class="code" href="classtson_1_1Property.html#a0356d5371725aa7f0cc03b13abb4e320">tson::Property::Property</a>(<span class="keyword">const</span> <a class="code" href="classnlohmann_1_1basic__json.html">nlohmann::json</a> &amp;<a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>)</div>
+<div class="line"><a name="l00115"></a><span class="lineno"><a class="line" href="classtson_1_1Property.html#a1535104ab7b74a5083d9d3d4cd01ca64">  115</a></span>&#160;<a class="code" href="classtson_1_1Property.html#a0356d5371725aa7f0cc03b13abb4e320">tson::Property::Property</a>(<span class="keyword">const</span> nlohmann::json &amp;json)</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;{</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    setTypeByString(<a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>[<span class="stringliteral">&quot;type&quot;</span>].get&lt;std::string&gt;());</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    setValueByType(<a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>[<span class="stringliteral">&quot;value&quot;</span>]);</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    m_name = <a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>[<span class="stringliteral">&quot;name&quot;</span>].get&lt;std::string&gt;();</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    setTypeByString(json[<span class="stringliteral">&quot;type&quot;</span>].get&lt;std::string&gt;());</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    setValueByType(json[<span class="stringliteral">&quot;value&quot;</span>]);</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    m_name = json[<span class="stringliteral">&quot;name&quot;</span>].get&lt;std::string&gt;();</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;}</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
 <div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="classtson_1_1Property.html#a37ff89a2917eb1e7f629bfbbe93d7757">  122</a></span>&#160;<a class="code" href="classtson_1_1Property.html#a0356d5371725aa7f0cc03b13abb4e320">tson::Property::Property</a>(std::string name, std::any value, <a class="code" href="namespacetson.html#a072f9f86eaa4189282ed315ddfde0094">Type</a> type) : m_name { move(name) }, m_value { move(value) }, m_type {type}</div>
@@ -255,40 +255,40 @@ $(function() {
 <div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;        m_type = tson::Type::Undefined;</div>
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;}</div>
 <div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160; </div>
-<div class="line"><a name="l00206"></a><span class="lineno"><a class="line" href="classtson_1_1Property.html#aab4439cdd26d7ab8b99be58b219558a5">  206</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classtson_1_1Property.html#aab4439cdd26d7ab8b99be58b219558a5">tson::Property::setValueByType</a>(<span class="keyword">const</span> <a class="code" href="classnlohmann_1_1basic__json.html">nlohmann::json</a> &amp;<a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>)</div>
+<div class="line"><a name="l00206"></a><span class="lineno"><a class="line" href="classtson_1_1Property.html#aab4439cdd26d7ab8b99be58b219558a5">  206</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="classtson_1_1Property.html#aab4439cdd26d7ab8b99be58b219558a5">tson::Property::setValueByType</a>(<span class="keyword">const</span> nlohmann::json &amp;json)</div>
 <div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;{</div>
 <div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="keywordflow">switch</span>(m_type)</div>
 <div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    {</div>
 <div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        <span class="keywordflow">case</span> <a class="code" href="namespacetson.html#a072f9f86eaa4189282ed315ddfde0094acb5feb1b7314637725a2e73bdc9f7295">Type::Color</a>:</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;            m_value = <a class="code" href="namespacetson.html#ae0579e97e7ba7d84797f4a258fd9af7e">Colori</a>(<a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>.get&lt;std::string&gt;());</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;            m_value = <a class="code" href="namespacetson.html#ae0579e97e7ba7d84797f4a258fd9af7e">Colori</a>(json.get&lt;std::string&gt;());</div>
 <div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;            <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
 <div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;        <span class="keywordflow">case</span> Type::File:</div>
 <div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;<span class="preprocessor">            #ifndef DISABLE_CPP17_FILESYSTEM</span></div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;            m_value = fs::path(<a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>.get&lt;std::string&gt;());</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;            m_value = fs::path(json.get&lt;std::string&gt;());</div>
 <div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;<span class="preprocessor">            #else</span></div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;            m_value = <a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>.get&lt;std::string&gt;();</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;            m_value = json.get&lt;std::string&gt;();</div>
 <div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;<span class="preprocessor">            #endif</span></div>
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;            <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160; </div>
 <div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;        <span class="keywordflow">case</span> Type::Int:</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;            m_value = <a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>.get&lt;<span class="keywordtype">int</span>&gt;();</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;            m_value = json.get&lt;<span class="keywordtype">int</span>&gt;();</div>
 <div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;            <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160; </div>
 <div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;        <span class="keywordflow">case</span> Type::Boolean:</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;            m_value = <a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>.get&lt;<span class="keywordtype">bool</span>&gt;();</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;            m_value = json.get&lt;<span class="keywordtype">bool</span>&gt;();</div>
 <div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;            <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160; </div>
 <div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;        <span class="keywordflow">case</span> Type::Float:</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;            m_value = <a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>.get&lt;<span class="keywordtype">float</span>&gt;();</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;            m_value = json.get&lt;<span class="keywordtype">float</span>&gt;();</div>
 <div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;            <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160; </div>
 <div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;        <span class="keywordflow">case</span> <a class="code" href="namespacetson.html#a072f9f86eaa4189282ed315ddfde0094aec0fc0100c4fc1ce4eea230c3dc10360">Type::String</a>:</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;            setStrValue(<a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>.get&lt;std::string&gt;());</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;            setStrValue(json.get&lt;std::string&gt;());</div>
 <div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;            <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160; </div>
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;        <span class="keywordflow">default</span>:</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;            setStrValue(<a class="code" href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">json</a>.get&lt;std::string&gt;());</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;            setStrValue(json.get&lt;std::string&gt;());</div>
 <div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;            <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160; </div>
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    }</div>
@@ -298,7 +298,6 @@ $(function() {
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclasstson_1_1Property_html_ad9df5aff4283d1ffdf40abf12090e034"><div class="ttname"><a href="classtson_1_1Property.html#ad9df5aff4283d1ffdf40abf12090e034">tson::Property::setStrValue</a></div><div class="ttdeci">void setStrValue(const std::string &amp;value)</div><div class="ttdef"><b>Definition:</b> Property.hpp:138</div></div>
 <div class="ttc" id="anamespacetson_html_a072f9f86eaa4189282ed315ddfde0094aec0fc0100c4fc1ce4eea230c3dc10360"><div class="ttname"><a href="namespacetson.html#a072f9f86eaa4189282ed315ddfde0094aec0fc0100c4fc1ce4eea230c3dc10360">tson::Type::Undefined</a></div><div class="ttdeci">@ Undefined</div></div>
-<div class="ttc" id="anamespacenlohmann_html_a2bfd99e845a2e5cd90aeaf1b1431f474"><div class="ttname"><a href="namespacenlohmann.html#a2bfd99e845a2e5cd90aeaf1b1431f474">nlohmann::json</a></div><div class="ttdeci">basic_json&lt;&gt; json</div><div class="ttdoc">default JSON class</div><div class="ttdef"><b>Definition:</b> json.hpp:2355</div></div>
 <div class="ttc" id="aclasstson_1_1Property_html_a8ff1dae4110fac51d024407303552b1b"><div class="ttname"><a href="classtson_1_1Property.html#a8ff1dae4110fac51d024407303552b1b">tson::Property::setValue</a></div><div class="ttdeci">void setValue(const std::any &amp;value)</div><div class="ttdef"><b>Definition:</b> Property.hpp:127</div></div>
 <div class="ttc" id="aclasstson_1_1Property_html_adfcce89b1c2fe417b05016fc4270a89f"><div class="ttname"><a href="classtson_1_1Property.html#adfcce89b1c2fe417b05016fc4270a89f">tson::Property::getType</a></div><div class="ttdeci">Type getType() const</div><div class="ttdef"><b>Definition:</b> Property.hpp:183</div></div>
 <div class="ttc" id="anamespacetson_html_a072f9f86eaa4189282ed315ddfde0094acb5feb1b7314637725a2e73bdc9f7295"><div class="ttname"><a href="namespacetson.html#a072f9f86eaa4189282ed315ddfde0094acb5feb1b7314637725a2e73bdc9f7295">tson::Type::Color</a></div><div class="ttdeci">@ Color</div></div>
@@ -311,7 +310,6 @@ $(function() {
 <div class="ttc" id="aclasstson_1_1Property_html_af1f97b6afdeed73db4f5d2a533be2e5f"><div class="ttname"><a href="classtson_1_1Property.html#af1f97b6afdeed73db4f5d2a533be2e5f">tson::Property::m_name</a></div><div class="ttdeci">std::string m_name</div><div class="ttdef"><b>Definition:</b> Property.hpp:88</div></div>
 <div class="ttc" id="aclasstson_1_1Property_html_a0356d5371725aa7f0cc03b13abb4e320"><div class="ttname"><a href="classtson_1_1Property.html#a0356d5371725aa7f0cc03b13abb4e320">tson::Property::Property</a></div><div class="ttdeci">Property()</div><div class="ttdef"><b>Definition:</b> Property.hpp:110</div></div>
 <div class="ttc" id="aclasstson_1_1Property_html"><div class="ttname"><a href="classtson_1_1Property.html">tson::Property</a></div><div class="ttdef"><b>Definition:</b> Property.hpp:53</div></div>
-<div class="ttc" id="aclassnlohmann_1_1basic__json_html"><div class="ttname"><a href="classnlohmann_1_1basic__json.html">nlohmann::basic_json</a></div><div class="ttdoc">a class to store JSON values</div><div class="ttdef"><b>Definition:</b> json.hpp:14572</div></div>
 <div class="ttc" id="aclasstson_1_1Property_html_a9dda5b011cdfd6229e68deaf4ad793f4"><div class="ttname"><a href="classtson_1_1Property.html#a9dda5b011cdfd6229e68deaf4ad793f4">tson::Property::getName</a></div><div class="ttdeci">const std::string &amp; getName() const</div><div class="ttdef"><b>Definition:</b> Property.hpp:153</div></div>
 <div class="ttc" id="aclasstson_1_1Property_html_a7c4094c49c3b10e0698d3f96f6695c68"><div class="ttname"><a href="classtson_1_1Property.html#a7c4094c49c3b10e0698d3f96f6695c68">tson::Property::m_value</a></div><div class="ttdeci">std::any m_value</div><div class="ttdef"><b>Definition:</b> Property.hpp:89</div></div>
 <div class="ttc" id="aclasstson_1_1Property_html_a69849575fcc65abcfed6ea0e3990c367"><div class="ttname"><a href="classtson_1_1Property.html#a69849575fcc65abcfed6ea0e3990c367">tson::Property::setTypeByString</a></div><div class="ttdeci">void setTypeByString(const std::string &amp;str)</div><div class="ttdef"><b>Definition:</b> Property.hpp:188</div></div>

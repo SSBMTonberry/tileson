@@ -1,18 +1,10 @@
 var searchData=
 [
-  ['r_735',['r',['../classtson_1_1Color.html#af3fcb996a66d8c0301eca603d3710a95',1,'tson::Color']]],
-  ['rbegin_736',['rbegin',['../classnlohmann_1_1basic__json.html#a1ef93e2006dbe52667294f5ef38b0b10',1,'nlohmann::basic_json::rbegin() noexcept'],['../classnlohmann_1_1basic__json.html#a515e7618392317dbf4b72d3e18bf2ab2',1,'nlohmann::basic_json::rbegin() const noexcept']]],
-  ['reallimits_737',['RealLimits',['../structnlohmann_1_1detail_1_1is__compatible__integer__type__impl_3_01RealIntegerType_00_01Compati58dfea94b501210ab5eb55b99717d8e4.html#ad4316bb4401538e9fd5662d1b7bb94f6',1,'nlohmann::detail::is_compatible_integer_type_impl&lt; RealIntegerType, CompatibleNumberIntegerType, enable_if_t&lt; std::is_integral&lt; RealIntegerType &gt;::value andstd::is_integral&lt; CompatibleNumberIntegerType &gt;::value andnot std::is_same&lt; bool, CompatibleNumberIntegerType &gt;::value &gt; &gt;']]],
-  ['rect_738',['Rect',['../classtson_1_1Rect.html',1,'tson::Rect'],['../classtson_1_1Rect.html#a98c297295dc6bcebafb4160c98a50821',1,'tson::Rect::Rect()'],['../classtson_1_1Rect.html#a6a45e8b96ddf06efc1b2096bf14d3c46',1,'tson::Rect::Rect(int x_, int y_, int width_, int height_)']]],
-  ['rect_2ehpp_739',['Rect.hpp',['../Rect_8hpp.html',1,'']]],
-  ['rectangle_740',['Rectangle',['../namespacetson.html#a7316610048678651b4f11a7319bee3f8ace9291906a4c3b042650b70d7f3b152e',1,'tson']]],
-  ['reference_741',['reference',['../structnlohmann_1_1detail_1_1iterator__types_3_01It_00_01void__t_3_01typename_01It_1_1difference_d2be8685966c97e00e99d4fd2366dc0b.html#a5e82d2d8dabd022b8ff916f2e83a82f2',1,'nlohmann::detail::iterator_types&lt; It, void_t&lt; typename It::difference_type, typename It::value_type, typename It::pointer, typename It::reference, typename It::iterator_category &gt; &gt;::reference()'],['../structnlohmann_1_1detail_1_1iterator__traits_3_01T_01_5_00_01enable__if__t_3_01std_1_1is__object_3_01T_01_4_1_1value_01_4_01_4.html#a0809c5949d22f08a993231d2fdf285f0',1,'nlohmann::detail::iterator_traits&lt; T *, enable_if_t&lt; std::is_object&lt; T &gt;::value &gt; &gt;::reference()'],['../classnlohmann_1_1detail_1_1iteration__proxy__value.html#a5bc7d3133daab5ec4797f3132e093af8',1,'nlohmann::detail::iteration_proxy_value::reference()'],['../classnlohmann_1_1detail_1_1iter__impl.html#a5be8001be099c6b82310f4d387b953ce',1,'nlohmann::detail::iter_impl::reference()'],['../classnlohmann_1_1detail_1_1json__reverse__iterator.html#a42f51a69bac7b2aebb613b2164e457f1',1,'nlohmann::detail::json_reverse_iterator::reference()'],['../classnlohmann_1_1basic__json.html#ac6a5eddd156c776ac75ff54cfe54a5bc',1,'nlohmann::basic_json::reference()']]],
-  ['reference_5ft_742',['reference_t',['../namespacenlohmann_1_1detail.html#a082bdafd3b4c61d9d1e92b35b8f75ee3',1,'nlohmann::detail']]],
-  ['reinterpret_5fbits_743',['reinterpret_bits',['../namespacenlohmann_1_1detail_1_1dtoa__impl.html#a1c5d30eb51e5e994a3f48bde104d2ce8',1,'nlohmann::detail::dtoa_impl']]],
-  ['remove_744',['remove',['../classtson_1_1DecompressorContainer.html#a5409d867cb2c54efd7894641b01ea6b0',1,'tson::DecompressorContainer::remove()'],['../classtson_1_1PropertyCollection.html#a1bbda14527b9276a34ed7057c54e315d',1,'tson::PropertyCollection::remove()']]],
-  ['rend_745',['rend',['../classnlohmann_1_1basic__json.html#ac77aed0925d447744676725ab0b6d535',1,'nlohmann::basic_json::rend() noexcept'],['../classnlohmann_1_1basic__json.html#a4f73d4cee67ea328d785979c22af0ae1',1,'nlohmann::basic_json::rend() const noexcept']]],
-  ['replace_746',['replace',['../namespacenlohmann_1_1detail.html#a5a76b60b26dc8c47256a996d18d967dfa9dde360102c103867bd2f45872f1129c',1,'nlohmann::detail']]],
-  ['resolveflaggedtiles_747',['resolveFlaggedTiles',['../classtson_1_1Layer.html#a6f27802a9e68c9c6539921af7a42a81f',1,'tson::Layer']]],
-  ['reverse_5fiterator_748',['reverse_iterator',['../classnlohmann_1_1basic__json.html#ac223d5560c2b05a208c88de67376c5f2',1,'nlohmann::basic_json']]],
-  ['right_749',['Right',['../namespacetson.html#ada2375f45be683cd0407a7b43ad8e5e7a92b09c7c48c520c3c55e497875da437c',1,'tson']]]
+  ['vector2_277',['Vector2',['../classtson_1_1Vector2.html',1,'tson::Vector2&lt; T &gt;'],['../classtson_1_1Vector2.html#abc9453580237e6790341456459c294d4',1,'tson::Vector2::Vector2(T xPos, T yPos)'],['../classtson_1_1Vector2.html#a38e61ea4b374c0e044d7272a11dd554c',1,'tson::Vector2::Vector2()']]],
+  ['vector2_2ehpp_278',['Vector2.hpp',['../Vector2_8hpp.html',1,'']]],
+  ['vector2_3c_20float_20_3e_279',['Vector2&lt; float &gt;',['../classtson_1_1Vector2.html',1,'tson']]],
+  ['vector2_3c_20int_20_3e_280',['Vector2&lt; int &gt;',['../classtson_1_1Vector2.html',1,'tson']]],
+  ['vector2f_281',['Vector2f',['../namespacetson.html#aaf0c9e1b0dfd2e23c10a3c881ea784e9',1,'tson']]],
+  ['vector2i_282',['Vector2i',['../namespacetson.html#ad9b8bc05e1220a920f03acae32e72245',1,'tson']]],
+  ['vertically_283',['Vertically',['../namespacetson.html#abcd37c33daaa7579bf76831bc470113da2f956b64560e7307c699c3492cb37607',1,'tson']]]
 ];

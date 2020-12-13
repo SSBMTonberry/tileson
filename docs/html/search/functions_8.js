@@ -1,9 +1,8 @@
 var searchData=
 [
-  ['hasdflip_1318',['hasDFlip',['../classtson_1_1WangTile.html#a90f90d24a6a3cf1108935da9d895c705',1,'tson::WangTile']]],
-  ['hasflipflags_1319',['hasFlipFlags',['../classtson_1_1Object.html#a22e5910e077d32be2076e425be7ced87',1,'tson::Object::hasFlipFlags()'],['../classtson_1_1Tile.html#a84ca313098600197ed89b3876f4a4720',1,'tson::Tile::hasFlipFlags()']]],
-  ['hashflip_1320',['hasHFlip',['../classtson_1_1WangTile.html#a48c4973ec700d342d91f9bb2abe23597',1,'tson::WangTile']]],
-  ['hasproperty_1321',['hasProperty',['../classtson_1_1PropertyCollection.html#a9460ec4fa2395e6f0e7324243b38028e',1,'tson::PropertyCollection']]],
-  ['hasvflip_1322',['hasVFlip',['../classtson_1_1WangTile.html#add4f356ec08dd3cc7c839c79b29391d6',1,'tson::WangTile']]],
-  ['hasworldfile_1323',['hasWorldFile',['../classtson_1_1ProjectFolder.html#ae813e2a28195bda9e38ea9250b6c3576',1,'tson::ProjectFolder']]]
+  ['initialize_501',['initialize',['../classtson_1_1TileObject.html#adeaeefb6ddd5c4551404b2311695edd6',1,'tson::TileObject']]],
+  ['isellipse_502',['isEllipse',['../classtson_1_1Object.html#ad4e021ff8d2eaa7c660d8b90db3ec005',1,'tson::Object']]],
+  ['isinfinite_503',['isInfinite',['../classtson_1_1Map.html#aeb7fd31ac283a3e7156d2ff528215932',1,'tson::Map']]],
+  ['ispoint_504',['isPoint',['../classtson_1_1Object.html#afda3ed8a906aef01e4b834ece6965e50',1,'tson::Object']]],
+  ['isvisible_505',['isVisible',['../classtson_1_1Layer.html#a9f15627018a6cd843babcd177c910bce',1,'tson::Layer::isVisible()'],['../classtson_1_1Object.html#ab2c504d55d8ddadd40cef0ca3711d49d',1,'tson::Object::isVisible()']]]
 ];

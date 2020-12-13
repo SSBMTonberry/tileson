@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['r_1582',['r',['../classtson_1_1Color.html#af3fcb996a66d8c0301eca603d3710a95',1,'tson::Color']]]
+  ['width_582',['width',['../classtson_1_1Rect.html#a32de1a212be817523a514442f92ca944',1,'tson::Rect']]],
+  ['wrap_583',['wrap',['../classtson_1_1Text.html#a73bb67581dff6050b6b6c324f5a82ee5',1,'tson::Text']]]
 ];

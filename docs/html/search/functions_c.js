@@ -1,8 +1,14 @@
 var searchData=
 [
-  ['layer_1362',['Layer',['../classtson_1_1Layer.html#ac744d2ba56eb9e2e11063db895c7318b',1,'tson::Layer::Layer()=default'],['../classtson_1_1Layer.html#a609a3673599840415869ab05cc473318',1,'tson::Layer::Layer(const nlohmann::json &amp;json, tson::Map *map)']]],
-  ['lexer_1363',['lexer',['../classnlohmann_1_1detail_1_1lexer.html#ab6818e0fc05f4a52c65aeb967dd79919',1,'nlohmann::detail::lexer::lexer(detail::input_adapter_t &amp;&amp;adapter)'],['../classnlohmann_1_1detail_1_1lexer.html#a2e8ce2a0d266d148b69dfbcc2e4ad71a',1,'nlohmann::detail::lexer::lexer(const lexer &amp;)=delete'],['../classnlohmann_1_1detail_1_1lexer.html#a9045348915010649fad1f15e80b6e34d',1,'nlohmann::detail::lexer::lexer(lexer &amp;&amp;)=delete']]],
-  ['line_1364',['line',['../classpicojson_1_1input.html#a5852aded6d48e28542f23fe0083a51fa',1,'picojson::input']]],
-  ['little_5fendianess_1365',['little_endianess',['../classnlohmann_1_1detail_1_1binary__reader.html#a1e31dbfcf9567c8c2d4f0e4eb1b0230a',1,'nlohmann::detail::binary_reader']]],
-  ['loadmaps_1366',['loadMaps',['../classtson_1_1World.html#a013ba94da8ae973705365456abee9dfa',1,'tson::World']]]
+  ['object_512',['Object',['../classtson_1_1Object.html#a21457f0596184e36e69852a730bda829',1,'tson::Object::Object()=default'],['../classtson_1_1Object.html#a378b41736c0a66e63e37f7f386daa7fb',1,'tson::Object::Object(const nlohmann::json &amp;json)']]],
+  ['onlyshowadjacentmaps_513',['onlyShowAdjacentMaps',['../classtson_1_1World.html#a11323f68497548bfe1eb29ed5d2f05c9',1,'tson::World']]],
+  ['operator_21_3d_514',['operator!=',['../classtson_1_1Color.html#ab5fbaa7f56a3f0caa42fe806ca300b0a',1,'tson::Color::operator!=()'],['../classtson_1_1Rect.html#af6040ebc88b27fe17533c501faa6c178',1,'tson::Rect::operator!=()'],['../classtson_1_1Vector2.html#ad55b3afcdce7473fb3a5c25e76952848',1,'tson::Vector2::operator!=()']]],
+  ['operator_26_515',['operator&amp;',['../namespacetson.html#adfcadeccd1853a4ebdad908afc1994b9',1,'tson']]],
+  ['operator_26_3d_516',['operator&amp;=',['../namespacetson.html#af76d7b3fa4ccd04e236d8c69ea40ab02',1,'tson']]],
+  ['operator_3d_3d_517',['operator==',['../classtson_1_1Color.html#ad69ae67e1691738d2544d0f3a73976be',1,'tson::Color::operator==(const Color &amp;rhs) const'],['../classtson_1_1Color.html#af782d8d982c5158536008d3fcc64036a',1,'tson::Color::operator==(const std::string &amp;rhs) const'],['../classtson_1_1Rect.html#a92fe4724d47fb50c38e3a3b4d2369c89',1,'tson::Rect::operator==()'],['../classtson_1_1Vector2.html#abb4bd3e1666b1772926069be2b736b90',1,'tson::Vector2::operator==()']]],
+  ['operator_5e_518',['operator^',['../namespacetson.html#ad6415dd0ecaa42b5664613a699a98970',1,'tson']]],
+  ['operator_5e_3d_519',['operator^=',['../namespacetson.html#a133f6f568b7118db834ccdc41154ff3e',1,'tson']]],
+  ['operator_7c_520',['operator|',['../namespacetson.html#a0bafed430073e8a00b6f38f05ce6387b',1,'tson']]],
+  ['operator_7c_3d_521',['operator|=',['../namespacetson.html#ab1021f2a72d807db68bbbd01e42c42e6',1,'tson']]],
+  ['operator_7e_522',['operator~',['../namespacetson.html#a99f54da8003f9cbdeb4d915ff7f52dbf',1,'tson']]]
 ];

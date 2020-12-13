@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['input_5fformat_5ft_1680',['input_format_t',['../namespacenlohmann_1_1detail.html#aa554fc6a11519e4f347deb25a9f0db40',1,'nlohmann::detail']]]
+  ['objectalignment_591',['ObjectAlignment',['../namespacetson.html#ada2375f45be683cd0407a7b43ad8e5e7',1,'tson']]],
+  ['objecttype_592',['ObjectType',['../namespacetson.html#a7316610048678651b4f11a7319bee3f8',1,'tson']]]
 ];
