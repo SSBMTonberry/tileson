@@ -13,7 +13,11 @@
 
 #include <map>
 #include "vera_font.h"
+
 #include "../../include/tileson.h"
+//#include "../../single_include/tileson.hpp"
+//#include "../../include/external/json.hpp"
+//#include "../../single_include/tileson_min.hpp"
 
 #if __clang__
 #include <mach-o/dyld.h>
