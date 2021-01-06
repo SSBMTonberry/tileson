@@ -823,21 +823,36 @@ TEST_CASE( "Property-tests - Set properties from json", "[tiled][wang]" )
         properties.add(item);
     }
 
-    bool hasCorrectValues = (
-        properties.getProperties().size() == 6 &&
-        properties.getValue<tson::Colori>("color") == tson::Colori("#ff268176") &&
-        properties.getProperty("color")->getType() == tson::Type::Color &&
+    //bool hasCorrectValues = (
+    //    properties.getProperties().size() == 6 &&
+    //    properties.getValue<tson::Colori>("color") == tson::Colori("#ff268176") &&
+    //    properties.getProperty("color")->getType() == tson::Type::Color &&
+//
+    //    properties.getValue<fs::path>("file_ref") == fs::path("../demo-tileset.png") &&
+//
+    //    properties.getProperty("file_ref")->getType() == tson::Type::File &&
+    //    properties.getValue<int>("hp") == 4 && properties.getProperty("hp")->getType() == tson::Type::Int &&
+    //    properties.getValue<bool>("is_player") && properties.getProperty("is_player")->getType() == tson::Type::Boolean &&
+    //    properties.getValue<float>("jump_force") == 10 && properties.getProperty("jump_force")->getType() == tson::Type::Float &&
+    //    properties.getValue<std::string>("name") == "Mario" && properties.getProperty("name")->getType() == tson::Type::String
+    //);
+//
+    //REQUIRE(hasCorrectValues);
 
-        properties.getValue<fs::path>("file_ref") == fs::path("../demo-tileset.png") &&
 
-        properties.getProperty("file_ref")->getType() == tson::Type::File &&
-        properties.getValue<int>("hp") == 4 && properties.getProperty("hp")->getType() == tson::Type::Int &&
-        properties.getValue<bool>("is_player") && properties.getProperty("is_player")->getType() == tson::Type::Boolean &&
-        properties.getValue<float>("jump_force") == 10 && properties.getProperty("jump_force")->getType() == tson::Type::Float &&
-        properties.getValue<std::string>("name") == "Mario" && properties.getProperty("name")->getType() == tson::Type::String
-    );
-
-    REQUIRE(hasCorrectValues);
+    REQUIRE(properties.getProperties().size() == 6);
+    REQUIRE(properties.getValue<tson::Colori>("color") == tson::Colori("#ff268176"));
+    REQUIRE(properties.getProperty("color")->getType() == tson::Type::Color);
+    REQUIRE(properties.getProperty("file_ref")->getType() == tson::Type::File);
+    REQUIRE(properties.getValue<fs::path>("file_ref") == fs::path("../demo-tileset.png"));
+    REQUIRE(properties.getValue<int>("hp") == 4);
+    REQUIRE(properties.getProperty("hp")->getType() == tson::Type::Int);
+    REQUIRE(properties.getValue<bool>("is_player"));
+    REQUIRE(properties.getProperty("is_player")->getType() == tson::Type::Boolean);
+    REQUIRE(properties.getValue<float>("jump_force") == 10);
+    REQUIRE(properties.getProperty("jump_force")->getType() == tson::Type::Float);
+    REQUIRE(properties.getValue<std::string>("name") == "Mario");
+    REQUIRE(properties.getProperty("name")->getType() == tson::Type::String);
 }
 
 TEST_CASE( "Tileset - Set object alignment by string - expect right value", "[tiled][tileset][alignment]" )
