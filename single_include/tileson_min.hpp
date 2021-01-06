@@ -1239,7 +1239,7 @@ void tson::Property::setValueByType(const nlohmann::json &json)
 			break;
 
 		case Type::File:
-			m_value = json.get<std::string>();
+			m_value = fs::path(json.get<std::string>());
 			break;
 
 		case Type::Int:
