@@ -8,7 +8,7 @@
 #include "../TilesonConfig.h"
 
 //#define TILESON_UNIT_TEST_USE_SINGLE_HEADER
-//#define DISABLE_CPP17_FILESYSTEM
+
 
 #ifdef TILESON_UNIT_TEST_USE_SINGLE_HEADER
     #include "../single_include/tileson.hpp"
@@ -87,13 +87,11 @@ void checkChangesAfterTiledVersion124(tson::Map *map)
 TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" )
 {
     tson::Tileson t;
-    #ifndef DISABLE_CPP17_FILESYSTEM
+
     fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
     fs::path pathTravis {"../content/test-maps/ultimate_test.json"};
     fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
-    #else
-    std::string pathToUse = "../../content/test-maps/ultimate_test.json";
-    #endif
+
     std::unique_ptr<tson::Map> map = t.parse({pathToUse});
     if(map->getStatus() == tson::ParseStatus::OK)
     {
@@ -128,13 +126,11 @@ TEST_CASE( "Test set", "[set]" )
 TEST_CASE( "Parse map - expect correct flip flags", "[parse][file][flip]" )
 {
     tson::Tileson t;
-    #ifndef DISABLE_CPP17_FILESYSTEM
+
     fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
     fs::path pathTravis {"../content/test-maps/ultimate_test.json"};
     fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
-    #else
-    std::string pathToUse = "../../content/test-maps/ultimate_test.json";
-    #endif
+
     std::unique_ptr<tson::Map> map = t.parse({pathToUse});
     if(map->getStatus() == tson::ParseStatus::OK)
     {
@@ -208,13 +204,11 @@ TEST_CASE( "Parse a whole map with base64 data by file", "[complete][parse][file
 {
 
     tson::Tileson t;
-    #ifndef DISABLE_CPP17_FILESYSTEM
+
     fs::path pathLocal {"../../content/test-maps/ultimate_test_base64.json"};
     fs::path pathTravis {"../content/test-maps/ultimate_test_base64.json"};
     fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
-    #else
-    std::string pathToUse = "../../content/test-maps/ultimate_test_base64.json";
-    #endif
+
     std::unique_ptr<tson::Map> map = t.parse({pathToUse});
     if(map->getStatus() == tson::ParseStatus::OK)
     {
@@ -300,13 +294,11 @@ TEST_CASE( "Parse a minimal version of whole map by memory", "[complete][parse][
 TEST_CASE( "Parse map3.json - expect correct tileset data for all TileObjects", "[complete][parse][map3]" )
 {
     tson::Tileson t;
-    #ifndef DISABLE_CPP17_FILESYSTEM
+
     fs::path pathLocal {"../../content/test-maps/project/maps/map3.json"};
     fs::path pathTravis {"../content/test-maps/project/maps/map3.json"};
     fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
-    #else
-    std::string pathToUse = "../../content/test-maps/ultimate_test_base64.json";
-    #endif
+
     std::unique_ptr<tson::Map> map = t.parse({pathToUse});
     size_t numberOfEmptyTilesets = 0;
     size_t numberOfOkTilesets = 0;
@@ -449,11 +441,9 @@ TEST_CASE( "Go through demo code - get success", "[demo]" )
         bool myBool = layer->get<bool>("my_bool");
         std::string myString = layer->get<std::string>("my_string");
         tson::Colori myColor = layer->get<tson::Colori>("my_color");
-        #ifndef DISABLE_CPP17_FILESYSTEM
+
         fs::path file = layer->get<fs::path>("my_file");
-        #else
-        std::string file = layer->get<std::string>("my_file");
-        #endif
+
         tson::Property *prop = layer->getProp("my_property");
     }
     else //Error occured

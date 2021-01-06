@@ -23352,34 +23352,32 @@ const tson::Vector2i &tson::Chunk::getPosition() const
 
 //#if USE_CPP17_FILESYSTEM
 
-#ifndef DISABLE_CPP17_FILESYSTEM
-	#if _MSC_VER && !__INTEL_COMPILER
+#if _MSC_VER && !__INTEL_COMPILER
+	#include <filesystem>
+	namespace fs = std::filesystem;
+#elif __MINGW64__
+	#if __MINGW64_VERSION_MAJOR > 6
 		#include <filesystem>
 		namespace fs = std::filesystem;
-	#elif __MINGW64__
-		#if __MINGW64_VERSION_MAJOR > 6
-			#include <filesystem>
-			namespace fs = std::filesystem;
-		#else
-			#include <experimental/filesystem>
-			namespace fs = std::experimental::filesystem;
-		#endif
-	#elif __clang__
-		#if __clang_major__ < 8
-			#include <experimental/filesystem>
-			namespace fs = std::experimental::filesystem;
-		#else
-			#include <filesystem>
-			namespace fs = std::filesystem;
-		#endif
-	#else //Linux
-		#if __GNUC__ < 8 //GCC major version less than 8
-			#include <experimental/filesystem>
-			namespace fs = std::experimental::filesystem;
-		#else
-			#include <filesystem>
-			namespace fs = std::filesystem;
-		#endif
+	#else
+		#include <experimental/filesystem>
+		namespace fs = std::experimental::filesystem;
+	#endif
+#elif __clang__
+	#if __clang_major__ < 8
+		#include <experimental/filesystem>
+		namespace fs = std::experimental::filesystem;
+	#else
+		#include <filesystem>
+		namespace fs = std::filesystem;
+	#endif
+#else //Linux
+	#if __GNUC__ < 8 //GCC major version less than 8
+		#include <experimental/filesystem>
+		namespace fs = std::experimental::filesystem;
+	#else
+		#include <filesystem>
+		namespace fs = std::filesystem;
 	#endif
 #endif
 
@@ -23805,11 +23803,7 @@ void tson::Property::setValueByType(const nlohmann::json &json)
 			break;
 
 		case Type::File:
-			#ifndef DISABLE_CPP17_FILESYSTEM
-			m_value = fs::path(json.get<std::string>());
-			#else
 			m_value = json.get<std::string>();
-			#endif
 			break;
 
 		case Type::Int:
@@ -25603,11 +25597,9 @@ namespace tson
 			inline bool parse(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
 
 			[[nodiscard]] inline uint32_t getId() const;
-			#ifndef DISABLE_CPP17_FILESYSTEM
+
 			[[nodiscard]] inline const fs::path &getImage() const;
-			#else
-			[[nodiscard]] inline const std::string &getImage() const;
-			#endif
+
 			[[nodiscard]] inline const Vector2i &getImageSize() const;
 			[[nodiscard]] inline const std::string &getType() const;
 
@@ -25639,11 +25631,9 @@ namespace tson
 		private:
 			std::vector<tson::Frame>    m_animation; 	    /*! 'animation': Array of Frames */
 			uint32_t                    m_id {};            /*! 'id': Local ID of the tile */
-			#ifndef DISABLE_CPP17_FILESYSTEM
+
 			fs::path                    m_image;            /*! 'image': Image representing this tile (optional)*/
-			#else
-			std::string                 m_image;
-			#endif
+
 			tson::Vector2i              m_imageSize;        /*! x = 'imagewidth' and y = 'imageheight': in pixels */
 			tson::Layer                 m_objectgroup; 	 	/*! 'objectgroup': Layer with type objectgroup (optional) */
 			tson::PropertyCollection    m_properties; 	    /*! 'properties': A list of properties (name, value, type). */
@@ -25722,11 +25712,9 @@ bool tson::Tile::parse(const nlohmann::json &json, tson::Tileset *tileset, tson:
 	m_map = map;
 
 	bool allFound = true;
-	#ifndef DISABLE_CPP17_FILESYSTEM
+
 	if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); //Optional
-	#else
-	if(json.count("image") > 0) m_image = json["image"].get<std::string>(); //Optional
-	#endif
+
 	if(json.count("id") > 0)
 	{
 		m_id = json["id"].get<uint32_t>() + 1;
@@ -25769,11 +25757,9 @@ uint32_t tson::Tile::getId() const
  * 'image': Image representing this tile (optional)
  * @return
  */
-#ifndef DISABLE_CPP17_FILESYSTEM
+
 const fs::path &tson::Tile::getImage() const { return m_image; }
-#else
-const std::string &tson::Tile::getImage() const { return m_image; }
-#endif
+
 /*!
  * x = 'imagewidth' and y = 'imageheight': in pixels
  * @return
@@ -26133,13 +26119,9 @@ namespace tson
 			[[nodiscard]] inline int getColumns() const;
 			[[nodiscard]] inline int getFirstgid() const;
 
-			#ifndef DISABLE_CPP17_FILESYSTEM
 			[[nodiscard]] inline const fs::path &getImagePath() const;
 			[[nodiscard]] inline const fs::path &getImage() const;
-			#else
-			[[nodiscard]] inline const std::string &getImagePath() const;
-			[[nodiscard]] inline const std::string &getImage() const;
-			#endif
+
 			[[nodiscard]] inline const Vector2i &getImageSize() const;
 			[[nodiscard]] inline int getMargin() const;
 			[[nodiscard]] inline const std::string &getName() const;
@@ -26174,11 +26156,9 @@ namespace tson
 
 			int                           m_columns {};       /*! 'columns': The number of tile columns in the tileset */
 			int                           m_firstgid {};      /*! 'firstgid': GID corresponding to the first tile in the set */
-			#ifndef DISABLE_CPP17_FILESYSTEM
+
 			fs::path                      m_image;            /*! 'image': Image used for tiles in this set */
-			#else
-			std::string                   m_image;
-			#endif
+
 			tson::Vector2i                m_imageSize;        /*! x = 'imagewidth' and y = 'imageheight': in pixels */
 			int                           m_margin {};        /*! 'margin': Buffer between image edge and first tile (pixels)*/
 			std::string                   m_name;             /*! 'name': Name given to this tileset */
@@ -26227,11 +26207,9 @@ bool tson::Tileset::parse(const nlohmann::json &json, tson::Map *map)
 
 	if(json.count("columns") > 0) m_columns = json["columns"].get<int>(); else allFound = false;
 	if(json.count("firstgid") > 0) m_firstgid = json["firstgid"].get<int>(); else allFound = false;
-	#ifndef DISABLE_CPP17_FILESYSTEM
+
 	if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); else allFound = false;
-	#else
-	if(json.count("image") > 0) m_image = json["image"].get<std::string>(); else allFound = false;
-	#endif
+
 	if(json.count("margin") > 0) m_margin = json["margin"].get<int>(); else allFound = false;
 	if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
 	if(json.count("spacing") > 0) m_spacing = json["spacing"].get<int>(); else allFound = false;
@@ -26291,11 +26269,9 @@ int tson::Tileset::getFirstgid() const
  * 'image': Image used for tiles in this set
  * @return
  */
-#ifndef DISABLE_CPP17_FILESYSTEM
+
 const fs::path &tson::Tileset::getImagePath() const { return m_image; }
-#else
-const std::string &tson::Tileset::getImagePath() const { return m_image; }
-#endif
+
 /*!
  * x = 'imagewidth' and y = 'imageheight': in pixels
  * @return
@@ -26372,11 +26348,9 @@ const std::string &tson::Tileset::getType() const
  * 'image': Image used for tiles in this set
  * @return
  */
-#ifndef DISABLE_CPP17_FILESYSTEM
+
 const fs::path &tson::Tileset::getImage() const { return m_image; }
-#else
-const std::string &tson::Tileset::getImage() const { return m_image; }
-#endif
+
 /*!
  * 'tiles': Array of Tiles (optional)
  * @return
@@ -26992,8 +26966,6 @@ int tson::Map::getCompressionLevel() const
 // Created by robin on 01.08.2020.
 //
 
-#ifndef DISABLE_CPP17_FILESYSTEM
-
 #ifndef TILESON_PROJECT_HPP
 #define TILESON_PROJECT_HPP
 
@@ -27006,8 +26978,6 @@ int tson::Map::getCompressionLevel() const
 // Created by robin on 01.08.2020.
 //
 
-#ifndef DISABLE_CPP17_FILESYSTEM
-
 #ifndef TILESON_WORLD_HPP
 #define TILESON_WORLD_HPP
 
@@ -27016,8 +26986,6 @@ int tson::Map::getCompressionLevel() const
 //
 // Created by robin on 01.08.2020.
 //
-
-#ifndef DISABLE_CPP17_FILESYSTEM
 
 #ifndef TILESON_WORLDMAPDATA_HPP
 #define TILESON_WORLDMAPDATA_HPP
@@ -27058,8 +27026,6 @@ namespace tson
 }
 
 #endif //TILESON_WORLDMAPDATA_HPP
-
-#endif //DISABLE_CPP17_FILESYSTEM
 /*** End of inlined file: WorldMapData.hpp ***/
 
 #include <memory>
@@ -27193,8 +27159,6 @@ namespace tson
 }
 
 #endif //TILESON_WORLD_HPP
-
-#endif //DISABLE_CPP17_FILESYSTEM
 /*** End of inlined file: World.hpp ***/
 
 
@@ -27203,8 +27167,6 @@ namespace tson
 //
 // Created by robin on 01.08.2020.
 //
-
-#ifndef DISABLE_CPP17_FILESYSTEM
 
 #ifndef TILESON_PROJECTFOLDER_HPP
 #define TILESON_PROJECTFOLDER_HPP
@@ -27305,8 +27267,6 @@ namespace tson
 }
 
 #endif //TILESON_PROJECTFOLDER_HPP
-
-#endif //DISABLE_CPP17_FILESYSTEM
 /*** End of inlined file: ProjectFolder.hpp ***/
 
 
@@ -27314,8 +27274,6 @@ namespace tson
 //
 // Created by robin on 01.08.2020.
 //
-
-#ifndef DISABLE_CPP17_FILESYSTEM
 
 #ifndef TILESON_PROJECTDATA_HPP
 #define TILESON_PROJECTDATA_HPP
@@ -27339,8 +27297,6 @@ namespace tson
 }
 
 #endif //TILESON_PROJECTDATA_HPP
-
-#endif //DISABLE_CPP17_FILESYSTEM
 /*** End of inlined file: ProjectData.hpp ***/
 
 namespace tson
@@ -27437,8 +27393,6 @@ namespace tson
 
 #endif //TILESON_PROJECT_HPP
 
-#endif //DISABLE_CPP17_FILESYSTEM
-
 /*** End of inlined file: Project.hpp ***/
 
 
@@ -27504,13 +27458,11 @@ namespace tson
 	{
 		public:
 			inline explicit Tileson(bool includeBase64Decoder = true);
-			#ifndef DISABLE_CPP17_FILESYSTEM
+
 			inline std::unique_ptr<tson::Map> parse(const fs::path &path);
-			#else
-			inline std::unique_ptr<tson::Map> parse(const std::string &path);
-			#endif
 			inline std::unique_ptr<tson::Map> parse(const void * data, size_t size);
 			inline tson::DecompressorContainer *decompressors();
+
 		private:
 			inline std::unique_ptr<tson::Map> parseJson(const nlohmann::json &json);
 			tson::DecompressorContainer m_decompressors;
@@ -27533,7 +27485,6 @@ tson::Tileson::Tileson(bool includeBase64Decoder)
  * @param path path to file
  * @return parsed data as Map
  */
-#ifndef DISABLE_CPP17_FILESYSTEM
 std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
 {
 	if(fs::exists(path) && fs::is_regular_file(path))
@@ -27558,27 +27509,7 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
 	msg += std::string(path.u8string());
 	return std::make_unique<tson::Map>(tson::ParseStatus::FileNotFound, msg);
 }
-#else
-[[deprecated("std::filesystem will be required in future versions and DISABLE_CPP17_FILESYSTEM will be removed")]]
-std::unique_ptr<tson::Map> tson::Tileson::parse(const std::string &path)
-{
 
-	std::ifstream i(path);
-	nlohmann::json json;
-	try
-	{
-		i >> json;
-	}
-	catch(const nlohmann::json::parse_error &error)
-	{
-		std::string message = "Parse error: ";
-		message += std::string(error.what());
-		message += std::string("\n");
-		return std::make_unique<tson::Map> (tson::ParseStatus::ParseError, message);
-	}
-	return std::move(parseJson(json));
-}
-#endif
 /*!
  * Parses Tiled json map data by memory
  * @param data The data to parse
@@ -27774,7 +27705,7 @@ void tson::Layer::decompressData()
  * @param parser A Tileson object used for parsing the maps of the world.
  * @return How many maps who were parsed. Remember to call getStatus() for the actual map to find out if everything went okay.
  */
-#ifndef DISABLE_CPP17_FILESYSTEM
+
 int tson::World::loadMaps(tson::Tileson *parser)
 {
 	m_maps.clear();
@@ -27789,7 +27720,6 @@ int tson::World::loadMaps(tson::Tileson *parser)
 
 	return m_maps.size();
 }
-#endif
 
 #endif //TILESON_TILESON_FORWARD_HPP
 

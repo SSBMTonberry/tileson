@@ -66,7 +66,7 @@ option(CLEAR_TSON_CMAKE_CACHE "Clear CMake cache for variables. Activate if you 
 #    option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" OFF)
 #endif()
 
-option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" OFF)
+# option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" OFF)
 
 #if(DISABLE_CPP17_FILESYSTEM)
 #    set(DISABLE_CPP17_FILESYSTEM 1)

@@ -29,11 +29,9 @@ namespace tson
 
 
             [[nodiscard]] inline uint32_t getId() const;
-            #ifndef DISABLE_CPP17_FILESYSTEM
+
             [[nodiscard]] inline const fs::path &getImage() const;
-            #else
-            [[nodiscard]] inline const std::string &getImage() const;
-            #endif
+
             [[nodiscard]] inline const Vector2i &getImageSize() const;
             [[nodiscard]] inline const std::string &getType() const;
 
@@ -66,11 +64,9 @@ namespace tson
         private:
             std::vector<tson::Frame>    m_animation; 	    /*! 'animation': Array of Frames */
             uint32_t                    m_id {};            /*! 'id': Local ID of the tile */
-            #ifndef DISABLE_CPP17_FILESYSTEM
+
             fs::path                    m_image;            /*! 'image': Image representing this tile (optional)*/
-            #else
-            std::string                 m_image;
-            #endif
+
             tson::Vector2i              m_imageSize;        /*! x = 'imagewidth' and y = 'imageheight': in pixels */
             tson::Layer                 m_objectgroup; 	 	/*! 'objectgroup': Layer with type objectgroup (optional) */
             tson::PropertyCollection    m_properties; 	    /*! 'properties': A list of properties (name, value, type). */
@@ -149,11 +145,9 @@ bool tson::Tile::parse(const nlohmann::json &json, tson::Tileset *tileset, tson:
     m_map = map;
 
     bool allFound = true;
-    #ifndef DISABLE_CPP17_FILESYSTEM
+
     if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); //Optional
-    #else
-    if(json.count("image") > 0) m_image = json["image"].get<std::string>(); //Optional
-    #endif
+
     if(json.count("id") > 0)
     {
         m_id = json["id"].get<uint32_t>() + 1;
@@ -196,11 +190,9 @@ uint32_t tson::Tile::getId() const
  * 'image': Image representing this tile (optional)
  * @return
  */
-#ifndef DISABLE_CPP17_FILESYSTEM
+
 const fs::path &tson::Tile::getImage() const { return m_image; }
-#else
-const std::string &tson::Tile::getImage() const { return m_image; }
-#endif
+
 /*!
  * x = 'imagewidth' and y = 'imageheight': in pixels
  * @return

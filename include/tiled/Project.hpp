@@ -2,8 +2,6 @@
 // Created by robin on 01.08.2020.
 //
 
-#ifndef DISABLE_CPP17_FILESYSTEM
-
 #ifndef TILESON_PROJECT_HPP
 #define TILESON_PROJECT_HPP
 
@@ -108,5 +106,3 @@ namespace tson
 }
 
 #endif //TILESON_PROJECT_HPP
-
-#endif //DISABLE_CPP17_FILESYSTEM

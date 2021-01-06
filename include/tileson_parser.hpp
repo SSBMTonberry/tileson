@@ -21,13 +21,11 @@ namespace tson
     {
         public:
             inline explicit Tileson(bool includeBase64Decoder = true);
-            #ifndef DISABLE_CPP17_FILESYSTEM
+
             inline std::unique_ptr<tson::Map> parse(const fs::path &path);
-            #else
-            inline std::unique_ptr<tson::Map> parse(const std::string &path);
-            #endif
             inline std::unique_ptr<tson::Map> parse(const void * data, size_t size);
             inline tson::DecompressorContainer *decompressors();
+
         private:
             inline std::unique_ptr<tson::Map> parseJson(const nlohmann::json &json);
             tson::DecompressorContainer m_decompressors;
@@ -50,7 +48,6 @@ tson::Tileson::Tileson(bool includeBase64Decoder)
  * @param path path to file
  * @return parsed data as Map
  */
-#ifndef DISABLE_CPP17_FILESYSTEM
 std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
 {
     if(fs::exists(path) && fs::is_regular_file(path))
@@ -75,27 +72,7 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
     msg += std::string(path.u8string());
     return std::make_unique<tson::Map>(tson::ParseStatus::FileNotFound, msg);
 }
-#else
-[[deprecated("std::filesystem will be required in future versions and DISABLE_CPP17_FILESYSTEM will be removed")]]
-std::unique_ptr<tson::Map> tson::Tileson::parse(const std::string &path)
-{
 
-    std::ifstream i(path);
-    nlohmann::json json;
-    try
-    {
-        i >> json;
-    }
-    catch(const nlohmann::json::parse_error &error)
-    {
-        std::string message = "Parse error: ";
-        message += std::string(error.what());
-        message += std::string("\n");
-        return std::make_unique<tson::Map> (tson::ParseStatus::ParseError, message);
-    }
-    return std::move(parseJson(json));
-}
-#endif
 /*!
  * Parses Tiled json map data by memory
  * @param data The data to parse

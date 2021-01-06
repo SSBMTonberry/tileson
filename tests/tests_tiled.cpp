@@ -519,9 +519,9 @@ TEST_CASE( "Parse a Tileset from Tiled's documentation - read simple values", "[
     bool hasCorrectValues = (
         tileset.getColumns() == 19 &&
         tileset.getFirstgid() == 1 &&
-        #ifndef DISABLE_CPP17_FILESYSTEM
+
         tileset.getImagePath() == fs::path("../image/fishbaddie_parts.png") &&
-        #endif
+
         tileset.getImageSize() == tson::Vector2i(640, 480) &&
         tileset.getMargin() == 3 &&
         tileset.getName().empty() &&
@@ -827,9 +827,9 @@ TEST_CASE( "Property-tests - Set properties from json", "[tiled][wang]" )
         properties.getProperties().size() == 6 &&
         properties.getValue<tson::Colori>("color") == tson::Colori("#ff268176") &&
         properties.getProperty("color")->getType() == tson::Type::Color &&
-        #ifndef DISABLE_CPP17_FILESYSTEM
+
         properties.getValue<fs::path>("file_ref") == fs::path("../demo-tileset.png") &&
-        #endif
+
         properties.getProperty("file_ref")->getType() == tson::Type::File &&
         properties.getValue<int>("hp") == 4 && properties.getProperty("hp")->getType() == tson::Type::Int &&
         properties.getValue<bool>("is_player") && properties.getProperty("is_player")->getType() == tson::Type::Boolean &&

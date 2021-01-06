@@ -2,7 +2,7 @@
 // Created by robin on 03.08.2020.
 //
 
-#ifndef DISABLE_CPP17_FILESYSTEM
+
 #include "../external_libs/catch.hpp"
 #include "tileson.h"
 
@@ -45,5 +45,3 @@ TEST_CASE( "Parse project - expect right number of files and folders", "[project
     REQUIRE(project.getFolders().at(1).getFiles().size() == 4);
     REQUIRE(project.getFolders().at(1).getSubFolders().empty());
 }
-
-#endif
