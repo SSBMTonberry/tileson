@@ -7,7 +7,7 @@
 #include "../external_libs/catch.hpp"
 #include "tileson.h"
 
-class DummyDecompressor : public tson::IDecompressor
+class DummyDecompressor : public tson::IDecompressor<std::string_view, std::string>
 {
     public:
         DummyDecompressor() : m_name {"undef"}, m_result {"undef"}
@@ -21,12 +21,12 @@ class DummyDecompressor : public tson::IDecompressor
 
         }
 
-        const std::string &name() const override
+        [[nodiscard]] const std::string &name() const override
         {
             return m_name;
         }
 
-        std::string decompress(std::string_view s) override
+        std::string decompress(const std::string_view &s) override
         {
             return m_result;
         }

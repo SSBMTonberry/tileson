@@ -5,6 +5,7 @@
 #ifndef TILESON_TILESON_PARSER_HPP
 #define TILESON_TILESON_PARSER_HPP
 
+#include "interfaces/IJson.hpp"
 #include "common/Tools.hpp"
 #include "common/Base64Decompressor.hpp"
 #include "common/DecompressorContainer.hpp"

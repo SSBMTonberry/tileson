@@ -41,6 +41,19 @@
 #define TILESON_TILESON_PARSER_HPP
 
 
+/*** Start of inlined file: IJson.hpp ***/
+//
+// Created by robin on 06.01.2021.
+//
+
+#ifndef TILESON_IJSON_HPP
+#define TILESON_IJSON_HPP
+
+#endif //TILESON_IJSON_HPP
+
+/*** End of inlined file: IJson.hpp ***/
+
+
 /*** Start of inlined file: Tools.hpp ***/
 //
 // Created by robin on 31.07.2020.
@@ -154,53 +167,17 @@ namespace tson
 #ifndef TILESON_BASE64DECOMPRESSOR_HPP
 #define TILESON_BASE64DECOMPRESSOR_HPP
 
-
-/*** Start of inlined file: IDecompressor.hpp ***/
-//
-// Created by robin on 29.07.2020.
-//
-
-#ifndef TILESON_IDECOMPRESSOR_HPP
-#define TILESON_IDECOMPRESSOR_HPP
-
-#include <string_view>
-
-namespace tson
-{
-	class IDecompressor
-	{
-		public:
-			/*!
-			 * If the name matches with 'compression' or 'encoding' the decompress() function will
-			 * be called automatically for the actual Layer. Encoding-related matching is handled first!
-			 *
-			 * Known values:
-			 *
-			 * compression: zlib, gzip, zstd (since Tiled 1.3) or empty (default) (tilelayer only).
-			 * encoding: csv (default) or base64 (tilelayer only).
-			 *
-			 * @return
-			 */
-			virtual const std::string &name() const = 0;
-
-			virtual std::string decompress(std::string_view s) = 0;
-	};
-}
-
-#endif //TILESON_IDECOMPRESSOR_HPP
-
-/*** End of inlined file: IDecompressor.hpp ***/
-
+#include "interfaces/IDecompressor.hpp"
 #include <string>
 
 namespace tson
 {
-	class Base64Decompressor : public IDecompressor
+	class Base64Decompressor : public IDecompressor<std::string_view, std::string>
 	{
 		public:
 			[[nodiscard]] inline const std::string &name() const override;
 
-			inline std::string decompress(std::string_view s) override;
+			inline std::string decompress(const std::string_view &s) override;
 
 		private:
 			inline unsigned int pos_of_char(const unsigned char chr);
@@ -212,7 +189,7 @@ namespace tson
 		return NAME;
 	}
 
-	std::string Base64Decompressor::decompress(std::string_view s)
+	std::string Base64Decompressor::decompress(const std::string_view &s)
 	{
 
 		size_t length_of_string = s.length();
@@ -282,6 +259,45 @@ namespace tson
 #ifndef TILESON_DECOMPRESSORCONTAINER_HPP
 #define TILESON_DECOMPRESSORCONTAINER_HPP
 
+
+/*** Start of inlined file: IDecompressor.hpp ***/
+//
+// Created by robin on 29.07.2020.
+//
+
+#ifndef TILESON_IDECOMPRESSOR_HPP
+#define TILESON_IDECOMPRESSOR_HPP
+
+#include <string_view>
+
+namespace tson
+{
+	template <class TIn, class TOut>
+	class IDecompressor
+	{
+		public:
+			/*!
+			 * If the name matches with 'compression' or 'encoding' the decompress() function will
+			 * be called automatically for the actual Layer. Encoding-related matching is handled first!
+			 *
+			 * Known values:
+			 *
+			 * compression: zlib, gzip, zstd (since Tiled 1.3) or empty (default) (tilelayer only).
+			 * encoding: csv (default) or base64 (tilelayer only).
+			 *
+			 * @return
+			 */
+			[[nodiscard]] virtual const std::string &name() const = 0;
+
+			//virtual std::string decompress(std::string_view s) = 0;
+			virtual TOut decompress(const TIn &s) = 0;
+	};
+}
+
+#endif //TILESON_IDECOMPRESSOR_HPP
+
+/*** End of inlined file: IDecompressor.hpp ***/
+
 #include <memory>
 #include <vector>
 #include <string_view>
@@ -300,10 +316,10 @@ namespace tson
 			inline size_t size() const;
 			inline void clear();
 
-			inline IDecompressor *get(std::string_view name);
+			inline IDecompressor<std::string_view, std::string> *get(std::string_view name);
 		private:
 			//Key: name,
-			std::vector<std::unique_ptr<IDecompressor>> m_decompressors;
+			std::vector<std::unique_ptr<IDecompressor<std::string_view, std::string>>> m_decompressors;
 	};
 
 	template<typename T, typename... Args>
@@ -350,7 +366,7 @@ namespace tson
 	 * @param name The name of the container
 	 * @return An ICompressor pointer if it exists. nullptr otherwise.
 	 */
-	IDecompressor *DecompressorContainer::get(std::string_view name)
+	IDecompressor<std::string_view, std::string> *DecompressorContainer::get(std::string_view name)
 	{
 		auto iter = std::find_if(m_decompressors.begin(), m_decompressors.end(), [&](const auto &item)
 		{
