@@ -4,91 +4,15 @@
 
 #include "../external_libs/catch.hpp"
 #include "../include/tileson.h"
+#include "IJsonFakes.hpp"
+#include "../include/common/NlohmannJson.hpp"
 
-class FakeSon : public tson::IJson
-{
-    public:
 
-        bool parse(const void *data, size_t size) override
-        {
-            return false;
-        }
-
-        [[nodiscard]] size_t count(std::string_view key) const override
-        {
-            return (key == "test") ? 1 : 0;
-        }
-
-        [[nodiscard]] bool any(std::string_view key) const override
-        {
-            return (key == "test");
-        }
-
-        [[nodiscard]] bool isArray() const override
-        {
-            return false;
-        }
-
-        [[nodiscard]] bool isObject() const override
-        {
-            return true;
-        }
-
-        [[nodiscard]] bool isNull() const override
-        {
-            return false;
-        }
-
-    protected:
-        [[nodiscard]] int32_t getInt32(std::string_view key) const override
-        {
-            return (key == "test") ? -32 : -1;
-        }
-
-        [[nodiscard]] uint32_t getUInt32(std::string_view key) const override
-        {
-            return (key == "test") ? 32 : 0;
-        }
-
-        [[nodiscard]] int64_t getInt64(std::string_view key) const override
-        {
-            return (key == "test") ? -64 : -1;
-        }
-
-        [[nodiscard]] uint64_t getUInt64(std::string_view key) const override
-        {
-            return (key == "test") ? 64 : 0;
-        }
-
-        [[nodiscard]] double getDouble(std::string_view key) const override
-        {
-            return (key == "test") ? 1337.1337 : 1.0;
-        }
-
-        [[nodiscard]] const std::string &getString(std::string_view key) const override
-        {
-            return (key == "test") ? m_str : m_str2;
-        }
-
-        [[nodiscard]] bool getBool(std::string_view key) const override
-        {
-            return (key == "test");
-        }
-
-    private:
-        std::string m_str {"Test"};
-        std::string m_str2 {"No value"};
-};
-
-//template<typename T>
-//T tson::IJson::get(std::string_view key) const
-//{
-//    static T defaultT;
-//    return defaultT;
-//}
 
 TEST_CASE( "Test a simple FAKE-implementation of IJson - Expect OK.", "[json][interface]" ) {
     std::unique_ptr<tson::IJson> j = std::make_unique<FakeSon>();
+    //tson::IJson &f = j->operator[]("lol");
+    //REQUIRE( f.count("test") == 1 );
     REQUIRE( j->count("test") == 1 );
     REQUIRE( j->count("best") == 0 );
     REQUIRE( j->any("test"));
@@ -110,4 +34,137 @@ TEST_CASE( "Test a simple FAKE-implementation of IJson - Expect OK.", "[json][in
     REQUIRE( j->get<bool>("test"));
     REQUIRE( !j->get<bool>("best"));
     REQUIRE( j->get<nullptr_t>("whatever") == nullptr);
+}
+
+TEST_CASE( "Test a nlohmann implementation of IJson", "[json][interface]" )
+{
+    nlohmann::json jstr = "{\n"
+                       "    \"cornercolors\":[],\n"
+                       "    \"edgecolors\":[\n"
+                       "        {\n"
+                       "            \"color\":\"#ff0000\",\n"
+                       "            \"name\":\"Red\",\n"
+                       "            \"probability\":1,\n"
+                       "            \"tile\":-1\n"
+                       "        }, \n"
+                       "        {\n"
+                       "            \"color\":\"#00ff00\",\n"
+                       "            \"name\":\"Green\",\n"
+                       "            \"probability\":1,\n"
+                       "            \"tile\":-1\n"
+                       "        }, \n"
+                       "        {\n"
+                       "            \"color\":\"#0000ff\",\n"
+                       "            \"name\":\"Blue\",\n"
+                       "            \"probability\":1,\n"
+                       "            \"tile\":-1\n"
+                       "        }, \n"
+                       "        {\n"
+                       "            \"color\":\"#ff7700\",\n"
+                       "            \"name\":\"Orange\",\n"
+                       "            \"probability\":1,\n"
+                       "            \"tile\":-1\n"
+                       "        }],\n"
+                       "    \"name\":\"FirstWang\",\n"
+                       "    \"properties\":[\n"
+                       "        {\n"
+                       "            \"name\":\"floating_wang\",\n"
+                       "            \"type\":\"float\",\n"
+                       "            \"value\":14.6\n"
+                       "        }, \n"
+                       "        {\n"
+                       "            \"name\":\"is_wang\",\n"
+                       "            \"type\":\"bool\",\n"
+                       "            \"value\":true\n"
+                       "        }],\n"
+                       "    \"tile\":-1,\n"
+                       "    \"wangtiles\":[\n"
+                       "        {\n"
+                       "            \"dflip\":false,\n"
+                       "            \"hflip\":false,\n"
+                       "            \"tileid\":0,\n"
+                       "            \"vflip\":false,\n"
+                       "            \"wangid\":[3, 0, 1, 0, 1, 0, 3, 0]\n"
+                       "        }, \n"
+                       "        {\n"
+                       "            \"dflip\":false,\n"
+                       "            \"hflip\":false,\n"
+                       "            \"tileid\":1,\n"
+                       "            \"vflip\":false,\n"
+                       "            \"wangid\":[1, 0, 1, 0, 1, 0, 1, 0]\n"
+                       "        }, \n"
+                       "        {\n"
+                       "            \"dflip\":false,\n"
+                       "            \"hflip\":false,\n"
+                       "            \"tileid\":2,\n"
+                       "            \"vflip\":false,\n"
+                       "            \"wangid\":[3, 0, 3, 0, 1, 0, 1, 0]\n"
+                       "        }, \n"
+                       "        {\n"
+                       "            \"dflip\":false,\n"
+                       "            \"hflip\":false,\n"
+                       "            \"tileid\":3,\n"
+                       "            \"vflip\":false,\n"
+                       "            \"wangid\":[3, 0, 1, 0, 1, 0, 1, 0]\n"
+                       "        }, \n"
+                       "        {\n"
+                       "            \"dflip\":false,\n"
+                       "            \"hflip\":false,\n"
+                       "            \"tileid\":4,\n"
+                       "            \"vflip\":false,\n"
+                       "            \"wangid\":[2, 0, 2, 0, 1, 0, 1, 0]\n"
+                       "        }, \n"
+                       "        {\n"
+                       "            \"dflip\":false,\n"
+                       "            \"hflip\":false,\n"
+                       "            \"tileid\":8,\n"
+                       "            \"vflip\":false,\n"
+                       "            \"wangid\":[1, 0, 1, 0, 3, 0, 3, 0]\n"
+                       "        }, \n"
+                       "        {\n"
+                       "            \"dflip\":false,\n"
+                       "            \"hflip\":false,\n"
+                       "            \"tileid\":9,\n"
+                       "            \"vflip\":false,\n"
+                       "            \"wangid\":[2, 0, 1, 0, 1, 0, 1, 0]\n"
+                       "        }, \n"
+                       "        {\n"
+                       "            \"dflip\":false,\n"
+                       "            \"hflip\":false,\n"
+                       "            \"tileid\":10,\n"
+                       "            \"vflip\":false,\n"
+                       "            \"wangid\":[1, 0, 3, 0, 3, 0, 1, 0]\n"
+                       "        }, \n"
+                       "        {\n"
+                       "            \"dflip\":false,\n"
+                       "            \"hflip\":false,\n"
+                       "            \"tileid\":16,\n"
+                       "            \"vflip\":false,\n"
+                       "            \"wangid\":[3, 0, 3, 0, 3, 0, 3, 0]\n"
+                       "        }, \n"
+                       "        {\n"
+                       "            \"dflip\":false,\n"
+                       "            \"hflip\":false,\n"
+                       "            \"tileid\":17,\n"
+                       "            \"vflip\":false,\n"
+                       "            \"wangid\":[3, 0, 3, 0, 3, 0, 3, 0]\n"
+                       "        }, \n"
+                       "        {\n"
+                       "            \"dflip\":false,\n"
+                       "            \"hflip\":false,\n"
+                       "            \"tileid\":18,\n"
+                       "            \"vflip\":false,\n"
+                       "            \"wangid\":[3, 0, 3, 0, 1, 0, 1, 0]\n"
+                       "        }]\n"
+                       "}"_json;
+    nlohmann::json *jptr = &jstr;
+    std::unique_ptr<tson::IJson> j = std::make_unique<NlohmannJson>(jptr);
+    std::unique_ptr<tson::IJson> wang = j->at("wangtiles");
+    std::unique_ptr<tson::IJson> props = j->at("properties");
+    //size_t nsize = sizeof (nlohmann::json);
+    //size_t isize = sizeof (uint32_t);
+    REQUIRE( j->get<std::string>("name") == "FirstWang");
+    REQUIRE( props->get<std::string>("name") == "floating_wang");
+    REQUIRE( props->size() == 2);
+    REQUIRE( wang->size() == 11);
 }

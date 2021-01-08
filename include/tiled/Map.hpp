@@ -10,6 +10,7 @@
 //#include "../external/json.hpp"
 #include "Layer.hpp"
 #include "Tileset.hpp"
+#include "interfaces/IJson.hpp"
 
 #include "../common/Enums.hpp"
 

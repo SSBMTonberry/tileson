@@ -10,6 +10,11 @@ namespace tson
     class IJson
     {
         public:
+            //virtual IJson& operator[](std::string_view key) = 0;
+            virtual std::unique_ptr<IJson> at(std::string_view key) = 0;
+            virtual std::unique_ptr<IJson> at(size_t pos) = 0;
+            [[nodiscard]] virtual size_t size() const = 0;
+            [[nodiscard]] virtual bool parse(const fs::path &path) = 0;
             [[nodiscard]] virtual bool parse(const void *data, size_t size) = 0;
 
             template <typename T>
@@ -27,7 +32,7 @@ namespace tson
             [[nodiscard]] virtual uint64_t getUInt64(std::string_view key) const = 0;
 
             [[nodiscard]] virtual double getDouble(std::string_view key) const = 0;
-            [[nodiscard]] virtual const std::string &getString(std::string_view key) const = 0;
+            [[nodiscard]] virtual std::string getString(std::string_view key) const = 0;
             [[nodiscard]] virtual bool getBool(std::string_view key) const = 0;
     };
 
