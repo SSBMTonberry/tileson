@@ -56,16 +56,6 @@ namespace tson
 
             inline std::vector<std::unique_ptr<IJson>> & array(std::string_view key) override
             {
-                //std::vector<std::unique_ptr<IJson>> vec;
-                //if (m_json->count(key.data()) > 0 && m_json->operator[](key.data()).is_array())
-                //{
-                //    std::for_each(m_json->operator[](key.data()).begin(), m_json->operator[](key.data()).end(), [&](nlohmann::json &item)
-                //    {
-                //        nlohmann::json *ptr = &item;
-                //        vec.emplace_back(std::make_unique<NlohmannJson>(ptr));
-                //    });
-                //}
-
                 if(m_arrayListDataCache.count(key.data()) == 0)
                 {
                     if (m_json->count(key.data()) > 0 && m_json->operator[](key.data()).is_array())

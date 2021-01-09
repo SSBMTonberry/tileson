@@ -8,9 +8,9 @@
 #include "../objects/Color.hpp"
 #include "../objects/Vector2.hpp"
 //#include "../external/json.hpp"
+#include "interfaces/IJson.hpp"
 #include "Layer.hpp"
 #include "Tileset.hpp"
-#include "interfaces/IJson.hpp"
 
 #include "../common/Enums.hpp"
 
@@ -21,8 +21,8 @@ namespace tson
         public:
             inline Map() = default;
             inline Map(ParseStatus status, std::string description);
-            inline explicit Map(const nlohmann::json &json, tson::DecompressorContainer *decompressors);
-            inline bool parse(const nlohmann::json &json, tson::DecompressorContainer *decompressors);
+            inline explicit Map(IJson &json, tson::DecompressorContainer *decompressors);
+            inline bool parse(IJson &json, tson::DecompressorContainer *decompressors);
 
             [[nodiscard]] inline const Colori &getBackgroundColor() const;
             [[nodiscard]] inline const Vector2i &getSize() const;
@@ -61,7 +61,7 @@ namespace tson
 
 
         private:
-            inline void createTilesetData(const nlohmann::json &json);
+            inline void createTilesetData(IJson &json);
             inline void processData();
 
             Colori                                 m_backgroundColor;   /*! 'backgroundcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)*/;
@@ -123,7 +123,7 @@ tson::Map::Map(tson::ParseStatus status, std::string description) : m_status {st
  * @param json A json object with the format of Map
  * @return true if all mandatory fields was found. false otherwise.
  */
-tson::Map::Map(const nlohmann::json &json, tson::DecompressorContainer *decompressors)
+tson::Map::Map(IJson &json, tson::DecompressorContainer *decompressors)
 {
     parse(json, decompressors);
 }
@@ -133,7 +133,7 @@ tson::Map::Map(const nlohmann::json &json, tson::DecompressorContainer *decompre
  * @param json A json object with the format of Map
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Map::parse(const nlohmann::json &json, tson::DecompressorContainer *decompressors)
+bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
 {
     m_decompressors = decompressors;
 
@@ -157,12 +157,22 @@ bool tson::Map::parse(const nlohmann::json &json, tson::DecompressorContainer *d
     if(json.count("version") > 0) m_version = json["version"].get<int>(); else allFound = false;
 
     //More advanced data
-    if(json.count("layers") > 0 && json["layers"].is_array())
-        std::for_each(json["layers"].begin(), json["layers"].end(), [&](const nlohmann::json &item) { m_layers.emplace_back(item, this); });
-
-    if(json.count("properties") > 0 && json["properties"].is_array())
-        std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
-
+    if(json.count("layers") > 0 && json["layers"].isArray())
+    {
+        auto array = json.array("layers");
+        std::for_each(array.begin(), array.end(), [&](IJson &item)
+        {
+            m_layers.emplace_back(item, this);
+        });
+    }
+    if(json.count("properties") > 0 && json["properties"].isArray())
+    {
+        auto array = json.array("properties");
+        std::for_each(array.begin(), array.end(), [&](IJson &item)
+        {
+            m_properties.add(item);
+        });
+    }
     createTilesetData(json);
     processData();
 
@@ -209,19 +219,20 @@ bool tson::Map::parse(const nlohmann::json &json, tson::DecompressorContainer *d
 /*!
  * Tileset data must be created in two steps to prevent malformed tson::Tileset pointers inside tson::Tile
  */
-void tson::Map::createTilesetData(const nlohmann::json &json)
+void tson::Map::createTilesetData(IJson &json)
 {
-    if(json.count("tilesets") > 0 && json["tilesets"].is_array())
+    if(json.count("tilesets") > 0 && json["tilesets"].isArray())
     {
         //First created tileset objects
-        std::for_each(json["tilesets"].begin(), json["tilesets"].end(), [&](const nlohmann::json &item)
+        auto tilesets = json.array("tilesets");
+        std::for_each(tilesets.begin(), tilesets.end(), [&](const nlohmann::json &item)
         {
             m_tilesets.emplace_back();
         });
 
         int i = 0;
         //Then do the parsing
-        std::for_each(json["tilesets"].begin(), json["tilesets"].end(), [&](const nlohmann::json &item)
+        std::for_each(tilesets.begin(), tilesets.end(), [&](const nlohmann::json &item)
         {
             m_tilesets[i].parse(item, this);
             ++i;

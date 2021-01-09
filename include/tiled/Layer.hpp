@@ -26,8 +26,8 @@ namespace tson
     {
         public:
             inline Layer() = default;
-            inline Layer(const nlohmann::json &json, tson::Map *map);
-            inline bool parse(const nlohmann::json &json, tson::Map *map);
+            inline Layer(IJson &json, tson::Map *map);
+            inline bool parse(IJson &json, tson::Map *map);
 
             [[nodiscard]] inline const std::string &getCompression() const;
             [[nodiscard]] inline const std::vector<uint32_t> &getData() const;
@@ -140,7 +140,7 @@ namespace tson
  * Parses a Tiled layer from json
  * @param json
  */
-tson::Layer::Layer(const nlohmann::json &json, tson::Map *map)
+tson::Layer::Layer(IJson &json, tson::Map *map)
 {
     parse(json, map);
 }
@@ -158,7 +158,7 @@ void tson::Layer::queueFlaggedTile(size_t x, size_t y, uint32_t id)
  * @param json
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Layer::parse(const nlohmann::json &json, tson::Map *map)
+bool tson::Layer::parse(IJson &json, tson::Map *map)
 {
     m_map = map;
 
@@ -184,9 +184,10 @@ bool tson::Layer::parse(const nlohmann::json &json, tson::Map *map)
     //Handle DATA (Optional)
     if(json.count("data") > 0)
     {
-        if(json["data"].is_array())
+        if(json["data"].isArray())
         {
-            std::for_each(json["data"].begin(), json["data"].end(), [&](const nlohmann::json &item) { m_data.push_back(item.get<uint32_t>()); });
+            auto array = json.array("data");
+            std::for_each(array.begin(), array.end(), [&](IJson &item) { m_data.push_back(item.get<uint32_t>()); });
         }
         else
         {
@@ -197,13 +198,13 @@ bool tson::Layer::parse(const nlohmann::json &json, tson::Map *map)
 
     //More advanced data
     if(json.count("chunks") > 0 && json["chunks"].is_array())
-        std::for_each(json["chunks"].begin(), json["chunks"].end(), [&](const nlohmann::json &item) { m_chunks.emplace_back(item); });
+        std::for_each(json["chunks"].begin(), json["chunks"].end(), [&](IJson &item) { m_chunks.emplace_back(item); });
     if(json.count("layers") > 0 && json["layers"].is_array())
-        std::for_each(json["layers"].begin(), json["layers"].end(), [&](const nlohmann::json &item) { m_layers.emplace_back(item, m_map); });
+        std::for_each(json["layers"].begin(), json["layers"].end(), [&](IJson &item) { m_layers.emplace_back(item, m_map); });
     if(json.count("objects") > 0 && json["objects"].is_array())
-        std::for_each(json["objects"].begin(), json["objects"].end(), [&](const nlohmann::json &item) { m_objects.emplace_back(item); });
+        std::for_each(json["objects"].begin(), json["objects"].end(), [&](IJson &item) { m_objects.emplace_back(item); });
     if(json.count("properties") > 0 && json["properties"].is_array())
-        std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+        std::for_each(json["properties"].begin(), json["properties"].end(), [&](IJson &item) { m_properties.add(item); });
 
     setTypeByString();
 
