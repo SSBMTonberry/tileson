@@ -21,10 +21,10 @@ namespace tson
     {
         public:
             inline Tile() = default;
-            inline Tile(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
+            inline Tile(IJson &json, tson::Tileset *tileset, tson::Map *map);
             inline Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map);
             inline Tile(uint32_t id, tson::Map *map); //v1.2.0
-            inline bool parse(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
+            inline bool parse(IJson &json, tson::Tileset *tileset, tson::Map *map);
 
 
 
@@ -97,7 +97,7 @@ namespace tson
     }
 }
 
-tson::Tile::Tile(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map)
+tson::Tile::Tile(IJson &json, tson::Tileset *tileset, tson::Map *map)
 {
     parse(json, tileset, map);
 }
@@ -139,7 +139,7 @@ void tson::Tile::addTilesetAndPerformCalculations(tson::Tileset *tileset)
  * @param json
  * @return
  */
-bool tson::Tile::parse(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map)
+bool tson::Tile::parse(IJson &json, tson::Tileset *tileset, tson::Map *map)
 {
     m_tileset = tileset;
     m_map = map;
@@ -164,13 +164,22 @@ bool tson::Tile::parse(const nlohmann::json &json, tson::Tileset *tileset, tson:
         m_imageSize = {json["imagewidth"].get<int>(), json["imageheight"].get<int>()}; //Optional
 
     //More advanced data
-    if(json.count("animation") > 0 && json["animation"].is_array())
-        std::for_each(json["animation"].begin(), json["animation"].end(), [&](const nlohmann::json &item) { m_animation.emplace_back(item); });
-    if(json.count("terrain") > 0 && json["terrain"].is_array())
-        std::for_each(json["terrain"].begin(), json["terrain"].end(), [&](const nlohmann::json &item) { m_terrain.emplace_back(item.get<int>()); });
+    if(json.count("animation") > 0 && json["animation"].isArray())
+    {
+        auto animation = json.array("animation");
+        std::for_each(animation.begin(), animation.end(), [&](std::unique_ptr<IJson> &item) { m_animation.emplace_back(*item); });
+    }
+    if(json.count("terrain") > 0 && json["terrain"].isArray())
+    {
+        auto terrain = json.array("terrain");
+        std::for_each(terrain.begin(), terrain.end(), [&](std::unique_ptr<IJson> &item) { m_terrain.emplace_back(item->get<int>()); });
+    }
 
-    if(json.count("properties") > 0 && json["properties"].is_array())
-        std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+    if(json.count("properties") > 0 && json["properties"].isArray())
+    {
+        auto properties = json.array("properties");
+        std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
+    }
 
     performDataCalculations();
 

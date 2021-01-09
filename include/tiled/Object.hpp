@@ -32,8 +32,8 @@ namespace tson
 
 
             inline Object() = default;
-            inline explicit Object(const nlohmann::json &json);
-            inline bool parse(const nlohmann::json &json);
+            inline explicit Object(IJson &json);
+            inline bool parse(IJson &json);
 
             [[nodiscard]] inline ObjectType getObjectType() const;
             [[nodiscard]] inline bool isEllipse() const;
@@ -63,7 +63,7 @@ namespace tson
 
 
         private:
-            inline void setObjectTypeByJson(const nlohmann::json &json);
+            inline void setObjectTypeByJson(IJson &json);
 
             ObjectType                        m_objectType = ObjectType::Undefined;    /*! Says with object type this is */
             bool                              m_ellipse {};                            /*! 'ellipse': Used to mark an object as an ellipse */
@@ -103,7 +103,7 @@ namespace tson
  * Parses a json Tiled object
  * @param json
  */
-tson::Object::Object(const nlohmann::json &json)
+tson::Object::Object(IJson &json)
 {
     parse(json);
 }
@@ -114,7 +114,7 @@ tson::Object::Object(const nlohmann::json &json)
  * @param json
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Object::parse(const nlohmann::json &json)
+bool tson::Object::parse(IJson &json)
 {
     bool allFound = true;
 
@@ -157,16 +157,35 @@ bool tson::Object::parse(const nlohmann::json &json)
         allFound = true; //Just accept anything with this type
 
     //More advanced data
-    if(json.count("polygon") > 0 && json["polygon"].is_array())
-        std::for_each(json["polygon"].begin(), json["polygon"].end(),
-                      [&](const nlohmann::json &item) { m_polygon.emplace_back(item["x"].get<int>(), item["y"].get<int>()); });
+    if(json.count("polygon") > 0 && json["polygon"].isArray())
+    {
+        auto polygon = json.array("polygon");
+        std::for_each(polygon.begin(), polygon.end(),[&](std::unique_ptr<IJson> &item)
+        {
+            IJson &j = *item;
+            m_polygon.emplace_back(j["x"].get<int>(), j["y"].get<int>());
+        });
 
-    if(json.count("polyline") > 0 && json["polyline"].is_array())
-        std::for_each(json["polyline"].begin(), json["polyline"].end(),
-                      [&](const nlohmann::json &item) { m_polyline.emplace_back(item["x"].get<int>(), item["y"].get<int>()); });
+    }
 
-    if(json.count("properties") > 0 && json["properties"].is_array())
-        std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+    if(json.count("polyline") > 0 && json["polyline"].isArray())
+    {
+        auto polyline = json.array("polyline");
+        std::for_each(polyline.begin(), polyline.end(),[&](std::unique_ptr<IJson> &item)
+        {
+            IJson &j = *item;
+            m_polyline.emplace_back(j["x"].get<int>(), j["y"].get<int>());
+        });
+    }
+
+    if(json.count("properties") > 0 && json["properties"].isArray())
+    {
+        auto properties = json.array("properties");
+        std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item)
+        {
+            m_properties.add(*item);
+        });
+    }
 
     return allFound;
 }
@@ -176,7 +195,7 @@ bool tson::Object::parse(const nlohmann::json &json)
  * Sets an object type based on json data.
  * @param json
  */
-void tson::Object::setObjectTypeByJson(const nlohmann::json &json)
+void tson::Object::setObjectTypeByJson(IJson &json)
 {
     m_objectType = ObjectType::Undefined;
     if(m_ellipse)

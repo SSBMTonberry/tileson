@@ -23,8 +23,8 @@ namespace tson
     {
         public:
             inline Tileset() = default;
-            inline explicit Tileset(const nlohmann::json &json, tson::Map *map);
-            inline bool parse(const nlohmann::json &json, tson::Map *map);
+            inline explicit Tileset(IJson &json, tson::Map *map);
+            inline bool parse(IJson &json, tson::Map *map);
 
             [[nodiscard]] inline int getColumns() const;
             [[nodiscard]] inline int getFirstgid() const;
@@ -105,12 +105,12 @@ namespace tson
     }
 }
 
-tson::Tileset::Tileset(const nlohmann::json &json, tson::Map *map)
+tson::Tileset::Tileset(IJson &json, tson::Map *map)
 {
     parse(json, map);
 }
 
-bool tson::Tileset::parse(const nlohmann::json &json, tson::Map *map)
+bool tson::Tileset::parse(IJson &json, tson::Map *map)
 {
     m_map = map;
     bool allFound = true;
@@ -136,15 +136,27 @@ bool tson::Tileset::parse(const nlohmann::json &json, tson::Map *map)
         m_tileOffset = {json["tileoffset"]["x"].get<int>(), json["tileoffset"]["y"].get<int>()};
 
     //More advanced data
-    if(json.count("wangsets") > 0 && json["wangsets"].is_array())
-        std::for_each(json["wangsets"].begin(), json["wangsets"].end(), [&](const nlohmann::json &item) { m_wangsets.emplace_back(item); });
-    if(json.count("tiles") > 0 && json["tiles"].is_array())
-        std::for_each(json["tiles"].begin(), json["tiles"].end(), [&](const nlohmann::json &item) { m_tiles.emplace_back(item, this, m_map); });
-    if(json.count("terrains") > 0 && json["terrains"].is_array())
-        std::for_each(json["terrains"].begin(), json["terrains"].end(), [&](const nlohmann::json &item) { m_terrains.emplace_back(item); });
+    if(json.count("wangsets") > 0 && json["wangsets"].isArray())
+    {
+        auto wangsets = json.array("wangsets");
+        std::for_each(wangsets.begin(), wangsets.end(), [&](std::unique_ptr<IJson> &item) { m_wangsets.emplace_back(*item); });
+    }
+    if(json.count("tiles") > 0 && json["tiles"].isArray())
+    {
+        auto tiles = json.array("tiles");
+        std::for_each(tiles.begin(), tiles.end(), [&](std::unique_ptr<IJson> &item) { m_tiles.emplace_back(*item, this, m_map); });
+    }
+    if(json.count("terrains") > 0 && json["terrains"].isArray())
+    {
+        auto terrains = json.array("terrains");
+        std::for_each(terrains.begin(), terrains.end(), [&](std::unique_ptr<IJson> &item) { m_terrains.emplace_back(*item); });
+    }
 
-    if(json.count("properties") > 0 && json["properties"].is_array())
-        std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+    if(json.count("properties") > 0 && json["properties"].isArray())
+    {
+        auto properties = json.array("properties");
+        std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
+    }
 
     if(json.count("objectalignment") > 0)
     {

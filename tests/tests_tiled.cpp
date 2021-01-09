@@ -57,7 +57,8 @@ TEST_CASE( "Parse a Map from Tiled's documentation", "[tiled][map]" )
                        "}"_json;
 
     tson::Map map;
-    bool parseOk = map.parse(j, nullptr);
+    std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+    bool parseOk = map.parse(*json, nullptr);
     bool hasCorrectValues = (
                                 map.getBackgroundColor() == "#656667" &&
                                 map.getSize() == tson::Vector2i(4,4) &&
@@ -104,7 +105,8 @@ TEST_CASE( "Parse a Layer from Tiled's documentation - read simple values", "[ti
                            "}"_json;
 
         tson::Layer layer;
-        bool parseOk = layer.parse(j, nullptr);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+        bool parseOk = layer.parse(*json, nullptr);
         bool hasCorrectValues = (
                 layer.getData().size() == 16 &&
                 layer.getSize() == tson::Vector2i(4, 4) &&
@@ -147,7 +149,8 @@ TEST_CASE( "Parse a Layer from Tiled's documentation - read simple values", "[ti
                            "}"_json;
 
         tson::Layer layer;
-        bool parseOk = layer.parse(j, nullptr);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+        bool parseOk = layer.parse(*json, nullptr);
         bool hasCorrectValues = (
                 layer.getDrawOrder() == "topdown" &&
                 layer.getName() == "people" &&
@@ -178,7 +181,8 @@ TEST_CASE( "Parse a Chunk from Tiled's documentation - read simple values", "[ti
                        "}"_json;
 
     tson::Chunk chunk;
-    bool parseOk = chunk.parse(j);
+    std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+    bool parseOk = chunk.parse(*json);
     bool hasCorrectValues = (
             chunk.getData().size() == 16 &&
             chunk.getSize() == tson::Vector2i(16, 16) &&
@@ -212,7 +216,8 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                            "}"_json;
 
         tson::Object obj;
-        bool parseOk = obj.parse(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+        bool parseOk = obj.parse(*json);
         bool hasCorrectValues = (
                 obj.getGid() == 5 &&
                 obj.getId() == 1 &&
@@ -248,7 +253,8 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                            "}"_json;
 
         tson::Object obj;
-        bool parseOk = obj.parse(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+        bool parseOk = obj.parse(*json);
         bool hasCorrectValues = (
                 obj.isEllipse() &&
                 obj.getId() == 13 &&
@@ -279,7 +285,8 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                            "}"_json;
 
         tson::Object obj;
-        bool parseOk = obj.parse(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+        bool parseOk = obj.parse(*json);
         bool hasCorrectValues = (
                 obj.getId() == 14 &&
                 obj.getName().empty() &&
@@ -310,7 +317,8 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                            "}"_json;
 
         tson::Object obj;
-        bool parseOk = obj.parse(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+        bool parseOk = obj.parse(*json);
         bool hasCorrectValues = (
                 obj.isPoint() &&
                 obj.getId() == 20 &&
@@ -362,7 +370,8 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                            "}"_json;
 
         tson::Object obj;
-        bool parseOk = obj.parse(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+        bool parseOk = obj.parse(*json);
         bool hasCorrectValues = (
                 obj.getId() == 15 &&
                 obj.getName().empty() &&
@@ -416,7 +425,8 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                            "}"_json;
 
         tson::Object obj;
-        bool parseOk = obj.parse(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+        bool parseOk = obj.parse(*json);
         bool hasCorrectValues = (
                 obj.getId() == 16 &&
                 obj.getName().empty() &&
@@ -452,7 +462,8 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                            "}"_json;
 
         tson::Object obj;
-        bool parseOk = obj.parse(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+        bool parseOk = obj.parse(*json);
         bool hasCorrectValues = (
                 obj.getId() == 15 &&
                 obj.getName().empty() &&
@@ -479,7 +490,8 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
                            "}"_json;
 
         tson::Object obj;
-        bool parseOk = obj.parse(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+        bool parseOk = obj.parse(*json);
         bool hasCorrectValues = (
                 obj.getId() == 13 &&
                 obj.getTemplate() == "useless_template_object.tx" &&
@@ -515,7 +527,8 @@ TEST_CASE( "Parse a Tileset from Tiled's documentation - read simple values", "[
                        "}"_json;
 
     tson::Tileset tileset;
-    bool parseOk = tileset.parse(j, nullptr);
+    std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+    bool parseOk = tileset.parse(*json, nullptr);
     bool hasCorrectValues = (
         tileset.getColumns() == 19 &&
         tileset.getFirstgid() == 1 &&
@@ -549,7 +562,8 @@ TEST_CASE( "Parse a Tile from Tiled's documentation - read simple values", "[til
                        "}"_json;
 
     tson::Tile tile;
-    bool parseOk = tile.parse(j, nullptr, nullptr);
+    std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+    bool parseOk = tile.parse(*json, nullptr, nullptr);
     REQUIRE(parseOk);
     REQUIRE(tile.getId() == 12);
     REQUIRE(tile.getTerrain().size() == 4);
@@ -569,7 +583,8 @@ TEST_CASE( "Parse a Frame", "[tiled][frame]" )
                        "}"_json;
 
     tson::Frame frame;
-    bool parseOk = frame.parse(j);
+    std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+    bool parseOk = frame.parse(*json);
     bool hasCorrectValues = (
             frame.getDuration() == 100 &&
             frame.getTileId() == 6
@@ -586,7 +601,8 @@ TEST_CASE( "Parse a Terrain from Tiled's documentation", "[tiled][terrain]" )
                        "}"_json;
 
     tson::Terrain terrain;
-    bool parseOk = terrain.parse(j);
+    std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+    bool parseOk = terrain.parse(*json);
     bool hasCorrectValues = (
             terrain.getName() == "chasm" &&
             terrain.getTile() == 12
@@ -720,7 +736,8 @@ TEST_CASE( "Wang-tests - everything Wang - simple", "[tiled][wang]" )
                            "}"_json;
 
         tson::WangSet wangset;
-        bool parseOk = wangset.parse(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+        bool parseOk = wangset.parse(*json);
         bool hasCorrectValues = (
                 wangset.getTile() == -1 &&
                 wangset.getName() == "FirstWang" &&
@@ -747,7 +764,8 @@ TEST_CASE( "Wang-tests - everything Wang - simple", "[tiled][wang]" )
 
         tson::WangColor wangColor;
         tson::Color colorMatch = tson::Colori("#d31313");
-        bool parseOk = wangColor.parse(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+        bool parseOk = wangColor.parse(*json);
         bool hasCorrectValues = (
                 wangColor.getColor() == colorMatch &&
                 wangColor.getName() == "Rails" &&
@@ -769,7 +787,8 @@ TEST_CASE( "Wang-tests - everything Wang - simple", "[tiled][wang]" )
                            "}"_json;
 
         tson::WangTile wangTile;
-        bool parseOk = wangTile.parse(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+        bool parseOk = wangTile.parse(*json);
         bool hasCorrectValues = (
                 !wangTile.hasDFlip() &&
                 !wangTile.hasHFlip() &&
@@ -818,27 +837,11 @@ TEST_CASE( "Property-tests - Set properties from json", "[tiled][wang]" )
                        "}]"_json;
 
     tson::PropertyCollection properties;
-    for(const auto &item : j)
+    std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
+    for(auto &item : json->array())
     {
-        properties.add(item);
+        properties.add(*item);
     }
-
-    //bool hasCorrectValues = (
-    //    properties.getProperties().size() == 6 &&
-    //    properties.getValue<tson::Colori>("color") == tson::Colori("#ff268176") &&
-    //    properties.getProperty("color")->getType() == tson::Type::Color &&
-//
-    //    properties.getValue<fs::path>("file_ref") == fs::path("../demo-tileset.png") &&
-//
-    //    properties.getProperty("file_ref")->getType() == tson::Type::File &&
-    //    properties.getValue<int>("hp") == 4 && properties.getProperty("hp")->getType() == tson::Type::Int &&
-    //    properties.getValue<bool>("is_player") && properties.getProperty("is_player")->getType() == tson::Type::Boolean &&
-    //    properties.getValue<float>("jump_force") == 10 && properties.getProperty("jump_force")->getType() == tson::Type::Float &&
-    //    properties.getValue<std::string>("name") == "Mario" && properties.getProperty("name")->getType() == tson::Type::String
-    //);
-//
-    //REQUIRE(hasCorrectValues);
-
 
     REQUIRE(properties.getProperties().size() == 6);
     REQUIRE(properties.getValue<tson::Colori>("color") == tson::Colori("#ff268176"));

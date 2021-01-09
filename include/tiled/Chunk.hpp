@@ -14,8 +14,8 @@ namespace tson
     {
         public:
             inline Chunk() = default;
-            inline explicit Chunk(const nlohmann::json &json);
-            inline bool parse(const nlohmann::json &json);
+            inline explicit Chunk(IJson &json);
+            inline bool parse(IJson &json);
 
             [[nodiscard]] inline const std::vector<int> &getData() const;
             [[nodiscard]] inline const std::string &getBase64Data() const;
@@ -36,7 +36,7 @@ namespace tson
  * Parses 'chunk' data from Tiled json and stores the values in this class
  * @param json json-data
  */
-tson::Chunk::Chunk(const nlohmann::json &json)
+tson::Chunk::Chunk(IJson &json)
 {
     parse(json);
 }
@@ -46,7 +46,7 @@ tson::Chunk::Chunk(const nlohmann::json &json)
  * @param json json-data
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Chunk::parse(const nlohmann::json &json)
+bool tson::Chunk::parse(IJson &json)
 {
     bool allFound = true;
 
@@ -58,9 +58,10 @@ bool tson::Chunk::parse(const nlohmann::json &json)
     //Handle DATA (Optional)
     if(json.count("data") > 0)
     {
-        if(json["data"].is_array())
+        if(json["data"].isArray())
         {
-            std::for_each(json["data"].begin(), json["data"].end(), [&](const nlohmann::json &item) { m_data.push_back(item.get<int>()); });
+            auto data = json.array("data");
+            std::for_each(data.begin(), data.end(), [&](std::unique_ptr<IJson> &item) { m_data.push_back(item->get<int>()); });
         }
         else
             m_base64Data = json["data"].get<std::string>();

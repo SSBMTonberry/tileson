@@ -13,6 +13,11 @@ namespace tson
             virtual IJson& operator[](std::string_view key) = 0;
             virtual IJson &at(std::string_view key) = 0;
             virtual IJson &at(size_t pos) = 0;
+            /*!
+             * If current json object is an array, this will get all elements of it!
+             * @return An array
+             */
+            [[nodiscard]] virtual std::vector<std::unique_ptr<IJson>> array() = 0;
             [[nodiscard]] virtual std::vector<std::unique_ptr<IJson>> & array(std::string_view key) = 0;
             /*!
              * Get the size of an object. This will be equal to the number of
@@ -39,6 +44,7 @@ namespace tson
             [[nodiscard]] virtual int64_t getInt64(std::string_view key) const = 0;
             [[nodiscard]] virtual uint64_t getUInt64(std::string_view key) const = 0;
             [[nodiscard]] virtual double getDouble(std::string_view key) const = 0;
+            [[nodiscard]] virtual float getFloat(std::string_view key) const = 0;
             [[nodiscard]] virtual std::string getString(std::string_view key) const = 0;
             [[nodiscard]] virtual bool getBool(std::string_view key) const = 0;
 
@@ -47,6 +53,7 @@ namespace tson
             [[nodiscard]] virtual int64_t getInt64() const = 0;
             [[nodiscard]] virtual uint64_t getUInt64() const = 0;
             [[nodiscard]] virtual double getDouble() const = 0;
+            [[nodiscard]] virtual float getFloat() const = 0;
             [[nodiscard]] virtual std::string getString() const = 0;
             [[nodiscard]] virtual bool getBool() const = 0;
     };
@@ -56,6 +63,8 @@ namespace tson
     {
         if constexpr (std::is_same<T, double>::value)
             return getDouble(key);
+        if constexpr (std::is_same<T, float>::value)
+            return getFloat(key);
         else if constexpr (std::is_same<T, int32_t>::value)
             return getInt32(key);
         else if constexpr (std::is_same<T, uint32_t>::value)
@@ -77,6 +86,8 @@ namespace tson
     {
         if constexpr (std::is_same<T, double>::value)
             return getDouble();
+        if constexpr (std::is_same<T, float>::value)
+            return getFloat();
         else if constexpr (std::is_same<T, int32_t>::value)
             return getInt32();
         else if constexpr (std::is_same<T, uint32_t>::value)

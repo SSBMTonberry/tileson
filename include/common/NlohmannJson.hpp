@@ -54,6 +54,18 @@ namespace tson
                 //return std::make_unique<NlohmannJson>(&m_json->at(pos));
             }
 
+            std::vector<std::unique_ptr<IJson>> array() override
+            {
+                std::vector<std::unique_ptr<IJson>> vec;
+                for(auto &item : *m_json)
+                {
+                    nlohmann::json *ptr = &item;
+                    vec.emplace_back(std::make_unique<NlohmannJson>(ptr));
+                }
+
+                return vec;
+            }
+
             inline std::vector<std::unique_ptr<IJson>> & array(std::string_view key) override
             {
                 if(m_arrayListDataCache.count(key.data()) == 0)
@@ -183,6 +195,11 @@ namespace tson
                 return m_json->operator[](key.data()).get<bool>();
             }
 
+            [[nodiscard]] float getFloat(std::string_view key) const override
+            {
+                return m_json->operator[](key.data()).get<float>();
+            }
+
             [[nodiscard]] inline int32_t getInt32() const override
             {
                 return m_json->get<int32_t>();
@@ -216,6 +233,11 @@ namespace tson
             [[nodiscard]] inline bool getBool() const override
             {
                 return m_json->get<bool>();
+            }
+
+            [[nodiscard]] float getFloat() const override
+            {
+                return m_json->get<float>();
             }
 
         private:
