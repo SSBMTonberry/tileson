@@ -4,37 +4,37 @@
 
 #include "../external_libs/catch.hpp"
 #include "../include/tileson.h"
-#include "IJsonFakes.hpp"
+//#include "IJsonFakes.hpp"
 #include "../include/common/NlohmannJson.hpp"
 
 
 
-TEST_CASE( "Test a simple FAKE-implementation of IJson - Expect OK.", "[json][interface]" ) {
-    std::unique_ptr<tson::IJson> j = std::make_unique<FakeSon>();
-    //tson::IJson &f = j->operator[]("lol");
-    //REQUIRE( f.count("test") == 1 );
-    REQUIRE( j->count("test") == 1 );
-    REQUIRE( j->count("best") == 0 );
-    REQUIRE( j->any("test"));
-    REQUIRE( !j->any("best"));
-    REQUIRE( j->isObject());
-
-    REQUIRE( j->get<int32_t>("test") == -32 );
-    REQUIRE( j->get<int32_t>("best") == -1 );
-    REQUIRE( j->get<uint32_t>("test") == 32 );
-    REQUIRE( j->get<uint32_t>("best") == 0 );
-    REQUIRE( j->get<int64_t>("test") == -64 );
-    REQUIRE( j->get<int64_t>("best") == -1 );
-    REQUIRE( j->get<uint64_t>("test") == 64 );
-    REQUIRE( j->get<uint64_t>("best") == 0 );
-    REQUIRE( j->get<double>("test") > 1337.0 );
-    REQUIRE( j->get<double>("best") < 2 );
-    REQUIRE( j->get<std::string>("test") == "Test" );
-    REQUIRE( j->get<std::string>("best") == "No value" );
-    REQUIRE( j->get<bool>("test"));
-    REQUIRE( !j->get<bool>("best"));
-    REQUIRE( j->get<nullptr_t>("whatever") == nullptr);
-}
+//TEST_CASE( "Test a simple FAKE-implementation of IJson - Expect OK.", "[json][interface]" ) {
+//    std::unique_ptr<tson::IJson> j = std::make_unique<FakeSon>();
+//    //tson::IJson &f = j->operator[]("lol");
+//    //REQUIRE( f.count("test") == 1 );
+//    REQUIRE( j->count("test") == 1 );
+//    REQUIRE( j->count("best") == 0 );
+//    REQUIRE( j->any("test"));
+//    REQUIRE( !j->any("best"));
+//    REQUIRE( j->isObject());
+//
+//    REQUIRE( j->get<int32_t>("test") == -32 );
+//    REQUIRE( j->get<int32_t>("best") == -1 );
+//    REQUIRE( j->get<uint32_t>("test") == 32 );
+//    REQUIRE( j->get<uint32_t>("best") == 0 );
+//    REQUIRE( j->get<int64_t>("test") == -64 );
+//    REQUIRE( j->get<int64_t>("best") == -1 );
+//    REQUIRE( j->get<uint64_t>("test") == 64 );
+//    REQUIRE( j->get<uint64_t>("best") == 0 );
+//    REQUIRE( j->get<double>("test") > 1337.0 );
+//    REQUIRE( j->get<double>("best") < 2 );
+//    REQUIRE( j->get<std::string>("test") == "Test" );
+//    REQUIRE( j->get<std::string>("best") == "No value" );
+//    REQUIRE( j->get<bool>("test"));
+//    REQUIRE( !j->get<bool>("best"));
+//    REQUIRE( j->get<nullptr_t>("whatever") == nullptr);
+//}
 
 TEST_CASE( "Test a nlohmann implementation of IJson", "[json][interface]" )
 {
@@ -159,12 +159,26 @@ TEST_CASE( "Test a nlohmann implementation of IJson", "[json][interface]" )
                        "}"_json;
     nlohmann::json *jptr = &jstr;
     std::unique_ptr<tson::IJson> j = std::make_unique<NlohmannJson>(jptr);
-    std::unique_ptr<tson::IJson> wang = j->at("wangtiles");
-    std::unique_ptr<tson::IJson> props = j->at("properties");
+    std::vector<std::unique_ptr<tson::IJson>> wang = j->array("wangtiles");
+    std::vector<std::unique_ptr<tson::IJson>> props = j->array("properties");
+    std::unique_ptr<tson::IJson> w1 = j->at("wangtiles");
+    std::unique_ptr<tson::IJson> p1 = j->at("properties");
     //size_t nsize = sizeof (nlohmann::json);
     //size_t isize = sizeof (uint32_t);
     REQUIRE( j->get<std::string>("name") == "FirstWang");
-    REQUIRE( props->get<std::string>("name") == "floating_wang");
-    REQUIRE( props->size() == 2);
-    REQUIRE( wang->size() == 11);
+    REQUIRE( props.at(0)->get<std::string>("name") == "floating_wang");
+    REQUIRE( props.at(1)->get<std::string>("name") == "is_wang"); //type
+    REQUIRE( j->array("properties").size() == 2);
+    REQUIRE( j->array("wangtiles").size() == 11);
+    REQUIRE( p1->size() == 3);
+    REQUIRE( w1->size() == 5);
+    REQUIRE( j->at("properties")->size() == 3);
+    REQUIRE( j->at("wangtiles")->size() == 5);
+    REQUIRE( props.at(0)->size() == 3);
+    REQUIRE( wang.at(0)->size() == 5);
+    REQUIRE( wang.at(2)->size() == 5);
+    REQUIRE( wang.at(2)->array("wangid").at(2)->get<uint32_t>() == 3);
+    REQUIRE( wang.at(3)->array("wangid").at(2)->get<int>() == 1);
+    REQUIRE( props.size() == 2);
+    REQUIRE( wang.size() == 11);
 }

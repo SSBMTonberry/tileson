@@ -13,12 +13,20 @@ namespace tson
             //virtual IJson& operator[](std::string_view key) = 0;
             virtual std::unique_ptr<IJson> at(std::string_view key) = 0;
             virtual std::unique_ptr<IJson> at(size_t pos) = 0;
+            virtual std::vector<std::unique_ptr<IJson>> array(std::string_view key) = 0;
+            /*!
+             * Get the size of an object. This will be equal to the number of
+             * variables an object contains.
+             * @return
+             */
             [[nodiscard]] virtual size_t size() const = 0;
             [[nodiscard]] virtual bool parse(const fs::path &path) = 0;
             [[nodiscard]] virtual bool parse(const void *data, size_t size) = 0;
 
             template <typename T>
             [[nodiscard]] T get(std::string_view key) const;
+            template <typename T>
+            [[nodiscard]] T get() const;
             [[nodiscard]] virtual size_t count(std::string_view key) const = 0;
             [[nodiscard]] virtual bool any(std::string_view key) const = 0;
             [[nodiscard]] virtual bool isArray() const = 0;
@@ -30,10 +38,17 @@ namespace tson
             [[nodiscard]] virtual uint32_t getUInt32(std::string_view key) const = 0;
             [[nodiscard]] virtual int64_t getInt64(std::string_view key) const = 0;
             [[nodiscard]] virtual uint64_t getUInt64(std::string_view key) const = 0;
-
             [[nodiscard]] virtual double getDouble(std::string_view key) const = 0;
             [[nodiscard]] virtual std::string getString(std::string_view key) const = 0;
             [[nodiscard]] virtual bool getBool(std::string_view key) const = 0;
+
+            [[nodiscard]] virtual int32_t getInt32() const = 0;
+            [[nodiscard]] virtual uint32_t getUInt32() const = 0;
+            [[nodiscard]] virtual int64_t getInt64() const = 0;
+            [[nodiscard]] virtual uint64_t getUInt64() const = 0;
+            [[nodiscard]] virtual double getDouble() const = 0;
+            [[nodiscard]] virtual std::string getString() const = 0;
+            [[nodiscard]] virtual bool getBool() const = 0;
     };
 
     template<typename T>
@@ -53,6 +68,27 @@ namespace tson
             return getString(key);
         else if constexpr (std::is_same<T, bool>::value)
             return getBool(key);
+        else
+            return nullptr;
+    }
+
+    template<typename T>
+    T IJson::get() const
+    {
+        if constexpr (std::is_same<T, double>::value)
+            return getDouble();
+        else if constexpr (std::is_same<T, int32_t>::value)
+            return getInt32();
+        else if constexpr (std::is_same<T, uint32_t>::value)
+            return getUInt32();
+        else if constexpr (std::is_same<T, int64_t>::value)
+            return getInt64();
+        else if constexpr (std::is_same<T, uint64_t>::value)
+            return getUInt64();
+        else if constexpr (std::is_same<T, std::string>::value)
+            return getString();
+        else if constexpr (std::is_same<T, bool>::value)
+            return getBool();
         else
             return nullptr;
     }

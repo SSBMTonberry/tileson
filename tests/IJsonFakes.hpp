@@ -23,6 +23,11 @@ class FakeSon : public tson::IJson
             return std::unique_ptr<FakeSon>();
         }
 
+        std::vector<std::unique_ptr<IJson>> array(std::string_view key) override
+        {
+            return std::vector<std::unique_ptr<IJson>>();
+        }
+
         [[nodiscard]] size_t size() const override
         {
             return 1;

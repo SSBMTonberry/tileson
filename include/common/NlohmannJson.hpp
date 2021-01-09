@@ -35,9 +35,22 @@ class NlohmannJson : public tson::IJson
             return std::make_unique<NlohmannJson>(&m_json->at(pos));
         }
 
+        std::vector<std::unique_ptr<IJson>> array(std::string_view key) override
+        {
+            std::vector<std::unique_ptr<IJson>> vec;
+            if(m_json->count(key.data()) > 0 && m_json->operator[](key.data()).is_array())
+            {
+                std::for_each(m_json->operator[](key.data()).begin(), m_json->operator[](key.data()).end(), [&](nlohmann::json &item)
+                {
+                    nlohmann::json *ptr = &item;
+                    vec.emplace_back(std::make_unique<NlohmannJson>(ptr));
+                });
+            }
+            return vec;
+        }
+
         size_t size() const override
         {
-            //return std::count(m_json->begin(), m_json->end(), 0);
             return m_json->size();
         }
 
@@ -150,6 +163,41 @@ class NlohmannJson : public tson::IJson
         [[nodiscard]] bool getBool(std::string_view key) const override
         {
             return m_json->operator[](key.data()).get<bool>();
+        }
+
+        [[nodiscard]] int32_t getInt32() const override
+        {
+            return m_json->get<int32_t>();
+        }
+
+        [[nodiscard]] uint32_t getUInt32() const override
+        {
+            return m_json->get<uint32_t>();
+        }
+
+        [[nodiscard]] int64_t getInt64() const override
+        {
+            return m_json->get<int64_t>();
+        }
+
+        [[nodiscard]] uint64_t getUInt64() const override
+        {
+            return m_json->get<uint64_t>();
+        }
+
+        [[nodiscard]] double getDouble() const override
+        {
+            return m_json->get<double>();
+        }
+
+        [[nodiscard]] std::string getString() const override
+        {
+            return m_json->get<std::string>();
+        }
+
+        [[nodiscard]] bool getBool() const override
+        {
+            return m_json->get<bool>();
         }
 
     private:
