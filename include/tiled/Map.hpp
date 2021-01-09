@@ -169,6 +169,43 @@ bool tson::Map::parse(const nlohmann::json &json, tson::DecompressorContainer *d
     return allFound;
 }
 
+// RBP: CLEANUP When new logic is verified!
+//bool tson::Map::parse(const nlohmann::json &json, tson::DecompressorContainer *decompressors)
+//{
+//    m_decompressors = decompressors;
+//
+//    bool allFound = true;
+//    if(json.count("compressionlevel") > 0) m_compressionLevel = json["compressionlevel"].get<int>(); //Tiled 1.3 - Optional
+//    if(json.count("backgroundcolor") > 0) m_backgroundColor = Colori(json["backgroundcolor"].get<std::string>()); //Optional
+//    if(json.count("width") > 0 && json.count("height") > 0 )
+//        m_size = {json["width"].get<int>(), json["height"].get<int>()}; else allFound = false;
+//    if(json.count("hexsidelength") > 0) m_hexsideLength = json["hexsidelength"].get<int>();         //Optional
+//    if(json.count("infinite") > 0) m_isInfinite = json["infinite"].get<bool>();                     //Optional
+//    if(json.count("nextlayerid") > 0) m_nextLayerId = json["nextlayerid"].get<int>();               //Optional
+//    if(json.count("nextobjectid") > 0) m_nextObjectId = json["nextobjectid"].get<int>(); else allFound = false;
+//    if(json.count("orientation") > 0) m_orientation = json["orientation"].get<std::string>(); else allFound = false;
+//    if(json.count("renderorder") > 0) m_renderOrder = json["renderorder"].get<std::string>();       //Optional
+//    if(json.count("staggeraxis") > 0) m_staggerAxis = json["staggeraxis"].get<std::string>();       //Optional
+//    if(json.count("staggerindex") > 0) m_staggerIndex = json["staggerindex"].get<std::string>();    //Optional
+//    if(json.count("tiledversion") > 0) m_tiledVersion = json["tiledversion"].get<std::string>(); else allFound = false;
+//    if(json.count("tilewidth") > 0 && json.count("tileheight") > 0 )
+//        m_tileSize = {json["tilewidth"].get<int>(), json["tileheight"].get<int>()}; else allFound = false;
+//    if(json.count("type") > 0) m_type = json["type"].get<std::string>();                            //Optional
+//    if(json.count("version") > 0) m_version = json["version"].get<int>(); else allFound = false;
+//
+//    //More advanced data
+//    if(json.count("layers") > 0 && json["layers"].is_array())
+//        std::for_each(json["layers"].begin(), json["layers"].end(), [&](const nlohmann::json &item) { m_layers.emplace_back(item, this); });
+//
+//    if(json.count("properties") > 0 && json["properties"].is_array())
+//        std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+//
+//    createTilesetData(json);
+//    processData();
+//
+//    return allFound;
+//}
+
 /*!
  * Tileset data must be created in two steps to prevent malformed tson::Tileset pointers inside tson::Tile
  */

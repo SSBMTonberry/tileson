@@ -158,22 +158,25 @@ TEST_CASE( "Test a nlohmann implementation of IJson", "[json][interface]" )
                        "        }]\n"
                        "}"_json;
     nlohmann::json *jptr = &jstr;
-    std::unique_ptr<tson::IJson> j = std::make_unique<NlohmannJson>(jptr);
-    std::vector<std::unique_ptr<tson::IJson>> wang = j->array("wangtiles");
-    std::vector<std::unique_ptr<tson::IJson>> props = j->array("properties");
-    std::unique_ptr<tson::IJson> w1 = j->at("wangtiles");
-    std::unique_ptr<tson::IJson> p1 = j->at("properties");
+    std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(jptr);
+    tson::IJson &j = *json;
+    //std::vector<std::unique_ptr<tson::IJson>> wang = j->array("wangtiles");
+    //std::vector<std::unique_ptr<tson::IJson>> props = j->array("properties");
+    std::vector<std::unique_ptr<tson::IJson>> wang = j.array("wangtiles");
+    std::vector<std::unique_ptr<tson::IJson>> props = j.array("properties");
+    tson::IJson &w1 = j["wangtiles"];
+    tson::IJson &p1 = j["properties"];
     //size_t nsize = sizeof (nlohmann::json);
     //size_t isize = sizeof (uint32_t);
-    REQUIRE( j->get<std::string>("name") == "FirstWang");
+    REQUIRE( j.get<std::string>("name") == "FirstWang");
     REQUIRE( props.at(0)->get<std::string>("name") == "floating_wang");
     REQUIRE( props.at(1)->get<std::string>("name") == "is_wang"); //type
-    REQUIRE( j->array("properties").size() == 2);
-    REQUIRE( j->array("wangtiles").size() == 11);
-    REQUIRE( p1->size() == 3);
-    REQUIRE( w1->size() == 5);
-    REQUIRE( j->at("properties")->size() == 3);
-    REQUIRE( j->at("wangtiles")->size() == 5);
+    REQUIRE( j.array("properties").size() == 2);
+    REQUIRE( j.array("wangtiles").size() == 11);
+    REQUIRE( p1.size() == 3);
+    REQUIRE( w1.size() == 5);
+    REQUIRE( j["properties"].size() == 3);
+    REQUIRE( j["wangtiles"].size() == 5);
     REQUIRE( props.at(0)->size() == 3);
     REQUIRE( wang.at(0)->size() == 5);
     REQUIRE( wang.at(2)->size() == 5);

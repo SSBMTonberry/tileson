@@ -15,19 +15,23 @@
 #include <sstream>
 #include <memory>
 
+//RBP: Remove this one later - temporary test!
+#include "common/NlohmannJson.hpp"
+
 namespace tson
 {
     class Tileson
     {
         public:
-            inline explicit Tileson(bool includeBase64Decoder = true);
+            inline explicit Tileson(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::NlohmannJson>(),bool includeBase64Decoder = true);
 
             inline std::unique_ptr<tson::Map> parse(const fs::path &path);
             inline std::unique_ptr<tson::Map> parse(const void * data, size_t size);
             inline tson::DecompressorContainer *decompressors();
 
         private:
-            inline std::unique_ptr<tson::Map> parseJson(const nlohmann::json &json);
+            inline std::unique_ptr<tson::Map> parseJson();
+            std::unique_ptr<tson::IJson> m_json;
             tson::DecompressorContainer m_decompressors;
     };
 }
@@ -37,7 +41,7 @@ namespace tson
  * @param includeBase64Decoder Includes the base64-decoder from "Base64Decompressor.hpp" if true.
  * Otherwise no other decompressors/decoders than whatever the user itself have added will be used.
  */
-tson::Tileson::Tileson(bool includeBase64Decoder)
+tson::Tileson::Tileson(std::unique_ptr<tson::IJson> jsonParser, bool includeBase64Decoder) : m_json {std::move(jsonParser)}
 {
     if(includeBase64Decoder)
         m_decompressors.add<Base64Decompressor>();
@@ -50,22 +54,12 @@ tson::Tileson::Tileson(bool includeBase64Decoder)
  */
 std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
 {
-    if(fs::exists(path) && fs::is_regular_file(path))
+
+    if(m_json->parse(path))
     {
-        std::ifstream i(path.u8string());
-        nlohmann::json json;
-        try
-        {
-            i >> json;
-        }
-        catch(const nlohmann::json::parse_error &error)
-        {
-            std::string message = "Parse error: ";
-            message += std::string(error.what());
-            message += std::string("\n");
-            return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, message);
-        }
-        return parseJson(json);
+        return nullptr;
+        //RBP: Change BACK later!
+        //return parseJson(m_json);
     }
 
     std::string msg = "File not found: ";
@@ -86,20 +80,11 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size)
 
     tson::MemoryStream mem {(uint8_t *)data, size};
 
-    nlohmann::json json;
-    try
-    {
-        mem >> json;
-    }
-    catch (const nlohmann::json::parse_error& error)
-    {
-        std::string message = "Parse error: ";
-        message += std::string(error.what());
-        message += std::string("\n");
-        return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, message);
-    }
+    if(!m_json->parse(data, size))
+        return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, "Memory error");
 
-    return std::move(parseJson(json));
+    //RBP: Change BACK later!
+    return nullptr;//std::move(parseJson(m_json));
 }
 
 /*!
@@ -107,11 +92,13 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size)
  * @param json Tiled json to parse
  * @return parsed data as Map
  */
-std::unique_ptr<tson::Map> tson::Tileson::parseJson(const nlohmann::json &json)
+std::unique_ptr<tson::Map> tson::Tileson::parseJson()
 {
     std::unique_ptr<tson::Map> map = std::make_unique<tson::Map>();
-    if(map->parse(json, &m_decompressors))
-        return std::move(map);
+
+    //RBP: Change BACK later!
+    //if(map->parse(m_json.get(), &m_decompressors))
+    //    return std::move(map);
 
     return std::make_unique<tson::Map> (tson::ParseStatus::MissingData, "Missing map data...");
 }

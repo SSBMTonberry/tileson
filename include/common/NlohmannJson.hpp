@@ -2,76 +2,126 @@
 // Created by robin on 08.01.2021.
 //
 
+#ifdef INCLUDE_NLOHMANN_JSON_HPP_
+
 #ifndef TILESON_NLOHMANNJSON_HPP
 #define TILESON_NLOHMANNJSON_HPP
 
-class NlohmannJson : public tson::IJson
+namespace tson
 {
-    public:
-        NlohmannJson() = default;
+    class NlohmannJson : public tson::IJson
+    {
+        public:
+            inline NlohmannJson() = default;
 
-        explicit NlohmannJson(nlohmann::json *json)
-        {
-            m_json = json;
-        }
-
-        explicit NlohmannJson(const fs::path &path)
-        {
-            parse(path);
-        }
-
-        explicit NlohmannJson(const void *data, size_t size)
-        {
-            parse(data, size);
-        }
-
-        std::unique_ptr<IJson> at(std::string_view key) override
-        {
-            return std::make_unique<NlohmannJson>(&m_json->operator[](key.data()).front());
-        }
-
-        std::unique_ptr<IJson> at(size_t pos) override
-        {
-            return std::make_unique<NlohmannJson>(&m_json->at(pos));
-        }
-
-        std::vector<std::unique_ptr<IJson>> array(std::string_view key) override
-        {
-            std::vector<std::unique_ptr<IJson>> vec;
-            if(m_json->count(key.data()) > 0 && m_json->operator[](key.data()).is_array())
+            IJson &operator[](std::string_view key) override
             {
-                std::for_each(m_json->operator[](key.data()).begin(), m_json->operator[](key.data()).end(), [&](nlohmann::json &item)
-                {
-                    nlohmann::json *ptr = &item;
-                    vec.emplace_back(std::make_unique<NlohmannJson>(ptr));
-                });
+                if(m_arrayCache.count(key.data()) == 0)
+                    m_arrayCache[key.data()] = std::make_unique<NlohmannJson>(&m_json->operator[](key.data()).front());
+
+                return *m_arrayCache[key.data()].get();
             }
-            return vec;
-        }
 
-        size_t size() const override
-        {
-            return m_json->size();
-        }
+            inline explicit NlohmannJson(nlohmann::json *json) : m_json {json}
+            {
 
-        //IJson &operator[](std::string_view key) override
-        //{
-        //    NlohmannJson j {m_json[key.data()].front()};
-        //    return j; //*this;
-        //}
+            }
 
-        bool parse(const fs::path &path) override
-        {
-            if(fs::exists(path) && fs::is_regular_file(path))
+            //inline explicit NlohmannJson(const fs::path &path)
+            //{
+            //    parse(path);
+            //}
+//
+            //inline explicit NlohmannJson(const void *data, size_t size)
+            //{
+            //    parse(data, size);
+            //}
+
+            inline IJson& at(std::string_view key) override
+            {
+                if(m_arrayCache.count(key.data()) == 0)
+                    m_arrayCache[key.data()] = std::make_unique<NlohmannJson>(&m_json->operator[](key.data()).front());
+
+                return *m_arrayCache[key.data()].get();
+            }
+
+            inline IJson& at(size_t pos) override
+            {
+                if(m_arrayPosCache.count(pos) == 0)
+                    m_arrayPosCache[pos] = std::make_unique<NlohmannJson>(&m_json->at(pos));
+
+                return *m_arrayPosCache[pos].get();
+                //return std::make_unique<NlohmannJson>(&m_json->at(pos));
+            }
+
+            inline std::vector<std::unique_ptr<IJson>> & array(std::string_view key) override
+            {
+                //std::vector<std::unique_ptr<IJson>> vec;
+                //if (m_json->count(key.data()) > 0 && m_json->operator[](key.data()).is_array())
+                //{
+                //    std::for_each(m_json->operator[](key.data()).begin(), m_json->operator[](key.data()).end(), [&](nlohmann::json &item)
+                //    {
+                //        nlohmann::json *ptr = &item;
+                //        vec.emplace_back(std::make_unique<NlohmannJson>(ptr));
+                //    });
+                //}
+
+                if(m_arrayListDataCache.count(key.data()) == 0)
+                {
+                    if (m_json->count(key.data()) > 0 && m_json->operator[](key.data()).is_array())
+                    {
+                        std::for_each(m_json->operator[](key.data()).begin(), m_json->operator[](key.data()).end(), [&](nlohmann::json &item)
+                        {
+                            nlohmann::json *ptr = &item;
+                            m_arrayListDataCache[key.data()].emplace_back(std::make_unique<NlohmannJson>(ptr));
+                            //m_arrayListRefCache[key.data()].emplace_back(*m_arrayListDataCache[key.data()].at(m_arrayListDataCache[key.data()].size() - 1));
+                        });
+                    }
+                }
+
+
+                return m_arrayListDataCache[key.data()];
+            }
+
+            inline size_t size() const override
+            {
+                return m_json->size();
+            }
+
+            inline bool parse(const fs::path &path) override
+            {
+                if (fs::exists(path) && fs::is_regular_file(path))
+                {
+                    m_data = std::make_unique<nlohmann::json>();
+                    std::ifstream i(path.u8string());
+                    try
+                    {
+                        i >> *m_data;
+                        m_json = m_data.get();
+                    }
+                    catch (const nlohmann::json::parse_error &error)
+                    {
+                        std::string message = "Parse error: ";
+                        message += std::string(error.what());
+                        message += std::string("\n");
+                        std::cerr << message;
+                        return false;
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            inline bool parse(const void *data, size_t size) override
             {
                 m_data = std::make_unique<nlohmann::json>();
-                std::ifstream i(path.u8string());
+                tson::MemoryStream mem{(uint8_t *) data, size};
                 try
                 {
-                    i >> *m_data;
+                    mem >> *m_data;
                     m_json = m_data.get();
                 }
-                catch(const nlohmann::json::parse_error &error)
+                catch (const nlohmann::json::parse_error &error)
                 {
                     std::string message = "Parse error: ";
                     message += std::string(error.what());
@@ -81,128 +131,116 @@ class NlohmannJson : public tson::IJson
                 }
                 return true;
             }
-            return false;
-        }
 
-        bool parse(const void *data, size_t size) override
-        {
-            m_data = std::make_unique<nlohmann::json>();
-            tson::MemoryStream mem {(uint8_t *)data, size};
-            try
+            [[nodiscard]] inline size_t count(std::string_view key) const override
             {
-                mem >> *m_data;
-                m_json = m_data.get();
+                return m_json->operator[](key.data()).count(key);
             }
-            catch (const nlohmann::json::parse_error& error)
+
+            [[nodiscard]] inline bool any(std::string_view key) const override
             {
-                std::string message = "Parse error: ";
-                message += std::string(error.what());
-                message += std::string("\n");
-                std::cerr << message;
-                return false;
+                return m_json->operator[](key.data()).count(key) > 1;
             }
-            return true;
-        }
 
-        [[nodiscard]] size_t count(std::string_view key) const override
-        {
-            return m_json->operator[](key.data()).count(key);
-        }
+            [[nodiscard]] inline bool isArray() const override
+            {
+                return m_json->is_array();
+            }
 
-        [[nodiscard]] bool any(std::string_view key) const override
-        {
-            return m_json->operator[](key.data()).count(key) > 1;
-        }
+            [[nodiscard]] inline bool isObject() const override
+            {
+                return m_json->is_object();
+            }
 
-        [[nodiscard]] bool isArray() const override
-        {
-            return false;
-        }
+            [[nodiscard]] inline bool isNull() const override
+            {
+                return m_json->is_null();
+            }
 
-        [[nodiscard]] bool isObject() const override
-        {
-            return true;
-        }
+        protected:
+            [[nodiscard]] inline int32_t getInt32(std::string_view key) const override
+            {
+                return m_json->operator[](key.data()).get<int32_t>();
+            }
 
-        [[nodiscard]] bool isNull() const override
-        {
-            return false;
-        }
+            [[nodiscard]] inline uint32_t getUInt32(std::string_view key) const override
+            {
+                return m_json->operator[](key.data()).get<uint32_t>();
+            }
 
-    protected:
-        [[nodiscard]] int32_t getInt32(std::string_view key) const override
-        {
-            return m_json->operator[](key.data()).get<int32_t>();
-        }
+            [[nodiscard]] inline int64_t getInt64(std::string_view key) const override
+            {
+                return m_json->operator[](key.data()).get<int64_t>();
+            }
 
-        [[nodiscard]] uint32_t getUInt32(std::string_view key) const override
-        {
-            return m_json->operator[](key.data()).get<uint32_t>();
-        }
+            [[nodiscard]] inline uint64_t getUInt64(std::string_view key) const override
+            {
+                return m_json->operator[](key.data()).get<uint64_t>();
+            }
 
-        [[nodiscard]] int64_t getInt64(std::string_view key) const override
-        {
-            return m_json->operator[](key.data()).get<int64_t>();
-        }
+            [[nodiscard]] inline double getDouble(std::string_view key) const override
+            {
+                return m_json->operator[](key.data()).get<double>();
+            }
 
-        [[nodiscard]] uint64_t getUInt64(std::string_view key) const override
-        {
-            return m_json->operator[](key.data()).get<uint64_t>();
-        }
+            [[nodiscard]] inline std::string getString(std::string_view key) const override
+            {
+                return m_json->operator[](key.data()).get<std::string>();
+            }
 
-        [[nodiscard]] double getDouble(std::string_view key) const override
-        {
-            return m_json->operator[](key.data()).get<double>();
-        }
+            [[nodiscard]] inline bool getBool(std::string_view key) const override
+            {
+                return m_json->operator[](key.data()).get<bool>();
+            }
 
-        [[nodiscard]] std::string getString(std::string_view key) const override
-        {
-            return m_json->operator[](key.data()).get<std::string>();
-        }
+            [[nodiscard]] inline int32_t getInt32() const override
+            {
+                return m_json->get<int32_t>();
+            }
 
-        [[nodiscard]] bool getBool(std::string_view key) const override
-        {
-            return m_json->operator[](key.data()).get<bool>();
-        }
+            [[nodiscard]] inline uint32_t getUInt32() const override
+            {
+                return m_json->get<uint32_t>();
+            }
 
-        [[nodiscard]] int32_t getInt32() const override
-        {
-            return m_json->get<int32_t>();
-        }
+            [[nodiscard]] inline int64_t getInt64() const override
+            {
+                return m_json->get<int64_t>();
+            }
 
-        [[nodiscard]] uint32_t getUInt32() const override
-        {
-            return m_json->get<uint32_t>();
-        }
+            [[nodiscard]] inline uint64_t getUInt64() const override
+            {
+                return m_json->get<uint64_t>();
+            }
 
-        [[nodiscard]] int64_t getInt64() const override
-        {
-            return m_json->get<int64_t>();
-        }
+            [[nodiscard]] inline double getDouble() const override
+            {
+                return m_json->get<double>();
+            }
 
-        [[nodiscard]] uint64_t getUInt64() const override
-        {
-            return m_json->get<uint64_t>();
-        }
+            [[nodiscard]] inline std::string getString() const override
+            {
+                return m_json->get<std::string>();
+            }
 
-        [[nodiscard]] double getDouble() const override
-        {
-            return m_json->get<double>();
-        }
+            [[nodiscard]] inline bool getBool() const override
+            {
+                return m_json->get<bool>();
+            }
 
-        [[nodiscard]] std::string getString() const override
-        {
-            return m_json->get<std::string>();
-        }
+        private:
+            nlohmann::json *m_json = nullptr;
+            std::unique_ptr<nlohmann::json> m_data = nullptr; //Only used if this is the owner json!
 
-        [[nodiscard]] bool getBool() const override
-        {
-            return m_json->get<bool>();
-        }
+            //Cache!
+            std::map<std::string, std::unique_ptr<NlohmannJson>> m_arrayCache;
+            std::map<size_t, std::unique_ptr<NlohmannJson>> m_arrayPosCache;
+            std::map<std::string, std::vector<std::unique_ptr<IJson>>> m_arrayListDataCache;
+            //std::map<std::string, std::vector<std::reference_wrapper<IJson>>> m_arrayListRefCache;
+            //std::vector<IJson &>
 
-    private:
-        nlohmann::json *m_json = nullptr;
-        std::unique_ptr<nlohmann::json> m_data = nullptr; //Only used if this is the owner json!
-};
-
+    };
+}
 #endif //TILESON_NLOHMANNJSON_HPP
+
+#endif //INCLUDE_NLOHMANN_JSON_HPP_
