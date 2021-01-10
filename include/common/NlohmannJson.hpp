@@ -51,8 +51,7 @@ namespace tson
                 if(m_arrayPosCache.count(pos) == 0)
                     m_arrayPosCache[pos] = std::make_unique<NlohmannJson>(&m_json->at(pos));
 
-                return *m_arrayPosCache[pos].get();
-                //return std::make_unique<NlohmannJson>(&m_json->at(pos));
+                return *m_arrayPosCache[pos];
             }
 
             std::vector<std::unique_ptr<IJson>> array() override
@@ -137,12 +136,13 @@ namespace tson
 
             [[nodiscard]] inline size_t count(std::string_view key) const override
             {
-                return m_json->operator[](key.data()).count(key);
+                //return m_json->operator[](key.data()).count(key);
+                return m_json->count(key);
             }
 
             [[nodiscard]] inline bool any(std::string_view key) const override
             {
-                return m_json->operator[](key.data()).count(key) > 1;
+                return count(key) > 1;
             }
 
             [[nodiscard]] inline bool isArray() const override
