@@ -159,7 +159,7 @@ bool tson::Object::parse(IJson &json)
     //More advanced data
     if(json.count("polygon") > 0 && json["polygon"].isArray())
     {
-        auto polygon = json.array("polygon");
+        auto &polygon = json.array("polygon");
         std::for_each(polygon.begin(), polygon.end(),[&](std::unique_ptr<IJson> &item)
         {
             IJson &j = *item;
@@ -170,7 +170,7 @@ bool tson::Object::parse(IJson &json)
 
     if(json.count("polyline") > 0 && json["polyline"].isArray())
     {
-        auto polyline = json.array("polyline");
+        auto &polyline = json.array("polyline");
         std::for_each(polyline.begin(), polyline.end(),[&](std::unique_ptr<IJson> &item)
         {
             IJson &j = *item;
@@ -180,7 +180,7 @@ bool tson::Object::parse(IJson &json)
 
     if(json.count("properties") > 0 && json["properties"].isArray())
     {
-        auto properties = json.array("properties");
+        auto &properties = json.array("properties");
         std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item)
         {
             m_properties.add(*item);

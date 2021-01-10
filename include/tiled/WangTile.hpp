@@ -53,7 +53,7 @@ bool tson::WangTile::parse(IJson &json)
 
     if(json.count("wangid") > 0 && json["wangid"].isArray())
     {
-        auto wangid = json.array("wangid");
+        auto &wangid = json.array("wangid");
         std::for_each(wangid.begin(), wangid.end(), [&](std::unique_ptr<IJson> &item) { m_wangId.emplace_back(item->get<int>()); });
     }
 

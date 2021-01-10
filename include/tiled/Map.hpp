@@ -159,7 +159,7 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
     //More advanced data
     if(json.count("layers") > 0 && json["layers"].isArray())
     {
-        auto array = json.array("layers");
+        auto &array = json.array("layers");
         std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
         {
             m_layers.emplace_back(*item, this);
@@ -167,7 +167,7 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
     }
     if(json.count("properties") > 0 && json["properties"].isArray())
     {
-        auto array = json.array("properties");
+        auto &array = json.array("properties");
         std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
         {
             m_properties.add(*item);
@@ -224,7 +224,7 @@ void tson::Map::createTilesetData(IJson &json)
     if(json.count("tilesets") > 0 && json["tilesets"].isArray())
     {
         //First created tileset objects
-        auto tilesets = json.array("tilesets");
+        auto &tilesets = json.array("tilesets");
         std::for_each(tilesets.begin(), tilesets.end(), [&](std::unique_ptr<IJson> &item)
         {
             m_tilesets.emplace_back();

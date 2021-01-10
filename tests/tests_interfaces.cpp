@@ -162,8 +162,8 @@ TEST_CASE( "Test a nlohmann implementation of IJson", "[json][interface]" )
     tson::IJson &j = *json;
     //std::vector<std::unique_ptr<tson::IJson>> wang = j->array("wangtiles");
     //std::vector<std::unique_ptr<tson::IJson>> props = j->array("properties");
-    std::vector<std::unique_ptr<tson::IJson>> wang = j.array("wangtiles");
-    std::vector<std::unique_ptr<tson::IJson>> props = j.array("properties");
+    std::vector<std::unique_ptr<tson::IJson>> &wang = j.array("wangtiles");
+    std::vector<std::unique_ptr<tson::IJson>> &props = j.array("properties");
     tson::IJson &w1 = j["wangtiles"];
     tson::IJson &p1 = j["properties"];
     //size_t nsize = sizeof (nlohmann::json);

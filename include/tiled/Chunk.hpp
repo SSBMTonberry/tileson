@@ -60,7 +60,7 @@ bool tson::Chunk::parse(IJson &json)
     {
         if(json["data"].isArray())
         {
-            auto data = json.array("data");
+            auto &data = json.array("data");
             std::for_each(data.begin(), data.end(), [&](std::unique_ptr<IJson> &item) { m_data.push_back(item->get<int>()); });
         }
         else

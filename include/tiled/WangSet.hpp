@@ -70,22 +70,22 @@ bool tson::WangSet::parse(IJson &json)
     //More advanced data
     if(json.count("wangtiles") > 0 && json["wangtiles"].isArray())
     {
-        auto wangtiles = json.array("wangtiles");
+        auto &wangtiles = json.array("wangtiles");
         std::for_each(wangtiles.begin(), wangtiles.end(), [&](std::unique_ptr<IJson> &item) { m_wangTiles.emplace_back(*item); });
     }
     if(json.count("cornercolors") > 0 && json["cornercolors"].isArray())
     {
-        auto cornercolors = json.array("cornercolors");
+        auto &cornercolors = json.array("cornercolors");
         std::for_each(cornercolors.begin(), cornercolors.end(), [&](std::unique_ptr<IJson> &item) { m_cornerColors.emplace_back(*item); });
     }
     if(json.count("edgecolors") > 0 && json["edgecolors"].isArray())
     {
-        auto edgecolors = json.array("edgecolors");
+        auto &edgecolors = json.array("edgecolors");
         std::for_each(edgecolors.begin(), edgecolors.end(), [&](std::unique_ptr<IJson> &item) { m_edgeColors.emplace_back(*item); });
     }
     if(json.count("properties") > 0 && json["properties"].isArray())
     {
-        auto properties = json.array("properties");
+        auto &properties = json.array("properties");
         std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
     }
 

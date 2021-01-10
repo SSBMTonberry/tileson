@@ -166,18 +166,18 @@ bool tson::Tile::parse(IJson &json, tson::Tileset *tileset, tson::Map *map)
     //More advanced data
     if(json.count("animation") > 0 && json["animation"].isArray())
     {
-        auto animation = json.array("animation");
+        auto &animation = json.array("animation");
         std::for_each(animation.begin(), animation.end(), [&](std::unique_ptr<IJson> &item) { m_animation.emplace_back(*item); });
     }
     if(json.count("terrain") > 0 && json["terrain"].isArray())
     {
-        auto terrain = json.array("terrain");
+        auto &terrain = json.array("terrain");
         std::for_each(terrain.begin(), terrain.end(), [&](std::unique_ptr<IJson> &item) { m_terrain.emplace_back(item->get<int>()); });
     }
 
     if(json.count("properties") > 0 && json["properties"].isArray())
     {
-        auto properties = json.array("properties");
+        auto &properties = json.array("properties");
         std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
     }
 

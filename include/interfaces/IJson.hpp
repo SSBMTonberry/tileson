@@ -10,6 +10,7 @@ namespace tson
     class IJson
     {
         public:
+
             virtual IJson& operator[](std::string_view key) = 0;
             virtual IJson &at(std::string_view key) = 0;
             virtual IJson &at(size_t pos) = 0;
@@ -18,7 +19,7 @@ namespace tson
              * @return An array
              */
             [[nodiscard]] virtual std::vector<std::unique_ptr<IJson>> array() = 0;
-            [[nodiscard]] virtual std::vector<std::unique_ptr<IJson>> & array(std::string_view key) = 0;
+            [[nodiscard]] virtual std::vector<std::unique_ptr<IJson>> &array(std::string_view key) = 0;
             /*!
              * Get the size of an object. This will be equal to the number of
              * variables an object contains.

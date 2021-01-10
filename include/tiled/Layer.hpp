@@ -186,7 +186,7 @@ bool tson::Layer::parse(IJson &json, tson::Map *map)
     {
         if(json["data"].isArray())
         {
-            auto array = json.array("data");
+            auto &array = json.array("data");
             std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item) { m_data.push_back(item->get<uint32_t>()); });
         }
         else
@@ -199,22 +199,22 @@ bool tson::Layer::parse(IJson &json, tson::Map *map)
     //More advanced data
     if(json.count("chunks") > 0 && json["chunks"].isArray())
     {
-        auto chunks = json.array("chunks");
+        auto &chunks = json.array("chunks");
         std::for_each(chunks.begin(), chunks.end(), [&](std::unique_ptr<IJson> &item) { m_chunks.emplace_back(*item); });
     }
     if(json.count("layers") > 0 && json["layers"].isArray())
     {
-        auto layers = json.array("layers");
+        auto &layers = json.array("layers");
         std::for_each(layers.begin(), layers.end(), [&](std::unique_ptr<IJson> &item) { m_layers.emplace_back(*item, m_map); });
     }
     if(json.count("objects") > 0 && json["objects"].isArray())
     {
-        auto objects = json.array("objects");
+        auto &objects = json.array("objects");
         std::for_each(objects.begin(), objects.end(), [&](std::unique_ptr<IJson> &item) { m_objects.emplace_back(*item); });
     }
     if(json.count("properties") > 0 && json["properties"].isArray())
     {
-        auto properties = json.array("properties");
+        auto &properties = json.array("properties");
         std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
     }
 

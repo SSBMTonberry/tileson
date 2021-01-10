@@ -14,6 +14,7 @@ namespace tson
         public:
             inline NlohmannJson() = default;
 
+
             IJson &operator[](std::string_view key) override
             {
                 if(m_arrayCache.count(key.data()) == 0)
@@ -66,7 +67,7 @@ namespace tson
                 return vec;
             }
 
-            inline std::vector<std::unique_ptr<IJson>> & array(std::string_view key) override
+            inline std::vector<std::unique_ptr<IJson>> &array(std::string_view key) override
             {
                 if(m_arrayListDataCache.count(key.data()) == 0)
                 {
@@ -85,7 +86,7 @@ namespace tson
                 return m_arrayListDataCache[key.data()];
             }
 
-            inline size_t size() const override
+            [[nodiscard]] inline size_t size() const override
             {
                 return m_json->size();
             }

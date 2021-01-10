@@ -138,23 +138,23 @@ bool tson::Tileset::parse(IJson &json, tson::Map *map)
     //More advanced data
     if(json.count("wangsets") > 0 && json["wangsets"].isArray())
     {
-        auto wangsets = json.array("wangsets");
+        auto &wangsets = json.array("wangsets");
         std::for_each(wangsets.begin(), wangsets.end(), [&](std::unique_ptr<IJson> &item) { m_wangsets.emplace_back(*item); });
     }
     if(json.count("tiles") > 0 && json["tiles"].isArray())
     {
-        auto tiles = json.array("tiles");
+        auto &tiles = json.array("tiles");
         std::for_each(tiles.begin(), tiles.end(), [&](std::unique_ptr<IJson> &item) { m_tiles.emplace_back(*item, this, m_map); });
     }
     if(json.count("terrains") > 0 && json["terrains"].isArray())
     {
-        auto terrains = json.array("terrains");
+        auto &terrains = json.array("terrains");
         std::for_each(terrains.begin(), terrains.end(), [&](std::unique_ptr<IJson> &item) { m_terrains.emplace_back(*item); });
     }
 
     if(json.count("properties") > 0 && json["properties"].isArray())
     {
-        auto properties = json.array("properties");
+        auto &properties = json.array("properties");
         std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
     }
 
