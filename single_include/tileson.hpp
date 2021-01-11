@@ -22620,18 +22620,35 @@ return nlohmann::json::json_pointer(std::string(s, n));
 #ifndef TILESON_TILESON_PARSER_HPP
 #define TILESON_TILESON_PARSER_HPP
 
-
-/*** Start of inlined file: IJson.hpp ***/
-//
-// Created by robin on 06.01.2021.
-//
-
-#ifndef TILESON_IJSON_HPP
-#define TILESON_IJSON_HPP
-
-#endif //TILESON_IJSON_HPP
-
-/*** End of inlined file: IJson.hpp ***/
+//RBP: FS-namespace is defined in tileson_parser now!
+#if _MSC_VER && !__INTEL_COMPILER
+	#include <filesystem>
+	namespace fs = std::filesystem;
+#elif __MINGW64__
+	#if __MINGW64_VERSION_MAJOR > 6
+		#include <filesystem>
+		namespace fs = std::filesystem;
+	#else
+		#include <experimental/filesystem>
+		namespace fs = std::experimental::filesystem;
+	#endif
+#elif __clang__
+	#if __clang_major__ < 8
+		#include <experimental/filesystem>
+		namespace fs = std::experimental::filesystem;
+	#else
+		#include <filesystem>
+		namespace fs = std::filesystem;
+	#endif
+#else //Linux
+	#if __GNUC__ < 8 //GCC major version less than 8
+		#include <experimental/filesystem>
+		namespace fs = std::experimental::filesystem;
+	#else
+		#include <filesystem>
+		namespace fs = std::filesystem;
+	#endif
+#endif
 
 
 /*** Start of inlined file: Tools.hpp ***/
@@ -23214,6 +23231,7 @@ namespace tson
 /*** End of inlined file: Vector2.hpp ***/
 
 //#include "../external/json.hpp"
+#include "interfaces/IJson.hpp"
 
 /*** Start of inlined file: Layer.hpp ***/
 //
@@ -23243,8 +23261,8 @@ namespace tson
 	{
 		public:
 			inline Chunk() = default;
-			inline explicit Chunk(const nlohmann::json &json);
-			inline bool parse(const nlohmann::json &json);
+			inline explicit Chunk(IJson &json);
+			inline bool parse(IJson &json);
 
 			[[nodiscard]] inline const std::vector<int> &getData() const;
 			[[nodiscard]] inline const std::string &getBase64Data() const;
@@ -23265,7 +23283,7 @@ namespace tson
  * Parses 'chunk' data from Tiled json and stores the values in this class
  * @param json json-data
  */
-tson::Chunk::Chunk(const nlohmann::json &json)
+tson::Chunk::Chunk(IJson &json)
 {
 	parse(json);
 }
@@ -23275,7 +23293,7 @@ tson::Chunk::Chunk(const nlohmann::json &json)
  * @param json json-data
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Chunk::parse(const nlohmann::json &json)
+bool tson::Chunk::parse(IJson &json)
 {
 	bool allFound = true;
 
@@ -23287,9 +23305,10 @@ bool tson::Chunk::parse(const nlohmann::json &json)
 	//Handle DATA (Optional)
 	if(json.count("data") > 0)
 	{
-		if(json["data"].is_array())
+		if(json["data"].isArray())
 		{
-			std::for_each(json["data"].begin(), json["data"].end(), [&](const nlohmann::json &item) { m_data.push_back(item.get<int>()); });
+			auto &data = json.array("data");
+			std::for_each(data.begin(), data.end(), [&](std::unique_ptr<IJson> &item) { m_data.push_back(item->get<int>()); });
 		}
 		else
 			m_base64Data = json["data"].get<std::string>();
@@ -23367,35 +23386,6 @@ const tson::Vector2i &tson::Chunk::getPosition() const
 //#include "../../TilesonConfig.h"
 
 //#if USE_CPP17_FILESYSTEM
-
-#if _MSC_VER && !__INTEL_COMPILER
-	#include <filesystem>
-	namespace fs = std::filesystem;
-#elif __MINGW64__
-	#if __MINGW64_VERSION_MAJOR > 6
-		#include <filesystem>
-		namespace fs = std::filesystem;
-	#else
-		#include <experimental/filesystem>
-		namespace fs = std::experimental::filesystem;
-	#endif
-#elif __clang__
-	#if __clang_major__ < 8
-		#include <experimental/filesystem>
-		namespace fs = std::experimental::filesystem;
-	#else
-		#include <filesystem>
-		namespace fs = std::filesystem;
-	#endif
-#else //Linux
-	#if __GNUC__ < 8 //GCC major version less than 8
-		#include <experimental/filesystem>
-		namespace fs = std::experimental::filesystem;
-	#else
-		#include <filesystem>
-		namespace fs = std::filesystem;
-	#endif
-#endif
 
 #include <any>
 #include <string>
@@ -23672,7 +23662,7 @@ namespace tson
 			//};
 
 			inline Property();
-			inline Property(const nlohmann::json &json);
+			inline Property(IJson &json);
 			inline Property(std::string name, std::any value, Type type);
 
 			inline void setValue(const std::any &value);
@@ -23689,7 +23679,7 @@ namespace tson
 
 		protected:
 			inline void setTypeByString(const std::string &str);
-			inline void setValueByType(const nlohmann::json &json);
+			inline void setValueByType(IJson &json);
 
 			Type m_type = Type::Undefined;
 			std::string m_name;
@@ -23719,7 +23709,7 @@ tson::Property::Property() : m_name {"unnamed"}
 
 }
 
-tson::Property::Property(const nlohmann::json &json)
+tson::Property::Property(IJson &json)
 {
 	setTypeByString(json["type"].get<std::string>());
 	setValueByType(json["value"]);
@@ -23810,7 +23800,7 @@ void tson::Property::setTypeByString(const std::string &str)
 		m_type = tson::Type::Undefined;
 }
 
-void tson::Property::setValueByType(const nlohmann::json &json)
+void tson::Property::setValueByType(IJson &json)
 {
 	switch(m_type)
 	{
@@ -23862,7 +23852,7 @@ namespace tson
 			inline explicit PropertyCollection(std::string id);
 
 			inline tson::Property * add(const tson::Property &property);
-			inline tson::Property * add(const nlohmann::json &json);
+			inline tson::Property * add(IJson &json);
 			inline tson::Property * add(const std::string &name, const std::any &value, tson::Type type);
 
 			inline void remove(const std::string &name);
@@ -23903,7 +23893,7 @@ tson::Property *tson::PropertyCollection::add(const tson::Property &property)
 	return &m_properties[property.getName()];
 }
 
-tson::Property *tson::PropertyCollection::add(const nlohmann::json &json)
+tson::Property *tson::PropertyCollection::add(IJson &json)
 {
 	tson::Property property = tson::Property(json);
 	std::string name = property.getName();
@@ -24034,8 +24024,8 @@ namespace tson
 			//};
 
 			inline Object() = default;
-			inline explicit Object(const nlohmann::json &json);
-			inline bool parse(const nlohmann::json &json);
+			inline explicit Object(IJson &json);
+			inline bool parse(IJson &json);
 
 			[[nodiscard]] inline ObjectType getObjectType() const;
 			[[nodiscard]] inline bool isEllipse() const;
@@ -24064,7 +24054,7 @@ namespace tson
 			inline bool hasFlipFlags(TileFlipFlags flags);
 
 		private:
-			inline void setObjectTypeByJson(const nlohmann::json &json);
+			inline void setObjectTypeByJson(IJson &json);
 
 			ObjectType                        m_objectType = ObjectType::Undefined;    /*! Says with object type this is */
 			bool                              m_ellipse {};                            /*! 'ellipse': Used to mark an object as an ellipse */
@@ -24104,7 +24094,7 @@ namespace tson
  * Parses a json Tiled object
  * @param json
  */
-tson::Object::Object(const nlohmann::json &json)
+tson::Object::Object(IJson &json)
 {
 	parse(json);
 }
@@ -24115,7 +24105,7 @@ tson::Object::Object(const nlohmann::json &json)
  * @param json
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Object::parse(const nlohmann::json &json)
+bool tson::Object::parse(IJson &json)
 {
 	bool allFound = true;
 
@@ -24158,16 +24148,35 @@ bool tson::Object::parse(const nlohmann::json &json)
 		allFound = true; //Just accept anything with this type
 
 	//More advanced data
-	if(json.count("polygon") > 0 && json["polygon"].is_array())
-		std::for_each(json["polygon"].begin(), json["polygon"].end(),
-					  [&](const nlohmann::json &item) { m_polygon.emplace_back(item["x"].get<int>(), item["y"].get<int>()); });
+	if(json.count("polygon") > 0 && json["polygon"].isArray())
+	{
+		auto &polygon = json.array("polygon");
+		std::for_each(polygon.begin(), polygon.end(),[&](std::unique_ptr<IJson> &item)
+		{
+			IJson &j = *item;
+			m_polygon.emplace_back(j["x"].get<int>(), j["y"].get<int>());
+		});
 
-	if(json.count("polyline") > 0 && json["polyline"].is_array())
-		std::for_each(json["polyline"].begin(), json["polyline"].end(),
-					  [&](const nlohmann::json &item) { m_polyline.emplace_back(item["x"].get<int>(), item["y"].get<int>()); });
+	}
 
-	if(json.count("properties") > 0 && json["properties"].is_array())
-		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+	if(json.count("polyline") > 0 && json["polyline"].isArray())
+	{
+		auto &polyline = json.array("polyline");
+		std::for_each(polyline.begin(), polyline.end(),[&](std::unique_ptr<IJson> &item)
+		{
+			IJson &j = *item;
+			m_polyline.emplace_back(j["x"].get<int>(), j["y"].get<int>());
+		});
+	}
+
+	if(json.count("properties") > 0 && json["properties"].isArray())
+	{
+		auto &properties = json.array("properties");
+		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item)
+		{
+			m_properties.add(*item);
+		});
+	}
 
 	return allFound;
 }
@@ -24176,7 +24185,7 @@ bool tson::Object::parse(const nlohmann::json &json)
  * Sets an object type based on json data.
  * @param json
  */
-void tson::Object::setObjectTypeByJson(const nlohmann::json &json)
+void tson::Object::setObjectTypeByJson(IJson &json)
 {
 	m_objectType = ObjectType::Undefined;
 	if(m_ellipse)
@@ -24549,8 +24558,8 @@ namespace tson
 	{
 		public:
 			inline Layer() = default;
-			inline Layer(const nlohmann::json &json, tson::Map *map);
-			inline bool parse(const nlohmann::json &json, tson::Map *map);
+			inline Layer(IJson &json, tson::Map *map);
+			inline bool parse(IJson &json, tson::Map *map);
 
 			[[nodiscard]] inline const std::string &getCompression() const;
 			[[nodiscard]] inline const std::vector<uint32_t> &getData() const;
@@ -24663,7 +24672,7 @@ namespace tson
  * Parses a Tiled layer from json
  * @param json
  */
-tson::Layer::Layer(const nlohmann::json &json, tson::Map *map)
+tson::Layer::Layer(IJson &json, tson::Map *map)
 {
 	parse(json, map);
 }
@@ -24681,7 +24690,7 @@ void tson::Layer::queueFlaggedTile(size_t x, size_t y, uint32_t id)
  * @param json
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Layer::parse(const nlohmann::json &json, tson::Map *map)
+bool tson::Layer::parse(IJson &json, tson::Map *map)
 {
 	m_map = map;
 
@@ -24707,9 +24716,10 @@ bool tson::Layer::parse(const nlohmann::json &json, tson::Map *map)
 	//Handle DATA (Optional)
 	if(json.count("data") > 0)
 	{
-		if(json["data"].is_array())
+		if(json["data"].isArray())
 		{
-			std::for_each(json["data"].begin(), json["data"].end(), [&](const nlohmann::json &item) { m_data.push_back(item.get<uint32_t>()); });
+			auto &array = json.array("data");
+			std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item) { m_data.push_back(item->get<uint32_t>()); });
 		}
 		else
 		{
@@ -24719,14 +24729,26 @@ bool tson::Layer::parse(const nlohmann::json &json, tson::Map *map)
 	}
 
 	//More advanced data
-	if(json.count("chunks") > 0 && json["chunks"].is_array())
-		std::for_each(json["chunks"].begin(), json["chunks"].end(), [&](const nlohmann::json &item) { m_chunks.emplace_back(item); });
-	if(json.count("layers") > 0 && json["layers"].is_array())
-		std::for_each(json["layers"].begin(), json["layers"].end(), [&](const nlohmann::json &item) { m_layers.emplace_back(item, m_map); });
-	if(json.count("objects") > 0 && json["objects"].is_array())
-		std::for_each(json["objects"].begin(), json["objects"].end(), [&](const nlohmann::json &item) { m_objects.emplace_back(item); });
-	if(json.count("properties") > 0 && json["properties"].is_array())
-		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+	if(json.count("chunks") > 0 && json["chunks"].isArray())
+	{
+		auto &chunks = json.array("chunks");
+		std::for_each(chunks.begin(), chunks.end(), [&](std::unique_ptr<IJson> &item) { m_chunks.emplace_back(*item); });
+	}
+	if(json.count("layers") > 0 && json["layers"].isArray())
+	{
+		auto &layers = json.array("layers");
+		std::for_each(layers.begin(), layers.end(), [&](std::unique_ptr<IJson> &item) { m_layers.emplace_back(*item, m_map); });
+	}
+	if(json.count("objects") > 0 && json["objects"].isArray())
+	{
+		auto &objects = json.array("objects");
+		std::for_each(objects.begin(), objects.end(), [&](std::unique_ptr<IJson> &item) { m_objects.emplace_back(*item); });
+	}
+	if(json.count("properties") > 0 && json["properties"].isArray())
+	{
+		auto &properties = json.array("properties");
+		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
+	}
 
 	setTypeByString();
 
@@ -25176,8 +25198,8 @@ namespace tson
 	{
 		public:
 			inline WangColor() = default;
-			inline explicit WangColor(const nlohmann::json &json);
-			inline bool parse(const nlohmann::json &json);
+			inline explicit WangColor(IJson &json);
+			inline bool parse(IJson &json);
 
 			[[nodiscard]] inline const Colori &getColor() const;
 			[[nodiscard]] inline const std::string &getName() const;
@@ -25192,12 +25214,12 @@ namespace tson
 	};
 }
 
-tson::WangColor::WangColor(const nlohmann::json &json)
+tson::WangColor::WangColor(IJson &json)
 {
 	parse(json);
 }
 
-bool tson::WangColor::parse(const nlohmann::json &json)
+bool tson::WangColor::parse(IJson &json)
 {
 	bool allFound = true;
 
@@ -25267,8 +25289,8 @@ namespace tson
 	{
 		public:
 			inline WangTile() = default;
-			inline explicit WangTile(const nlohmann::json &json);
-			inline bool parse(const nlohmann::json &json);
+			inline explicit WangTile(IJson &json);
+			inline bool parse(IJson &json);
 
 			[[nodiscard]] inline bool hasDFlip() const;
 			[[nodiscard]] inline bool hasHFlip() const;
@@ -25286,7 +25308,7 @@ namespace tson
 	};
 }
 
-tson::WangTile::WangTile(const nlohmann::json &json)
+tson::WangTile::WangTile(IJson &json)
 {
 	parse(json);
 }
@@ -25296,7 +25318,7 @@ tson::WangTile::WangTile(const nlohmann::json &json)
  * @param json A Tiled json file
  * @return true if all mandatory fields were found. False otherwise.
  */
-bool tson::WangTile::parse(const nlohmann::json &json)
+bool tson::WangTile::parse(IJson &json)
 {
 	bool allFound = true;
 
@@ -25305,8 +25327,11 @@ bool tson::WangTile::parse(const nlohmann::json &json)
 	if(json.count("vflip") > 0) m_vflip = json["vflip"].get<bool>(); else allFound = false;
 	if(json.count("tileid") > 0) m_tileid = json["tileid"].get<int>(); else allFound = false;
 
-	if(json.count("wangid") > 0 && json["wangid"].is_array())
-		std::for_each(json["wangid"].begin(), json["wangid"].end(), [&](const nlohmann::json &item) { m_wangId.emplace_back(item.get<int>()); });
+	if(json.count("wangid") > 0 && json["wangid"].isArray())
+	{
+		auto &wangid = json.array("wangid");
+		std::for_each(wangid.begin(), wangid.end(), [&](std::unique_ptr<IJson> &item) { m_wangId.emplace_back(item->get<int>()); });
+	}
 
 	return allFound;
 }
@@ -25366,8 +25391,8 @@ namespace tson
 	{
 		public:
 			inline WangSet() = default;
-			inline explicit WangSet(const nlohmann::json &json);
-			inline bool parse(const nlohmann::json &json);
+			inline explicit WangSet(IJson &json);
+			inline bool parse(IJson &json);
 
 			[[nodiscard]] inline const std::string &getName() const;
 			[[nodiscard]] inline int getTile() const;
@@ -25405,12 +25430,12 @@ namespace tson
 	}
 }
 
-tson::WangSet::WangSet(const nlohmann::json &json)
+tson::WangSet::WangSet(IJson &json)
 {
 	parse(json);
 }
 
-bool tson::WangSet::parse(const nlohmann::json &json)
+bool tson::WangSet::parse(IJson &json)
 {
 	bool allFound = true;
 
@@ -25418,14 +25443,26 @@ bool tson::WangSet::parse(const nlohmann::json &json)
 	if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
 
 	//More advanced data
-	if(json.count("wangtiles") > 0 && json["wangtiles"].is_array())
-		std::for_each(json["wangtiles"].begin(), json["wangtiles"].end(), [&](const nlohmann::json &item) { m_wangTiles.emplace_back(item); });
-	if(json.count("cornercolors") > 0 && json["cornercolors"].is_array())
-		std::for_each(json["cornercolors"].begin(), json["cornercolors"].end(), [&](const nlohmann::json &item) { m_cornerColors.emplace_back(item); });
-	if(json.count("edgecolors") > 0 && json["edgecolors"].is_array())
-		std::for_each(json["edgecolors"].begin(), json["edgecolors"].end(), [&](const nlohmann::json &item) { m_edgeColors.emplace_back(item); });
-	if(json.count("properties") > 0 && json["properties"].is_array())
-		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+	if(json.count("wangtiles") > 0 && json["wangtiles"].isArray())
+	{
+		auto &wangtiles = json.array("wangtiles");
+		std::for_each(wangtiles.begin(), wangtiles.end(), [&](std::unique_ptr<IJson> &item) { m_wangTiles.emplace_back(*item); });
+	}
+	if(json.count("cornercolors") > 0 && json["cornercolors"].isArray())
+	{
+		auto &cornercolors = json.array("cornercolors");
+		std::for_each(cornercolors.begin(), cornercolors.end(), [&](std::unique_ptr<IJson> &item) { m_cornerColors.emplace_back(*item); });
+	}
+	if(json.count("edgecolors") > 0 && json["edgecolors"].isArray())
+	{
+		auto &edgecolors = json.array("edgecolors");
+		std::for_each(edgecolors.begin(), edgecolors.end(), [&](std::unique_ptr<IJson> &item) { m_edgeColors.emplace_back(*item); });
+	}
+	if(json.count("properties") > 0 && json["properties"].isArray())
+	{
+		auto &properties = json.array("properties");
+		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
+	}
 
 	return allFound;
 }
@@ -25530,9 +25567,9 @@ namespace tson
 		public:
 			inline Frame() = default;
 			inline Frame(int duration, int tileId);
-			inline Frame(const nlohmann::json &json);
+			inline explicit Frame(IJson &json);
 
-			inline bool parse(const nlohmann::json &json);
+			inline bool parse(IJson &json);
 
 			[[nodiscard]] inline int getDuration() const;
 			[[nodiscard]] inline int getTileId() const;
@@ -25557,7 +25594,7 @@ tson::Frame::Frame(int duration, int tileId) : m_duration {duration}, m_tileId {
  * Parses frame data from json
  * @param json
  */
-tson::Frame::Frame(const nlohmann::json &json)
+tson::Frame::Frame(IJson &json)
 {
 	parse(json);
 }
@@ -25567,7 +25604,7 @@ tson::Frame::Frame(const nlohmann::json &json)
  * @param json
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Frame::parse(const nlohmann::json &json)
+bool tson::Frame::parse(IJson &json)
 {
 	bool allFound = true;
 
@@ -25607,10 +25644,10 @@ namespace tson
 	{
 		public:
 			inline Tile() = default;
-			inline Tile(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
+			inline Tile(IJson &json, tson::Tileset *tileset, tson::Map *map);
 			inline Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map);
 			inline Tile(uint32_t id, tson::Map *map); //v1.2.0
-			inline bool parse(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
+			inline bool parse(IJson &json, tson::Tileset *tileset, tson::Map *map);
 
 			[[nodiscard]] inline uint32_t getId() const;
 
@@ -25680,7 +25717,7 @@ namespace tson
 	}
 }
 
-tson::Tile::Tile(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map)
+tson::Tile::Tile(IJson &json, tson::Tileset *tileset, tson::Map *map)
 {
 	parse(json, tileset, map);
 }
@@ -25722,7 +25759,7 @@ void tson::Tile::addTilesetAndPerformCalculations(tson::Tileset *tileset)
  * @param json
  * @return
  */
-bool tson::Tile::parse(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map)
+bool tson::Tile::parse(IJson &json, tson::Tileset *tileset, tson::Map *map)
 {
 	m_tileset = tileset;
 	m_map = map;
@@ -25747,13 +25784,22 @@ bool tson::Tile::parse(const nlohmann::json &json, tson::Tileset *tileset, tson:
 		m_imageSize = {json["imagewidth"].get<int>(), json["imageheight"].get<int>()}; //Optional
 
 	//More advanced data
-	if(json.count("animation") > 0 && json["animation"].is_array())
-		std::for_each(json["animation"].begin(), json["animation"].end(), [&](const nlohmann::json &item) { m_animation.emplace_back(item); });
-	if(json.count("terrain") > 0 && json["terrain"].is_array())
-		std::for_each(json["terrain"].begin(), json["terrain"].end(), [&](const nlohmann::json &item) { m_terrain.emplace_back(item.get<int>()); });
+	if(json.count("animation") > 0 && json["animation"].isArray())
+	{
+		auto &animation = json.array("animation");
+		std::for_each(animation.begin(), animation.end(), [&](std::unique_ptr<IJson> &item) { m_animation.emplace_back(*item); });
+	}
+	if(json.count("terrain") > 0 && json["terrain"].isArray())
+	{
+		auto &terrain = json.array("terrain");
+		std::for_each(terrain.begin(), terrain.end(), [&](std::unique_ptr<IJson> &item) { m_terrain.emplace_back(item->get<int>()); });
+	}
 
-	if(json.count("properties") > 0 && json["properties"].is_array())
-		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+	if(json.count("properties") > 0 && json["properties"].isArray())
+	{
+		auto &properties = json.array("properties");
+		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
+	}
 
 	performDataCalculations();
 
@@ -25944,9 +25990,9 @@ namespace tson
 		public:
 			inline Terrain() = default;
 			inline Terrain(std::string name, int tile);
-			inline explicit Terrain(const nlohmann::json &json);
+			inline explicit Terrain(IJson &json);
 
-			inline bool parse(const nlohmann::json &json);
+			inline bool parse(IJson &json);
 
 			[[nodiscard]] inline const std::string &getName() const;
 			[[nodiscard]] inline int getTile() const;
@@ -25980,20 +26026,23 @@ tson::Terrain::Terrain(std::string name, int tile) : m_name {std::move(name)}, m
 
 }
 
-tson::Terrain::Terrain(const nlohmann::json &json)
+tson::Terrain::Terrain(IJson &json)
 {
 	parse(json);
 }
 
-bool tson::Terrain::parse(const nlohmann::json &json)
+bool tson::Terrain::parse(IJson &json)
 {
 	bool allFound = true;
 
 	if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
 	if(json.count("tile") > 0) m_tile = json["tile"].get<int>(); else allFound = false;
 
-	if(json.count("properties") > 0 && json["properties"].is_array())
-		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+	if(json.count("properties") > 0 && json["properties"].isArray())
+	{
+		auto &properties = json.array("properties");
+		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
+	}
 
 	return allFound;
 }
@@ -26059,9 +26108,9 @@ namespace tson
 	{
 		public:
 			inline Grid() = default;
-			inline explicit Grid(const nlohmann::json &json);
+			inline explicit Grid(IJson &json);
 
-			inline bool parse(const nlohmann::json &json);
+			inline bool parse(IJson &json);
 
 			[[nodiscard]] inline const std::string &getOrientation() const;
 			[[nodiscard]] inline const Vector2i &getSize() const;
@@ -26076,7 +26125,7 @@ namespace tson
  * Parses Tiled grid data from json
  * @param json
  */
-tson::Grid::Grid(const nlohmann::json &json)
+tson::Grid::Grid(IJson &json)
 {
 	parse(json);
 }
@@ -26086,7 +26135,7 @@ tson::Grid::Grid(const nlohmann::json &json)
  * @param json
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Grid::parse(const nlohmann::json &json)
+bool tson::Grid::parse(IJson &json)
 {
 	bool allFound = true;
 
@@ -26129,8 +26178,8 @@ namespace tson
 	{
 		public:
 			inline Tileset() = default;
-			inline explicit Tileset(const nlohmann::json &json, tson::Map *map);
-			inline bool parse(const nlohmann::json &json, tson::Map *map);
+			inline explicit Tileset(IJson &json, tson::Map *map);
+			inline bool parse(IJson &json, tson::Map *map);
 
 			[[nodiscard]] inline int getColumns() const;
 			[[nodiscard]] inline int getFirstgid() const;
@@ -26211,12 +26260,12 @@ namespace tson
 	}
 }
 
-tson::Tileset::Tileset(const nlohmann::json &json, tson::Map *map)
+tson::Tileset::Tileset(IJson &json, tson::Map *map)
 {
 	parse(json, map);
 }
 
-bool tson::Tileset::parse(const nlohmann::json &json, tson::Map *map)
+bool tson::Tileset::parse(IJson &json, tson::Map *map)
 {
 	m_map = map;
 	bool allFound = true;
@@ -26242,15 +26291,27 @@ bool tson::Tileset::parse(const nlohmann::json &json, tson::Map *map)
 		m_tileOffset = {json["tileoffset"]["x"].get<int>(), json["tileoffset"]["y"].get<int>()};
 
 	//More advanced data
-	if(json.count("wangsets") > 0 && json["wangsets"].is_array())
-		std::for_each(json["wangsets"].begin(), json["wangsets"].end(), [&](const nlohmann::json &item) { m_wangsets.emplace_back(item); });
-	if(json.count("tiles") > 0 && json["tiles"].is_array())
-		std::for_each(json["tiles"].begin(), json["tiles"].end(), [&](const nlohmann::json &item) { m_tiles.emplace_back(item, this, m_map); });
-	if(json.count("terrains") > 0 && json["terrains"].is_array())
-		std::for_each(json["terrains"].begin(), json["terrains"].end(), [&](const nlohmann::json &item) { m_terrains.emplace_back(item); });
+	if(json.count("wangsets") > 0 && json["wangsets"].isArray())
+	{
+		auto &wangsets = json.array("wangsets");
+		std::for_each(wangsets.begin(), wangsets.end(), [&](std::unique_ptr<IJson> &item) { m_wangsets.emplace_back(*item); });
+	}
+	if(json.count("tiles") > 0 && json["tiles"].isArray())
+	{
+		auto &tiles = json.array("tiles");
+		std::for_each(tiles.begin(), tiles.end(), [&](std::unique_ptr<IJson> &item) { m_tiles.emplace_back(*item, this, m_map); });
+	}
+	if(json.count("terrains") > 0 && json["terrains"].isArray())
+	{
+		auto &terrains = json.array("terrains");
+		std::for_each(terrains.begin(), terrains.end(), [&](std::unique_ptr<IJson> &item) { m_terrains.emplace_back(*item); });
+	}
 
-	if(json.count("properties") > 0 && json["properties"].is_array())
-		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+	if(json.count("properties") > 0 && json["properties"].isArray())
+	{
+		auto &properties = json.array("properties");
+		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
+	}
 
 	if(json.count("objectalignment") > 0)
 	{
@@ -26527,8 +26588,8 @@ namespace tson
 		public:
 			inline Map() = default;
 			inline Map(ParseStatus status, std::string description);
-			inline explicit Map(const nlohmann::json &json, tson::DecompressorContainer *decompressors);
-			inline bool parse(const nlohmann::json &json, tson::DecompressorContainer *decompressors);
+			inline explicit Map(IJson &json, tson::DecompressorContainer *decompressors);
+			inline bool parse(IJson &json, tson::DecompressorContainer *decompressors);
 
 			[[nodiscard]] inline const Colori &getBackgroundColor() const;
 			[[nodiscard]] inline const Vector2i &getSize() const;
@@ -26566,7 +26627,7 @@ namespace tson
 			inline Tileset * getTilesetByGid(uint32_t gid);
 
 		private:
-			inline void createTilesetData(const nlohmann::json &json);
+			inline void createTilesetData(IJson &json);
 			inline void processData();
 
 			Colori                                 m_backgroundColor;   /*! 'backgroundcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)*/;
@@ -26628,7 +26689,7 @@ tson::Map::Map(tson::ParseStatus status, std::string description) : m_status {st
  * @param json A json object with the format of Map
  * @return true if all mandatory fields was found. false otherwise.
  */
-tson::Map::Map(const nlohmann::json &json, tson::DecompressorContainer *decompressors)
+tson::Map::Map(IJson &json, tson::DecompressorContainer *decompressors)
 {
 	parse(json, decompressors);
 }
@@ -26638,7 +26699,7 @@ tson::Map::Map(const nlohmann::json &json, tson::DecompressorContainer *decompre
  * @param json A json object with the format of Map
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Map::parse(const nlohmann::json &json, tson::DecompressorContainer *decompressors)
+bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
 {
 	m_decompressors = decompressors;
 
@@ -26662,36 +26723,84 @@ bool tson::Map::parse(const nlohmann::json &json, tson::DecompressorContainer *d
 	if(json.count("version") > 0) m_version = json["version"].get<int>(); else allFound = false;
 
 	//More advanced data
-	if(json.count("layers") > 0 && json["layers"].is_array())
-		std::for_each(json["layers"].begin(), json["layers"].end(), [&](const nlohmann::json &item) { m_layers.emplace_back(item, this); });
-
-	if(json.count("properties") > 0 && json["properties"].is_array())
-		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
-
+	if(json.count("layers") > 0 && json["layers"].isArray())
+	{
+		auto &array = json.array("layers");
+		std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
+		{
+			m_layers.emplace_back(*item, this);
+		});
+	}
+	if(json.count("properties") > 0 && json["properties"].isArray())
+	{
+		auto &array = json.array("properties");
+		std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
+		{
+			m_properties.add(*item);
+		});
+	}
 	createTilesetData(json);
 	processData();
 
 	return allFound;
 }
 
+// RBP: CLEANUP When new logic is verified!
+//bool tson::Map::parse(const nlohmann::json &json, tson::DecompressorContainer *decompressors)
+//{
+//    m_decompressors = decompressors;
+//
+//    bool allFound = true;
+//    if(json.count("compressionlevel") > 0) m_compressionLevel = json["compressionlevel"].get<int>(); //Tiled 1.3 - Optional
+//    if(json.count("backgroundcolor") > 0) m_backgroundColor = Colori(json["backgroundcolor"].get<std::string>()); //Optional
+//    if(json.count("width") > 0 && json.count("height") > 0 )
+//        m_size = {json["width"].get<int>(), json["height"].get<int>()}; else allFound = false;
+//    if(json.count("hexsidelength") > 0) m_hexsideLength = json["hexsidelength"].get<int>();         //Optional
+//    if(json.count("infinite") > 0) m_isInfinite = json["infinite"].get<bool>();                     //Optional
+//    if(json.count("nextlayerid") > 0) m_nextLayerId = json["nextlayerid"].get<int>();               //Optional
+//    if(json.count("nextobjectid") > 0) m_nextObjectId = json["nextobjectid"].get<int>(); else allFound = false;
+//    if(json.count("orientation") > 0) m_orientation = json["orientation"].get<std::string>(); else allFound = false;
+//    if(json.count("renderorder") > 0) m_renderOrder = json["renderorder"].get<std::string>();       //Optional
+//    if(json.count("staggeraxis") > 0) m_staggerAxis = json["staggeraxis"].get<std::string>();       //Optional
+//    if(json.count("staggerindex") > 0) m_staggerIndex = json["staggerindex"].get<std::string>();    //Optional
+//    if(json.count("tiledversion") > 0) m_tiledVersion = json["tiledversion"].get<std::string>(); else allFound = false;
+//    if(json.count("tilewidth") > 0 && json.count("tileheight") > 0 )
+//        m_tileSize = {json["tilewidth"].get<int>(), json["tileheight"].get<int>()}; else allFound = false;
+//    if(json.count("type") > 0) m_type = json["type"].get<std::string>();                            //Optional
+//    if(json.count("version") > 0) m_version = json["version"].get<int>(); else allFound = false;
+//
+//    //More advanced data
+//    if(json.count("layers") > 0 && json["layers"].is_array())
+//        std::for_each(json["layers"].begin(), json["layers"].end(), [&](const nlohmann::json &item) { m_layers.emplace_back(item, this); });
+//
+//    if(json.count("properties") > 0 && json["properties"].is_array())
+//        std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+//
+//    createTilesetData(json);
+//    processData();
+//
+//    return allFound;
+//}
+
 /*!
  * Tileset data must be created in two steps to prevent malformed tson::Tileset pointers inside tson::Tile
  */
-void tson::Map::createTilesetData(const nlohmann::json &json)
+void tson::Map::createTilesetData(IJson &json)
 {
-	if(json.count("tilesets") > 0 && json["tilesets"].is_array())
+	if(json.count("tilesets") > 0 && json["tilesets"].isArray())
 	{
 		//First created tileset objects
-		std::for_each(json["tilesets"].begin(), json["tilesets"].end(), [&](const nlohmann::json &item)
+		auto &tilesets = json.array("tilesets");
+		std::for_each(tilesets.begin(), tilesets.end(), [&](std::unique_ptr<IJson> &item)
 		{
 			m_tilesets.emplace_back();
 		});
 
 		int i = 0;
 		//Then do the parsing
-		std::for_each(json["tilesets"].begin(), json["tilesets"].end(), [&](const nlohmann::json &item)
+		std::for_each(tilesets.begin(), tilesets.end(), [&](std::unique_ptr<IJson> &item)
 		{
-			m_tilesets[i].parse(item, this);
+			m_tilesets[i].parse(*item, this);
 			++i;
 		});
 	}
@@ -27468,19 +27577,283 @@ namespace tson
 #include <sstream>
 #include <memory>
 
+//RBP: Remove this one later - temporary test!
+
+/*** Start of inlined file: NlohmannJson.hpp ***/
+//
+// Created by robin on 08.01.2021.
+//
+
+#ifdef INCLUDE_NLOHMANN_JSON_HPP_
+
+#ifndef TILESON_NLOHMANNJSON_HPP
+#define TILESON_NLOHMANNJSON_HPP
+
+namespace tson
+{
+	class NlohmannJson : public tson::IJson
+	{
+		public:
+			inline NlohmannJson() = default;
+
+			IJson &operator[](std::string_view key) override
+			{
+				if(m_arrayCache.count(key.data()) == 0)
+					m_arrayCache[key.data()] = std::make_unique<NlohmannJson>(&m_json->operator[](key.data()));//.front());
+
+				return *m_arrayCache[key.data()].get();
+			}
+
+			inline explicit NlohmannJson(nlohmann::json *json) : m_json {json}
+			{
+
+			}
+
+			//inline explicit NlohmannJson(const fs::path &path)
+			//{
+			//    parse(path);
+			//}
+//
+			//inline explicit NlohmannJson(const void *data, size_t size)
+			//{
+			//    parse(data, size);
+			//}
+
+			inline IJson& at(std::string_view key) override
+			{
+				if(m_arrayCache.count(key.data()) == 0)
+					m_arrayCache[key.data()] = std::make_unique<NlohmannJson>(&m_json->operator[](key.data()));//.front());
+
+				return *m_arrayCache[key.data()].get();
+			}
+
+			inline IJson& at(size_t pos) override
+			{
+				if(m_arrayPosCache.count(pos) == 0)
+					m_arrayPosCache[pos] = std::make_unique<NlohmannJson>(&m_json->at(pos));
+
+				return *m_arrayPosCache[pos];
+			}
+
+			std::vector<std::unique_ptr<IJson>> array() override
+			{
+				std::vector<std::unique_ptr<IJson>> vec;
+				for(auto &item : *m_json)
+				{
+					nlohmann::json *ptr = &item;
+					vec.emplace_back(std::make_unique<NlohmannJson>(ptr));
+				}
+
+				return vec;
+			}
+
+			inline std::vector<std::unique_ptr<IJson>> &array(std::string_view key) override
+			{
+				if(m_arrayListDataCache.count(key.data()) == 0)
+				{
+					if (m_json->count(key.data()) > 0 && m_json->operator[](key.data()).is_array())
+					{
+						std::for_each(m_json->operator[](key.data()).begin(), m_json->operator[](key.data()).end(), [&](nlohmann::json &item)
+						{
+							nlohmann::json *ptr = &item;
+							m_arrayListDataCache[key.data()].emplace_back(std::make_unique<NlohmannJson>(ptr));
+							//m_arrayListRefCache[key.data()].emplace_back(*m_arrayListDataCache[key.data()].at(m_arrayListDataCache[key.data()].size() - 1));
+						});
+					}
+				}
+
+				return m_arrayListDataCache[key.data()];
+			}
+
+			[[nodiscard]] inline size_t size() const override
+			{
+				return m_json->size();
+			}
+
+			inline bool parse(const fs::path &path) override
+			{
+				if (fs::exists(path) && fs::is_regular_file(path))
+				{
+					m_data = std::make_unique<nlohmann::json>();
+					std::ifstream i(path.u8string());
+					try
+					{
+						i >> *m_data;
+						m_json = m_data.get();
+					}
+					catch (const nlohmann::json::parse_error &error)
+					{
+						std::string message = "Parse error: ";
+						message += std::string(error.what());
+						message += std::string("\n");
+						std::cerr << message;
+						return false;
+					}
+					return true;
+				}
+				return false;
+			}
+
+			inline bool parse(const void *data, size_t size) override
+			{
+				m_data = std::make_unique<nlohmann::json>();
+				tson::MemoryStream mem{(uint8_t *) data, size};
+				try
+				{
+					mem >> *m_data;
+					m_json = m_data.get();
+				}
+				catch (const nlohmann::json::parse_error &error)
+				{
+					std::string message = "Parse error: ";
+					message += std::string(error.what());
+					message += std::string("\n");
+					std::cerr << message;
+					return false;
+				}
+				return true;
+			}
+
+			[[nodiscard]] inline size_t count(std::string_view key) const override
+			{
+				//return m_json->operator[](key.data()).count(key);
+				return m_json->count(key);
+			}
+
+			[[nodiscard]] inline bool any(std::string_view key) const override
+			{
+				return count(key) > 1;
+			}
+
+			[[nodiscard]] inline bool isArray() const override
+			{
+				return m_json->is_array();
+			}
+
+			[[nodiscard]] inline bool isObject() const override
+			{
+				return m_json->is_object();
+			}
+
+			[[nodiscard]] inline bool isNull() const override
+			{
+				return m_json->is_null();
+			}
+
+		protected:
+			[[nodiscard]] inline int32_t getInt32(std::string_view key) const override
+			{
+				return m_json->operator[](key.data()).get<int32_t>();
+			}
+
+			[[nodiscard]] inline uint32_t getUInt32(std::string_view key) const override
+			{
+				return m_json->operator[](key.data()).get<uint32_t>();
+			}
+
+			[[nodiscard]] inline int64_t getInt64(std::string_view key) const override
+			{
+				return m_json->operator[](key.data()).get<int64_t>();
+			}
+
+			[[nodiscard]] inline uint64_t getUInt64(std::string_view key) const override
+			{
+				return m_json->operator[](key.data()).get<uint64_t>();
+			}
+
+			[[nodiscard]] inline double getDouble(std::string_view key) const override
+			{
+				return m_json->operator[](key.data()).get<double>();
+			}
+
+			[[nodiscard]] inline std::string getString(std::string_view key) const override
+			{
+				return m_json->operator[](key.data()).get<std::string>();
+			}
+
+			[[nodiscard]] inline bool getBool(std::string_view key) const override
+			{
+				return m_json->operator[](key.data()).get<bool>();
+			}
+
+			[[nodiscard]] float getFloat(std::string_view key) const override
+			{
+				return m_json->operator[](key.data()).get<float>();
+			}
+
+			[[nodiscard]] inline int32_t getInt32() const override
+			{
+				return m_json->get<int32_t>();
+			}
+
+			[[nodiscard]] inline uint32_t getUInt32() const override
+			{
+				return m_json->get<uint32_t>();
+			}
+
+			[[nodiscard]] inline int64_t getInt64() const override
+			{
+				return m_json->get<int64_t>();
+			}
+
+			[[nodiscard]] inline uint64_t getUInt64() const override
+			{
+				return m_json->get<uint64_t>();
+			}
+
+			[[nodiscard]] inline double getDouble() const override
+			{
+				return m_json->get<double>();
+			}
+
+			[[nodiscard]] inline std::string getString() const override
+			{
+				return m_json->get<std::string>();
+			}
+
+			[[nodiscard]] inline bool getBool() const override
+			{
+				return m_json->get<bool>();
+			}
+
+			[[nodiscard]] float getFloat() const override
+			{
+				return m_json->get<float>();
+			}
+
+		private:
+			nlohmann::json *m_json = nullptr;
+			std::unique_ptr<nlohmann::json> m_data = nullptr; //Only used if this is the owner json!
+
+			//Cache!
+			std::map<std::string, std::unique_ptr<NlohmannJson>> m_arrayCache;
+			std::map<size_t, std::unique_ptr<NlohmannJson>> m_arrayPosCache;
+			std::map<std::string, std::vector<std::unique_ptr<IJson>>> m_arrayListDataCache;
+			//std::map<std::string, std::vector<std::reference_wrapper<IJson>>> m_arrayListRefCache;
+			//std::vector<IJson &>
+
+	};
+}
+#endif //TILESON_NLOHMANNJSON_HPP
+
+#endif //INCLUDE_NLOHMANN_JSON_HPP_
+/*** End of inlined file: NlohmannJson.hpp ***/
+
+
 namespace tson
 {
 	class Tileson
 	{
 		public:
-			inline explicit Tileson(bool includeBase64Decoder = true);
+			inline explicit Tileson(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::NlohmannJson>(),bool includeBase64Decoder = true);
 
 			inline std::unique_ptr<tson::Map> parse(const fs::path &path);
 			inline std::unique_ptr<tson::Map> parse(const void * data, size_t size);
 			inline tson::DecompressorContainer *decompressors();
 
 		private:
-			inline std::unique_ptr<tson::Map> parseJson(const nlohmann::json &json);
+			inline std::unique_ptr<tson::Map> parseJson();
+			std::unique_ptr<tson::IJson> m_json;
 			tson::DecompressorContainer m_decompressors;
 	};
 }
@@ -27490,7 +27863,7 @@ namespace tson
  * @param includeBase64Decoder Includes the base64-decoder from "Base64Decompressor.hpp" if true.
  * Otherwise no other decompressors/decoders than whatever the user itself have added will be used.
  */
-tson::Tileson::Tileson(bool includeBase64Decoder)
+tson::Tileson::Tileson(std::unique_ptr<tson::IJson> jsonParser, bool includeBase64Decoder) : m_json {std::move(jsonParser)}
 {
 	if(includeBase64Decoder)
 		m_decompressors.add<Base64Decompressor>();
@@ -27503,22 +27876,10 @@ tson::Tileson::Tileson(bool includeBase64Decoder)
  */
 std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
 {
-	if(fs::exists(path) && fs::is_regular_file(path))
+
+	if(m_json->parse(path))
 	{
-		std::ifstream i(path.u8string());
-		nlohmann::json json;
-		try
-		{
-			i >> json;
-		}
-		catch(const nlohmann::json::parse_error &error)
-		{
-			std::string message = "Parse error: ";
-			message += std::string(error.what());
-			message += std::string("\n");
-			return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, message);
-		}
-		return parseJson(json);
+		return std::move(parseJson());
 	}
 
 	std::string msg = "File not found: ";
@@ -27539,20 +27900,10 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size)
 
 	tson::MemoryStream mem {(uint8_t *)data, size};
 
-	nlohmann::json json;
-	try
-	{
-		mem >> json;
-	}
-	catch (const nlohmann::json::parse_error& error)
-	{
-		std::string message = "Parse error: ";
-		message += std::string(error.what());
-		message += std::string("\n");
-		return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, message);
-	}
+	if(!m_json->parse(data, size))
+		return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, "Memory error");
 
-	return std::move(parseJson(json));
+	return std::move(parseJson());
 }
 
 /*!
@@ -27560,10 +27911,11 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size)
  * @param json Tiled json to parse
  * @return parsed data as Map
  */
-std::unique_ptr<tson::Map> tson::Tileson::parseJson(const nlohmann::json &json)
+std::unique_ptr<tson::Map> tson::Tileson::parseJson()
 {
 	std::unique_ptr<tson::Map> map = std::make_unique<tson::Map>();
-	if(map->parse(json, &m_decompressors))
+
+	if(map->parse(*m_json, &m_decompressors))
 		return std::move(map);
 
 	return std::make_unique<tson::Map> (tson::ParseStatus::MissingData, "Missing map data...");
