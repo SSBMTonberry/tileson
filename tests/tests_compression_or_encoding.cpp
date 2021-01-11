@@ -7,6 +7,9 @@
 #include "../external_libs/catch.hpp"
 #include "tileson.h"
 
+#include "../include/external/json.hpp"
+#include "../include/json/NlohmannJson.hpp"
+
 class DummyDecompressor : public tson::IDecompressor<std::string_view, std::string>
 {
     public:

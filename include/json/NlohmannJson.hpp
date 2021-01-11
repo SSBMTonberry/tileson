@@ -142,7 +142,7 @@ namespace tson
 
             [[nodiscard]] inline bool any(std::string_view key) const override
             {
-                return count(key) > 1;
+                return count(key) > 0;
             }
 
             [[nodiscard]] inline bool isArray() const override

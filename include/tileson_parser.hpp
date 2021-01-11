@@ -35,25 +35,24 @@
     #endif
 #endif
 
-#include "common/Tools.hpp"
-#include "common/Base64Decompressor.hpp"
-#include "common/DecompressorContainer.hpp"
-#include "tiled/Map.hpp"
-#include "tiled/Project.hpp"
-#include "misc/MemoryStream.hpp"
 #include <fstream>
 #include <sstream>
 #include <memory>
 
-//RBP: Remove this one later - temporary test!
-#include "common/NlohmannJson.hpp"
+#include "common/Tools.hpp"
+#include "common/Base64Decompressor.hpp"
+#include "common/DecompressorContainer.hpp"
+#include "misc/MemoryStream.hpp"
+#include "tiled/Map.hpp"
+#include "tiled/Project.hpp"
+
 
 namespace tson
 {
     class Tileson
     {
         public:
-            inline explicit Tileson(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::NlohmannJson>(),bool includeBase64Decoder = true);
+            inline explicit Tileson(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>(), bool includeBase64Decoder = true);
 
             inline std::unique_ptr<tson::Map> parse(const fs::path &path);
             inline std::unique_ptr<tson::Map> parse(const void * data, size_t size);
