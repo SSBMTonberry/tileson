@@ -16,7 +16,7 @@
 TEST_CASE( "PicoJson - Parse a Map from Tiled's documentation", "[tiled][map]" )
 {
 
-    nlohmann::json j = "{\n"
+    std::string jstr = "{\n"
                        "  \"backgroundcolor\":\"#656667\",\n"
                        "  \"compressionlevel\":2,\n"
                        "  \"height\":4,\n"
@@ -41,30 +41,32 @@ TEST_CASE( "PicoJson - Parse a Map from Tiled's documentation", "[tiled][map]" )
                        "  \"version\":1,\n"
                        "  \"tiledversion\":\"1.0.3\",\n"
                        "  \"width\":4\n"
-                       "}"_json;
+                       "}";
 
+    picojson::value j;
+    picojson::parse(j, jstr);
     tson::Map map;
     std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
     bool parseOk = map.parse(*json, nullptr);
-    bool hasCorrectValues = (
-            map.getBackgroundColor() == "#656667" &&
-            map.getSize() == tson::Vector2i(4,4) &&
-            map.getNextObjectId() == 1 &&
-            map.getOrientation() == "orthogonal" &&
-            map.getRenderOrder() == "right-down" &&
-            map.getTileSize() == tson::Vector2i(32, 32) &&
-            map.getVersion() == 1 &&
-            map.getTiledVersion() == "1.0.3" &&
-            map.getProperties().getSize() == 2 &&
-            map.getProperties().get()[0]->getName() == "mapProperty1" &&
-            map.getProperties().getValue<std::string>("mapProperty1") == "string" &&
-            map.getProperties().getProperty("mapProperty2")->getType() == tson::Type::Undefined && //The doc got some errors
-            map.get<std::string>("mapProperty1") == "string" &&
-            map.getProp("mapProperty1")->getType() == tson::Type::Undefined &&
-            map.getCompressionLevel() == 2
-    );
+    //bool hasCorrectValues = (
+    REQUIRE( (parseOk) );
+    REQUIRE(map.getBackgroundColor() == "#656667");
+    REQUIRE(map.getSize() == tson::Vector2i(4,4));
+    REQUIRE(map.getNextObjectId() == 1);
+    REQUIRE(map.getOrientation() == "orthogonal");
+    REQUIRE(map.getRenderOrder() == "right-down");
+    REQUIRE(map.getTileSize() == tson::Vector2i(32, 32));
+    REQUIRE(map.getVersion() == 1);
+    REQUIRE(map.getTiledVersion() == "1.0.3");
+    REQUIRE(map.getProperties().getSize() == 2);
+    REQUIRE(map.getProperties().get()[0]->getName() == "mapProperty1");
+    REQUIRE(map.getProperties().getValue<std::string>("mapProperty1") == "string");
+    REQUIRE(map.getProperties().getProperty("mapProperty2")->getType() == tson::Type::Undefined); //The doc got some errors
+    REQUIRE(map.get<std::string>("mapProperty1") == "string");
+    REQUIRE(map.getProp("mapProperty1")->getType() == tson::Type::Undefined);
+    REQUIRE(map.getCompressionLevel() == 2);
+    //);
 
-    REQUIRE( (parseOk && hasCorrectValues) );
 }
 
 TEST_CASE( "PicoJson - Parse a Layer from Tiled's documentation - read simple values", "[tiled][layer]" )
@@ -72,7 +74,7 @@ TEST_CASE( "PicoJson - Parse a Layer from Tiled's documentation - read simple va
 
     SECTION("Layer - Tile Layer format")
     {
-        nlohmann::json j = "{\n"
+        std::string jstr = "{\n"
                            "  \"data\":[1, 2, 1, 2, 3, 1, 3, 1, 2, 2, 3, 3, 4, 4, 4, 1],\n"
                            "  \"height\":4,\n"
                            "  \"name\":\"ground\",\n"
@@ -89,9 +91,12 @@ TEST_CASE( "PicoJson - Parse a Layer from Tiled's documentation - read simple va
                            "  \"width\":4,\n"
                            "  \"x\":0,\n"
                            "  \"y\":0\n"
-                           "}"_json;
+                           "}";
 
+        picojson::value j;
+        picojson::parse(j, jstr);
         tson::Layer layer;
+
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
         bool parseOk = layer.parse(*json, nullptr);
         bool hasCorrectValues = (
@@ -116,7 +121,7 @@ TEST_CASE( "PicoJson - Parse a Layer from Tiled's documentation - read simple va
 
     SECTION("Layer - Object Layer format")
     {
-        nlohmann::json j = "{\n"
+        std::string jstr = "{\n"
                            "  \"draworder\":\"topdown\",\n"
                            "  \"height\":8,\n"
                            "  \"name\":\"people\",\n"
@@ -133,8 +138,10 @@ TEST_CASE( "PicoJson - Parse a Layer from Tiled's documentation - read simple va
                            "  \"width\":4,\n"
                            "  \"x\":0,\n"
                            "  \"y\":0\n"
-                           "}"_json;
+                           "}";
 
+        picojson::value j;
+        picojson::parse(j, jstr);
         tson::Layer layer;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
         bool parseOk = layer.parse(*json, nullptr);
@@ -159,14 +166,15 @@ TEST_CASE( "PicoJson - Parse a Layer from Tiled's documentation - read simple va
 
 TEST_CASE( "PicoJson - Parse a Chunk from Tiled's documentation - read simple values", "[tiled][chunk]" )
 {
-    nlohmann::json j = "{\n"
+    std::string jstr = "{\n"
                        "  \"data\":[1, 2, 1, 2, 3, 1, 3, 1, 2, 2, 3, 3, 4, 4, 4, 1],\n"
                        "  \"height\":16,\n"
                        "  \"width\":16,\n"
                        "  \"x\":4,\n"
                        "  \"y\":-16\n"
-                       "}"_json;
-
+                       "}";
+    picojson::value j;
+    picojson::parse(j, jstr);
     tson::Chunk chunk;
     std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
     bool parseOk = chunk.parse(*json);
@@ -183,7 +191,7 @@ TEST_CASE( "PicoJson - Parse an Object from Tiled's documentation - read simple 
 {
     SECTION("Object - regular")
     {
-        nlohmann::json j = "{\n"
+        std::string jstr = "{\n"
                            "  \"gid\":5,\n"
                            "  \"height\":0,\n"
                            "  \"id\":1,\n"
@@ -200,8 +208,9 @@ TEST_CASE( "PicoJson - Parse an Object from Tiled's documentation - read simple 
                            "  \"width\":0,\n"
                            "  \"x\":32,\n"
                            "  \"y\":32\n"
-                           "}"_json;
-
+                           "}";
+        picojson::value j;
+        picojson::parse(j, jstr);
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
         bool parseOk = obj.parse(*json);
@@ -226,7 +235,7 @@ TEST_CASE( "PicoJson - Parse an Object from Tiled's documentation - read simple 
 
     SECTION("Object - ellipse")
     {
-        nlohmann::json j = "{\n"
+        std::string jstr = "{\n"
                            "  \"ellipse\":true,\n"
                            "  \"height\":152,\n"
                            "  \"id\":13,\n"
@@ -237,8 +246,9 @@ TEST_CASE( "PicoJson - Parse an Object from Tiled's documentation - read simple 
                            "  \"width\":248,\n"
                            "  \"x\":560,\n"
                            "  \"y\":808\n"
-                           "}"_json;
-
+                           "}";
+        picojson::value j;
+        picojson::parse(j, jstr);
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
         bool parseOk = obj.parse(*json);
@@ -259,7 +269,7 @@ TEST_CASE( "PicoJson - Parse an Object from Tiled's documentation - read simple 
 
     SECTION("Object - rectangle")
     {
-        nlohmann::json j = "{\n"
+        std::string jstr = "{\n"
                            "  \"height\":184,\n"
                            "  \"id\":14,\n"
                            "  \"name\":\"\",\n"
@@ -269,8 +279,9 @@ TEST_CASE( "PicoJson - Parse an Object from Tiled's documentation - read simple 
                            "  \"width\":368,\n"
                            "  \"x\":576,\n"
                            "  \"y\":584\n"
-                           "}"_json;
-
+                           "}";
+        picojson::value j;
+        picojson::parse(j, jstr);
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
         bool parseOk = obj.parse(*json);
@@ -290,7 +301,7 @@ TEST_CASE( "PicoJson - Parse an Object from Tiled's documentation - read simple 
 
     SECTION("Object - point")
     {
-        nlohmann::json j = "{\n"
+        std::string jstr = "{\n"
                            "  \"point\":true,\n"
                            "  \"height\":0,\n"
                            "  \"id\":20,\n"
@@ -301,8 +312,9 @@ TEST_CASE( "PicoJson - Parse an Object from Tiled's documentation - read simple 
                            "  \"width\":0,\n"
                            "  \"x\":220,\n"
                            "  \"y\":350\n"
-                           "}"_json;
-
+                           "}";
+        picojson::value j;
+        picojson::parse(j, jstr);
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
         bool parseOk = obj.parse(*json);
@@ -323,7 +335,7 @@ TEST_CASE( "PicoJson - Parse an Object from Tiled's documentation - read simple 
 
     SECTION("Object - polygon")
     {
-        nlohmann::json j = "{\n"
+        std::string jstr = "{\n"
                            "  \"height\":0,\n"
                            "  \"id\":15,\n"
                            "  \"name\":\"\",\n"
@@ -354,8 +366,9 @@ TEST_CASE( "PicoJson - Parse an Object from Tiled's documentation - read simple 
                            "  \"width\":0,\n"
                            "  \"x\":-176,\n"
                            "  \"y\":432\n"
-                           "}"_json;
-
+                           "}";
+        picojson::value j;
+        picojson::parse(j, jstr);
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
         bool parseOk = obj.parse(*json);
@@ -374,7 +387,7 @@ TEST_CASE( "PicoJson - Parse an Object from Tiled's documentation - read simple 
     }
     SECTION("Object - polyline")
     {
-        nlohmann::json j = "{\n"
+        std::string jstr = "{\n"
                            "  \"height\":0,\n"
                            "  \"id\":16,\n"
                            "  \"name\":\"\",\n"
@@ -409,8 +422,9 @@ TEST_CASE( "PicoJson - Parse an Object from Tiled's documentation - read simple 
                            "  \"width\":0,\n"
                            "  \"x\":240,\n"
                            "  \"y\":88\n"
-                           "}"_json;
-
+                           "}";
+        picojson::value j;
+        picojson::parse(j, jstr);
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
         bool parseOk = obj.parse(*json);
@@ -431,7 +445,7 @@ TEST_CASE( "PicoJson - Parse an Object from Tiled's documentation - read simple 
     }
     SECTION("Object - text")
     {
-        nlohmann::json j = "{\n"
+        std::string jstr = "{\n"
                            "  \"height\":19,\n"
                            "  \"id\":15,\n"
                            "  \"name\":\"\",\n"
@@ -446,8 +460,9 @@ TEST_CASE( "PicoJson - Parse an Object from Tiled's documentation - read simple 
                            "  \"width\":248,\n"
                            "  \"x\":48,\n"
                            "  \"y\":136\n"
-                           "}"_json;
-
+                           "}";
+        picojson::value j;
+        picojson::parse(j, jstr);
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
         bool parseOk = obj.parse(*json);
@@ -469,13 +484,14 @@ TEST_CASE( "PicoJson - Parse an Object from Tiled's documentation - read simple 
 
     SECTION("Object - template")
     {
-        nlohmann::json j = "{\n"
+        std::string jstr = "{\n"
                            "    \"id\":13,\n"
                            "    \"template\":\"useless_template_object.tx\",\n"
                            "    \"x\":104,\n"
                            "    \"y\":34\n"
-                           "}"_json;
-
+                           "}";
+        picojson::value j;
+        picojson::parse(j, jstr);
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
         bool parseOk = obj.parse(*json);
@@ -492,7 +508,7 @@ TEST_CASE( "PicoJson - Parse an Object from Tiled's documentation - read simple 
 
 TEST_CASE( "PicoJson - Parse a Tileset from Tiled's documentation - read simple values", "[tiled][tileset]" )
 {
-    nlohmann::json j = "{\n"
+    std::string jstr = "{\n"
                        " \"columns\":19,\n"
                        " \"firstgid\":1,\n"
                        " \"image\":\"..\\/image\\/fishbaddie_parts.png\",\n"
@@ -511,8 +527,9 @@ TEST_CASE( "PicoJson - Parse a Tileset from Tiled's documentation - read simple 
                        " \"tilecount\":266,\n"
                        " \"tileheight\":32,\n"
                        " \"tilewidth\":32\n"
-                       "}"_json;
-
+                       "}";
+    picojson::value j;
+    picojson::parse(j, jstr);
     tson::Tileset tileset;
     std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
     bool parseOk = tileset.parse(*json, nullptr);
@@ -537,7 +554,7 @@ TEST_CASE( "PicoJson - Parse a Tileset from Tiled's documentation - read simple 
 
 TEST_CASE( "PicoJson - Parse a Tile from Tiled's documentation - read simple values", "[tiled][tile]" )
 {
-    nlohmann::json j = "{\n"
+    std::string jstr = "{\n"
                        "  \"id\":11,\n"
                        "  \"properties\":[\n"
                        "    {\n"
@@ -546,8 +563,9 @@ TEST_CASE( "PicoJson - Parse a Tile from Tiled's documentation - read simple val
                        "      \"value\":\"myProperty2_value\"\n"
                        "    }],\n"
                        "  \"terrain\":[0, 1, 0, 1]\n"
-                       "}"_json;
-
+                       "}";
+    picojson::value j;
+    picojson::parse(j, jstr);
     tson::Tile tile;
     std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
     bool parseOk = tile.parse(*json, nullptr, nullptr);
@@ -564,11 +582,12 @@ TEST_CASE( "PicoJson - Parse a Tile from Tiled's documentation - read simple val
 
 TEST_CASE( "PicoJson - Parse a Frame", "[tiled][frame]" )
 {
-    nlohmann::json j = "{\n"
+    std::string jstr = "{\n"
                        "  \"duration\":100,\n"
                        "  \"tileid\":6\n"
-                       "}"_json;
-
+                       "}";
+    picojson::value j;
+    picojson::parse(j, jstr);
     tson::Frame frame;
     std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
     bool parseOk = frame.parse(*json);
@@ -582,11 +601,12 @@ TEST_CASE( "PicoJson - Parse a Frame", "[tiled][frame]" )
 
 TEST_CASE( "PicoJson - Parse a Terrain from Tiled's documentation", "[tiled][terrain]" )
 {
-    nlohmann::json j = "{\n"
+    std::string jstr = "{\n"
                        "  \"name\":\"chasm\",\n"
                        "  \"tile\":12\n"
-                       "}"_json;
-
+                       "}";
+    picojson::value j;
+    picojson::parse(j, jstr);
     tson::Terrain terrain;
     std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
     bool parseOk = terrain.parse(*json);
@@ -602,7 +622,7 @@ TEST_CASE( "PicoJson - Wang-tests - everything Wang - simple", "[tiled][wang]" )
 {
     SECTION("WangSet")
     {
-        nlohmann::json j = "{\n"
+        std::string jstr = "{\n"
                            "    \"cornercolors\":[],\n"
                            "    \"edgecolors\":[\n"
                            "        {\n"
@@ -720,8 +740,9 @@ TEST_CASE( "PicoJson - Wang-tests - everything Wang - simple", "[tiled][wang]" )
                            "            \"vflip\":false,\n"
                            "            \"wangid\":[3, 0, 3, 0, 1, 0, 1, 0]\n"
                            "        }]\n"
-                           "}"_json;
-
+                           "}";
+        picojson::value j;
+        picojson::parse(j, jstr);
         tson::WangSet wangset;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
         bool parseOk = wangset.parse(*json);
@@ -742,13 +763,14 @@ TEST_CASE( "PicoJson - Wang-tests - everything Wang - simple", "[tiled][wang]" )
 
     SECTION("WangColor")
     {
-        nlohmann::json j = "{\n"
+        std::string jstr = "{\n"
                            "  \"color\": \"#d31313\",\n"
                            "  \"name\": \"Rails\",\n"
                            "  \"probability\": 1,\n"
                            "  \"tile\": 18\n"
-                           "}"_json;
-
+                           "}";
+        picojson::value j;
+        picojson::parse(j, jstr);
         tson::WangColor wangColor;
         tson::Color colorMatch = tson::Colori("#d31313");
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
@@ -765,14 +787,15 @@ TEST_CASE( "PicoJson - Wang-tests - everything Wang - simple", "[tiled][wang]" )
 
     SECTION("WangTile")
     {
-        nlohmann::json j = "{\n"
+        std::string jstr = "{\n"
                            "  \"dflip\": false,\n"
                            "  \"hflip\": false,\n"
                            "  \"tileid\": 0,\n"
                            "  \"vflip\": false,\n"
                            "  \"wangid\": [2, 0, 1, 0, 1, 0, 2, 0]\n"
-                           "}"_json;
-
+                           "}";
+        picojson::value j;
+        picojson::parse(j, jstr);
         tson::WangTile wangTile;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
         bool parseOk = wangTile.parse(*json);
@@ -791,7 +814,7 @@ TEST_CASE( "PicoJson - Wang-tests - everything Wang - simple", "[tiled][wang]" )
 
 TEST_CASE( "PicoJson - Property-tests - Set properties from json", "[tiled][wang]" )
 {
-    nlohmann::json j = "[\n"
+    std::string jstr = "[\n"
                        "{\n"
                        "    \"name\":\"color\",\n"
                        "    \"type\":\"color\",\n"
@@ -821,8 +844,9 @@ TEST_CASE( "PicoJson - Property-tests - Set properties from json", "[tiled][wang
                        "    \"name\":\"name\",\n"
                        "    \"type\":\"string\",\n"
                        "    \"value\":\"Mario\"\n"
-                       "}]"_json;
-
+                       "}]";
+    picojson::value j;
+    picojson::parse(j, jstr);
     tson::PropertyCollection properties;
     std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
     for(auto &item : json->array())

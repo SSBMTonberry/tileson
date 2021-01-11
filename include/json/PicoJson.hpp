@@ -211,25 +211,25 @@ namespace tson
             [[nodiscard]] inline int32_t getInt32(std::string_view key) const override
             {
                 picojson::object obj = m_json->get<picojson::object>();
-                return obj[key.data()].get<int32_t>();
+                return getDouble(key);
             }
 
             [[nodiscard]] inline uint32_t getUInt32(std::string_view key) const override
             {
                 picojson::object obj = m_json->get<picojson::object>();
-                return obj[key.data()].get<uint32_t>();
+                return getDouble(key);
             }
 
             [[nodiscard]] inline int64_t getInt64(std::string_view key) const override
             {
                 picojson::object obj = m_json->get<picojson::object>();
-                return obj[key.data()].get<int64_t>();
+                return getDouble(key);
             }
 
             [[nodiscard]] inline uint64_t getUInt64(std::string_view key) const override
             {
                 picojson::object obj = m_json->get<picojson::object>();
-                return obj[key.data()].get<uint64_t>();
+                return getDouble(key);
             }
 
             [[nodiscard]] inline double getDouble(std::string_view key) const override
@@ -253,27 +253,27 @@ namespace tson
             [[nodiscard]] float getFloat(std::string_view key) const override
             {
                 picojson::object obj = m_json->get<picojson::object>();
-                return obj[key.data()].get<float>();
+                return static_cast<float>(getDouble(key));
             }
 
             [[nodiscard]] inline int32_t getInt32() const override
             {
-                return m_json->get<int32_t>();
+                return getDouble();
             }
 
             [[nodiscard]] inline uint32_t getUInt32() const override
             {
-                return m_json->get<uint32_t>();
+                return getDouble();
             }
 
             [[nodiscard]] inline int64_t getInt64() const override
             {
-                return m_json->get<int64_t>();
+                return getDouble();
             }
 
             [[nodiscard]] inline uint64_t getUInt64() const override
             {
-                return m_json->get<uint64_t>();
+                return getDouble();
             }
 
             [[nodiscard]] inline double getDouble() const override
@@ -293,7 +293,7 @@ namespace tson
 
             [[nodiscard]] float getFloat() const override
             {
-                return m_json->get<float>();
+                return static_cast<float>(getDouble());
             }
 
         private:

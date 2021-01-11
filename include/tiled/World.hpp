@@ -96,7 +96,7 @@ namespace tson
         if(json["maps"].isArray())
         {
             auto &maps = json.array("maps");
-            std::for_each(maps.begin(), maps.end(), [&](IJson &item) { m_mapData.emplace_back(m_folder, item); });
+            std::for_each(maps.begin(), maps.end(), [&](std::unique_ptr<IJson> &item) { m_mapData.emplace_back(m_folder, *item); });
         }
     }
 

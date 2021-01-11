@@ -74,9 +74,9 @@ namespace tson
         {
             m_data.commands.clear();
             auto &commands = json.array("commands");
-            std::for_each(commands.begin(), commands.end(), [&](IJson &item)
+            std::for_each(commands.begin(), commands.end(), [&](std::unique_ptr<IJson> &item)
             {
-                m_data.commands.emplace_back(item.get<std::string>());
+                m_data.commands.emplace_back(item->get<std::string>());
             });
         }
         if(json.count("extensionsPath") > 0) m_data.extensionsPath = json["extensionsPath"].get<std::string>();
@@ -85,9 +85,9 @@ namespace tson
             m_data.folders.clear();
             m_data.folderPaths.clear();
             auto &folders = json.array("folders");
-            std::for_each(folders.begin(), folders.end(), [&](IJson &item)
+            std::for_each(folders.begin(), folders.end(), [&](std::unique_ptr<IJson> &item)
             {
-                std::string folder = item.get<std::string>();
+                std::string folder = item->get<std::string>();
                 m_data.folders.emplace_back(folder);
                 m_data.folderPaths.emplace_back(m_data.basePath / folder);
                 m_folders.emplace_back(m_data.basePath / folder);

@@ -5,7 +5,9 @@
 #include "../external_libs/catch.hpp"
 #include "../include/tileson.h"
 //#include "IJsonFakes.hpp"
-#include "json/NlohmannJson.hpp"
+
+#include "../include/external/json.hpp"
+#include "../include/json/NlohmannJson.hpp"
 
 
 
