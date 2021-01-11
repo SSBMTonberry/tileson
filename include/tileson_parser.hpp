@@ -87,9 +87,7 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
 
     if(m_json->parse(path))
     {
-        return nullptr;
-        //RBP: Change BACK later!
-        //return parseJson(m_json);
+        return std::move(parseJson());
     }
 
     std::string msg = "File not found: ";
@@ -113,8 +111,8 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size)
     if(!m_json->parse(data, size))
         return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, "Memory error");
 
-    //RBP: Change BACK later!
-    return nullptr;//std::move(parseJson(m_json));
+
+    return std::move(parseJson());
 }
 
 /*!
@@ -126,9 +124,8 @@ std::unique_ptr<tson::Map> tson::Tileson::parseJson()
 {
     std::unique_ptr<tson::Map> map = std::make_unique<tson::Map>();
 
-    //RBP: Change BACK later!
-    //if(map->parse(m_json.get(), &m_decompressors))
-    //    return std::move(map);
+    if(map->parse(*m_json, &m_decompressors))
+        return std::move(map);
 
     return std::make_unique<tson::Map> (tson::ParseStatus::MissingData, "Missing map data...");
 }

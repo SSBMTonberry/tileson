@@ -18,7 +18,7 @@ namespace tson
             IJson &operator[](std::string_view key) override
             {
                 if(m_arrayCache.count(key.data()) == 0)
-                    m_arrayCache[key.data()] = std::make_unique<NlohmannJson>(&m_json->operator[](key.data()).front());
+                    m_arrayCache[key.data()] = std::make_unique<NlohmannJson>(&m_json->operator[](key.data()));//.front());
 
                 return *m_arrayCache[key.data()].get();
             }
@@ -41,7 +41,7 @@ namespace tson
             inline IJson& at(std::string_view key) override
             {
                 if(m_arrayCache.count(key.data()) == 0)
-                    m_arrayCache[key.data()] = std::make_unique<NlohmannJson>(&m_json->operator[](key.data()).front());
+                    m_arrayCache[key.data()] = std::make_unique<NlohmannJson>(&m_json->operator[](key.data()));//.front());
 
                 return *m_arrayCache[key.data()].get();
             }
