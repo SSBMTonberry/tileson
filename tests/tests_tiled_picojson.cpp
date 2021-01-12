@@ -49,7 +49,7 @@ TEST_CASE( "PicoJson - Parse a Map from Tiled's documentation", "[tiled][map]" )
     std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
     bool parseOk = map.parse(*json, nullptr);
     //bool hasCorrectValues = (
-    REQUIRE( (parseOk) );
+    REQUIRE(parseOk);
     REQUIRE(map.getBackgroundColor() == "#656667");
     REQUIRE(map.getSize() == tson::Vector2i(4,4));
     REQUIRE(map.getNextObjectId() == 1);

@@ -161,14 +161,17 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
     if(json.count("layers") > 0 && json["layers"].isArray())
     {
         auto &array = json.array("layers");
+        size_t size = array.size();
         std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
         {
             m_layers.emplace_back(*item, this);
         });
     }
+
     if(json.count("properties") > 0 && json["properties"].isArray())
     {
         auto &array = json.array("properties");
+        size_t size = array.size();
         std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
         {
             m_properties.add(*item);

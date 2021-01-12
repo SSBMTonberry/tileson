@@ -24,6 +24,13 @@ namespace tson
                         m_arrayCache[key.data()] = std::make_unique<PicoJson>(&o[key.data()]);
                         //m_arrayCache[key.data()] = std::make_unique<PicoJson>(&m_json->operator[](key.data()));
                     }
+                    //else
+                    //{
+                    //    bool isArray = m_json->is<picojson::array>();
+//
+                    //    picojson::value &v = m_json->get(key.data());
+                    //    m_arrayCache[key.data()] = std::make_unique<PicoJson>(&v);
+                    //}
                 }
 
                 return *m_arrayCache[key.data()].get();
@@ -52,7 +59,6 @@ namespace tson
                     {
                         picojson::object &o = m_json->get<picojson::object>();
                         m_arrayCache[key.data()] = std::make_unique<PicoJson>(&o[key.data()]);
-                        //m_arrayCache[key.data()] = std::make_unique<PicoJson>(&m_json->operator[](key.data()));
                     }
                 }
                 return *m_arrayCache[key.data()].get();
@@ -92,17 +98,23 @@ namespace tson
                     //if (m_json->count(key.data()) > 0 && m_json->operator[](key.data()).is_array())
                     if(count(key.data()) > 0)
                     {
-                        if(m_json->is<picojson::array>())
+                        if (isObject())
                         {
-                            picojson::array &a = m_json->get<picojson::array>();
-
-                            //std::for_each(m_json->operator[](key.data()).begin(), m_json->operator[](key.data()).end(), [&](nlohmann::json &item)
-                            std::for_each(a.begin(), a.end(), [&](picojson::value &item)
+                            picojson::object &obj = m_json->get<picojson::object>();
+                            picojson::value &v = obj.at(key.data());
+                            bool isArray = v.is<picojson::array>();
+                            if (isArray)
                             {
-                                picojson::value *ptr = &item;
-                                m_arrayListDataCache[key.data()].emplace_back(std::make_unique<PicoJson>(ptr));
-                                //m_arrayListRefCache[key.data()].emplace_back(*m_arrayListDataCache[key.data()].at(m_arrayListDataCache[key.data()].size() - 1));
-                            });
+                                picojson::array &a = v.get<picojson::array>();
+
+                                //std::for_each(m_json->operator[](key.data()).begin(), m_json->operator[](key.data()).end(), [&](nlohmann::json &item)
+                                std::for_each(a.begin(), a.end(), [&](picojson::value &item)
+                                {
+                                    picojson::value *ptr = &item;
+                                    m_arrayListDataCache[key.data()].emplace_back(std::make_unique<PicoJson>(ptr));
+                                    //m_arrayListRefCache[key.data()].emplace_back(*m_arrayListDataCache[key.data()].at(m_arrayListDataCache[key.data()].size() - 1));
+                                });
+                            }
                         }
                     }
                 }
@@ -184,6 +196,7 @@ namespace tson
                     picojson::object obj = m_json->get<picojson::object>();
                     return obj.count(key.data());
                 }
+
                 return m_json->contains(key.data()) ? 1 : 0;
             }
 
