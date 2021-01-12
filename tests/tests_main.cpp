@@ -23,6 +23,7 @@
 #include <map>
 #include <functional>
 
+
 void performMainAsserts(tson::Map *map)
 {
     std::map<int, bool> tests;

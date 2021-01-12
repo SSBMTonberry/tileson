@@ -26,7 +26,7 @@
 
 #include "../external_libs/catch.hpp"
 
-#include "../include/external/json.hpp"
+#include "../include/external/nlohmann.hpp"
 #include "../include/json/NlohmannJson.hpp"
 
 TEST_CASE( "Parse a Map from Tiled's documentation", "[tiled][map]" )
