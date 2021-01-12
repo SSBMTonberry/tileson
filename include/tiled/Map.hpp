@@ -139,7 +139,9 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
     m_decompressors = decompressors;
 
     bool allFound = true;
-    if(json.count("compressionlevel") > 0) m_compressionLevel = json["compressionlevel"].get<int>(); //Tiled 1.3 - Optional
+    if(json.count("compressionlevel") > 0)
+        m_compressionLevel = json["compressionlevel"].get<int>(); //Tiled 1.3 - Optional
+
     if(json.count("backgroundcolor") > 0) m_backgroundColor = Colori(json["backgroundcolor"].get<std::string>()); //Optional
     if(json.count("width") > 0 && json.count("height") > 0 )
         m_size = {json["width"].get<int>(), json["height"].get<int>()}; else allFound = false;

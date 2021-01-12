@@ -175,10 +175,13 @@ TEST_CASE( "Test a nlohmann implementation of IJson", "[json][interface]" )
     REQUIRE( props.at(1)->get<std::string>("name") == "is_wang"); //type
     REQUIRE( j.array("properties").size() == 2);
     REQUIRE( j.array("wangtiles").size() == 11);
-    REQUIRE( p1.size() == 3);
-    REQUIRE( w1.size() == 5);
-    REQUIRE( j["properties"].size() == 3);
-    REQUIRE( j["wangtiles"].size() == 5);
+
+    //Changed in Nlohmann Json 3.9.1
+    REQUIRE( p1.size() == 2); //3 -> 2
+    REQUIRE( w1.size() == 11); //5 -> 11
+    REQUIRE( j["properties"].size() == 2); //3 -> 2
+    REQUIRE( j["wangtiles"].size() == 11); //5 -> 11
+
     REQUIRE( props.at(0)->size() == 3);
     REQUIRE( wang.at(0)->size() == 5);
     REQUIRE( wang.at(2)->size() == 5);

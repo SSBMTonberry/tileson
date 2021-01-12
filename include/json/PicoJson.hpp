@@ -135,6 +135,7 @@ namespace tson
 
             inline bool parse(const fs::path &path) override
             {
+
                 if (fs::exists(path) && fs::is_regular_file(path))
                 {
                     m_data = std::make_unique<picojson::value>();
