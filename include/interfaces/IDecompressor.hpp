@@ -9,6 +9,7 @@
 
 namespace tson
 {
+    template <class TIn, class TOut>
     class IDecompressor
     {
         public:
@@ -23,9 +24,10 @@ namespace tson
              *
              * @return
              */
-            virtual const std::string &name() const = 0;
+            [[nodiscard]] virtual const std::string &name() const = 0;
 
-            virtual std::string decompress(std::string_view s) = 0;
+            //virtual std::string decompress(std::string_view s) = 0;
+            virtual TOut decompress(const TIn &s) = 0;
     };
 }
 

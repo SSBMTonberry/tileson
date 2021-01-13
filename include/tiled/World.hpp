@@ -2,8 +2,6 @@
 // Created by robin on 01.08.2020.
 //
 
-#ifndef DISABLE_CPP17_FILESYSTEM
-
 #ifndef TILESON_WORLD_HPP
 #define TILESON_WORLD_HPP
 
@@ -15,8 +13,11 @@ namespace tson
     class World
     {
         public:
-            inline World() = default;
-            inline explicit World(const fs::path &path);
+            inline explicit World(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>()) : m_json {std::move(jsonParser)}
+            {
+            }
+
+            inline explicit World(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>());
             inline bool parse(const fs::path &path);
             inline int loadMaps(tson::Tileson *parser); //tileson_forward.hpp
             inline bool contains(std::string_view filename);
@@ -30,8 +31,9 @@ namespace tson
             [[nodiscard]] inline const std::vector<std::unique_ptr<tson::Map>> &getMaps() const;
 
         private:
-            inline void parseJson(const nlohmann::json &json);
+            inline void parseJson(IJson &json);
 
+            std::unique_ptr<IJson> m_json = nullptr;
             fs::path m_path;
             fs::path m_folder;
             std::vector<WorldMapData> m_mapData;
@@ -40,7 +42,7 @@ namespace tson
             std::string m_type;
     };
 
-    World::World(const fs::path &path)
+    World::World(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser) : m_json {std::move(jsonParser)}
     {
         parse(path);
     }
@@ -49,20 +51,11 @@ namespace tson
     {
         m_path = path;
         m_folder = m_path.parent_path();
-        std::ifstream i(m_path.u8string());
-        nlohmann::json json;
-        try
-        {
-            i >> json;
-        }
-        catch(const nlohmann::json::parse_error &error)
-        {
-            std::string message = "Parse error: ";
-            message += std::string(error.what());
-            message += std::string("\n");
+
+        if(!m_json->parse(path))
             return false;
-        }
-        parseJson(json);
+
+        parseJson(*m_json);
         return true;
     }
 
@@ -86,14 +79,15 @@ namespace tson
         return m_type;
     }
 
-    void World::parseJson(const nlohmann::json &json)
+    void World::parseJson(IJson &json)
     {
         if(json.count("onlyShowAdjacentMaps") > 0) m_onlyShowAdjacentMaps = json["onlyShowAdjacentMaps"].get<bool>();
         if(json.count("type") > 0) m_type = json["type"].get<std::string>();
 
-        if(json["maps"].is_array())
+        if(json["maps"].isArray())
         {
-            std::for_each(json["maps"].begin(), json["maps"].end(), [&](const nlohmann::json &item) { m_mapData.emplace_back(m_folder, item); });
+            auto &maps = json.array("maps");
+            std::for_each(maps.begin(), maps.end(), [&](std::unique_ptr<IJson> &item) { m_mapData.emplace_back(m_folder, *item); });
         }
     }
 
@@ -139,5 +133,3 @@ namespace tson
 }
 
 #endif //TILESON_WORLD_HPP
-
-#endif //DISABLE_CPP17_FILESYSTEM

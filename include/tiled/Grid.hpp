@@ -15,9 +15,9 @@ namespace tson
     {
         public:
             inline Grid() = default;
-            inline explicit Grid(const nlohmann::json &json);
+            inline explicit Grid(IJson &json);
 
-            inline bool parse(const nlohmann::json &json);
+            inline bool parse(IJson &json);
 
             [[nodiscard]] inline const std::string &getOrientation() const;
             [[nodiscard]] inline const Vector2i &getSize() const;
@@ -32,7 +32,7 @@ namespace tson
  * Parses Tiled grid data from json
  * @param json
  */
-tson::Grid::Grid(const nlohmann::json &json)
+tson::Grid::Grid(IJson &json)
 {
     parse(json);
 }
@@ -42,7 +42,7 @@ tson::Grid::Grid(const nlohmann::json &json)
  * @param json
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Grid::parse(const nlohmann::json &json)
+bool tson::Grid::parse(IJson &json)
 {
     bool allFound = true;
 

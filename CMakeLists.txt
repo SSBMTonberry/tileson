@@ -3,7 +3,7 @@ project(tileson)
 
 set(CMAKE_CXX_STANDARD 17)
 set(TILESON_PROJECT_VERSION_MAJOR 1)
-set(TILESON_PROJECT_VERSION_MINOR 2)
+set(TILESON_PROJECT_VERSION_MINOR 3)
 set(TILESON_PROJECT_VERSION_PATCH 0)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DTILESON_DEBUG")
@@ -57,8 +57,8 @@ endif()
 
 #option(BUILD_SHARED_LIBS "Build shared libraries." OFF)
 option(BUILD_TESTS "Build unit tests." ON)
-option(BUILD_EXAMPLES "Build examples." OFF)
-option(CLEAR_TSON_CMAKE_CACHE "Clear CMake cache for variables. Activate if you are working on the code. Otherwise: keep it off" OFF)
+option(BUILD_EXAMPLES "Build examples." ON)
+option(CLEAR_TSON_CMAKE_CACHE "Clear CMake cache for variables. Activate if you are working on the code. Otherwise: keep it off" ON)
 
 #if(APPLE)
 #    option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" ON)
@@ -66,7 +66,7 @@ option(CLEAR_TSON_CMAKE_CACHE "Clear CMake cache for variables. Activate if you 
 #    option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" OFF)
 #endif()
 
-option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" OFF)
+# option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" OFF)
 
 #if(DISABLE_CPP17_FILESYSTEM)
 #    set(DISABLE_CPP17_FILESYSTEM 1)
@@ -86,7 +86,7 @@ set(INCLUDE_FILES include/tileson.h include/tileson_parser.hpp include/misc/Memo
         include/objects/Property.hpp include/objects/PropertyCollection.hpp include/objects/Vector2.hpp include/tiled/Chunk.hpp include/tiled/Frame.hpp
         include/tiled/Grid.hpp include/tiled/Layer.hpp include/tiled/Map.hpp include/tiled/Object.hpp include/tiled/Terrain.hpp include/tiled/Text.hpp
         include/tiled/Tile.hpp include/tiled/Tileset.hpp include/tiled/WangColor.hpp include/tiled/WangSet.hpp include/tiled/WangTile.hpp
-        include/objects/Rect.hpp include/common/tileson_forward.hpp include/common/IDecompressor.hpp include/common/Base64Decompressor.hpp
+        include/objects/Rect.hpp include/common/tileson_forward.hpp include/interfaces/IDecompressor.hpp include/common/Base64Decompressor.hpp
         include/common/DecompressorContainer.hpp include/common/Tools.hpp include/tiled/Project.hpp include/objects/ProjectData.hpp
         include/objects/ProjectFolder.hpp include/tiled/World.hpp include/objects/WorldMapData.hpp)
 

@@ -14,8 +14,8 @@ namespace tson
     {
         public:
             inline WangColor() = default;
-            inline explicit WangColor(const nlohmann::json &json);
-            inline bool parse(const nlohmann::json &json);
+            inline explicit WangColor(IJson &json);
+            inline bool parse(IJson &json);
 
             [[nodiscard]] inline const Colori &getColor() const;
             [[nodiscard]] inline const std::string &getName() const;
@@ -30,12 +30,12 @@ namespace tson
     };
 }
 
-tson::WangColor::WangColor(const nlohmann::json &json)
+tson::WangColor::WangColor(IJson &json)
 {
     parse(json);
 }
 
-bool tson::WangColor::parse(const nlohmann::json &json)
+bool tson::WangColor::parse(IJson &json)
 {
     bool allFound = true;
 

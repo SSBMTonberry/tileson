@@ -13,8 +13,8 @@ namespace tson
     {
         public:
             inline WangTile() = default;
-            inline explicit WangTile(const nlohmann::json &json);
-            inline bool parse(const nlohmann::json &json);
+            inline explicit WangTile(IJson &json);
+            inline bool parse(IJson &json);
 
             [[nodiscard]] inline bool hasDFlip() const;
             [[nodiscard]] inline bool hasHFlip() const;
@@ -32,7 +32,7 @@ namespace tson
     };
 }
 
-tson::WangTile::WangTile(const nlohmann::json &json)
+tson::WangTile::WangTile(IJson &json)
 {
     parse(json);
 }
@@ -42,7 +42,7 @@ tson::WangTile::WangTile(const nlohmann::json &json)
  * @param json A Tiled json file
  * @return true if all mandatory fields were found. False otherwise.
  */
-bool tson::WangTile::parse(const nlohmann::json &json)
+bool tson::WangTile::parse(IJson &json)
 {
     bool allFound = true;
 
@@ -51,8 +51,11 @@ bool tson::WangTile::parse(const nlohmann::json &json)
     if(json.count("vflip") > 0) m_vflip = json["vflip"].get<bool>(); else allFound = false;
     if(json.count("tileid") > 0) m_tileid = json["tileid"].get<int>(); else allFound = false;
 
-    if(json.count("wangid") > 0 && json["wangid"].is_array())
-        std::for_each(json["wangid"].begin(), json["wangid"].end(), [&](const nlohmann::json &item) { m_wangId.emplace_back(item.get<int>()); });
+    if(json.count("wangid") > 0 && json["wangid"].isArray())
+    {
+        auto &wangid = json.array("wangid");
+        std::for_each(wangid.begin(), wangid.end(), [&](std::unique_ptr<IJson> &item) { m_wangId.emplace_back(item->get<int>()); });
+    }
 
     return allFound;
 }

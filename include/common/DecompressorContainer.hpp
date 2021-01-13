@@ -5,7 +5,7 @@
 #ifndef TILESON_DECOMPRESSORCONTAINER_HPP
 #define TILESON_DECOMPRESSORCONTAINER_HPP
 
-#include "IDecompressor.hpp"
+#include "../interfaces/IDecompressor.hpp"
 #include <memory>
 #include <vector>
 #include <string_view>
@@ -24,10 +24,10 @@ namespace tson
             inline size_t size() const;
             inline void clear();
 
-            inline IDecompressor *get(std::string_view name);
+            inline IDecompressor<std::string_view, std::string> *get(std::string_view name);
         private:
             //Key: name,
-            std::vector<std::unique_ptr<IDecompressor>> m_decompressors;
+            std::vector<std::unique_ptr<IDecompressor<std::string_view, std::string>>> m_decompressors;
     };
 
     template<typename T, typename... Args>
@@ -74,7 +74,7 @@ namespace tson
      * @param name The name of the container
      * @return An ICompressor pointer if it exists. nullptr otherwise.
      */
-    IDecompressor *DecompressorContainer::get(std::string_view name)
+    IDecompressor<std::string_view, std::string> *DecompressorContainer::get(std::string_view name)
     {
         auto iter = std::find_if(m_decompressors.begin(), m_decompressors.end(), [&](const auto &item)
         {

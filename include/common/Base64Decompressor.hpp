@@ -6,17 +6,17 @@
 #ifndef TILESON_BASE64DECOMPRESSOR_HPP
 #define TILESON_BASE64DECOMPRESSOR_HPP
 
-#include "IDecompressor.hpp"
+#include "../interfaces/IDecompressor.hpp"
 #include <string>
 
 namespace tson
 {
-    class Base64Decompressor : public IDecompressor
+    class Base64Decompressor : public IDecompressor<std::string_view, std::string>
     {
         public:
             [[nodiscard]] inline const std::string &name() const override;
 
-            inline std::string decompress(std::string_view s) override;
+            inline std::string decompress(const std::string_view &s) override;
 
         private:
             inline unsigned int pos_of_char(const unsigned char chr);
@@ -28,7 +28,7 @@ namespace tson
         return NAME;
     }
 
-    std::string Base64Decompressor::decompress(std::string_view s)
+    std::string Base64Decompressor::decompress(const std::string_view &s)
     {
 
         size_t length_of_string = s.length();

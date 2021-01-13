@@ -14,9 +14,9 @@ namespace tson
         public:
             inline Frame() = default;
             inline Frame(int duration, int tileId);
-            inline Frame(const nlohmann::json &json);
+            inline explicit Frame(IJson &json);
 
-            inline bool parse(const nlohmann::json &json);
+            inline bool parse(IJson &json);
 
             [[nodiscard]] inline int getDuration() const;
             [[nodiscard]] inline int getTileId() const;
@@ -41,7 +41,7 @@ tson::Frame::Frame(int duration, int tileId) : m_duration {duration}, m_tileId {
  * Parses frame data from json
  * @param json
  */
-tson::Frame::Frame(const nlohmann::json &json)
+tson::Frame::Frame(IJson &json)
 {
     parse(json);
 }
@@ -51,7 +51,7 @@ tson::Frame::Frame(const nlohmann::json &json)
  * @param json
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Frame::parse(const nlohmann::json &json)
+bool tson::Frame::parse(IJson &json)
 {
     bool allFound = true;
 

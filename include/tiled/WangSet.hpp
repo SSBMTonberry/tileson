@@ -16,8 +16,8 @@ namespace tson
     {
         public:
             inline WangSet() = default;
-            inline explicit WangSet(const nlohmann::json &json);
-            inline bool parse(const nlohmann::json &json);
+            inline explicit WangSet(IJson &json);
+            inline bool parse(IJson &json);
 
             [[nodiscard]] inline const std::string &getName() const;
             [[nodiscard]] inline int getTile() const;
@@ -55,12 +55,12 @@ namespace tson
     }
 }
 
-tson::WangSet::WangSet(const nlohmann::json &json)
+tson::WangSet::WangSet(IJson &json)
 {
     parse(json);
 }
 
-bool tson::WangSet::parse(const nlohmann::json &json)
+bool tson::WangSet::parse(IJson &json)
 {
     bool allFound = true;
 
@@ -68,14 +68,26 @@ bool tson::WangSet::parse(const nlohmann::json &json)
     if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
 
     //More advanced data
-    if(json.count("wangtiles") > 0 && json["wangtiles"].is_array())
-        std::for_each(json["wangtiles"].begin(), json["wangtiles"].end(), [&](const nlohmann::json &item) { m_wangTiles.emplace_back(item); });
-    if(json.count("cornercolors") > 0 && json["cornercolors"].is_array())
-        std::for_each(json["cornercolors"].begin(), json["cornercolors"].end(), [&](const nlohmann::json &item) { m_cornerColors.emplace_back(item); });
-    if(json.count("edgecolors") > 0 && json["edgecolors"].is_array())
-        std::for_each(json["edgecolors"].begin(), json["edgecolors"].end(), [&](const nlohmann::json &item) { m_edgeColors.emplace_back(item); });
-    if(json.count("properties") > 0 && json["properties"].is_array())
-        std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+    if(json.count("wangtiles") > 0 && json["wangtiles"].isArray())
+    {
+        auto &wangtiles = json.array("wangtiles");
+        std::for_each(wangtiles.begin(), wangtiles.end(), [&](std::unique_ptr<IJson> &item) { m_wangTiles.emplace_back(*item); });
+    }
+    if(json.count("cornercolors") > 0 && json["cornercolors"].isArray())
+    {
+        auto &cornercolors = json.array("cornercolors");
+        std::for_each(cornercolors.begin(), cornercolors.end(), [&](std::unique_ptr<IJson> &item) { m_cornerColors.emplace_back(*item); });
+    }
+    if(json.count("edgecolors") > 0 && json["edgecolors"].isArray())
+    {
+        auto &edgecolors = json.array("edgecolors");
+        std::for_each(edgecolors.begin(), edgecolors.end(), [&](std::unique_ptr<IJson> &item) { m_edgeColors.emplace_back(*item); });
+    }
+    if(json.count("properties") > 0 && json["properties"].isArray())
+    {
+        auto &properties = json.array("properties");
+        std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
+    }
 
     return allFound;
 }

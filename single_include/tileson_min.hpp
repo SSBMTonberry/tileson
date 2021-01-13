@@ -40,6 +40,40 @@
 #ifndef TILESON_TILESON_PARSER_HPP
 #define TILESON_TILESON_PARSER_HPP
 
+//RBP: FS-namespace is defined in tileson_parser now!
+#if _MSC_VER && !__INTEL_COMPILER
+	#include <filesystem>
+	namespace fs = std::filesystem;
+#elif __MINGW64__
+	#if __MINGW64_VERSION_MAJOR > 6
+		#include <filesystem>
+		namespace fs = std::filesystem;
+	#else
+		#include <experimental/filesystem>
+		namespace fs = std::experimental::filesystem;
+	#endif
+#elif __clang__
+	#if __clang_major__ < 8
+		#include <experimental/filesystem>
+		namespace fs = std::experimental::filesystem;
+	#else
+		#include <filesystem>
+		namespace fs = std::filesystem;
+	#endif
+#else //Linux
+	#if __GNUC__ < 8 //GCC major version less than 8
+		#include <experimental/filesystem>
+		namespace fs = std::experimental::filesystem;
+	#else
+		#include <filesystem>
+		namespace fs = std::filesystem;
+	#endif
+#endif
+
+#include <fstream>
+#include <sstream>
+#include <memory>
+
 
 /*** Start of inlined file: Tools.hpp ***/
 //
@@ -167,6 +201,7 @@ namespace tson
 
 namespace tson
 {
+	template <class TIn, class TOut>
 	class IDecompressor
 	{
 		public:
@@ -181,9 +216,10 @@ namespace tson
 			 *
 			 * @return
 			 */
-			virtual const std::string &name() const = 0;
+			[[nodiscard]] virtual const std::string &name() const = 0;
 
-			virtual std::string decompress(std::string_view s) = 0;
+			//virtual std::string decompress(std::string_view s) = 0;
+			virtual TOut decompress(const TIn &s) = 0;
 	};
 }
 
@@ -195,12 +231,12 @@ namespace tson
 
 namespace tson
 {
-	class Base64Decompressor : public IDecompressor
+	class Base64Decompressor : public IDecompressor<std::string_view, std::string>
 	{
 		public:
 			[[nodiscard]] inline const std::string &name() const override;
 
-			inline std::string decompress(std::string_view s) override;
+			inline std::string decompress(const std::string_view &s) override;
 
 		private:
 			inline unsigned int pos_of_char(const unsigned char chr);
@@ -212,7 +248,7 @@ namespace tson
 		return NAME;
 	}
 
-	std::string Base64Decompressor::decompress(std::string_view s)
+	std::string Base64Decompressor::decompress(const std::string_view &s)
 	{
 
 		size_t length_of_string = s.length();
@@ -300,10 +336,10 @@ namespace tson
 			inline size_t size() const;
 			inline void clear();
 
-			inline IDecompressor *get(std::string_view name);
+			inline IDecompressor<std::string_view, std::string> *get(std::string_view name);
 		private:
 			//Key: name,
-			std::vector<std::unique_ptr<IDecompressor>> m_decompressors;
+			std::vector<std::unique_ptr<IDecompressor<std::string_view, std::string>>> m_decompressors;
 	};
 
 	template<typename T, typename... Args>
@@ -350,7 +386,7 @@ namespace tson
 	 * @param name The name of the container
 	 * @return An ICompressor pointer if it exists. nullptr otherwise.
 	 */
-	IDecompressor *DecompressorContainer::get(std::string_view name)
+	IDecompressor<std::string_view, std::string> *DecompressorContainer::get(std::string_view name)
 	{
 		auto iter = std::find_if(m_decompressors.begin(), m_decompressors.end(), [&](const auto &item)
 		{
@@ -380,6 +416,59 @@ namespace tson
 #endif //TILESON_DECOMPRESSORCONTAINER_HPP
 
 /*** End of inlined file: DecompressorContainer.hpp ***/
+
+
+/*** Start of inlined file: MemoryStream.hpp ***/
+//
+// Created by robin on 22.03.2020.
+//
+
+#ifndef TILESON_MEMORYSTREAM_HPP
+#define TILESON_MEMORYSTREAM_HPP
+
+
+/*** Start of inlined file: MemoryBuffer.hpp ***/
+//
+// Created by robin on 22.03.2020.
+//
+
+#ifndef TILESON_MEMORYBUFFER_HPP
+#define TILESON_MEMORYBUFFER_HPP
+
+#include <iostream>
+
+namespace tson
+{
+	class MemoryBuffer : public std::basic_streambuf<char> {
+		public:
+			MemoryBuffer(const uint8_t *p, size_t l) {
+				setg((char*)p, (char*)p, (char*)p + l);
+			}
+	};
+}
+
+#endif //TILESON_MEMORYBUFFER_HPP
+
+/*** End of inlined file: MemoryBuffer.hpp ***/
+
+namespace tson
+{
+	class MemoryStream : public std::istream {
+		public:
+			MemoryStream(const uint8_t *p, size_t l) :
+					std::istream(&m_buffer),
+					m_buffer(p, l) {
+				rdbuf(&m_buffer);
+			}
+
+		private:
+			MemoryBuffer m_buffer;
+	};
+}
+
+#endif //TILESON_MEMORYSTREAM_HPP
+
+/*** End of inlined file: MemoryStream.hpp ***/
 
 
 /*** Start of inlined file: Map.hpp ***/
@@ -619,6 +708,1853 @@ namespace tson
 
 //#include "../external/json.hpp"
 
+/*** Start of inlined file: IJson.hpp ***/
+//
+// Created by robin on 06.01.2021.
+//
+
+#ifndef TILESON_IJSON_HPP
+#define TILESON_IJSON_HPP
+
+namespace tson
+{
+	class IJson
+	{
+		public:
+
+			virtual IJson& operator[](std::string_view key) = 0;
+			virtual IJson &at(std::string_view key) = 0;
+			virtual IJson &at(size_t pos) = 0;
+			/*!
+			 * If current json object is an array, this will get all elements of it!
+			 * @return An array
+			 */
+			[[nodiscard]] virtual std::vector<std::unique_ptr<IJson>> array() = 0;
+			[[nodiscard]] virtual std::vector<std::unique_ptr<IJson>> &array(std::string_view key) = 0;
+			/*!
+			 * Get the size of an object. This will be equal to the number of
+			 * variables an object contains.
+			 * @return
+			 */
+			[[nodiscard]] virtual size_t size() const = 0;
+			[[nodiscard]] virtual bool parse(const fs::path &path) = 0;
+			[[nodiscard]] virtual bool parse(const void *data, size_t size) = 0;
+
+			template <typename T>
+			[[nodiscard]] T get(std::string_view key) const;
+			template <typename T>
+			[[nodiscard]] T get() const;
+			[[nodiscard]] virtual size_t count(std::string_view key) const = 0;
+			[[nodiscard]] virtual bool any(std::string_view key) const = 0;
+			[[nodiscard]] virtual bool isArray() const = 0;
+			[[nodiscard]] virtual bool isObject() const = 0;
+			[[nodiscard]] virtual bool isNull() const = 0;
+
+		protected:
+			[[nodiscard]] virtual int32_t getInt32(std::string_view key) const = 0;
+			[[nodiscard]] virtual uint32_t getUInt32(std::string_view key) const = 0;
+			[[nodiscard]] virtual int64_t getInt64(std::string_view key) const = 0;
+			[[nodiscard]] virtual uint64_t getUInt64(std::string_view key) const = 0;
+			[[nodiscard]] virtual double getDouble(std::string_view key) const = 0;
+			[[nodiscard]] virtual float getFloat(std::string_view key) const = 0;
+			[[nodiscard]] virtual std::string getString(std::string_view key) const = 0;
+			[[nodiscard]] virtual bool getBool(std::string_view key) const = 0;
+
+			[[nodiscard]] virtual int32_t getInt32() const = 0;
+			[[nodiscard]] virtual uint32_t getUInt32() const = 0;
+			[[nodiscard]] virtual int64_t getInt64() const = 0;
+			[[nodiscard]] virtual uint64_t getUInt64() const = 0;
+			[[nodiscard]] virtual double getDouble() const = 0;
+			[[nodiscard]] virtual float getFloat() const = 0;
+			[[nodiscard]] virtual std::string getString() const = 0;
+			[[nodiscard]] virtual bool getBool() const = 0;
+	};
+
+	template<typename T>
+	T IJson::get(std::string_view key) const
+	{
+		if constexpr (std::is_same<T, double>::value)
+			return getDouble(key);
+		if constexpr (std::is_same<T, float>::value)
+			return getFloat(key);
+		else if constexpr (std::is_same<T, int32_t>::value)
+			return getInt32(key);
+		else if constexpr (std::is_same<T, uint32_t>::value)
+			return getUInt32(key);
+		else if constexpr (std::is_same<T, int64_t>::value)
+			return getInt64(key);
+		else if constexpr (std::is_same<T, uint64_t>::value)
+			return getUInt64(key);
+		else if constexpr (std::is_same<T, std::string>::value)
+			return getString(key);
+		else if constexpr (std::is_same<T, bool>::value)
+			return getBool(key);
+		else
+			return nullptr;
+	}
+
+	template<typename T>
+	T IJson::get() const
+	{
+		if constexpr (std::is_same<T, double>::value)
+			return getDouble();
+		if constexpr (std::is_same<T, float>::value)
+			return getFloat();
+		else if constexpr (std::is_same<T, int32_t>::value)
+			return getInt32();
+		else if constexpr (std::is_same<T, uint32_t>::value)
+			return getUInt32();
+		else if constexpr (std::is_same<T, int64_t>::value)
+			return getInt64();
+		else if constexpr (std::is_same<T, uint64_t>::value)
+			return getUInt64();
+		else if constexpr (std::is_same<T, std::string>::value)
+			return getString();
+		else if constexpr (std::is_same<T, bool>::value)
+			return getBool();
+		else
+			return nullptr;
+	}
+
+}
+
+#endif //TILESON_IJSON_HPP
+
+/*** End of inlined file: IJson.hpp ***/
+
+
+
+/*** Start of inlined file: NlohmannJson.hpp ***/
+//
+// Created by robin on 08.01.2021.
+//
+
+#ifdef INCLUDE_NLOHMANN_JSON_HPP_
+
+#ifndef TILESON_NLOHMANNJSON_HPP
+#define TILESON_NLOHMANNJSON_HPP
+
+namespace tson
+{
+	class NlohmannJson : public tson::IJson
+	{
+		public:
+			inline NlohmannJson() = default;
+
+			IJson &operator[](std::string_view key) override
+			{
+				if(m_arrayCache.count(key.data()) == 0)
+					m_arrayCache[key.data()] = std::make_unique<NlohmannJson>(&m_json->operator[](key.data()));//.front());
+
+				return *m_arrayCache[key.data()].get();
+			}
+
+			inline explicit NlohmannJson(nlohmann::json *json) : m_json {json}
+			{
+
+			}
+
+			inline IJson& at(std::string_view key) override
+			{
+				if(m_arrayCache.count(key.data()) == 0)
+					m_arrayCache[key.data()] = std::make_unique<NlohmannJson>(&m_json->operator[](key.data()));//.front());
+
+				return *m_arrayCache[key.data()].get();
+			}
+
+			inline IJson& at(size_t pos) override
+			{
+				if(m_arrayPosCache.count(pos) == 0)
+					m_arrayPosCache[pos] = std::make_unique<NlohmannJson>(&m_json->at(pos));
+
+				return *m_arrayPosCache[pos];
+			}
+
+			std::vector<std::unique_ptr<IJson>> array() override
+			{
+				std::vector<std::unique_ptr<IJson>> vec;
+				for(auto &item : *m_json)
+				{
+					nlohmann::json *ptr = &item;
+					vec.emplace_back(std::make_unique<NlohmannJson>(ptr));
+				}
+
+				return vec;
+			}
+
+			inline std::vector<std::unique_ptr<IJson>> &array(std::string_view key) override
+			{
+				if(m_arrayListDataCache.count(key.data()) == 0)
+				{
+					if (m_json->count(key.data()) > 0 && m_json->operator[](key.data()).is_array())
+					{
+						std::for_each(m_json->operator[](key.data()).begin(), m_json->operator[](key.data()).end(), [&](nlohmann::json &item)
+						{
+							nlohmann::json *ptr = &item;
+							m_arrayListDataCache[key.data()].emplace_back(std::make_unique<NlohmannJson>(ptr));
+						});
+					}
+				}
+
+				return m_arrayListDataCache[key.data()];
+			}
+
+			[[nodiscard]] inline size_t size() const override
+			{
+				return m_json->size();
+			}
+
+			inline bool parse(const fs::path &path) override
+			{
+				clearCache();
+				m_data = nullptr;
+				m_json = nullptr;
+				if (fs::exists(path) && fs::is_regular_file(path))
+				{
+					m_data = std::make_unique<nlohmann::json>();
+					std::ifstream i(path.u8string());
+					try
+					{
+						i >> *m_data;
+						m_json = m_data.get();
+					}
+					catch (const nlohmann::json::parse_error &error)
+					{
+						std::string message = "Parse error: ";
+						message += std::string(error.what());
+						message += std::string("\n");
+						std::cerr << message;
+						return false;
+					}
+					return true;
+				}
+				return false;
+			}
+
+			inline bool parse(const void *data, size_t size) override
+			{
+				clearCache();
+				m_json = nullptr;
+				m_data = std::make_unique<nlohmann::json>();
+				tson::MemoryStream mem{(uint8_t *) data, size};
+				try
+				{
+					mem >> *m_data;
+					m_json = m_data.get();
+				}
+				catch (const nlohmann::json::parse_error &error)
+				{
+					std::string message = "Parse error: ";
+					message += std::string(error.what());
+					message += std::string("\n");
+					std::cerr << message;
+					return false;
+				}
+				return true;
+			}
+
+			[[nodiscard]] inline size_t count(std::string_view key) const override
+			{
+				return m_json->count(key);
+			}
+
+			[[nodiscard]] inline bool any(std::string_view key) const override
+			{
+				return count(key) > 0;
+			}
+
+			[[nodiscard]] inline bool isArray() const override
+			{
+				return m_json->is_array();
+			}
+
+			[[nodiscard]] inline bool isObject() const override
+			{
+				return m_json->is_object();
+			}
+
+			[[nodiscard]] inline bool isNull() const override
+			{
+				return m_json->is_null();
+			}
+
+		protected:
+			[[nodiscard]] inline int32_t getInt32(std::string_view key) const override
+			{
+				return m_json->operator[](key.data()).get<int32_t>();
+			}
+
+			[[nodiscard]] inline uint32_t getUInt32(std::string_view key) const override
+			{
+				return m_json->operator[](key.data()).get<uint32_t>();
+			}
+
+			[[nodiscard]] inline int64_t getInt64(std::string_view key) const override
+			{
+				return m_json->operator[](key.data()).get<int64_t>();
+			}
+
+			[[nodiscard]] inline uint64_t getUInt64(std::string_view key) const override
+			{
+				return m_json->operator[](key.data()).get<uint64_t>();
+			}
+
+			[[nodiscard]] inline double getDouble(std::string_view key) const override
+			{
+				return m_json->operator[](key.data()).get<double>();
+			}
+
+			[[nodiscard]] inline std::string getString(std::string_view key) const override
+			{
+				return m_json->operator[](key.data()).get<std::string>();
+			}
+
+			[[nodiscard]] inline bool getBool(std::string_view key) const override
+			{
+				return m_json->operator[](key.data()).get<bool>();
+			}
+
+			[[nodiscard]] float getFloat(std::string_view key) const override
+			{
+				return m_json->operator[](key.data()).get<float>();
+			}
+
+			[[nodiscard]] inline int32_t getInt32() const override
+			{
+				return m_json->get<int32_t>();
+			}
+
+			[[nodiscard]] inline uint32_t getUInt32() const override
+			{
+				return m_json->get<uint32_t>();
+			}
+
+			[[nodiscard]] inline int64_t getInt64() const override
+			{
+				return m_json->get<int64_t>();
+			}
+
+			[[nodiscard]] inline uint64_t getUInt64() const override
+			{
+				return m_json->get<uint64_t>();
+			}
+
+			[[nodiscard]] inline double getDouble() const override
+			{
+				return m_json->get<double>();
+			}
+
+			[[nodiscard]] inline std::string getString() const override
+			{
+				return m_json->get<std::string>();
+			}
+
+			[[nodiscard]] inline bool getBool() const override
+			{
+				return m_json->get<bool>();
+			}
+
+			[[nodiscard]] float getFloat() const override
+			{
+				return m_json->get<float>();
+			}
+
+		private:
+			inline void clearCache()
+			{
+				m_arrayCache.clear();
+				m_arrayPosCache.clear();
+				m_arrayListDataCache.clear();
+			}
+
+			nlohmann::json *m_json = nullptr;
+			std::unique_ptr<nlohmann::json> m_data = nullptr; //Only used if this is the owner json!
+
+			//Cache!
+			std::map<std::string, std::unique_ptr<IJson>> m_arrayCache;
+			std::map<size_t, std::unique_ptr<IJson>> m_arrayPosCache;
+			std::map<std::string, std::vector<std::unique_ptr<IJson>>> m_arrayListDataCache;
+
+	};
+}
+#endif //TILESON_NLOHMANNJSON_HPP
+
+#endif //INCLUDE_NLOHMANN_JSON_HPP_
+/*** End of inlined file: NlohmannJson.hpp ***/
+
+
+/*** Start of inlined file: PicoJson.hpp ***/
+//
+// Created by robin on 11.01.2021.
+//
+
+#ifndef TILESON_PICOJSON_HPP
+#define TILESON_PICOJSON_HPP
+
+
+/*** Start of inlined file: picojson.hpp ***/
+#ifndef picojson_h
+#define picojson_h
+
+#include <algorithm>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cstddef>
+#include <iostream>
+#include <iterator>
+#include <limits>
+#include <map>
+#include <stdexcept>
+#include <string>
+#include <vector>
+#include <utility>
+
+// for isnan/isinf
+#if __cplusplus >= 201103L
+#include <cmath>
+#else
+extern "C" {
+#ifdef _MSC_VER
+#include <float.h>
+#elif defined(__INTEL_COMPILER)
+#include <mathimf.h>
+#else
+#include <math.h>
+#endif
+}
+#endif
+
+#ifndef PICOJSON_USE_RVALUE_REFERENCE
+#if (defined(__cpp_rvalue_references) && __cpp_rvalue_references >= 200610) || (defined(_MSC_VER) && _MSC_VER >= 1600)
+#define PICOJSON_USE_RVALUE_REFERENCE 1
+#else
+#define PICOJSON_USE_RVALUE_REFERENCE 0
+#endif
+#endif // PICOJSON_USE_RVALUE_REFERENCE
+
+#ifndef PICOJSON_NOEXCEPT
+#if PICOJSON_USE_RVALUE_REFERENCE
+#define PICOJSON_NOEXCEPT noexcept
+#else
+#define PICOJSON_NOEXCEPT throw()
+#endif
+#endif
+
+// experimental support for int64_t (see README.mkdn for detail)
+#ifdef PICOJSON_USE_INT64
+#define __STDC_FORMAT_MACROS
+#include <cerrno>
+#if __cplusplus >= 201103L
+#include <cinttypes>
+#else
+extern "C" {
+#include <inttypes.h>
+}
+#endif
+#endif
+
+// to disable the use of localeconv(3), set PICOJSON_USE_LOCALE to 0
+#ifndef PICOJSON_USE_LOCALE
+#define PICOJSON_USE_LOCALE 1
+#endif
+#if PICOJSON_USE_LOCALE
+extern "C" {
+#include <locale.h>
+}
+#endif
+
+#ifndef PICOJSON_ASSERT
+#define PICOJSON_ASSERT(e)                                                                                                         \
+  do {                                                                                                                             \
+	if (!(e))                                                                                                                      \
+	  throw std::runtime_error(#e);                                                                                                \
+  } while (0)
+#endif
+
+#ifdef _MSC_VER
+#define SNPRINTF _snprintf_s
+#pragma warning(push)
+#pragma warning(disable : 4244) // conversion from int to char
+#pragma warning(disable : 4127) // conditional expression is constant
+#pragma warning(disable : 4702) // unreachable code
+#pragma warning(disable : 4706) // assignment within conditional expression
+#else
+#define SNPRINTF snprintf
+#endif
+
+namespace picojson {
+
+	enum {
+		null_type,
+		boolean_type,
+		number_type,
+		string_type,
+		array_type,
+		object_type
+#ifdef PICOJSON_USE_INT64
+		,
+  int64_type
+#endif
+	};
+
+	enum { INDENT_WIDTH = 2 };
+
+	struct null {};
+
+	class value {
+		public:
+			typedef std::vector<value> array;
+			typedef std::map<std::string, value> object;
+			union _storage {
+				bool boolean_;
+				double number_;
+#ifdef PICOJSON_USE_INT64
+				int64_t int64_;
+#endif
+				std::string *string_;
+				array *array_;
+				object *object_;
+			};
+
+		protected:
+			int type_;
+			_storage u_;
+
+		public:
+			value();
+			value(int type, bool);
+			explicit value(bool b);
+#ifdef PICOJSON_USE_INT64
+			explicit value(int64_t i);
+#endif
+			explicit value(double n);
+			explicit value(const std::string &s);
+			explicit value(const array &a);
+			explicit value(const object &o);
+#if PICOJSON_USE_RVALUE_REFERENCE
+			explicit value(std::string &&s);
+			explicit value(array &&a);
+			explicit value(object &&o);
+#endif
+			explicit value(const char *s);
+			value(const char *s, size_t len);
+			~value();
+			value(const value &x);
+			value &operator=(const value &x);
+#if PICOJSON_USE_RVALUE_REFERENCE
+			value(value &&x) PICOJSON_NOEXCEPT;
+			value &operator=(value &&x) PICOJSON_NOEXCEPT;
+#endif
+			void swap(value &x) PICOJSON_NOEXCEPT;
+			template <typename T> bool is() const;
+			template <typename T> const T &get() const;
+			template <typename T> T &get();
+			template <typename T> void set(const T &);
+#if PICOJSON_USE_RVALUE_REFERENCE
+			template <typename T> void set(T &&);
+#endif
+			bool evaluate_as_boolean() const;
+			const value &get(const size_t idx) const;
+			const value &get(const std::string &key) const;
+			value &get(const size_t idx);
+			value &get(const std::string &key);
+
+			bool contains(const size_t idx) const;
+			bool contains(const std::string &key) const;
+			std::string to_str() const;
+			template <typename Iter> void serialize(Iter os, bool prettify = false) const;
+			std::string serialize(bool prettify = false) const;
+
+		private:
+			template <typename T> value(const T *); // intentionally defined to block implicit conversion of pointer to bool
+			template <typename Iter> static void _indent(Iter os, int indent);
+			template <typename Iter> void _serialize(Iter os, int indent) const;
+			std::string _serialize(int indent) const;
+			void clear();
+	};
+
+	typedef value::array array;
+	typedef value::object object;
+
+	inline value::value() : type_(null_type), u_() {
+	}
+
+	inline value::value(int type, bool) : type_(type), u_() {
+		switch (type) {
+#define INIT(p, v)                                                                                                                 \
+  case p##type:                                                                                                                    \
+	u_.p = v;                                                                                                                      \
+	break
+			INIT(boolean_, false);
+			INIT(number_, 0.0);
+#ifdef PICOJSON_USE_INT64
+			INIT(int64_, 0);
+#endif
+			INIT(string_, new std::string());
+			INIT(array_, new array());
+			INIT(object_, new object());
+#undef INIT
+			default:
+				break;
+		}
+	}
+
+	inline value::value(bool b) : type_(boolean_type), u_() {
+		u_.boolean_ = b;
+	}
+
+#ifdef PICOJSON_USE_INT64
+	inline value::value(int64_t i) : type_(int64_type), u_() {
+  u_.int64_ = i;
+}
+#endif
+
+	inline value::value(double n) : type_(number_type), u_() {
+		if (
+#ifdef _MSC_VER
+!_finite(n)
+#elif __cplusplus >= 201103L
+std::isnan(n) || std::isinf(n)
+#else
+isnan(n) || isinf(n)
+#endif
+				) {
+			throw std::overflow_error("");
+		}
+		u_.number_ = n;
+	}
+
+	inline value::value(const std::string &s) : type_(string_type), u_() {
+		u_.string_ = new std::string(s);
+	}
+
+	inline value::value(const array &a) : type_(array_type), u_() {
+		u_.array_ = new array(a);
+	}
+
+	inline value::value(const object &o) : type_(object_type), u_() {
+		u_.object_ = new object(o);
+	}
+
+#if PICOJSON_USE_RVALUE_REFERENCE
+	inline value::value(std::string &&s) : type_(string_type), u_() {
+		u_.string_ = new std::string(std::move(s));
+	}
+
+	inline value::value(array &&a) : type_(array_type), u_() {
+		u_.array_ = new array(std::move(a));
+	}
+
+	inline value::value(object &&o) : type_(object_type), u_() {
+		u_.object_ = new object(std::move(o));
+	}
+#endif
+
+	inline value::value(const char *s) : type_(string_type), u_() {
+		u_.string_ = new std::string(s);
+	}
+
+	inline value::value(const char *s, size_t len) : type_(string_type), u_() {
+		u_.string_ = new std::string(s, len);
+	}
+
+	inline void value::clear() {
+		switch (type_) {
+#define DEINIT(p)                                                                                                                  \
+  case p##type:                                                                                                                    \
+	delete u_.p;                                                                                                                   \
+	break
+			DEINIT(string_);
+			DEINIT(array_);
+			DEINIT(object_);
+#undef DEINIT
+			default:
+				break;
+		}
+	}
+
+	inline value::~value() {
+		clear();
+	}
+
+	inline value::value(const value &x) : type_(x.type_), u_() {
+		switch (type_) {
+#define INIT(p, v)                                                                                                                 \
+  case p##type:                                                                                                                    \
+	u_.p = v;                                                                                                                      \
+	break
+			INIT(string_, new std::string(*x.u_.string_));
+			INIT(array_, new array(*x.u_.array_));
+			INIT(object_, new object(*x.u_.object_));
+#undef INIT
+			default:
+				u_ = x.u_;
+				break;
+		}
+	}
+
+	inline value &value::operator=(const value &x) {
+		if (this != &x) {
+			value t(x);
+			swap(t);
+		}
+		return *this;
+	}
+
+#if PICOJSON_USE_RVALUE_REFERENCE
+	inline value::value(value &&x) PICOJSON_NOEXCEPT : type_(null_type), u_() {
+		swap(x);
+	}
+	inline value &value::operator=(value &&x) PICOJSON_NOEXCEPT {
+		swap(x);
+		return *this;
+	}
+#endif
+	inline void value::swap(value &x) PICOJSON_NOEXCEPT {
+		std::swap(type_, x.type_);
+		std::swap(u_, x.u_);
+	}
+
+#define IS(ctype, jtype)                                                                                                           \
+  template <> inline bool value::is<ctype>() const {                                                                               \
+	return type_ == jtype##_type;                                                                                                  \
+  }
+	IS(null, null)
+	IS(bool, boolean)
+#ifdef PICOJSON_USE_INT64
+	IS(int64_t, int64)
+#endif
+	IS(std::string, string)
+	IS(array, array)
+	IS(object, object)
+#undef IS
+	template <> inline bool value::is<double>() const {
+		return type_ == number_type
+#ifdef PICOJSON_USE_INT64
+			|| type_ == int64_type
+#endif
+				;
+	}
+
+#define GET(ctype, var)                                                                                                            \
+  template <> inline const ctype &value::get<ctype>() const {                                                                      \
+	PICOJSON_ASSERT("type mismatch! call is<type>() before get<type>()" && is<ctype>());                                           \
+	return var;                                                                                                                    \
+  }                                                                                                                                \
+  template <> inline ctype &value::get<ctype>() {                                                                                  \
+	PICOJSON_ASSERT("type mismatch! call is<type>() before get<type>()" && is<ctype>());                                           \
+	return var;                                                                                                                    \
+  }
+	GET(bool, u_.boolean_)
+	GET(std::string, *u_.string_)
+	GET(array, *u_.array_)
+	GET(object, *u_.object_)
+#ifdef PICOJSON_USE_INT64
+	GET(double,
+	(type_ == int64_type && (const_cast<value *>(this)->type_ = number_type, const_cast<value *>(this)->u_.number_ = u_.int64_),
+	 u_.number_))
+GET(int64_t, u_.int64_)
+#else
+	GET(double, u_.number_)
+#endif
+#undef GET
+
+#define SET(ctype, jtype, setter)                                                                                                  \
+  template <> inline void value::set<ctype>(const ctype &_val) {                                                                   \
+	clear();                                                                                                                       \
+	type_ = jtype##_type;                                                                                                          \
+	setter                                                                                                                         \
+  }
+	SET(bool, boolean, u_.boolean_ = _val;)
+	SET(std::string, string, u_.string_ = new std::string(_val);)
+	SET(array, array, u_.array_ = new array(_val);)
+	SET(object, object, u_.object_ = new object(_val);)
+	SET(double, number, u_.number_ = _val;)
+#ifdef PICOJSON_USE_INT64
+	SET(int64_t, int64, u_.int64_ = _val;)
+#endif
+#undef SET
+
+#if PICOJSON_USE_RVALUE_REFERENCE
+	#define MOVESET(ctype, jtype, setter)                                                                                              \
+  template <> inline void value::set<ctype>(ctype && _val) {                                                                       \
+	clear();                                                                                                                       \
+	type_ = jtype##_type;                                                                                                          \
+	setter                                                                                                                         \
+  }
+	MOVESET(std::string, string, u_.string_ = new std::string(std::move(_val));)
+	MOVESET(array, array, u_.array_ = new array(std::move(_val));)
+	MOVESET(object, object, u_.object_ = new object(std::move(_val));)
+#undef MOVESET
+#endif
+
+	inline bool value::evaluate_as_boolean() const {
+		switch (type_) {
+			case null_type:
+				return false;
+			case boolean_type:
+				return u_.boolean_;
+			case number_type:
+				return u_.number_ != 0;
+#ifdef PICOJSON_USE_INT64
+				case int64_type:
+	return u_.int64_ != 0;
+#endif
+			case string_type:
+				return !u_.string_->empty();
+			default:
+				return true;
+		}
+	}
+
+	inline const value &value::get(const size_t idx) const {
+		static value s_null;
+		PICOJSON_ASSERT(is<array>());
+		return idx < u_.array_->size() ? (*u_.array_)[idx] : s_null;
+	}
+
+	inline value &value::get(const size_t idx) {
+		static value s_null;
+		PICOJSON_ASSERT(is<array>());
+		return idx < u_.array_->size() ? (*u_.array_)[idx] : s_null;
+	}
+
+	inline const value &value::get(const std::string &key) const {
+		static value s_null;
+		PICOJSON_ASSERT(is<object>());
+		object::const_iterator i = u_.object_->find(key);
+		return i != u_.object_->end() ? i->second : s_null;
+	}
+
+	inline value &value::get(const std::string &key) {
+		static value s_null;
+		PICOJSON_ASSERT(is<object>());
+		object::iterator i = u_.object_->find(key);
+		return i != u_.object_->end() ? i->second : s_null;
+	}
+
+	inline bool value::contains(const size_t idx) const {
+		PICOJSON_ASSERT(is<array>());
+		return idx < u_.array_->size();
+	}
+
+	inline bool value::contains(const std::string &key) const {
+		PICOJSON_ASSERT(is<object>());
+		object::const_iterator i = u_.object_->find(key);
+		return i != u_.object_->end();
+	}
+
+	inline std::string value::to_str() const {
+		switch (type_) {
+			case null_type:
+				return "null";
+			case boolean_type:
+				return u_.boolean_ ? "true" : "false";
+#ifdef PICOJSON_USE_INT64
+				case int64_type: {
+	char buf[sizeof("-9223372036854775808")];
+	SNPRINTF(buf, sizeof(buf), "%" PRId64, u_.int64_);
+	return buf;
+  }
+#endif
+			case number_type: {
+				char buf[256];
+				double tmp;
+				SNPRINTF(buf, sizeof(buf), fabs(u_.number_) < (1ULL << 53) && modf(u_.number_, &tmp) == 0 ? "%.f" : "%.17g", u_.number_);
+#if PICOJSON_USE_LOCALE
+				char *decimal_point = localeconv()->decimal_point;
+				if (strcmp(decimal_point, ".") != 0) {
+					size_t decimal_point_len = strlen(decimal_point);
+					for (char *p = buf; *p != '\0'; ++p) {
+						if (strncmp(p, decimal_point, decimal_point_len) == 0) {
+							return std::string(buf, p) + "." + (p + decimal_point_len);
+						}
+					}
+				}
+#endif
+				return buf;
+			}
+			case string_type:
+				return *u_.string_;
+			case array_type:
+				return "array";
+			case object_type:
+				return "object";
+			default:
+				PICOJSON_ASSERT(0);
+#ifdef _MSC_VER
+				__assume(0);
+#endif
+		}
+		return std::string();
+	}
+
+	template <typename Iter> void copy(const std::string &s, Iter oi) {
+		std::copy(s.begin(), s.end(), oi);
+	}
+
+	template <typename Iter> struct serialize_str_char {
+		Iter oi;
+		void operator()(char c) {
+			switch (c) {
+#define MAP(val, sym)                                                                                                              \
+  case val:                                                                                                                        \
+	copy(sym, oi);                                                                                                                 \
+	break
+				MAP('"', "\\\"");
+				MAP('\\', "\\\\");
+				MAP('/', "\\/");
+				MAP('\b', "\\b");
+				MAP('\f', "\\f");
+				MAP('\n', "\\n");
+				MAP('\r', "\\r");
+				MAP('\t', "\\t");
+#undef MAP
+				default:
+					if (static_cast<unsigned char>(c) < 0x20 || c == 0x7f) {
+						char buf[7];
+						SNPRINTF(buf, sizeof(buf), "\\u%04x", c & 0xff);
+						copy(buf, buf + 6, oi);
+					} else {
+						*oi++ = c;
+					}
+					break;
+			}
+		}
+	};
+
+	template <typename Iter> void serialize_str(const std::string &s, Iter oi) {
+		*oi++ = '"';
+		serialize_str_char<Iter> process_char = {oi};
+		std::for_each(s.begin(), s.end(), process_char);
+		*oi++ = '"';
+	}
+
+	template <typename Iter> void value::serialize(Iter oi, bool prettify) const {
+		return _serialize(oi, prettify ? 0 : -1);
+	}
+
+	inline std::string value::serialize(bool prettify) const {
+		return _serialize(prettify ? 0 : -1);
+	}
+
+	template <typename Iter> void value::_indent(Iter oi, int indent) {
+		*oi++ = '\n';
+		for (int i = 0; i < indent * INDENT_WIDTH; ++i) {
+			*oi++ = ' ';
+		}
+	}
+
+	template <typename Iter> void value::_serialize(Iter oi, int indent) const {
+		switch (type_) {
+			case string_type:
+				serialize_str(*u_.string_, oi);
+				break;
+			case array_type: {
+				*oi++ = '[';
+				if (indent != -1) {
+					++indent;
+				}
+				for (array::const_iterator i = u_.array_->begin(); i != u_.array_->end(); ++i) {
+					if (i != u_.array_->begin()) {
+						*oi++ = ',';
+					}
+					if (indent != -1) {
+						_indent(oi, indent);
+					}
+					i->_serialize(oi, indent);
+				}
+				if (indent != -1) {
+					--indent;
+					if (!u_.array_->empty()) {
+						_indent(oi, indent);
+					}
+				}
+				*oi++ = ']';
+				break;
+			}
+			case object_type: {
+				*oi++ = '{';
+				if (indent != -1) {
+					++indent;
+				}
+				for (object::const_iterator i = u_.object_->begin(); i != u_.object_->end(); ++i) {
+					if (i != u_.object_->begin()) {
+						*oi++ = ',';
+					}
+					if (indent != -1) {
+						_indent(oi, indent);
+					}
+					serialize_str(i->first, oi);
+					*oi++ = ':';
+					if (indent != -1) {
+						*oi++ = ' ';
+					}
+					i->second._serialize(oi, indent);
+				}
+				if (indent != -1) {
+					--indent;
+					if (!u_.object_->empty()) {
+						_indent(oi, indent);
+					}
+				}
+				*oi++ = '}';
+				break;
+			}
+			default:
+				copy(to_str(), oi);
+				break;
+		}
+		if (indent == 0) {
+			*oi++ = '\n';
+		}
+	}
+
+	inline std::string value::_serialize(int indent) const {
+		std::string s;
+		_serialize(std::back_inserter(s), indent);
+		return s;
+	}
+
+	template <typename Iter> class input {
+		protected:
+			Iter cur_, end_;
+			bool consumed_;
+			int line_;
+
+		public:
+			input(const Iter &first, const Iter &last) : cur_(first), end_(last), consumed_(false), line_(1) {
+			}
+			int getc() {
+				if (consumed_) {
+					if (*cur_ == '\n') {
+						++line_;
+					}
+					++cur_;
+				}
+				if (cur_ == end_) {
+					consumed_ = false;
+					return -1;
+				}
+				consumed_ = true;
+				return *cur_ & 0xff;
+			}
+			void ungetc() {
+				consumed_ = false;
+			}
+			Iter cur() const {
+				if (consumed_) {
+					input<Iter> *self = const_cast<input<Iter> *>(this);
+					self->consumed_ = false;
+					++self->cur_;
+				}
+				return cur_;
+			}
+			int line() const {
+				return line_;
+			}
+			void skip_ws() {
+				while (1) {
+					int ch = getc();
+					if (!(ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r')) {
+						ungetc();
+						break;
+					}
+				}
+			}
+			bool expect(const int expected) {
+				skip_ws();
+				if (getc() != expected) {
+					ungetc();
+					return false;
+				}
+				return true;
+			}
+			bool match(const std::string &pattern) {
+				for (std::string::const_iterator pi(pattern.begin()); pi != pattern.end(); ++pi) {
+					if (getc() != *pi) {
+						ungetc();
+						return false;
+					}
+				}
+				return true;
+			}
+	};
+
+	template <typename Iter> inline int _parse_quadhex(input<Iter> &in) {
+		int uni_ch = 0, hex;
+		for (int i = 0; i < 4; i++) {
+			if ((hex = in.getc()) == -1) {
+				return -1;
+			}
+			if ('0' <= hex && hex <= '9') {
+				hex -= '0';
+			} else if ('A' <= hex && hex <= 'F') {
+				hex -= 'A' - 0xa;
+			} else if ('a' <= hex && hex <= 'f') {
+				hex -= 'a' - 0xa;
+			} else {
+				in.ungetc();
+				return -1;
+			}
+			uni_ch = uni_ch * 16 + hex;
+		}
+		return uni_ch;
+	}
+
+	template <typename String, typename Iter> inline bool _parse_codepoint(String &out, input<Iter> &in) {
+		int uni_ch;
+		if ((uni_ch = _parse_quadhex(in)) == -1) {
+			return false;
+		}
+		if (0xd800 <= uni_ch && uni_ch <= 0xdfff) {
+			if (0xdc00 <= uni_ch) {
+				// a second 16-bit of a surrogate pair appeared
+				return false;
+			}
+			// first 16-bit of surrogate pair, get the next one
+			if (in.getc() != '\\' || in.getc() != 'u') {
+				in.ungetc();
+				return false;
+			}
+			int second = _parse_quadhex(in);
+			if (!(0xdc00 <= second && second <= 0xdfff)) {
+				return false;
+			}
+			uni_ch = ((uni_ch - 0xd800) << 10) | ((second - 0xdc00) & 0x3ff);
+			uni_ch += 0x10000;
+		}
+		if (uni_ch < 0x80) {
+			out.push_back(static_cast<char>(uni_ch));
+		} else {
+			if (uni_ch < 0x800) {
+				out.push_back(static_cast<char>(0xc0 | (uni_ch >> 6)));
+			} else {
+				if (uni_ch < 0x10000) {
+					out.push_back(static_cast<char>(0xe0 | (uni_ch >> 12)));
+				} else {
+					out.push_back(static_cast<char>(0xf0 | (uni_ch >> 18)));
+					out.push_back(static_cast<char>(0x80 | ((uni_ch >> 12) & 0x3f)));
+				}
+				out.push_back(static_cast<char>(0x80 | ((uni_ch >> 6) & 0x3f)));
+			}
+			out.push_back(static_cast<char>(0x80 | (uni_ch & 0x3f)));
+		}
+		return true;
+	}
+
+	template <typename String, typename Iter> inline bool _parse_string(String &out, input<Iter> &in) {
+		while (1) {
+			int ch = in.getc();
+			if (ch < ' ') {
+				in.ungetc();
+				return false;
+			} else if (ch == '"') {
+				return true;
+			} else if (ch == '\\') {
+				if ((ch = in.getc()) == -1) {
+					return false;
+				}
+				switch (ch) {
+#define MAP(sym, val)                                                                                                              \
+  case sym:                                                                                                                        \
+	out.push_back(val);                                                                                                            \
+	break
+					MAP('"', '\"');
+					MAP('\\', '\\');
+					MAP('/', '/');
+					MAP('b', '\b');
+					MAP('f', '\f');
+					MAP('n', '\n');
+					MAP('r', '\r');
+					MAP('t', '\t');
+#undef MAP
+					case 'u':
+						if (!_parse_codepoint(out, in)) {
+							return false;
+						}
+						break;
+					default:
+						return false;
+				}
+			} else {
+				out.push_back(static_cast<char>(ch));
+			}
+		}
+		return false;
+	}
+
+	template <typename Context, typename Iter> inline bool _parse_array(Context &ctx, input<Iter> &in) {
+		if (!ctx.parse_array_start()) {
+			return false;
+		}
+		size_t idx = 0;
+		if (in.expect(']')) {
+			return ctx.parse_array_stop(idx);
+		}
+		do {
+			if (!ctx.parse_array_item(in, idx)) {
+				return false;
+			}
+			idx++;
+		} while (in.expect(','));
+		return in.expect(']') && ctx.parse_array_stop(idx);
+	}
+
+	template <typename Context, typename Iter> inline bool _parse_object(Context &ctx, input<Iter> &in) {
+		if (!ctx.parse_object_start()) {
+			return false;
+		}
+		if (in.expect('}')) {
+			return true;
+		}
+		do {
+			std::string key;
+			if (!in.expect('"') || !_parse_string(key, in) || !in.expect(':')) {
+				return false;
+			}
+			if (!ctx.parse_object_item(in, key)) {
+				return false;
+			}
+		} while (in.expect(','));
+		return in.expect('}');
+	}
+
+	template <typename Iter> inline std::string _parse_number(input<Iter> &in) {
+		std::string num_str;
+		while (1) {
+			int ch = in.getc();
+			if (('0' <= ch && ch <= '9') || ch == '+' || ch == '-' || ch == 'e' || ch == 'E') {
+				num_str.push_back(static_cast<char>(ch));
+			} else if (ch == '.') {
+#if PICOJSON_USE_LOCALE
+				num_str += localeconv()->decimal_point;
+#else
+				num_str.push_back('.');
+#endif
+			} else {
+				in.ungetc();
+				break;
+			}
+		}
+		return num_str;
+	}
+
+	template <typename Context, typename Iter> inline bool _parse(Context &ctx, input<Iter> &in) {
+		in.skip_ws();
+		int ch = in.getc();
+		switch (ch) {
+#define IS(ch, text, op)                                                                                                           \
+  case ch:                                                                                                                         \
+	if (in.match(text) && op) {                                                                                                    \
+	  return true;                                                                                                                 \
+	} else {                                                                                                                       \
+	  return false;                                                                                                                \
+	}
+			IS('n', "ull", ctx.set_null());
+			IS('f', "alse", ctx.set_bool(false));
+			IS('t', "rue", ctx.set_bool(true));
+#undef IS
+			case '"':
+				return ctx.parse_string(in);
+			case '[':
+				return _parse_array(ctx, in);
+			case '{':
+				return _parse_object(ctx, in);
+			default:
+				if (('0' <= ch && ch <= '9') || ch == '-') {
+					double f;
+					char *endp;
+					in.ungetc();
+					std::string num_str(_parse_number(in));
+					if (num_str.empty()) {
+						return false;
+					}
+#ifdef PICOJSON_USE_INT64
+					{
+		errno = 0;
+		intmax_t ival = strtoimax(num_str.c_str(), &endp, 10);
+		if (errno == 0 && std::numeric_limits<int64_t>::min() <= ival && ival <= std::numeric_limits<int64_t>::max() &&
+			endp == num_str.c_str() + num_str.size()) {
+		  ctx.set_int64(ival);
+		  return true;
+		}
+	  }
+#endif
+					f = strtod(num_str.c_str(), &endp);
+					if (endp == num_str.c_str() + num_str.size()) {
+						ctx.set_number(f);
+						return true;
+					}
+					return false;
+				}
+				break;
+		}
+		in.ungetc();
+		return false;
+	}
+
+	class deny_parse_context {
+		public:
+			bool set_null() {
+				return false;
+			}
+			bool set_bool(bool) {
+				return false;
+			}
+#ifdef PICOJSON_USE_INT64
+			bool set_int64(int64_t) {
+	return false;
+  }
+#endif
+			bool set_number(double) {
+				return false;
+			}
+			template <typename Iter> bool parse_string(input<Iter> &) {
+				return false;
+			}
+			bool parse_array_start() {
+				return false;
+			}
+			template <typename Iter> bool parse_array_item(input<Iter> &, size_t) {
+				return false;
+			}
+			bool parse_array_stop(size_t) {
+				return false;
+			}
+			bool parse_object_start() {
+				return false;
+			}
+			template <typename Iter> bool parse_object_item(input<Iter> &, const std::string &) {
+				return false;
+			}
+	};
+
+	class default_parse_context {
+		protected:
+			value *out_;
+
+		public:
+			default_parse_context(value *out) : out_(out) {
+			}
+			bool set_null() {
+				*out_ = value();
+				return true;
+			}
+			bool set_bool(bool b) {
+				*out_ = value(b);
+				return true;
+			}
+#ifdef PICOJSON_USE_INT64
+			bool set_int64(int64_t i) {
+	*out_ = value(i);
+	return true;
+  }
+#endif
+			bool set_number(double f) {
+				*out_ = value(f);
+				return true;
+			}
+			template <typename Iter> bool parse_string(input<Iter> &in) {
+				*out_ = value(string_type, false);
+				return _parse_string(out_->get<std::string>(), in);
+			}
+			bool parse_array_start() {
+				*out_ = value(array_type, false);
+				return true;
+			}
+			template <typename Iter> bool parse_array_item(input<Iter> &in, size_t) {
+				array &a = out_->get<array>();
+				a.push_back(value());
+				default_parse_context ctx(&a.back());
+				return _parse(ctx, in);
+			}
+			bool parse_array_stop(size_t) {
+				return true;
+			}
+			bool parse_object_start() {
+				*out_ = value(object_type, false);
+				return true;
+			}
+			template <typename Iter> bool parse_object_item(input<Iter> &in, const std::string &key) {
+				object &o = out_->get<object>();
+				default_parse_context ctx(&o[key]);
+				return _parse(ctx, in);
+			}
+
+		private:
+			default_parse_context(const default_parse_context &);
+			default_parse_context &operator=(const default_parse_context &);
+	};
+
+	class null_parse_context {
+		public:
+			struct dummy_str {
+				void push_back(int) {
+				}
+			};
+
+		public:
+			null_parse_context() {
+			}
+			bool set_null() {
+				return true;
+			}
+			bool set_bool(bool) {
+				return true;
+			}
+#ifdef PICOJSON_USE_INT64
+			bool set_int64(int64_t) {
+	return true;
+  }
+#endif
+			bool set_number(double) {
+				return true;
+			}
+			template <typename Iter> bool parse_string(input<Iter> &in) {
+				dummy_str s;
+				return _parse_string(s, in);
+			}
+			bool parse_array_start() {
+				return true;
+			}
+			template <typename Iter> bool parse_array_item(input<Iter> &in, size_t) {
+				return _parse(*this, in);
+			}
+			bool parse_array_stop(size_t) {
+				return true;
+			}
+			bool parse_object_start() {
+				return true;
+			}
+			template <typename Iter> bool parse_object_item(input<Iter> &in, const std::string &) {
+				return _parse(*this, in);
+			}
+
+		private:
+			null_parse_context(const null_parse_context &);
+			null_parse_context &operator=(const null_parse_context &);
+	};
+
+// obsolete, use the version below
+	template <typename Iter> inline std::string parse(value &out, Iter &pos, const Iter &last) {
+		std::string err;
+		pos = parse(out, pos, last, &err);
+		return err;
+	}
+
+	template <typename Context, typename Iter> inline Iter _parse(Context &ctx, const Iter &first, const Iter &last, std::string *err) {
+		input<Iter> in(first, last);
+		if (!_parse(ctx, in) && err != NULL) {
+			char buf[64];
+			SNPRINTF(buf, sizeof(buf), "syntax error at line %d near: ", in.line());
+			*err = buf;
+			while (1) {
+				int ch = in.getc();
+				if (ch == -1 || ch == '\n') {
+					break;
+				} else if (ch >= ' ') {
+					err->push_back(static_cast<char>(ch));
+				}
+			}
+		}
+		return in.cur();
+	}
+
+	template <typename Iter> inline Iter parse(value &out, const Iter &first, const Iter &last, std::string *err) {
+		default_parse_context ctx(&out);
+		return _parse(ctx, first, last, err);
+	}
+
+	inline std::string parse(value &out, const std::string &s) {
+		std::string err;
+		parse(out, s.begin(), s.end(), &err);
+		return err;
+	}
+
+	inline std::string parse(value &out, std::istream &is) {
+		std::string err;
+		parse(out, std::istreambuf_iterator<char>(is.rdbuf()), std::istreambuf_iterator<char>(), &err);
+		return err;
+	}
+
+	template <typename T> struct last_error_t { static std::string s; };
+	template <typename T> std::string last_error_t<T>::s;
+
+	inline void set_last_error(const std::string &s) {
+		last_error_t<bool>::s = s;
+	}
+
+	inline const std::string &get_last_error() {
+		return last_error_t<bool>::s;
+	}
+
+	inline bool operator==(const value &x, const value &y) {
+		if (x.is<null>())
+			return y.is<null>();
+#define PICOJSON_CMP(type)                                                                                                         \
+  if (x.is<type>())                                                                                                                \
+  return y.is<type>() && x.get<type>() == y.get<type>()
+		PICOJSON_CMP(bool);
+		PICOJSON_CMP(double);
+		PICOJSON_CMP(std::string);
+		PICOJSON_CMP(array);
+		PICOJSON_CMP(object);
+#undef PICOJSON_CMP
+		PICOJSON_ASSERT(0);
+#ifdef _MSC_VER
+		__assume(0);
+#endif
+		return false;
+	}
+
+	inline bool operator!=(const value &x, const value &y) {
+		return !(x == y);
+	}
+}
+
+#if !PICOJSON_USE_RVALUE_REFERENCE
+namespace std {
+	template <> inline void swap(picojson::value &x, picojson::value &y) {
+		x.swap(y);
+	}
+}
+#endif
+
+inline std::istream &operator>>(std::istream &is, picojson::value &x) {
+	picojson::set_last_error(std::string());
+	const std::string err(picojson::parse(x, is));
+	if (!err.empty()) {
+		picojson::set_last_error(err);
+		is.setstate(std::ios::failbit);
+	}
+	return is;
+}
+
+inline std::ostream &operator<<(std::ostream &os, const picojson::value &x) {
+	x.serialize(std::ostream_iterator<char>(os));
+	return os;
+}
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
+#endif
+
+/*** End of inlined file: picojson.hpp ***/
+
+namespace tson
+{
+	class PicoJson : public tson::IJson
+	{
+		public:
+			inline PicoJson() = default;
+
+			IJson &operator[](std::string_view key) override
+			{
+				if(m_arrayCache.count(key.data()) == 0)
+				{
+					if(m_json->is<picojson::object>())
+					{
+						picojson::object &o = m_json->get<picojson::object>();
+						m_arrayCache[key.data()] = std::make_unique<PicoJson>(&o[key.data()]);
+					}
+				}
+
+				return *m_arrayCache[key.data()].get();
+			}
+
+			inline explicit PicoJson(picojson::value *json) : m_json {json}
+			{
+
+			}
+
+			inline IJson& at(std::string_view key) override
+			{
+				if(m_arrayCache.count(key.data()) == 0)
+				{
+					if(m_json->is<picojson::object>())
+					{
+						picojson::object &o = m_json->get<picojson::object>();
+						m_arrayCache[key.data()] = std::make_unique<PicoJson>(&o[key.data()]);
+					}
+				}
+				return *m_arrayCache[key.data()].get();
+			}
+
+			inline IJson& at(size_t pos) override
+			{
+				if(m_arrayPosCache.count(pos) == 0)
+				{
+					picojson::array &a = m_json->get<picojson::array>();
+					m_arrayPosCache[pos] = std::make_unique<PicoJson>(&a.at(pos));
+				}
+
+				return *m_arrayPosCache[pos];
+			}
+
+			std::vector<std::unique_ptr<IJson>> array() override
+			{
+				std::vector<std::unique_ptr<IJson>> vec;
+				if(m_json->is<picojson::array>())
+				{
+					picojson::array &a = m_json->get<picojson::array>();
+					for (auto &item : a)
+					{
+						picojson::value *ptr = &item;
+						vec.emplace_back(std::make_unique<PicoJson>(ptr));
+					}
+				}
+
+				return vec;
+			}
+
+			inline std::vector<std::unique_ptr<IJson>> &array(std::string_view key) override
+			{
+				if(m_arrayListDataCache.count(key.data()) == 0)
+				{
+					if(count(key.data()) > 0)
+					{
+						if (isObject())
+						{
+							picojson::object &obj = m_json->get<picojson::object>();
+							picojson::value &v = obj.at(key.data());
+							bool isArray = v.is<picojson::array>();
+							if (isArray)
+							{
+								picojson::array &a = v.get<picojson::array>();
+
+								std::for_each(a.begin(), a.end(), [&](picojson::value &item)
+								{
+									picojson::value *ptr = &item;
+									m_arrayListDataCache[key.data()].emplace_back(std::make_unique<PicoJson>(ptr));
+								});
+							}
+						}
+					}
+				}
+
+				return m_arrayListDataCache[key.data()];
+			}
+
+			[[nodiscard]] inline size_t size() const override
+			{
+				if (m_json->is<picojson::object>())
+				{
+					picojson::object obj = m_json->get<picojson::object>();
+					return obj.size();
+				}
+				return 0;
+			}
+
+			inline bool parse(const fs::path &path) override
+			{
+				clearCache();
+				m_data = nullptr;
+				m_json = nullptr;
+				if (fs::exists(path) && fs::is_regular_file(path))
+				{
+					m_data = std::make_unique<picojson::value>();
+					std::ifstream i(path.u8string());
+					try
+					{
+						std::string error = picojson::parse(*m_data, i);
+						if(!error.empty())
+						{
+							std::cerr << "PicoJson parse error: " << error << "\n";
+							return false;
+						}
+						//i >> *m_data;
+						m_json = m_data.get();
+					}
+					catch (const std::exception &error)
+					{
+						std::string message = "Parse error: ";
+						message += std::string(error.what());
+						message += std::string("\n");
+						std::cerr << message;
+						return false;
+					}
+					return true;
+				}
+				return false;
+			}
+
+			inline bool parse(const void *data, size_t size) override
+			{
+				clearCache();
+				m_json = nullptr;
+				m_data = std::make_unique<picojson::value>();
+				tson::MemoryStream mem{(uint8_t *) data, size};
+				try
+				{
+					std::string error = picojson::parse(*m_data, mem);
+					if(!error.empty())
+					{
+						std::cerr << "PicoJson parse error: " << error << "\n";
+						return false;
+					}
+					//mem >> *m_data;
+					m_json = m_data.get();
+				}
+				catch (const std::exception &error)
+				{
+					std::string message = "Parse error: ";
+					message += std::string(error.what());
+					message += std::string("\n");
+					std::cerr << message;
+					return false;
+				}
+				return true;
+			}
+
+			[[nodiscard]] inline size_t count(std::string_view key) const override
+			{
+				if (isObject())
+				{
+					picojson::object obj = m_json->get<picojson::object>();
+					return obj.count(key.data());
+				}
+
+				return m_json->contains(key.data()) ? 1 : 0;
+			}
+
+			[[nodiscard]] inline bool any(std::string_view key) const override
+			{
+				return count(key) > 0;
+			}
+
+			[[nodiscard]] inline bool isArray() const override
+			{
+				return m_json->is<picojson::array>();
+			}
+
+			[[nodiscard]] inline bool isObject() const override
+			{
+				return m_json->is<picojson::object>();
+			}
+
+			[[nodiscard]] inline bool isNull() const override
+			{
+				return m_json->is<picojson::null>();
+			}
+
+		protected:
+			[[nodiscard]] inline int32_t getInt32(std::string_view key) const override
+			{
+				picojson::object obj = m_json->get<picojson::object>();
+				return getDouble(key);
+			}
+
+			[[nodiscard]] inline uint32_t getUInt32(std::string_view key) const override
+			{
+				picojson::object obj = m_json->get<picojson::object>();
+				return getDouble(key);
+			}
+
+			[[nodiscard]] inline int64_t getInt64(std::string_view key) const override
+			{
+				picojson::object obj = m_json->get<picojson::object>();
+				return getDouble(key);
+			}
+
+			[[nodiscard]] inline uint64_t getUInt64(std::string_view key) const override
+			{
+				picojson::object obj = m_json->get<picojson::object>();
+				return getDouble(key);
+			}
+
+			[[nodiscard]] inline double getDouble(std::string_view key) const override
+			{
+				picojson::object obj = m_json->get<picojson::object>();
+				return obj[key.data()].get<double>();
+			}
+
+			[[nodiscard]] inline std::string getString(std::string_view key) const override
+			{
+				picojson::object obj = m_json->get<picojson::object>();
+				return obj[key.data()].get<std::string>();
+			}
+
+			[[nodiscard]] inline bool getBool(std::string_view key) const override
+			{
+				picojson::object obj = m_json->get<picojson::object>();
+				return obj[key.data()].get<bool>();
+			}
+
+			[[nodiscard]] float getFloat(std::string_view key) const override
+			{
+				picojson::object obj = m_json->get<picojson::object>();
+				return static_cast<float>(getDouble(key));
+			}
+
+			[[nodiscard]] inline int32_t getInt32() const override
+			{
+				return getDouble();
+			}
+
+			[[nodiscard]] inline uint32_t getUInt32() const override
+			{
+				return getDouble();
+			}
+
+			[[nodiscard]] inline int64_t getInt64() const override
+			{
+				return getDouble();
+			}
+
+			[[nodiscard]] inline uint64_t getUInt64() const override
+			{
+				return getDouble();
+			}
+
+			[[nodiscard]] inline double getDouble() const override
+			{
+				return m_json->get<double>();
+			}
+
+			[[nodiscard]] inline std::string getString() const override
+			{
+				return m_json->get<std::string>();
+			}
+
+			[[nodiscard]] inline bool getBool() const override
+			{
+				return m_json->get<bool>();
+			}
+
+			[[nodiscard]] float getFloat() const override
+			{
+				return static_cast<float>(getDouble());
+			}
+
+		private:
+			inline void clearCache()
+			{
+				m_arrayCache.clear();
+				m_arrayPosCache.clear();
+				m_arrayListDataCache.clear();
+			}
+
+			picojson::value *m_json = nullptr;
+			std::unique_ptr<picojson::value> m_data = nullptr; //Only used if this is the owner json!
+
+			//Cache!
+			std::map<std::string, std::unique_ptr<IJson>> m_arrayCache;
+			std::map<size_t, std::unique_ptr<IJson>> m_arrayPosCache;
+			std::map<std::string, std::vector<std::unique_ptr<IJson>>> m_arrayListDataCache;
+			//std::map<std::string, std::vector<std::reference_wrapper<IJson>>> m_arrayListRefCache;
+			//std::vector<IJson &>
+
+	};
+}
+
+#endif //TILESON_PICOJSON_HPP
+
+/*** End of inlined file: PicoJson.hpp ***/
+
+
 /*** Start of inlined file: Layer.hpp ***/
 //
 // Created by robin on 22.03.2020.
@@ -647,8 +2583,8 @@ namespace tson
 	{
 		public:
 			inline Chunk() = default;
-			inline explicit Chunk(const nlohmann::json &json);
-			inline bool parse(const nlohmann::json &json);
+			inline explicit Chunk(IJson &json);
+			inline bool parse(IJson &json);
 
 			[[nodiscard]] inline const std::vector<int> &getData() const;
 			[[nodiscard]] inline const std::string &getBase64Data() const;
@@ -669,7 +2605,7 @@ namespace tson
  * Parses 'chunk' data from Tiled json and stores the values in this class
  * @param json json-data
  */
-tson::Chunk::Chunk(const nlohmann::json &json)
+tson::Chunk::Chunk(IJson &json)
 {
 	parse(json);
 }
@@ -679,7 +2615,7 @@ tson::Chunk::Chunk(const nlohmann::json &json)
  * @param json json-data
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Chunk::parse(const nlohmann::json &json)
+bool tson::Chunk::parse(IJson &json)
 {
 	bool allFound = true;
 
@@ -691,9 +2627,10 @@ bool tson::Chunk::parse(const nlohmann::json &json)
 	//Handle DATA (Optional)
 	if(json.count("data") > 0)
 	{
-		if(json["data"].is_array())
+		if(json["data"].isArray())
 		{
-			std::for_each(json["data"].begin(), json["data"].end(), [&](const nlohmann::json &item) { m_data.push_back(item.get<int>()); });
+			auto &data = json.array("data");
+			std::for_each(data.begin(), data.end(), [&](std::unique_ptr<IJson> &item) { m_data.push_back(item->get<int>()); });
 		}
 		else
 			m_base64Data = json["data"].get<std::string>();
@@ -771,37 +2708,6 @@ const tson::Vector2i &tson::Chunk::getPosition() const
 //#include "../../TilesonConfig.h"
 
 //#if USE_CPP17_FILESYSTEM
-
-#ifndef DISABLE_CPP17_FILESYSTEM
-	#if _MSC_VER && !__INTEL_COMPILER
-		#include <filesystem>
-		namespace fs = std::filesystem;
-	#elif __MINGW64__
-		#if __MINGW64_VERSION_MAJOR > 6
-			#include <filesystem>
-			namespace fs = std::filesystem;
-		#else
-			#include <experimental/filesystem>
-			namespace fs = std::experimental::filesystem;
-		#endif
-	#elif __clang__
-		#if __clang_major__ < 8
-			#include <experimental/filesystem>
-			namespace fs = std::experimental::filesystem;
-		#else
-			#include <filesystem>
-			namespace fs = std::filesystem;
-		#endif
-	#else //Linux
-		#if __GNUC__ < 8 //GCC major version less than 8
-			#include <experimental/filesystem>
-			namespace fs = std::experimental::filesystem;
-		#else
-			#include <filesystem>
-			namespace fs = std::filesystem;
-		#endif
-	#endif
-#endif
 
 #include <any>
 #include <string>
@@ -1078,7 +2984,7 @@ namespace tson
 			//};
 
 			inline Property();
-			inline Property(const nlohmann::json &json);
+			inline Property(IJson &json);
 			inline Property(std::string name, std::any value, Type type);
 
 			inline void setValue(const std::any &value);
@@ -1095,7 +3001,7 @@ namespace tson
 
 		protected:
 			inline void setTypeByString(const std::string &str);
-			inline void setValueByType(const nlohmann::json &json);
+			inline void setValueByType(IJson &json);
 
 			Type m_type = Type::Undefined;
 			std::string m_name;
@@ -1125,7 +3031,7 @@ tson::Property::Property() : m_name {"unnamed"}
 
 }
 
-tson::Property::Property(const nlohmann::json &json)
+tson::Property::Property(IJson &json)
 {
 	setTypeByString(json["type"].get<std::string>());
 	setValueByType(json["value"]);
@@ -1216,7 +3122,7 @@ void tson::Property::setTypeByString(const std::string &str)
 		m_type = tson::Type::Undefined;
 }
 
-void tson::Property::setValueByType(const nlohmann::json &json)
+void tson::Property::setValueByType(IJson &json)
 {
 	switch(m_type)
 	{
@@ -1225,11 +3131,7 @@ void tson::Property::setValueByType(const nlohmann::json &json)
 			break;
 
 		case Type::File:
-			#ifndef DISABLE_CPP17_FILESYSTEM
 			m_value = fs::path(json.get<std::string>());
-			#else
-			m_value = json.get<std::string>();
-			#endif
 			break;
 
 		case Type::Int:
@@ -1272,7 +3174,7 @@ namespace tson
 			inline explicit PropertyCollection(std::string id);
 
 			inline tson::Property * add(const tson::Property &property);
-			inline tson::Property * add(const nlohmann::json &json);
+			inline tson::Property * add(IJson &json);
 			inline tson::Property * add(const std::string &name, const std::any &value, tson::Type type);
 
 			inline void remove(const std::string &name);
@@ -1313,7 +3215,7 @@ tson::Property *tson::PropertyCollection::add(const tson::Property &property)
 	return &m_properties[property.getName()];
 }
 
-tson::Property *tson::PropertyCollection::add(const nlohmann::json &json)
+tson::Property *tson::PropertyCollection::add(IJson &json)
 {
 	tson::Property property = tson::Property(json);
 	std::string name = property.getName();
@@ -1444,8 +3346,8 @@ namespace tson
 			//};
 
 			inline Object() = default;
-			inline explicit Object(const nlohmann::json &json);
-			inline bool parse(const nlohmann::json &json);
+			inline explicit Object(IJson &json);
+			inline bool parse(IJson &json);
 
 			[[nodiscard]] inline ObjectType getObjectType() const;
 			[[nodiscard]] inline bool isEllipse() const;
@@ -1474,7 +3376,7 @@ namespace tson
 			inline bool hasFlipFlags(TileFlipFlags flags);
 
 		private:
-			inline void setObjectTypeByJson(const nlohmann::json &json);
+			inline void setObjectTypeByJson(IJson &json);
 
 			ObjectType                        m_objectType = ObjectType::Undefined;    /*! Says with object type this is */
 			bool                              m_ellipse {};                            /*! 'ellipse': Used to mark an object as an ellipse */
@@ -1514,7 +3416,7 @@ namespace tson
  * Parses a json Tiled object
  * @param json
  */
-tson::Object::Object(const nlohmann::json &json)
+tson::Object::Object(IJson &json)
 {
 	parse(json);
 }
@@ -1525,7 +3427,7 @@ tson::Object::Object(const nlohmann::json &json)
  * @param json
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Object::parse(const nlohmann::json &json)
+bool tson::Object::parse(IJson &json)
 {
 	bool allFound = true;
 
@@ -1568,16 +3470,35 @@ bool tson::Object::parse(const nlohmann::json &json)
 		allFound = true; //Just accept anything with this type
 
 	//More advanced data
-	if(json.count("polygon") > 0 && json["polygon"].is_array())
-		std::for_each(json["polygon"].begin(), json["polygon"].end(),
-					  [&](const nlohmann::json &item) { m_polygon.emplace_back(item["x"].get<int>(), item["y"].get<int>()); });
+	if(json.count("polygon") > 0 && json["polygon"].isArray())
+	{
+		auto &polygon = json.array("polygon");
+		std::for_each(polygon.begin(), polygon.end(),[&](std::unique_ptr<IJson> &item)
+		{
+			IJson &j = *item;
+			m_polygon.emplace_back(j["x"].get<int>(), j["y"].get<int>());
+		});
 
-	if(json.count("polyline") > 0 && json["polyline"].is_array())
-		std::for_each(json["polyline"].begin(), json["polyline"].end(),
-					  [&](const nlohmann::json &item) { m_polyline.emplace_back(item["x"].get<int>(), item["y"].get<int>()); });
+	}
 
-	if(json.count("properties") > 0 && json["properties"].is_array())
-		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+	if(json.count("polyline") > 0 && json["polyline"].isArray())
+	{
+		auto &polyline = json.array("polyline");
+		std::for_each(polyline.begin(), polyline.end(),[&](std::unique_ptr<IJson> &item)
+		{
+			IJson &j = *item;
+			m_polyline.emplace_back(j["x"].get<int>(), j["y"].get<int>());
+		});
+	}
+
+	if(json.count("properties") > 0 && json["properties"].isArray())
+	{
+		auto &properties = json.array("properties");
+		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item)
+		{
+			m_properties.add(*item);
+		});
+	}
 
 	return allFound;
 }
@@ -1586,7 +3507,7 @@ bool tson::Object::parse(const nlohmann::json &json)
  * Sets an object type based on json data.
  * @param json
  */
-void tson::Object::setObjectTypeByJson(const nlohmann::json &json)
+void tson::Object::setObjectTypeByJson(IJson &json)
 {
 	m_objectType = ObjectType::Undefined;
 	if(m_ellipse)
@@ -1959,8 +3880,8 @@ namespace tson
 	{
 		public:
 			inline Layer() = default;
-			inline Layer(const nlohmann::json &json, tson::Map *map);
-			inline bool parse(const nlohmann::json &json, tson::Map *map);
+			inline Layer(IJson &json, tson::Map *map);
+			inline bool parse(IJson &json, tson::Map *map);
 
 			[[nodiscard]] inline const std::string &getCompression() const;
 			[[nodiscard]] inline const std::vector<uint32_t> &getData() const;
@@ -2073,7 +3994,7 @@ namespace tson
  * Parses a Tiled layer from json
  * @param json
  */
-tson::Layer::Layer(const nlohmann::json &json, tson::Map *map)
+tson::Layer::Layer(IJson &json, tson::Map *map)
 {
 	parse(json, map);
 }
@@ -2091,7 +4012,7 @@ void tson::Layer::queueFlaggedTile(size_t x, size_t y, uint32_t id)
  * @param json
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Layer::parse(const nlohmann::json &json, tson::Map *map)
+bool tson::Layer::parse(IJson &json, tson::Map *map)
 {
 	m_map = map;
 
@@ -2117,9 +4038,10 @@ bool tson::Layer::parse(const nlohmann::json &json, tson::Map *map)
 	//Handle DATA (Optional)
 	if(json.count("data") > 0)
 	{
-		if(json["data"].is_array())
+		if(json["data"].isArray())
 		{
-			std::for_each(json["data"].begin(), json["data"].end(), [&](const nlohmann::json &item) { m_data.push_back(item.get<uint32_t>()); });
+			auto &array = json.array("data");
+			std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item) { m_data.push_back(item->get<uint32_t>()); });
 		}
 		else
 		{
@@ -2129,14 +4051,26 @@ bool tson::Layer::parse(const nlohmann::json &json, tson::Map *map)
 	}
 
 	//More advanced data
-	if(json.count("chunks") > 0 && json["chunks"].is_array())
-		std::for_each(json["chunks"].begin(), json["chunks"].end(), [&](const nlohmann::json &item) { m_chunks.emplace_back(item); });
-	if(json.count("layers") > 0 && json["layers"].is_array())
-		std::for_each(json["layers"].begin(), json["layers"].end(), [&](const nlohmann::json &item) { m_layers.emplace_back(item, m_map); });
-	if(json.count("objects") > 0 && json["objects"].is_array())
-		std::for_each(json["objects"].begin(), json["objects"].end(), [&](const nlohmann::json &item) { m_objects.emplace_back(item); });
-	if(json.count("properties") > 0 && json["properties"].is_array())
-		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+	if(json.count("chunks") > 0 && json["chunks"].isArray())
+	{
+		auto &chunks = json.array("chunks");
+		std::for_each(chunks.begin(), chunks.end(), [&](std::unique_ptr<IJson> &item) { m_chunks.emplace_back(*item); });
+	}
+	if(json.count("layers") > 0 && json["layers"].isArray())
+	{
+		auto &layers = json.array("layers");
+		std::for_each(layers.begin(), layers.end(), [&](std::unique_ptr<IJson> &item) { m_layers.emplace_back(*item, m_map); });
+	}
+	if(json.count("objects") > 0 && json["objects"].isArray())
+	{
+		auto &objects = json.array("objects");
+		std::for_each(objects.begin(), objects.end(), [&](std::unique_ptr<IJson> &item) { m_objects.emplace_back(*item); });
+	}
+	if(json.count("properties") > 0 && json["properties"].isArray())
+	{
+		auto &properties = json.array("properties");
+		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
+	}
 
 	setTypeByString();
 
@@ -2548,7 +4482,6 @@ const tson::Colori &tson::Layer::getTintColor() const
 /*** End of inlined file: Layer.hpp ***/
 
 
-
 /*** Start of inlined file: Tileset.hpp ***/
 //
 // Created by robin on 22.03.2020.
@@ -2586,8 +4519,8 @@ namespace tson
 	{
 		public:
 			inline WangColor() = default;
-			inline explicit WangColor(const nlohmann::json &json);
-			inline bool parse(const nlohmann::json &json);
+			inline explicit WangColor(IJson &json);
+			inline bool parse(IJson &json);
 
 			[[nodiscard]] inline const Colori &getColor() const;
 			[[nodiscard]] inline const std::string &getName() const;
@@ -2602,12 +4535,12 @@ namespace tson
 	};
 }
 
-tson::WangColor::WangColor(const nlohmann::json &json)
+tson::WangColor::WangColor(IJson &json)
 {
 	parse(json);
 }
 
-bool tson::WangColor::parse(const nlohmann::json &json)
+bool tson::WangColor::parse(IJson &json)
 {
 	bool allFound = true;
 
@@ -2677,8 +4610,8 @@ namespace tson
 	{
 		public:
 			inline WangTile() = default;
-			inline explicit WangTile(const nlohmann::json &json);
-			inline bool parse(const nlohmann::json &json);
+			inline explicit WangTile(IJson &json);
+			inline bool parse(IJson &json);
 
 			[[nodiscard]] inline bool hasDFlip() const;
 			[[nodiscard]] inline bool hasHFlip() const;
@@ -2696,7 +4629,7 @@ namespace tson
 	};
 }
 
-tson::WangTile::WangTile(const nlohmann::json &json)
+tson::WangTile::WangTile(IJson &json)
 {
 	parse(json);
 }
@@ -2706,7 +4639,7 @@ tson::WangTile::WangTile(const nlohmann::json &json)
  * @param json A Tiled json file
  * @return true if all mandatory fields were found. False otherwise.
  */
-bool tson::WangTile::parse(const nlohmann::json &json)
+bool tson::WangTile::parse(IJson &json)
 {
 	bool allFound = true;
 
@@ -2715,8 +4648,11 @@ bool tson::WangTile::parse(const nlohmann::json &json)
 	if(json.count("vflip") > 0) m_vflip = json["vflip"].get<bool>(); else allFound = false;
 	if(json.count("tileid") > 0) m_tileid = json["tileid"].get<int>(); else allFound = false;
 
-	if(json.count("wangid") > 0 && json["wangid"].is_array())
-		std::for_each(json["wangid"].begin(), json["wangid"].end(), [&](const nlohmann::json &item) { m_wangId.emplace_back(item.get<int>()); });
+	if(json.count("wangid") > 0 && json["wangid"].isArray())
+	{
+		auto &wangid = json.array("wangid");
+		std::for_each(wangid.begin(), wangid.end(), [&](std::unique_ptr<IJson> &item) { m_wangId.emplace_back(item->get<int>()); });
+	}
 
 	return allFound;
 }
@@ -2776,8 +4712,8 @@ namespace tson
 	{
 		public:
 			inline WangSet() = default;
-			inline explicit WangSet(const nlohmann::json &json);
-			inline bool parse(const nlohmann::json &json);
+			inline explicit WangSet(IJson &json);
+			inline bool parse(IJson &json);
 
 			[[nodiscard]] inline const std::string &getName() const;
 			[[nodiscard]] inline int getTile() const;
@@ -2815,12 +4751,12 @@ namespace tson
 	}
 }
 
-tson::WangSet::WangSet(const nlohmann::json &json)
+tson::WangSet::WangSet(IJson &json)
 {
 	parse(json);
 }
 
-bool tson::WangSet::parse(const nlohmann::json &json)
+bool tson::WangSet::parse(IJson &json)
 {
 	bool allFound = true;
 
@@ -2828,14 +4764,26 @@ bool tson::WangSet::parse(const nlohmann::json &json)
 	if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
 
 	//More advanced data
-	if(json.count("wangtiles") > 0 && json["wangtiles"].is_array())
-		std::for_each(json["wangtiles"].begin(), json["wangtiles"].end(), [&](const nlohmann::json &item) { m_wangTiles.emplace_back(item); });
-	if(json.count("cornercolors") > 0 && json["cornercolors"].is_array())
-		std::for_each(json["cornercolors"].begin(), json["cornercolors"].end(), [&](const nlohmann::json &item) { m_cornerColors.emplace_back(item); });
-	if(json.count("edgecolors") > 0 && json["edgecolors"].is_array())
-		std::for_each(json["edgecolors"].begin(), json["edgecolors"].end(), [&](const nlohmann::json &item) { m_edgeColors.emplace_back(item); });
-	if(json.count("properties") > 0 && json["properties"].is_array())
-		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+	if(json.count("wangtiles") > 0 && json["wangtiles"].isArray())
+	{
+		auto &wangtiles = json.array("wangtiles");
+		std::for_each(wangtiles.begin(), wangtiles.end(), [&](std::unique_ptr<IJson> &item) { m_wangTiles.emplace_back(*item); });
+	}
+	if(json.count("cornercolors") > 0 && json["cornercolors"].isArray())
+	{
+		auto &cornercolors = json.array("cornercolors");
+		std::for_each(cornercolors.begin(), cornercolors.end(), [&](std::unique_ptr<IJson> &item) { m_cornerColors.emplace_back(*item); });
+	}
+	if(json.count("edgecolors") > 0 && json["edgecolors"].isArray())
+	{
+		auto &edgecolors = json.array("edgecolors");
+		std::for_each(edgecolors.begin(), edgecolors.end(), [&](std::unique_ptr<IJson> &item) { m_edgeColors.emplace_back(*item); });
+	}
+	if(json.count("properties") > 0 && json["properties"].isArray())
+	{
+		auto &properties = json.array("properties");
+		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
+	}
 
 	return allFound;
 }
@@ -2940,9 +4888,9 @@ namespace tson
 		public:
 			inline Frame() = default;
 			inline Frame(int duration, int tileId);
-			inline Frame(const nlohmann::json &json);
+			inline explicit Frame(IJson &json);
 
-			inline bool parse(const nlohmann::json &json);
+			inline bool parse(IJson &json);
 
 			[[nodiscard]] inline int getDuration() const;
 			[[nodiscard]] inline int getTileId() const;
@@ -2967,7 +4915,7 @@ tson::Frame::Frame(int duration, int tileId) : m_duration {duration}, m_tileId {
  * Parses frame data from json
  * @param json
  */
-tson::Frame::Frame(const nlohmann::json &json)
+tson::Frame::Frame(IJson &json)
 {
 	parse(json);
 }
@@ -2977,7 +4925,7 @@ tson::Frame::Frame(const nlohmann::json &json)
  * @param json
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Frame::parse(const nlohmann::json &json)
+bool tson::Frame::parse(IJson &json)
 {
 	bool allFound = true;
 
@@ -3017,17 +4965,15 @@ namespace tson
 	{
 		public:
 			inline Tile() = default;
-			inline Tile(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
+			inline Tile(IJson &json, tson::Tileset *tileset, tson::Map *map);
 			inline Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map);
 			inline Tile(uint32_t id, tson::Map *map); //v1.2.0
-			inline bool parse(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map);
+			inline bool parse(IJson &json, tson::Tileset *tileset, tson::Map *map);
 
 			[[nodiscard]] inline uint32_t getId() const;
-			#ifndef DISABLE_CPP17_FILESYSTEM
+
 			[[nodiscard]] inline const fs::path &getImage() const;
-			#else
-			[[nodiscard]] inline const std::string &getImage() const;
-			#endif
+
 			[[nodiscard]] inline const Vector2i &getImageSize() const;
 			[[nodiscard]] inline const std::string &getType() const;
 
@@ -3059,11 +5005,9 @@ namespace tson
 		private:
 			std::vector<tson::Frame>    m_animation; 	    /*! 'animation': Array of Frames */
 			uint32_t                    m_id {};            /*! 'id': Local ID of the tile */
-			#ifndef DISABLE_CPP17_FILESYSTEM
+
 			fs::path                    m_image;            /*! 'image': Image representing this tile (optional)*/
-			#else
-			std::string                 m_image;
-			#endif
+
 			tson::Vector2i              m_imageSize;        /*! x = 'imagewidth' and y = 'imageheight': in pixels */
 			tson::Layer                 m_objectgroup; 	 	/*! 'objectgroup': Layer with type objectgroup (optional) */
 			tson::PropertyCollection    m_properties; 	    /*! 'properties': A list of properties (name, value, type). */
@@ -3094,7 +5038,7 @@ namespace tson
 	}
 }
 
-tson::Tile::Tile(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map)
+tson::Tile::Tile(IJson &json, tson::Tileset *tileset, tson::Map *map)
 {
 	parse(json, tileset, map);
 }
@@ -3136,17 +5080,15 @@ void tson::Tile::addTilesetAndPerformCalculations(tson::Tileset *tileset)
  * @param json
  * @return
  */
-bool tson::Tile::parse(const nlohmann::json &json, tson::Tileset *tileset, tson::Map *map)
+bool tson::Tile::parse(IJson &json, tson::Tileset *tileset, tson::Map *map)
 {
 	m_tileset = tileset;
 	m_map = map;
 
 	bool allFound = true;
-	#ifndef DISABLE_CPP17_FILESYSTEM
+
 	if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); //Optional
-	#else
-	if(json.count("image") > 0) m_image = json["image"].get<std::string>(); //Optional
-	#endif
+
 	if(json.count("id") > 0)
 	{
 		m_id = json["id"].get<uint32_t>() + 1;
@@ -3163,13 +5105,22 @@ bool tson::Tile::parse(const nlohmann::json &json, tson::Tileset *tileset, tson:
 		m_imageSize = {json["imagewidth"].get<int>(), json["imageheight"].get<int>()}; //Optional
 
 	//More advanced data
-	if(json.count("animation") > 0 && json["animation"].is_array())
-		std::for_each(json["animation"].begin(), json["animation"].end(), [&](const nlohmann::json &item) { m_animation.emplace_back(item); });
-	if(json.count("terrain") > 0 && json["terrain"].is_array())
-		std::for_each(json["terrain"].begin(), json["terrain"].end(), [&](const nlohmann::json &item) { m_terrain.emplace_back(item.get<int>()); });
+	if(json.count("animation") > 0 && json["animation"].isArray())
+	{
+		auto &animation = json.array("animation");
+		std::for_each(animation.begin(), animation.end(), [&](std::unique_ptr<IJson> &item) { m_animation.emplace_back(*item); });
+	}
+	if(json.count("terrain") > 0 && json["terrain"].isArray())
+	{
+		auto &terrain = json.array("terrain");
+		std::for_each(terrain.begin(), terrain.end(), [&](std::unique_ptr<IJson> &item) { m_terrain.emplace_back(item->get<int>()); });
+	}
 
-	if(json.count("properties") > 0 && json["properties"].is_array())
-		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+	if(json.count("properties") > 0 && json["properties"].isArray())
+	{
+		auto &properties = json.array("properties");
+		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
+	}
 
 	performDataCalculations();
 
@@ -3189,11 +5140,9 @@ uint32_t tson::Tile::getId() const
  * 'image': Image representing this tile (optional)
  * @return
  */
-#ifndef DISABLE_CPP17_FILESYSTEM
+
 const fs::path &tson::Tile::getImage() const { return m_image; }
-#else
-const std::string &tson::Tile::getImage() const { return m_image; }
-#endif
+
 /*!
  * x = 'imagewidth' and y = 'imageheight': in pixels
  * @return
@@ -3362,9 +5311,9 @@ namespace tson
 		public:
 			inline Terrain() = default;
 			inline Terrain(std::string name, int tile);
-			inline explicit Terrain(const nlohmann::json &json);
+			inline explicit Terrain(IJson &json);
 
-			inline bool parse(const nlohmann::json &json);
+			inline bool parse(IJson &json);
 
 			[[nodiscard]] inline const std::string &getName() const;
 			[[nodiscard]] inline int getTile() const;
@@ -3398,20 +5347,23 @@ tson::Terrain::Terrain(std::string name, int tile) : m_name {std::move(name)}, m
 
 }
 
-tson::Terrain::Terrain(const nlohmann::json &json)
+tson::Terrain::Terrain(IJson &json)
 {
 	parse(json);
 }
 
-bool tson::Terrain::parse(const nlohmann::json &json)
+bool tson::Terrain::parse(IJson &json)
 {
 	bool allFound = true;
 
 	if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
 	if(json.count("tile") > 0) m_tile = json["tile"].get<int>(); else allFound = false;
 
-	if(json.count("properties") > 0 && json["properties"].is_array())
-		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+	if(json.count("properties") > 0 && json["properties"].isArray())
+	{
+		auto &properties = json.array("properties");
+		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
+	}
 
 	return allFound;
 }
@@ -3477,9 +5429,9 @@ namespace tson
 	{
 		public:
 			inline Grid() = default;
-			inline explicit Grid(const nlohmann::json &json);
+			inline explicit Grid(IJson &json);
 
-			inline bool parse(const nlohmann::json &json);
+			inline bool parse(IJson &json);
 
 			[[nodiscard]] inline const std::string &getOrientation() const;
 			[[nodiscard]] inline const Vector2i &getSize() const;
@@ -3494,7 +5446,7 @@ namespace tson
  * Parses Tiled grid data from json
  * @param json
  */
-tson::Grid::Grid(const nlohmann::json &json)
+tson::Grid::Grid(IJson &json)
 {
 	parse(json);
 }
@@ -3504,7 +5456,7 @@ tson::Grid::Grid(const nlohmann::json &json)
  * @param json
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Grid::parse(const nlohmann::json &json)
+bool tson::Grid::parse(IJson &json)
 {
 	bool allFound = true;
 
@@ -3547,19 +5499,15 @@ namespace tson
 	{
 		public:
 			inline Tileset() = default;
-			inline explicit Tileset(const nlohmann::json &json, tson::Map *map);
-			inline bool parse(const nlohmann::json &json, tson::Map *map);
+			inline explicit Tileset(IJson &json, tson::Map *map);
+			inline bool parse(IJson &json, tson::Map *map);
 
 			[[nodiscard]] inline int getColumns() const;
 			[[nodiscard]] inline int getFirstgid() const;
 
-			#ifndef DISABLE_CPP17_FILESYSTEM
 			[[nodiscard]] inline const fs::path &getImagePath() const;
 			[[nodiscard]] inline const fs::path &getImage() const;
-			#else
-			[[nodiscard]] inline const std::string &getImagePath() const;
-			[[nodiscard]] inline const std::string &getImage() const;
-			#endif
+
 			[[nodiscard]] inline const Vector2i &getImageSize() const;
 			[[nodiscard]] inline int getMargin() const;
 			[[nodiscard]] inline const std::string &getName() const;
@@ -3594,11 +5542,9 @@ namespace tson
 
 			int                           m_columns {};       /*! 'columns': The number of tile columns in the tileset */
 			int                           m_firstgid {};      /*! 'firstgid': GID corresponding to the first tile in the set */
-			#ifndef DISABLE_CPP17_FILESYSTEM
+
 			fs::path                      m_image;            /*! 'image': Image used for tiles in this set */
-			#else
-			std::string                   m_image;
-			#endif
+
 			tson::Vector2i                m_imageSize;        /*! x = 'imagewidth' and y = 'imageheight': in pixels */
 			int                           m_margin {};        /*! 'margin': Buffer between image edge and first tile (pixels)*/
 			std::string                   m_name;             /*! 'name': Name given to this tileset */
@@ -3635,23 +5581,21 @@ namespace tson
 	}
 }
 
-tson::Tileset::Tileset(const nlohmann::json &json, tson::Map *map)
+tson::Tileset::Tileset(IJson &json, tson::Map *map)
 {
 	parse(json, map);
 }
 
-bool tson::Tileset::parse(const nlohmann::json &json, tson::Map *map)
+bool tson::Tileset::parse(IJson &json, tson::Map *map)
 {
 	m_map = map;
 	bool allFound = true;
 
 	if(json.count("columns") > 0) m_columns = json["columns"].get<int>(); else allFound = false;
 	if(json.count("firstgid") > 0) m_firstgid = json["firstgid"].get<int>(); else allFound = false;
-	#ifndef DISABLE_CPP17_FILESYSTEM
+
 	if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); else allFound = false;
-	#else
-	if(json.count("image") > 0) m_image = json["image"].get<std::string>(); else allFound = false;
-	#endif
+
 	if(json.count("margin") > 0) m_margin = json["margin"].get<int>(); else allFound = false;
 	if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
 	if(json.count("spacing") > 0) m_spacing = json["spacing"].get<int>(); else allFound = false;
@@ -3668,15 +5612,27 @@ bool tson::Tileset::parse(const nlohmann::json &json, tson::Map *map)
 		m_tileOffset = {json["tileoffset"]["x"].get<int>(), json["tileoffset"]["y"].get<int>()};
 
 	//More advanced data
-	if(json.count("wangsets") > 0 && json["wangsets"].is_array())
-		std::for_each(json["wangsets"].begin(), json["wangsets"].end(), [&](const nlohmann::json &item) { m_wangsets.emplace_back(item); });
-	if(json.count("tiles") > 0 && json["tiles"].is_array())
-		std::for_each(json["tiles"].begin(), json["tiles"].end(), [&](const nlohmann::json &item) { m_tiles.emplace_back(item, this, m_map); });
-	if(json.count("terrains") > 0 && json["terrains"].is_array())
-		std::for_each(json["terrains"].begin(), json["terrains"].end(), [&](const nlohmann::json &item) { m_terrains.emplace_back(item); });
+	if(json.count("wangsets") > 0 && json["wangsets"].isArray())
+	{
+		auto &wangsets = json.array("wangsets");
+		std::for_each(wangsets.begin(), wangsets.end(), [&](std::unique_ptr<IJson> &item) { m_wangsets.emplace_back(*item); });
+	}
+	if(json.count("tiles") > 0 && json["tiles"].isArray())
+	{
+		auto &tiles = json.array("tiles");
+		std::for_each(tiles.begin(), tiles.end(), [&](std::unique_ptr<IJson> &item) { m_tiles.emplace_back(*item, this, m_map); });
+	}
+	if(json.count("terrains") > 0 && json["terrains"].isArray())
+	{
+		auto &terrains = json.array("terrains");
+		std::for_each(terrains.begin(), terrains.end(), [&](std::unique_ptr<IJson> &item) { m_terrains.emplace_back(*item); });
+	}
 
-	if(json.count("properties") > 0 && json["properties"].is_array())
-		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+	if(json.count("properties") > 0 && json["properties"].isArray())
+	{
+		auto &properties = json.array("properties");
+		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
+	}
 
 	if(json.count("objectalignment") > 0)
 	{
@@ -3711,11 +5667,9 @@ int tson::Tileset::getFirstgid() const
  * 'image': Image used for tiles in this set
  * @return
  */
-#ifndef DISABLE_CPP17_FILESYSTEM
+
 const fs::path &tson::Tileset::getImagePath() const { return m_image; }
-#else
-const std::string &tson::Tileset::getImagePath() const { return m_image; }
-#endif
+
 /*!
  * x = 'imagewidth' and y = 'imageheight': in pixels
  * @return
@@ -3792,11 +5746,9 @@ const std::string &tson::Tileset::getType() const
  * 'image': Image used for tiles in this set
  * @return
  */
-#ifndef DISABLE_CPP17_FILESYSTEM
+
 const fs::path &tson::Tileset::getImage() const { return m_image; }
-#else
-const std::string &tson::Tileset::getImage() const { return m_image; }
-#endif
+
 /*!
  * 'tiles': Array of Tiles (optional)
  * @return
@@ -3957,8 +5909,8 @@ namespace tson
 		public:
 			inline Map() = default;
 			inline Map(ParseStatus status, std::string description);
-			inline explicit Map(const nlohmann::json &json, tson::DecompressorContainer *decompressors);
-			inline bool parse(const nlohmann::json &json, tson::DecompressorContainer *decompressors);
+			inline explicit Map(IJson &json, tson::DecompressorContainer *decompressors);
+			inline bool parse(IJson &json, tson::DecompressorContainer *decompressors);
 
 			[[nodiscard]] inline const Colori &getBackgroundColor() const;
 			[[nodiscard]] inline const Vector2i &getSize() const;
@@ -3996,7 +5948,7 @@ namespace tson
 			inline Tileset * getTilesetByGid(uint32_t gid);
 
 		private:
-			inline void createTilesetData(const nlohmann::json &json);
+			inline void createTilesetData(IJson &json);
 			inline void processData();
 
 			Colori                                 m_backgroundColor;   /*! 'backgroundcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)*/;
@@ -4058,7 +6010,7 @@ tson::Map::Map(tson::ParseStatus status, std::string description) : m_status {st
  * @param json A json object with the format of Map
  * @return true if all mandatory fields was found. false otherwise.
  */
-tson::Map::Map(const nlohmann::json &json, tson::DecompressorContainer *decompressors)
+tson::Map::Map(IJson &json, tson::DecompressorContainer *decompressors)
 {
 	parse(json, decompressors);
 }
@@ -4068,12 +6020,14 @@ tson::Map::Map(const nlohmann::json &json, tson::DecompressorContainer *decompre
  * @param json A json object with the format of Map
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Map::parse(const nlohmann::json &json, tson::DecompressorContainer *decompressors)
+bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
 {
 	m_decompressors = decompressors;
 
 	bool allFound = true;
-	if(json.count("compressionlevel") > 0) m_compressionLevel = json["compressionlevel"].get<int>(); //Tiled 1.3 - Optional
+	if(json.count("compressionlevel") > 0)
+		m_compressionLevel = json["compressionlevel"].get<int>(); //Tiled 1.3 - Optional
+
 	if(json.count("backgroundcolor") > 0) m_backgroundColor = Colori(json["backgroundcolor"].get<std::string>()); //Optional
 	if(json.count("width") > 0 && json.count("height") > 0 )
 		m_size = {json["width"].get<int>(), json["height"].get<int>()}; else allFound = false;
@@ -4092,12 +6046,23 @@ bool tson::Map::parse(const nlohmann::json &json, tson::DecompressorContainer *d
 	if(json.count("version") > 0) m_version = json["version"].get<int>(); else allFound = false;
 
 	//More advanced data
-	if(json.count("layers") > 0 && json["layers"].is_array())
-		std::for_each(json["layers"].begin(), json["layers"].end(), [&](const nlohmann::json &item) { m_layers.emplace_back(item, this); });
+	if(json.count("layers") > 0 && json["layers"].isArray())
+	{
+		auto &array = json.array("layers");
+		std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
+		{
+			m_layers.emplace_back(*item, this);
+		});
+	}
 
-	if(json.count("properties") > 0 && json["properties"].is_array())
-		std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
-
+	if(json.count("properties") > 0 && json["properties"].isArray())
+	{
+		auto &array = json.array("properties");
+		std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
+		{
+			m_properties.add(*item);
+		});
+	}
 	createTilesetData(json);
 	processData();
 
@@ -4107,21 +6072,22 @@ bool tson::Map::parse(const nlohmann::json &json, tson::DecompressorContainer *d
 /*!
  * Tileset data must be created in two steps to prevent malformed tson::Tileset pointers inside tson::Tile
  */
-void tson::Map::createTilesetData(const nlohmann::json &json)
+void tson::Map::createTilesetData(IJson &json)
 {
-	if(json.count("tilesets") > 0 && json["tilesets"].is_array())
+	if(json.count("tilesets") > 0 && json["tilesets"].isArray())
 	{
 		//First created tileset objects
-		std::for_each(json["tilesets"].begin(), json["tilesets"].end(), [&](const nlohmann::json &item)
+		auto &tilesets = json.array("tilesets");
+		std::for_each(tilesets.begin(), tilesets.end(), [&](std::unique_ptr<IJson> &item)
 		{
 			m_tilesets.emplace_back();
 		});
 
 		int i = 0;
 		//Then do the parsing
-		std::for_each(json["tilesets"].begin(), json["tilesets"].end(), [&](const nlohmann::json &item)
+		std::for_each(tilesets.begin(), tilesets.end(), [&](std::unique_ptr<IJson> &item)
 		{
-			m_tilesets[i].parse(item, this);
+			m_tilesets[i].parse(*item, this);
 			++i;
 		});
 	}
@@ -4412,8 +6378,6 @@ int tson::Map::getCompressionLevel() const
 // Created by robin on 01.08.2020.
 //
 
-#ifndef DISABLE_CPP17_FILESYSTEM
-
 #ifndef TILESON_PROJECT_HPP
 #define TILESON_PROJECT_HPP
 
@@ -4426,8 +6390,6 @@ int tson::Map::getCompressionLevel() const
 // Created by robin on 01.08.2020.
 //
 
-#ifndef DISABLE_CPP17_FILESYSTEM
-
 #ifndef TILESON_WORLD_HPP
 #define TILESON_WORLD_HPP
 
@@ -4437,8 +6399,6 @@ int tson::Map::getCompressionLevel() const
 // Created by robin on 01.08.2020.
 //
 
-#ifndef DISABLE_CPP17_FILESYSTEM
-
 #ifndef TILESON_WORLDMAPDATA_HPP
 #define TILESON_WORLDMAPDATA_HPP
 
@@ -4447,8 +6407,8 @@ namespace tson
 	class WorldMapData
 	{
 		public:
-			inline WorldMapData(const fs::path &folder_, const nlohmann::json &json);
-			inline void parse(const fs::path &folder_, const nlohmann::json &json);
+			inline WorldMapData(const fs::path &folder_, IJson &json);
+			inline void parse(const fs::path &folder_, IJson &json);
 			//inline WorldMapData(fs::path folder_, std::string fileName_) : folder {std::move(folder_)}, fileName {fileName_}
 			//{
 			//    path = folder / fileName;
@@ -4461,12 +6421,12 @@ namespace tson
 			tson::Vector2i position;
 	};
 
-	WorldMapData::WorldMapData(const fs::path &folder_, const nlohmann::json &json)
+	WorldMapData::WorldMapData(const fs::path &folder_, IJson &json)
 	{
 		parse(folder_, json);
 	}
 
-	void WorldMapData::parse(const fs::path &folder_, const nlohmann::json &json)
+	void WorldMapData::parse(const fs::path &folder_, IJson &json)
 	{
 		folder = folder_;
 		if(json.count("fileName") > 0) fileName = json["fileName"].get<std::string>();
@@ -4478,8 +6438,6 @@ namespace tson
 }
 
 #endif //TILESON_WORLDMAPDATA_HPP
-
-#endif //DISABLE_CPP17_FILESYSTEM
 /*** End of inlined file: WorldMapData.hpp ***/
 
 #include <memory>
@@ -4489,8 +6447,11 @@ namespace tson
 	class World
 	{
 		public:
-			inline World() = default;
-			inline explicit World(const fs::path &path);
+			inline explicit World(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>()) : m_json {std::move(jsonParser)}
+			{
+			}
+
+			inline explicit World(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>());
 			inline bool parse(const fs::path &path);
 			inline int loadMaps(tson::Tileson *parser); //tileson_forward.hpp
 			inline bool contains(std::string_view filename);
@@ -4504,8 +6465,9 @@ namespace tson
 			[[nodiscard]] inline const std::vector<std::unique_ptr<tson::Map>> &getMaps() const;
 
 		private:
-			inline void parseJson(const nlohmann::json &json);
+			inline void parseJson(IJson &json);
 
+			std::unique_ptr<IJson> m_json = nullptr;
 			fs::path m_path;
 			fs::path m_folder;
 			std::vector<WorldMapData> m_mapData;
@@ -4514,7 +6476,7 @@ namespace tson
 			std::string m_type;
 	};
 
-	World::World(const fs::path &path)
+	World::World(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser) : m_json {std::move(jsonParser)}
 	{
 		parse(path);
 	}
@@ -4523,20 +6485,11 @@ namespace tson
 	{
 		m_path = path;
 		m_folder = m_path.parent_path();
-		std::ifstream i(m_path.u8string());
-		nlohmann::json json;
-		try
-		{
-			i >> json;
-		}
-		catch(const nlohmann::json::parse_error &error)
-		{
-			std::string message = "Parse error: ";
-			message += std::string(error.what());
-			message += std::string("\n");
+
+		if(!m_json->parse(path))
 			return false;
-		}
-		parseJson(json);
+
+		parseJson(*m_json);
 		return true;
 	}
 
@@ -4560,14 +6513,15 @@ namespace tson
 		return m_type;
 	}
 
-	void World::parseJson(const nlohmann::json &json)
+	void World::parseJson(IJson &json)
 	{
 		if(json.count("onlyShowAdjacentMaps") > 0) m_onlyShowAdjacentMaps = json["onlyShowAdjacentMaps"].get<bool>();
 		if(json.count("type") > 0) m_type = json["type"].get<std::string>();
 
-		if(json["maps"].is_array())
+		if(json["maps"].isArray())
 		{
-			std::for_each(json["maps"].begin(), json["maps"].end(), [&](const nlohmann::json &item) { m_mapData.emplace_back(m_folder, item); });
+			auto &maps = json.array("maps");
+			std::for_each(maps.begin(), maps.end(), [&](std::unique_ptr<IJson> &item) { m_mapData.emplace_back(m_folder, *item); });
 		}
 	}
 
@@ -4613,8 +6567,6 @@ namespace tson
 }
 
 #endif //TILESON_WORLD_HPP
-
-#endif //DISABLE_CPP17_FILESYSTEM
 /*** End of inlined file: World.hpp ***/
 
 
@@ -4623,8 +6575,6 @@ namespace tson
 //
 // Created by robin on 01.08.2020.
 //
-
-#ifndef DISABLE_CPP17_FILESYSTEM
 
 #ifndef TILESON_PROJECTFOLDER_HPP
 #define TILESON_PROJECTFOLDER_HPP
@@ -4725,8 +6675,6 @@ namespace tson
 }
 
 #endif //TILESON_PROJECTFOLDER_HPP
-
-#endif //DISABLE_CPP17_FILESYSTEM
 /*** End of inlined file: ProjectFolder.hpp ***/
 
 
@@ -4734,8 +6682,6 @@ namespace tson
 //
 // Created by robin on 01.08.2020.
 //
-
-#ifndef DISABLE_CPP17_FILESYSTEM
 
 #ifndef TILESON_PROJECTDATA_HPP
 #define TILESON_PROJECTDATA_HPP
@@ -4759,8 +6705,6 @@ namespace tson
 }
 
 #endif //TILESON_PROJECTDATA_HPP
-
-#endif //DISABLE_CPP17_FILESYSTEM
 /*** End of inlined file: ProjectData.hpp ***/
 
 namespace tson
@@ -4768,8 +6712,11 @@ namespace tson
 	class Project
 	{
 		public:
-			inline Project() = default;
-			inline explicit Project(const fs::path &path);
+			inline explicit Project(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>()) : m_json {std::move(jsonParser)}
+			{
+
+			}
+			inline explicit Project(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>());
 			inline bool parse(const fs::path &path);
 
 			[[nodiscard]] inline const ProjectData &getData() const;
@@ -4777,13 +6724,14 @@ namespace tson
 			[[nodiscard]] inline const std::vector<ProjectFolder> &getFolders() const;
 
 		private:
-			inline void parseJson(const nlohmann::json &json);
+			inline void parseJson(IJson &json);
 			fs::path m_path;
 			std::vector<ProjectFolder> m_folders;
 			ProjectData m_data;
+			std::unique_ptr<IJson> m_json = nullptr;
 	};
 
-	Project::Project(const fs::path &path)
+	Project::Project(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser) : m_json {std::move(jsonParser)}
 	{
 		parse(path);
 	}
@@ -4792,19 +6740,20 @@ namespace tson
 	{
 		m_path = path;
 		std::ifstream i(m_path.u8string());
-		nlohmann::json json;
+
 		try
 		{
-			i >> json;
+			if(!m_json->parse(path))
+				return false;
 		}
-		catch(const nlohmann::json::parse_error &error)
+		catch(const std::exception &error)
 		{
 			std::string message = "Parse error: ";
 			message += std::string(error.what());
 			message += std::string("\n");
 			return false;
 		}
-		parseJson(json);
+		parseJson(*m_json);
 		return true;
 	}
 
@@ -4813,7 +6762,7 @@ namespace tson
 		return m_data;
 	}
 
-	void Project::parseJson(const nlohmann::json &json)
+	void Project::parseJson(IJson &json)
 	{
 		m_data.basePath = m_path.parent_path(); //The directory of the project file
 
@@ -4821,9 +6770,10 @@ namespace tson
 		if(json.count("commands") > 0)
 		{
 			m_data.commands.clear();
-			std::for_each(json["commands"].begin(), json["commands"].end(), [&](const nlohmann::json &item)
+			auto &commands = json.array("commands");
+			std::for_each(commands.begin(), commands.end(), [&](std::unique_ptr<IJson> &item)
 			{
-				m_data.commands.emplace_back(item.get<std::string>());
+				m_data.commands.emplace_back(item->get<std::string>());
 			});
 		}
 		if(json.count("extensionsPath") > 0) m_data.extensionsPath = json["extensionsPath"].get<std::string>();
@@ -4831,9 +6781,10 @@ namespace tson
 		{
 			m_data.folders.clear();
 			m_data.folderPaths.clear();
-			std::for_each(json["folders"].begin(), json["folders"].end(), [&](const nlohmann::json &item)
+			auto &folders = json.array("folders");
+			std::for_each(folders.begin(), folders.end(), [&](std::unique_ptr<IJson> &item)
 			{
-				std::string folder = item.get<std::string>();
+				std::string folder = item->get<std::string>();
 				m_data.folders.emplace_back(folder);
 				m_data.folderPaths.emplace_back(m_data.basePath / folder);
 				m_folders.emplace_back(m_data.basePath / folder);
@@ -4857,82 +6808,22 @@ namespace tson
 
 #endif //TILESON_PROJECT_HPP
 
-#endif //DISABLE_CPP17_FILESYSTEM
-
 /*** End of inlined file: Project.hpp ***/
-
-
-/*** Start of inlined file: MemoryStream.hpp ***/
-//
-// Created by robin on 22.03.2020.
-//
-
-#ifndef TILESON_MEMORYSTREAM_HPP
-#define TILESON_MEMORYSTREAM_HPP
-
-
-/*** Start of inlined file: MemoryBuffer.hpp ***/
-//
-// Created by robin on 22.03.2020.
-//
-
-#ifndef TILESON_MEMORYBUFFER_HPP
-#define TILESON_MEMORYBUFFER_HPP
-
-#include <iostream>
-
-namespace tson
-{
-	class MemoryBuffer : public std::basic_streambuf<char> {
-		public:
-			MemoryBuffer(const uint8_t *p, size_t l) {
-				setg((char*)p, (char*)p, (char*)p + l);
-			}
-	};
-}
-
-#endif //TILESON_MEMORYBUFFER_HPP
-
-/*** End of inlined file: MemoryBuffer.hpp ***/
-
-namespace tson
-{
-	class MemoryStream : public std::istream {
-		public:
-			MemoryStream(const uint8_t *p, size_t l) :
-					std::istream(&m_buffer),
-					m_buffer(p, l) {
-				rdbuf(&m_buffer);
-			}
-
-		private:
-			MemoryBuffer m_buffer;
-	};
-}
-
-#endif //TILESON_MEMORYSTREAM_HPP
-
-/*** End of inlined file: MemoryStream.hpp ***/
-
-#include <fstream>
-#include <sstream>
-#include <memory>
 
 namespace tson
 {
 	class Tileson
 	{
 		public:
-			inline explicit Tileson(bool includeBase64Decoder = true);
-			#ifndef DISABLE_CPP17_FILESYSTEM
+			inline explicit Tileson(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>(), bool includeBase64Decoder = true);
+
 			inline std::unique_ptr<tson::Map> parse(const fs::path &path);
-			#else
-			inline std::unique_ptr<tson::Map> parse(const std::string &path);
-			#endif
 			inline std::unique_ptr<tson::Map> parse(const void * data, size_t size);
 			inline tson::DecompressorContainer *decompressors();
+
 		private:
-			inline std::unique_ptr<tson::Map> parseJson(const nlohmann::json &json);
+			inline std::unique_ptr<tson::Map> parseJson();
+			std::unique_ptr<tson::IJson> m_json;
 			tson::DecompressorContainer m_decompressors;
 	};
 }
@@ -4942,7 +6833,7 @@ namespace tson
  * @param includeBase64Decoder Includes the base64-decoder from "Base64Decompressor.hpp" if true.
  * Otherwise no other decompressors/decoders than whatever the user itself have added will be used.
  */
-tson::Tileson::Tileson(bool includeBase64Decoder)
+tson::Tileson::Tileson(std::unique_ptr<tson::IJson> jsonParser, bool includeBase64Decoder) : m_json {std::move(jsonParser)}
 {
 	if(includeBase64Decoder)
 		m_decompressors.add<Base64Decompressor>();
@@ -4953,52 +6844,19 @@ tson::Tileson::Tileson(bool includeBase64Decoder)
  * @param path path to file
  * @return parsed data as Map
  */
-#ifndef DISABLE_CPP17_FILESYSTEM
 std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
 {
-	if(fs::exists(path) && fs::is_regular_file(path))
+
+	if(m_json->parse(path))
 	{
-		std::ifstream i(path.u8string());
-		nlohmann::json json;
-		try
-		{
-			i >> json;
-		}
-		catch(const nlohmann::json::parse_error &error)
-		{
-			std::string message = "Parse error: ";
-			message += std::string(error.what());
-			message += std::string("\n");
-			return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, message);
-		}
-		return parseJson(json);
+		return std::move(parseJson());
 	}
 
 	std::string msg = "File not found: ";
 	msg += std::string(path.u8string());
 	return std::make_unique<tson::Map>(tson::ParseStatus::FileNotFound, msg);
 }
-#else
-[[deprecated("std::filesystem will be required in future versions and DISABLE_CPP17_FILESYSTEM will be removed")]]
-std::unique_ptr<tson::Map> tson::Tileson::parse(const std::string &path)
-{
 
-	std::ifstream i(path);
-	nlohmann::json json;
-	try
-	{
-		i >> json;
-	}
-	catch(const nlohmann::json::parse_error &error)
-	{
-		std::string message = "Parse error: ";
-		message += std::string(error.what());
-		message += std::string("\n");
-		return std::make_unique<tson::Map> (tson::ParseStatus::ParseError, message);
-	}
-	return std::move(parseJson(json));
-}
-#endif
 /*!
  * Parses Tiled json map data by memory
  * @param data The data to parse
@@ -5012,20 +6870,10 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size)
 
 	tson::MemoryStream mem {(uint8_t *)data, size};
 
-	nlohmann::json json;
-	try
-	{
-		mem >> json;
-	}
-	catch (const nlohmann::json::parse_error& error)
-	{
-		std::string message = "Parse error: ";
-		message += std::string(error.what());
-		message += std::string("\n");
-		return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, message);
-	}
+	if(!m_json->parse(data, size))
+		return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, "Memory error");
 
-	return std::move(parseJson(json));
+	return std::move(parseJson());
 }
 
 /*!
@@ -5033,10 +6881,11 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size)
  * @param json Tiled json to parse
  * @return parsed data as Map
  */
-std::unique_ptr<tson::Map> tson::Tileson::parseJson(const nlohmann::json &json)
+std::unique_ptr<tson::Map> tson::Tileson::parseJson()
 {
 	std::unique_ptr<tson::Map> map = std::make_unique<tson::Map>();
-	if(map->parse(json, &m_decompressors))
+
+	if(map->parse(*m_json, &m_decompressors))
 		return std::move(map);
 
 	return std::make_unique<tson::Map> (tson::ParseStatus::MissingData, "Missing map data...");
@@ -5194,7 +7043,7 @@ void tson::Layer::decompressData()
  * @param parser A Tileson object used for parsing the maps of the world.
  * @return How many maps who were parsed. Remember to call getStatus() for the actual map to find out if everything went okay.
  */
-#ifndef DISABLE_CPP17_FILESYSTEM
+
 int tson::World::loadMaps(tson::Tileson *parser)
 {
 	m_maps.clear();
@@ -5209,7 +7058,6 @@ int tson::World::loadMaps(tson::Tileson *parser)
 
 	return m_maps.size();
 }
-#endif
 
 #endif //TILESON_TILESON_FORWARD_HPP
 

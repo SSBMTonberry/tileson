@@ -9,38 +9,6 @@
 
 //#if USE_CPP17_FILESYSTEM
 
-
-#ifndef DISABLE_CPP17_FILESYSTEM
-    #if _MSC_VER && !__INTEL_COMPILER
-        #include <filesystem>
-        namespace fs = std::filesystem;
-    #elif __MINGW64__
-        #if __MINGW64_VERSION_MAJOR > 6
-            #include <filesystem>
-            namespace fs = std::filesystem;
-        #else
-            #include <experimental/filesystem>
-            namespace fs = std::experimental::filesystem;
-        #endif
-    #elif __clang__
-        #if __clang_major__ < 8
-            #include <experimental/filesystem>
-            namespace fs = std::experimental::filesystem;
-        #else
-            #include <filesystem>
-            namespace fs = std::filesystem;
-        #endif
-    #else //Linux
-        #if __GNUC__ < 8 //GCC major version less than 8
-            #include <experimental/filesystem>
-            namespace fs = std::experimental::filesystem;
-        #else
-            #include <filesystem>
-            namespace fs = std::filesystem;
-        #endif
-    #endif
-#endif
-
 #include <any>
 #include <string>
 #include "../common/Enums.hpp"
@@ -65,7 +33,7 @@ namespace tson
             //};
 
             inline Property();
-            inline Property(const nlohmann::json &json);
+            inline Property(IJson &json);
             inline Property(std::string name, std::any value, Type type);
 
             inline void setValue(const std::any &value);
@@ -82,7 +50,7 @@ namespace tson
 
         protected:
             inline void setTypeByString(const std::string &str);
-            inline void setValueByType(const nlohmann::json &json);
+            inline void setValueByType(IJson &json);
 
             Type m_type = Type::Undefined;
             std::string m_name;
@@ -112,7 +80,7 @@ tson::Property::Property() : m_name {"unnamed"}
 
 }
 
-tson::Property::Property(const nlohmann::json &json)
+tson::Property::Property(IJson &json)
 {
     setTypeByString(json["type"].get<std::string>());
     setValueByType(json["value"]);
@@ -203,7 +171,7 @@ void tson::Property::setTypeByString(const std::string &str)
         m_type = tson::Type::Undefined;
 }
 
-void tson::Property::setValueByType(const nlohmann::json &json)
+void tson::Property::setValueByType(IJson &json)
 {
     switch(m_type)
     {
@@ -212,11 +180,7 @@ void tson::Property::setValueByType(const nlohmann::json &json)
             break;
 
         case Type::File:
-            #ifndef DISABLE_CPP17_FILESYSTEM
             m_value = fs::path(json.get<std::string>());
-            #else
-            m_value = json.get<std::string>();
-            #endif
             break;
 
         case Type::Int:

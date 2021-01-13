@@ -15,9 +15,9 @@ namespace tson
         public:
             inline Terrain() = default;
             inline Terrain(std::string name, int tile);
-            inline explicit Terrain(const nlohmann::json &json);
+            inline explicit Terrain(IJson &json);
 
-            inline bool parse(const nlohmann::json &json);
+            inline bool parse(IJson &json);
 
             [[nodiscard]] inline const std::string &getName() const;
             [[nodiscard]] inline int getTile() const;
@@ -51,20 +51,23 @@ tson::Terrain::Terrain(std::string name, int tile) : m_name {std::move(name)}, m
 
 }
 
-tson::Terrain::Terrain(const nlohmann::json &json)
+tson::Terrain::Terrain(IJson &json)
 {
     parse(json);
 }
 
-bool tson::Terrain::parse(const nlohmann::json &json)
+bool tson::Terrain::parse(IJson &json)
 {
     bool allFound = true;
 
     if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
     if(json.count("tile") > 0) m_tile = json["tile"].get<int>(); else allFound = false;
 
-    if(json.count("properties") > 0 && json["properties"].is_array())
-        std::for_each(json["properties"].begin(), json["properties"].end(), [&](const nlohmann::json &item) { m_properties.add(item); });
+    if(json.count("properties") > 0 && json["properties"].isArray())
+    {
+        auto &properties = json.array("properties");
+        std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
+    }
 
     return allFound;
 }
