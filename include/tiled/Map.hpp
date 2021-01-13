@@ -9,6 +9,7 @@
 #include "../objects/Vector2.hpp"
 //#include "../external/json.hpp"
 #include "interfaces/IJson.hpp"
+#include "json/NlohmannJson.hpp"
 #include "json/PicoJson.hpp"
 #include "Layer.hpp"
 #include "Tileset.hpp"
@@ -163,7 +164,6 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
     if(json.count("layers") > 0 && json["layers"].isArray())
     {
         auto &array = json.array("layers");
-        size_t size = array.size();
         std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
         {
             m_layers.emplace_back(*item, this);
@@ -173,7 +173,6 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
     if(json.count("properties") > 0 && json["properties"].isArray())
     {
         auto &array = json.array("properties");
-        size_t size = array.size();
         std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
         {
             m_properties.add(*item);

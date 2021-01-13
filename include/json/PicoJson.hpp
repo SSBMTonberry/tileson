@@ -145,11 +145,11 @@ namespace tson
                         std::string error = picojson::parse(*m_data, i);
                         if(!error.empty())
                         {
-                            std::cerr << error << "\n";
+                            std::cerr << "PicoJson error: " << error << "\n";
                             return false;
                         }
                         //i >> *m_data;
-                        //m_json = m_data.get();
+                        m_json = m_data.get();
                     }
                     catch (const std::exception &error)
                     {
@@ -177,7 +177,7 @@ namespace tson
                         return false;
                     }
                     //mem >> *m_data;
-                    //m_json = m_data.get();
+                    m_json = m_data.get();
                 }
                 catch (const std::exception &error)
                 {

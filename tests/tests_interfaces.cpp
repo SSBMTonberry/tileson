@@ -3,11 +3,11 @@
 //
 
 #include "../external_libs/catch.hpp"
+#include "../include/external/nlohmann.hpp"
 #include "../include/tileson.h"
 //#include "IJsonFakes.hpp"
 
-#include "../include/external/nlohmann.hpp"
-#include "../include/json/NlohmannJson.hpp"
+//#include "../include/json/NlohmannJson.hpp"
 
 
 
@@ -189,4 +189,23 @@ TEST_CASE( "Test a nlohmann implementation of IJson", "[json][interface]" )
     REQUIRE( wang.at(3)->array("wangid").at(2)->get<int>() == 1);
     REQUIRE( props.size() == 2);
     REQUIRE( wang.size() == 11);
+}
+
+TEST_CASE( "Test a picojson implementation of IJson", "[json][interface]" )
+{
+
+    fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
+    fs::path pathTravis {"../content/test-maps/ultimate_test.json"};
+    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+
+    std::unique_ptr<tson::IJson> j = std::make_unique<tson::PicoJson>();
+    tson::IJson &json = *j;
+    bool loadedFine = json.parse(pathToUse);
+    REQUIRE(loadedFine);
+
+    size_t c = json.count("compressionlevel");
+    REQUIRE(c > 0);
+
+    int compressionLevel = json["compressionlevel"].get<int>();
+    REQUIRE(compressionLevel == -1);
 }
