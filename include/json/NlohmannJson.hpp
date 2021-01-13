@@ -81,6 +81,7 @@ namespace tson
 
             inline bool parse(const fs::path &path) override
             {
+                clearCache();
                 m_data = nullptr;
                 m_json = nullptr;
                 if (fs::exists(path) && fs::is_regular_file(path))
@@ -107,6 +108,7 @@ namespace tson
 
             inline bool parse(const void *data, size_t size) override
             {
+                clearCache();
                 m_json = nullptr;
                 m_data = std::make_unique<nlohmann::json>();
                 tson::MemoryStream mem{(uint8_t *) data, size};
@@ -233,6 +235,13 @@ namespace tson
             }
 
         private:
+            inline void clearCache()
+            {
+                m_arrayCache.clear();
+                m_arrayPosCache.clear();
+                m_arrayListDataCache.clear();
+            }
+
             nlohmann::json *m_json = nullptr;
             std::unique_ptr<nlohmann::json> m_data = nullptr; //Only used if this is the owner json!
 
