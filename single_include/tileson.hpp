@@ -4603,8 +4603,11 @@ namespace tson
 	class World
 	{
 		public:
-			inline World() = default;
-			inline explicit World(const fs::path &path);
+			inline explicit World(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>()) : m_json {std::move(jsonParser)}
+			{
+			}
+
+			inline explicit World(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>());
 			inline bool parse(const fs::path &path);
 			inline int loadMaps(tson::Tileson *parser); //tileson_forward.hpp
 			inline bool contains(std::string_view filename);
@@ -4629,31 +4632,19 @@ namespace tson
 			std::string m_type;
 	};
 
-	World::World(const fs::path &path)
+	World::World(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser) : m_json {std::move(jsonParser)}
 	{
 		parse(path);
 	}
 
 	bool World::parse(const fs::path &path)
 	{
-		m_json = std::make_unique<tson::PicoJson>();
 		m_path = path;
 		m_folder = m_path.parent_path();
+
 		if(!m_json->parse(path))
 			return false;
-		//std::ifstream i(m_path.u8string());
-		//nlohmann::json json;
-		//try
-		//{
-		//    i >> json;
-		//}
-		//catch(IJson::parse_error &error)
-		//{
-		//    std::string message = "Parse error: ";
-		//    message += std::string(error.what());
-		//    message += std::string("\n");
-		//    return false;
-		//}
+
 		parseJson(*m_json);
 		return true;
 	}
@@ -4877,8 +4868,11 @@ namespace tson
 	class Project
 	{
 		public:
-			inline Project() = default;
-			inline explicit Project(const fs::path &path);
+			inline explicit Project(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>()) : m_json {std::move(jsonParser)}
+			{
+
+			}
+			inline explicit Project(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>());
 			inline bool parse(const fs::path &path);
 
 			[[nodiscard]] inline const ProjectData &getData() const;
@@ -4893,7 +4887,7 @@ namespace tson
 			std::unique_ptr<IJson> m_json = nullptr;
 	};
 
-	Project::Project(const fs::path &path)
+	Project::Project(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser) : m_json {std::move(jsonParser)}
 	{
 		parse(path);
 	}
@@ -4907,7 +4901,6 @@ namespace tson
 		{
 			if(!m_json->parse(path))
 				return false;
-			//i >> json;
 		}
 		catch(const std::exception &error)
 		{

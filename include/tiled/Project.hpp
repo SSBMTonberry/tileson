@@ -17,8 +17,11 @@ namespace tson
     class Project
     {
         public:
-            inline Project() = default;
-            inline explicit Project(const fs::path &path);
+            inline explicit Project(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>()) : m_json {std::move(jsonParser)}
+            {
+
+            }
+            inline explicit Project(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>());
             inline bool parse(const fs::path &path);
 
             [[nodiscard]] inline const ProjectData &getData() const;
@@ -33,7 +36,7 @@ namespace tson
             std::unique_ptr<IJson> m_json = nullptr;
     };
 
-    Project::Project(const fs::path &path)
+    Project::Project(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser) : m_json {std::move(jsonParser)}
     {
         parse(path);
     }
@@ -47,7 +50,6 @@ namespace tson
         {
             if(!m_json->parse(path))
                 return false;
-            //i >> json;
         }
         catch(const std::exception &error)
         {

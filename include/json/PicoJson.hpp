@@ -22,15 +22,7 @@ namespace tson
                     {
                         picojson::object &o = m_json->get<picojson::object>();
                         m_arrayCache[key.data()] = std::make_unique<PicoJson>(&o[key.data()]);
-                        //m_arrayCache[key.data()] = std::make_unique<PicoJson>(&m_json->operator[](key.data()));
                     }
-                    //else
-                    //{
-                    //    bool isArray = m_json->is<picojson::array>();
-//
-                    //    picojson::value &v = m_json->get(key.data());
-                    //    m_arrayCache[key.data()] = std::make_unique<PicoJson>(&v);
-                    //}
                 }
 
                 return *m_arrayCache[key.data()].get();
@@ -40,16 +32,6 @@ namespace tson
             {
 
             }
-
-            //inline explicit PicoJson(const fs::path &path)
-            //{
-            //    parse(path);
-            //}
-//
-            //inline explicit PicoJson(const void *data, size_t size)
-            //{
-            //    parse(data, size);
-            //}
 
             inline IJson& at(std::string_view key) override
             {
@@ -95,7 +77,6 @@ namespace tson
             {
                 if(m_arrayListDataCache.count(key.data()) == 0)
                 {
-                    //if (m_json->count(key.data()) > 0 && m_json->operator[](key.data()).is_array())
                     if(count(key.data()) > 0)
                     {
                         if (isObject())
@@ -107,12 +88,10 @@ namespace tson
                             {
                                 picojson::array &a = v.get<picojson::array>();
 
-                                //std::for_each(m_json->operator[](key.data()).begin(), m_json->operator[](key.data()).end(), [&](nlohmann::json &item)
                                 std::for_each(a.begin(), a.end(), [&](picojson::value &item)
                                 {
                                     picojson::value *ptr = &item;
                                     m_arrayListDataCache[key.data()].emplace_back(std::make_unique<PicoJson>(ptr));
-                                    //m_arrayListRefCache[key.data()].emplace_back(*m_arrayListDataCache[key.data()].at(m_arrayListDataCache[key.data()].size() - 1));
                                 });
                             }
                         }
@@ -145,7 +124,7 @@ namespace tson
                         std::string error = picojson::parse(*m_data, i);
                         if(!error.empty())
                         {
-                            std::cerr << "PicoJson error: " << error << "\n";
+                            std::cerr << "PicoJson parse error: " << error << "\n";
                             return false;
                         }
                         //i >> *m_data;
@@ -173,7 +152,7 @@ namespace tson
                     std::string error = picojson::parse(*m_data, mem);
                     if(!error.empty())
                     {
-                        std::cerr << error << "\n";
+                        std::cerr << "PicoJson parse error: " << error << "\n";
                         return false;
                     }
                     //mem >> *m_data;
