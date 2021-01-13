@@ -8,9 +8,9 @@
 #include "../objects/Color.hpp"
 #include "../objects/Vector2.hpp"
 //#include "../external/json.hpp"
-#include "interfaces/IJson.hpp"
-#include "json/NlohmannJson.hpp"
-#include "json/PicoJson.hpp"
+#include "../interfaces/IJson.hpp"
+#include "../json/NlohmannJson.hpp"
+#include "../json/PicoJson.hpp"
 #include "Layer.hpp"
 #include "Tileset.hpp"
 

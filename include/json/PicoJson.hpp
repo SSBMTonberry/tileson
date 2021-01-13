@@ -114,7 +114,8 @@ namespace tson
 
             inline bool parse(const fs::path &path) override
             {
-
+                m_data = nullptr;
+                m_json = nullptr;
                 if (fs::exists(path) && fs::is_regular_file(path))
                 {
                     m_data = std::make_unique<picojson::value>();
@@ -145,6 +146,7 @@ namespace tson
 
             inline bool parse(const void *data, size_t size) override
             {
+                m_json = nullptr;
                 m_data = std::make_unique<picojson::value>();
                 tson::MemoryStream mem{(uint8_t *) data, size};
                 try

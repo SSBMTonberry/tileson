@@ -14,6 +14,7 @@
 #include <map>
 #include "vera_font.h"
 
+#include "../../include/external/nlohmann.hpp"
 #include "../../include/tileson.h"
 //#include "../../single_include/tileson.hpp"
 //#include "../../include/external/json.hpp"
@@ -71,7 +72,7 @@ class SfmlDemoManager
         std::string m_currentInfo;
         bool m_isImguiSizeSet = false;
 
-        tson::Project m_project;
+        tson::Project m_project; //Can also use Nlohmann like this: tson::Project m_project {std::make_unique<tson::NlohmannJson>()};
 
         sf::Font m_font;
         sf::Text m_demoText;

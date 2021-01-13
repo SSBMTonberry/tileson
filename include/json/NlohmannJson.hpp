@@ -28,16 +28,6 @@ namespace tson
 
             }
 
-            //inline explicit NlohmannJson(const fs::path &path)
-            //{
-            //    parse(path);
-            //}
-//
-            //inline explicit NlohmannJson(const void *data, size_t size)
-            //{
-            //    parse(data, size);
-            //}
-
             inline IJson& at(std::string_view key) override
             {
                 if(m_arrayCache.count(key.data()) == 0)
@@ -76,7 +66,6 @@ namespace tson
                         {
                             nlohmann::json *ptr = &item;
                             m_arrayListDataCache[key.data()].emplace_back(std::make_unique<NlohmannJson>(ptr));
-                            //m_arrayListRefCache[key.data()].emplace_back(*m_arrayListDataCache[key.data()].at(m_arrayListDataCache[key.data()].size() - 1));
                         });
                     }
                 }
@@ -92,6 +81,8 @@ namespace tson
 
             inline bool parse(const fs::path &path) override
             {
+                m_data = nullptr;
+                m_json = nullptr;
                 if (fs::exists(path) && fs::is_regular_file(path))
                 {
                     m_data = std::make_unique<nlohmann::json>();
@@ -116,6 +107,7 @@ namespace tson
 
             inline bool parse(const void *data, size_t size) override
             {
+                m_json = nullptr;
                 m_data = std::make_unique<nlohmann::json>();
                 tson::MemoryStream mem{(uint8_t *) data, size};
                 try
@@ -136,7 +128,6 @@ namespace tson
 
             [[nodiscard]] inline size_t count(std::string_view key) const override
             {
-                //return m_json->operator[](key.data()).count(key);
                 return m_json->count(key);
             }
 
@@ -246,11 +237,9 @@ namespace tson
             std::unique_ptr<nlohmann::json> m_data = nullptr; //Only used if this is the owner json!
 
             //Cache!
-            std::map<std::string, std::unique_ptr<NlohmannJson>> m_arrayCache;
-            std::map<size_t, std::unique_ptr<NlohmannJson>> m_arrayPosCache;
+            std::map<std::string, std::unique_ptr<IJson>> m_arrayCache;
+            std::map<size_t, std::unique_ptr<IJson>> m_arrayPosCache;
             std::map<std::string, std::vector<std::unique_ptr<IJson>>> m_arrayListDataCache;
-            //std::map<std::string, std::vector<std::reference_wrapper<IJson>>> m_arrayListRefCache;
-            //std::vector<IJson &>
 
     };
 }

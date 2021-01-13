@@ -3,7 +3,7 @@ project(tileson)
 
 set(CMAKE_CXX_STANDARD 17)
 set(TILESON_PROJECT_VERSION_MAJOR 1)
-set(TILESON_PROJECT_VERSION_MINOR 2)
+set(TILESON_PROJECT_VERSION_MINOR 3)
 set(TILESON_PROJECT_VERSION_PATCH 0)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DTILESON_DEBUG")
@@ -57,8 +57,8 @@ endif()
 
 #option(BUILD_SHARED_LIBS "Build shared libraries." OFF)
 option(BUILD_TESTS "Build unit tests." ON)
-option(BUILD_EXAMPLES "Build examples." OFF)
-option(CLEAR_TSON_CMAKE_CACHE "Clear CMake cache for variables. Activate if you are working on the code. Otherwise: keep it off" OFF)
+option(BUILD_EXAMPLES "Build examples." ON)
+option(CLEAR_TSON_CMAKE_CACHE "Clear CMake cache for variables. Activate if you are working on the code. Otherwise: keep it off" ON)
 
 #if(APPLE)
 #    option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" ON)
