@@ -154,82 +154,82 @@ namespace tson
             }
 
         protected:
-            [[nodiscard]] inline int32_t getInt32(std::string_view key) const override
+            [[nodiscard]] inline int32_t getInt32(std::string_view key) override
             {
                 return m_json->operator[](key.data()).get<int32_t>();
             }
 
-            [[nodiscard]] inline uint32_t getUInt32(std::string_view key) const override
+            [[nodiscard]] inline uint32_t getUInt32(std::string_view key) override
             {
                 return m_json->operator[](key.data()).get<uint32_t>();
             }
 
-            [[nodiscard]] inline int64_t getInt64(std::string_view key) const override
+            [[nodiscard]] inline int64_t getInt64(std::string_view key) override
             {
                 return m_json->operator[](key.data()).get<int64_t>();
             }
 
-            [[nodiscard]] inline uint64_t getUInt64(std::string_view key) const override
+            [[nodiscard]] inline uint64_t getUInt64(std::string_view key) override
             {
                 return m_json->operator[](key.data()).get<uint64_t>();
             }
 
-            [[nodiscard]] inline double getDouble(std::string_view key) const override
+            [[nodiscard]] inline double getDouble(std::string_view key) override
             {
                 return m_json->operator[](key.data()).get<double>();
             }
 
-            [[nodiscard]] inline std::string getString(std::string_view key) const override
+            [[nodiscard]] inline std::string getString(std::string_view key) override
             {
                 return m_json->operator[](key.data()).get<std::string>();
             }
 
-            [[nodiscard]] inline bool getBool(std::string_view key) const override
+            [[nodiscard]] inline bool getBool(std::string_view key) override
             {
                 return m_json->operator[](key.data()).get<bool>();
             }
 
-            [[nodiscard]] float getFloat(std::string_view key) const override
+            [[nodiscard]] float getFloat(std::string_view key) override
             {
                 return m_json->operator[](key.data()).get<float>();
             }
 
-            [[nodiscard]] inline int32_t getInt32() const override
+            [[nodiscard]] inline int32_t getInt32() override
             {
                 return m_json->get<int32_t>();
             }
 
-            [[nodiscard]] inline uint32_t getUInt32() const override
+            [[nodiscard]] inline uint32_t getUInt32() override
             {
                 return m_json->get<uint32_t>();
             }
 
-            [[nodiscard]] inline int64_t getInt64() const override
+            [[nodiscard]] inline int64_t getInt64() override
             {
                 return m_json->get<int64_t>();
             }
 
-            [[nodiscard]] inline uint64_t getUInt64() const override
+            [[nodiscard]] inline uint64_t getUInt64() override
             {
                 return m_json->get<uint64_t>();
             }
 
-            [[nodiscard]] inline double getDouble() const override
+            [[nodiscard]] inline double getDouble() override
             {
                 return m_json->get<double>();
             }
 
-            [[nodiscard]] inline std::string getString() const override
+            [[nodiscard]] inline std::string getString() override
             {
                 return m_json->get<std::string>();
             }
 
-            [[nodiscard]] inline bool getBool() const override
+            [[nodiscard]] inline bool getBool() override
             {
                 return m_json->get<bool>();
             }
 
-            [[nodiscard]] float getFloat() const override
+            [[nodiscard]] float getFloat() override
             {
                 return m_json->get<float>();
             }

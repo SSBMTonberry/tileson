@@ -21,18 +21,18 @@ namespace tson
                     //    picojson::object &o = m_json->get<picojson::object>();
                     //    m_arrayCache[key.data()] = std::make_unique<Gason>(&o[key.data()]);
                     //}
-                    if(m_json->value.getTag() == gason::JSON_OBJECT)
+                    if(m_json->getTag() == gason::JSON_OBJECT)
                     {
-                        m_arrayCache[key.data()] = std::make_unique<Gason>(m_objectCache[key.data()].toNode());
+                        m_arrayCache[key.data()] = std::make_unique<Gason>(&m_objectCache[key.data()]);
                     }
                 }
 
                 return *m_arrayCache[key.data()].get();
             }
 
-            inline explicit Gason(gason::JsonNode *json) : m_json {json}
+            inline explicit Gason(gason::JsonValue *json) : m_json {json}
             {
-
+                createObjCache();
             }
 
             inline IJson& at(std::string_view key) override
@@ -44,9 +44,9 @@ namespace tson
                     //    picojson::object &o = m_json->get<picojson::object>();
                     //    m_arrayCache[key.data()] = std::make_unique<Gason>(&o[key.data()]);
                     //}
-                    if(m_json->value.getTag() == gason::JSON_OBJECT)
+                    if(m_json->getTag() == gason::JSON_OBJECT)
                     {
-                        m_arrayCache[key.data()] = std::make_unique<Gason>(m_objectCache[key.data()].toNode());
+                        m_arrayCache[key.data()] = std::make_unique<Gason>(&m_objectCache[key.data()]);
                     }
                 }
                 return *m_arrayCache[key.data()].get();
@@ -57,11 +57,11 @@ namespace tson
                 if(m_arrayPosCache.count(pos) == 0)
                 {
                     int i = 0;
-                    for (auto item : m_json->value)
+                    for (auto item : *m_json)
                     {
                         if(i == pos)
                         {
-                            m_arrayPosCache[pos] = std::make_unique<Gason>(item->value.toNode());
+                            m_arrayPosCache[pos] = std::make_unique<Gason>(&item->value);
                             break;
                         }
                     }
@@ -75,11 +75,11 @@ namespace tson
             std::vector<std::unique_ptr<IJson>> array() override
             {
                 std::vector<std::unique_ptr<IJson>> vec;
-                if(m_json->value.getTag() == gason::JSON_ARRAY)
+                if(m_json->getTag() == gason::JSON_ARRAY)
                 {
-                    for (auto item : m_json->value)
+                    for (auto item : *m_json)
                     {
-                        vec.emplace_back(std::make_unique<Gason>(item->value.toNode()));
+                        vec.emplace_back(std::make_unique<Gason>(&item->value));
                     }
                     //picojson::array &a = m_json->get<picojson::array>();
                     //for (auto &item : a)
@@ -100,12 +100,12 @@ namespace tson
                     {
                         if(isObject())
                         {
-                            gason::JsonNode *node = m_objectCache[key.data()].toNode();
-                            if(node->value.getTag() == gason::JSON_ARRAY)
+                            gason::JsonValue *v = &m_objectCache[key.data()];
+                            if(v->getTag() == gason::JSON_ARRAY)
                             {
-                                for (auto item : m_json->value)
+                                for (auto item : *v)//*m_json)
                                 {
-                                    m_arrayListDataCache[key.data()].emplace_back(std::make_unique<Gason>(item->value.toNode()));
+                                    m_arrayListDataCache[key.data()].emplace_back(std::make_unique<Gason>(&item->value));
                                 }
                             }
                         }
@@ -161,6 +161,7 @@ namespace tson
                                std::istreambuf_iterator<char>());
 
                     m_data = std::make_unique<gason::JsonValue>();
+                    m_allocator = std::make_unique<gason::JsonAllocator>();
 
                     try
                     {
@@ -169,7 +170,8 @@ namespace tson
                             fprintf(stderr, "%s at %zd\n", gason::jsonStrError(status), m_endptr - str.data());
                             return false;
                         }
-                        m_json = m_data->toNode();
+                        m_json = m_data.get();
+                        createObjCache();
                     }
                     catch (const std::exception &error)
                     {
@@ -198,6 +200,7 @@ namespace tson
                            std::istreambuf_iterator<char>());
 
                 m_data = std::make_unique<gason::JsonValue>();
+                m_allocator = std::make_unique<gason::JsonAllocator>();
 
                 try
                 {
@@ -206,7 +209,8 @@ namespace tson
                         fprintf(stderr, "%s at %zd\n", gason::jsonStrError(status), m_endptr - str.data());
                         return false;
                     }
-                    m_json = m_data->toNode();
+                    m_json = m_data.get();
+                    createObjCache();
                 }
                 catch (const std::exception &error)
                 {
@@ -238,96 +242,96 @@ namespace tson
 
             [[nodiscard]] inline bool isArray() const override
             {
-                return m_json->value.getTag() == gason::JSON_ARRAY;
+                return m_json->getTag() == gason::JSON_ARRAY;
             }
 
             [[nodiscard]] inline bool isObject() const override
             {
-                return m_json->value.getTag() == gason::JSON_OBJECT;
+                return m_json->getTag() == gason::JSON_OBJECT;
             }
 
             [[nodiscard]] inline bool isNull() const override
             {
-                return m_json->value.getTag() == gason::JSON_NULL;
+                return m_json->getTag() == gason::JSON_NULL;
             }
 
         protected:
-            [[nodiscard]] inline int32_t getInt32(std::string_view key) const override
+            [[nodiscard]] inline int32_t getInt32(std::string_view key) override
             {
                 return getDouble(key);
             }
 
-            [[nodiscard]] inline uint32_t getUInt32(std::string_view key) const override
+            [[nodiscard]] inline uint32_t getUInt32(std::string_view key) override
             {
                 return getDouble(key);
             }
 
-            [[nodiscard]] inline int64_t getInt64(std::string_view key) const override
+            [[nodiscard]] inline int64_t getInt64(std::string_view key) override
             {
                 return getDouble(key);
             }
 
-            [[nodiscard]] inline uint64_t getUInt64(std::string_view key) const override
+            [[nodiscard]] inline uint64_t getUInt64(std::string_view key) override
             {
                 return getDouble(key);
             }
 
-            [[nodiscard]] inline double getDouble(std::string_view key) const override
+            [[nodiscard]] inline double getDouble(std::string_view key) override
             {
-                return 0;//m_objectCache[key.data()].;
+                return obj(key.data())->toNumber();
             }
 
-            [[nodiscard]] inline std::string getString(std::string_view key) const override
+            [[nodiscard]] inline std::string getString(std::string_view key) override
             {
-                return "NONE";//m_objectCache[key.data()] ->value.toString(); // .get<std::string>();
+                return obj(key.data())->toString(); // .get<std::string>();
             }
 
-            [[nodiscard]] inline bool getBool(std::string_view key) const override
+            [[nodiscard]] inline bool getBool(std::string_view key) override
             {
-                return false; //obj[key.data()].get<bool>();
+                return obj(key.data())->getTag() == gason::JSON_TRUE;
             }
 
-            [[nodiscard]] float getFloat(std::string_view key) const override
+            [[nodiscard]] float getFloat(std::string_view key) override
             {
                 return static_cast<float>(getDouble(key));
             }
 
-            [[nodiscard]] inline int32_t getInt32() const override
+            [[nodiscard]] inline int32_t getInt32() override
             {
                 return getDouble();
             }
 
-            [[nodiscard]] inline uint32_t getUInt32() const override
+            [[nodiscard]] inline uint32_t getUInt32() override
             {
                 return getDouble();
             }
 
-            [[nodiscard]] inline int64_t getInt64() const override
+            [[nodiscard]] inline int64_t getInt64() override
             {
                 return getDouble();
             }
 
-            [[nodiscard]] inline uint64_t getUInt64() const override
+            [[nodiscard]] inline uint64_t getUInt64() override
             {
                 return getDouble();
             }
 
-            [[nodiscard]] inline double getDouble() const override
+            [[nodiscard]] inline double getDouble() override
             {
-                return m_json->value.toNumber();
+                return m_json->toNumber();
             }
 
-            [[nodiscard]] inline std::string getString() const override
+            [[nodiscard]] inline std::string getString() override
             {
-                return m_json->value.toString();
+                return m_json->toString();
             }
 
-            [[nodiscard]] inline bool getBool() const override
+            [[nodiscard]] inline bool getBool() override
             {
-                return m_json->value.getTag() == gason::JSON_TRUE;
+                return m_json->getTag() == gason::JSON_TRUE;
             }
 
-            [[nodiscard]] float getFloat() const override
+            [[nodiscard]] float getFloat() override
             {
                 return static_cast<float>(getDouble());
             }
@@ -337,19 +341,23 @@ namespace tson
              * Creates a map of all objects if not already done, then returns them.
              * @return
              */
-            //const gason::JsonNode *obj(std::string_view key)
-            //{
-            //    createObjCache();
-            //    return m_objectCache[key.data()].toNode();
-            //}
+            const gason::JsonValue *obj(std::string_view key)
+            {
+                //createObjCache();
+                return &m_objectCache[key.data()];
+            }
 
             void createObjCache()
             {
                 if(m_objectCache.empty())
                 {
-                    for (auto i : m_json->value)
+                    //if(m_json->getTag() == gason::JSON_ARRAY || m_json->getTag() == gason::JSON_OBJECT)
+                    if(m_json->getTag() == gason::JSON_OBJECT)
                     {
-                        m_objectCache[i->key] = i->value; //i->value.toNode();
+                        for (auto i : *m_json)
+                        {
+                            m_objectCache[i->key] = i->value; //i->value.toNode();
+                        }
                     }
                 }
             }
@@ -367,13 +375,13 @@ namespace tson
             std::unique_ptr<gason::JsonValue> m_data = nullptr; //Only used if this is the owner json!
             std::unique_ptr<gason::JsonAllocator> m_allocator = nullptr;
 
-            gason::JsonNode *m_json = nullptr;
+            gason::JsonValue *m_json = nullptr;
 
 
 
             //Cache!
-            //std::map<std::string, gason::JsonNode*> m_objectCache;
             std::map<std::string, gason::JsonValue> m_objectCache;
+            //std::map<std::string, gason::JsonValue> m_objectCache;
 
             std::map<std::string, std::unique_ptr<IJson>> m_arrayCache;
             std::map<size_t, std::unique_ptr<IJson>> m_arrayPosCache;

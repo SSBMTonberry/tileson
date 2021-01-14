@@ -113,6 +113,33 @@ TEST_CASE( "Nlohmann - Parse a whole map by file", "[complete][parse][file]" )
     }
 }
 
+TEST_CASE( "Gason - Parse a whole map by file", "[complete][parse][file]" )
+{
+    tson::Tileson t{std::make_unique<tson::Gason>()};
+
+    fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
+    fs::path pathTravis {"../content/test-maps/ultimate_test.json"};
+    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+
+    std::unique_ptr<tson::Map> map = t.parse({pathToUse});
+    if(map->getStatus() == tson::ParseStatus::OK)
+    {
+        performMainAsserts(map.get());
+        checkChangesAfterTiledVersion124(map.get());
+        //Just check the colors here
+        tson::Colori color = map->getLayer("Object Layer")->firstObj("text")->getText().color;
+        REQUIRE(color.r == 254);
+        REQUIRE(color.g == 254);
+        REQUIRE(color.b == 254);
+        REQUIRE(color.a == 255);
+    }
+    else
+    {
+        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
+        REQUIRE(true);
+    }
+}
+
 TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" )
 {
     tson::Tileson t;
@@ -255,6 +282,22 @@ TEST_CASE( "Parse a whole map with base64 data by file", "[complete][parse][file
 TEST_CASE( "Parse a whole map by memory", "[complete][parse][memory]" )
 {
     tson::Tileson t;
+    std::unique_ptr<tson::Map> map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
+    if (map->getStatus() == tson::ParseStatus::OK)
+    {
+        performMainAsserts(map.get());
+    }
+    else
+    {
+        std::cout << "Memory parse error - " << map->getStatusMessage() << std::endl;
+        //REQUIRE(true);
+        FAIL("Unexpected memory read failure!");
+    }
+}
+
+TEST_CASE( "Gason - Parse a whole map by memory", "[complete][parse][memory]" )
+{
+    tson::Tileson t {std::make_unique<tson::Gason>()};
     std::unique_ptr<tson::Map> map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
     if (map->getStatus() == tson::ParseStatus::OK)
     {

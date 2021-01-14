@@ -30,9 +30,9 @@ namespace tson
             [[nodiscard]] virtual bool parse(const void *data, size_t size) = 0;
 
             template <typename T>
-            [[nodiscard]] T get(std::string_view key) const;
+            [[nodiscard]] T get(std::string_view key);
             template <typename T>
-            [[nodiscard]] T get() const;
+            [[nodiscard]] T get();
             [[nodiscard]] virtual size_t count(std::string_view key) const = 0;
             [[nodiscard]] virtual bool any(std::string_view key) const = 0;
             [[nodiscard]] virtual bool isArray() const = 0;
@@ -40,27 +40,27 @@ namespace tson
             [[nodiscard]] virtual bool isNull() const = 0;
 
         protected:
-            [[nodiscard]] virtual int32_t getInt32(std::string_view key) const = 0;
-            [[nodiscard]] virtual uint32_t getUInt32(std::string_view key) const = 0;
-            [[nodiscard]] virtual int64_t getInt64(std::string_view key) const = 0;
-            [[nodiscard]] virtual uint64_t getUInt64(std::string_view key) const = 0;
-            [[nodiscard]] virtual double getDouble(std::string_view key) const = 0;
-            [[nodiscard]] virtual float getFloat(std::string_view key) const = 0;
-            [[nodiscard]] virtual std::string getString(std::string_view key) const = 0;
-            [[nodiscard]] virtual bool getBool(std::string_view key) const = 0;
+            [[nodiscard]] virtual int32_t getInt32(std::string_view key) = 0;
+            [[nodiscard]] virtual uint32_t getUInt32(std::string_view key) = 0;
+            [[nodiscard]] virtual int64_t getInt64(std::string_view key) = 0;
+            [[nodiscard]] virtual uint64_t getUInt64(std::string_view key) = 0;
+            [[nodiscard]] virtual double getDouble(std::string_view key) = 0;
+            [[nodiscard]] virtual float getFloat(std::string_view key) = 0;
+            [[nodiscard]] virtual std::string getString(std::string_view key) = 0;
+            [[nodiscard]] virtual bool getBool(std::string_view key) = 0;
 
-            [[nodiscard]] virtual int32_t getInt32() const = 0;
-            [[nodiscard]] virtual uint32_t getUInt32() const = 0;
-            [[nodiscard]] virtual int64_t getInt64() const = 0;
-            [[nodiscard]] virtual uint64_t getUInt64() const = 0;
-            [[nodiscard]] virtual double getDouble() const = 0;
-            [[nodiscard]] virtual float getFloat() const = 0;
-            [[nodiscard]] virtual std::string getString() const = 0;
-            [[nodiscard]] virtual bool getBool() const = 0;
+            [[nodiscard]] virtual int32_t getInt32() = 0;
+            [[nodiscard]] virtual uint32_t getUInt32() = 0;
+            [[nodiscard]] virtual int64_t getInt64() = 0;
+            [[nodiscard]] virtual uint64_t getUInt64() = 0;
+            [[nodiscard]] virtual double getDouble() = 0;
+            [[nodiscard]] virtual float getFloat() = 0;
+            [[nodiscard]] virtual std::string getString() = 0;
+            [[nodiscard]] virtual bool getBool() = 0;
     };
 
     template<typename T>
-    T IJson::get(std::string_view key) const
+    T IJson::get(std::string_view key)
     {
         if constexpr (std::is_same<T, double>::value)
             return getDouble(key);
@@ -83,7 +83,7 @@ namespace tson
     }
 
     template<typename T>
-    T IJson::get() const
+    T IJson::get()
     {
         if constexpr (std::is_same<T, double>::value)
             return getDouble();
