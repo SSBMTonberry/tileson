@@ -2,10 +2,9 @@
 // Created by robin on 11.01.2021.
 //
 
+#ifdef picojson_h
 #ifndef TILESON_PICOJSON_HPP
 #define TILESON_PICOJSON_HPP
-
-#include "../external/picojson.hpp"
 
 namespace tson
 {
@@ -313,5 +312,5 @@ namespace tson
 
     };
 }
-
 #endif //TILESON_PICOJSON_HPP
+#endif

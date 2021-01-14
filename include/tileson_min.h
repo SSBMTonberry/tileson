@@ -31,6 +31,8 @@
 // Tileson related.
 //#include "external/json.hpp"
 
+#include "external/picojson.hpp"
+
 #include "tileson_parser.hpp"
 #include "common/tileson_forward.hpp"
 
