@@ -18,6 +18,9 @@ namespace tson
 
             inline std::string decompress(const std::string_view &s) override;
 
+            inline std::string decompressFile(const std::filesystem::path &path) override;
+            inline std::string decompress(const void *data, size_t size) override;
+
         private:
             inline unsigned int pos_of_char(const unsigned char chr);
             inline static const std::string NAME = "base64";
@@ -82,6 +85,26 @@ namespace tson
         else if (chr == '/' || chr == '_') return 63; // Ditto for '/' and '_'
 
         throw "If input is correct, this line should never be reached.";
+    }
+
+    /*!
+     * UNUSED! Does nothing
+     * @param path
+     * @return
+     */
+    std::string Base64Decompressor::decompressFile(const std::filesystem::path &path)
+    {
+        return std::string();
+    }
+
+    /*!
+     * UNUSED! Does nothing
+     * @param path
+     * @return
+     */
+    std::string Base64Decompressor::decompress(const void *data, size_t size)
+    {
+        return std::string();
     }
 }
 

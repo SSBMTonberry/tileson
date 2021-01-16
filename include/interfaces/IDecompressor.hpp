@@ -26,8 +26,26 @@ namespace tson
              */
             [[nodiscard]] virtual const std::string &name() const = 0;
 
-            //virtual std::string decompress(std::string_view s) = 0;
-            virtual TOut decompress(const TIn &s) = 0;
+            /*!
+             * Used primarily for Tiled related decompression.
+             * @param input Input data
+             * @return Decompressed data
+             */
+            virtual TOut decompress(const TIn &input) = 0;
+
+            /*!
+             * Used for whole file decompression. Not related to Tiled
+             * @param path
+             * @return
+             */
+            virtual TOut decompressFile(const fs::path &path) = 0;
+
+            /*!
+             * Used for whole file decompression. Not related to Tiled
+             * @param path
+             * @return
+             */
+            virtual TOut decompress(const void *data, size_t size) = 0;
     };
 }
 
