@@ -17,11 +17,11 @@ namespace tson
     class Project
     {
         public:
-            inline explicit Project(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>()) : m_json {std::move(jsonParser)}
+            inline explicit Project(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>()) : m_json {std::move(jsonParser)}
             {
 
             }
-            inline explicit Project(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>());
+            inline explicit Project(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>());
             inline bool parse(const fs::path &path);
 
             [[nodiscard]] inline const ProjectData &getData() const;

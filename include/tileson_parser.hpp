@@ -52,7 +52,7 @@ namespace tson
     class Tileson
     {
         public:
-            inline explicit Tileson(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>(), bool includeBase64Decoder = true);
+            inline explicit Tileson(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>(), bool includeBase64Decoder = true);
 
             inline std::unique_ptr<tson::Map> parse(const fs::path &path);
             inline std::unique_ptr<tson::Map> parse(const void * data, size_t size);
@@ -102,12 +102,10 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
  */
 std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size)
 {
-    //std::istringstream i;
-    //i.rdbuf()->pubsetbuf((char *)data, size);
 
-    tson::MemoryStream mem {(uint8_t *)data, size};
-
-    if(!m_json->parse(data, size))
+    //tson::MemoryStream mem {(uint8_t *)data, size};
+    bool result = m_json->parse(data, size);
+    if(!result)
         return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, "Memory error");
 
 

@@ -1,45 +1,42 @@
 //
-// Created by robin on 11.01.2021.
+// Created by robin on 14.01.2021.
 //
 
-#ifdef picojson_h
-#ifndef TILESON_PICOJSON_HPP
-#define TILESON_PICOJSON_HPP
+#ifndef TILESON_GASON_HPP
+#define TILESON_GASON_HPP
 
 namespace tson
 {
-    class PicoJson : public tson::IJson
+    class Gason : public tson::IJson
     {
         public:
-            inline PicoJson() = default;
+            inline Gason() = default;
 
             IJson &operator[](std::string_view key) override
             {
                 if(m_arrayCache.count(key.data()) == 0)
                 {
-                    if(m_json->is<picojson::object>())
+                    if(m_json.getTag() == gason::JSON_OBJECT)
                     {
-                        picojson::object &o = m_json->get<picojson::object>();
-                        m_arrayCache[key.data()] = std::make_unique<PicoJson>(&o[key.data()]);
+                        m_arrayCache[key.data()] = std::make_unique<Gason>(m_objectCache[key.data()]);
                     }
                 }
 
                 return *m_arrayCache[key.data()].get();
             }
 
-            inline explicit PicoJson(picojson::value *json) : m_json {json}
+            inline explicit Gason(gason::JsonValue json) : m_json {json}
             {
-
+                createObjCache();
             }
 
             inline IJson& at(std::string_view key) override
             {
                 if(m_arrayCache.count(key.data()) == 0)
                 {
-                    if(m_json->is<picojson::object>())
+                    if(m_json.getTag() == gason::JSON_OBJECT)
                     {
-                        picojson::object &o = m_json->get<picojson::object>();
-                        m_arrayCache[key.data()] = std::make_unique<PicoJson>(&o[key.data()]);
+                        m_arrayCache[key.data()] = std::make_unique<Gason>(m_objectCache[key.data()]);
                     }
                 }
                 return *m_arrayCache[key.data()].get();
@@ -49,8 +46,15 @@ namespace tson
             {
                 if(m_arrayPosCache.count(pos) == 0)
                 {
-                    picojson::array &a = m_json->get<picojson::array>();
-                    m_arrayPosCache[pos] = std::make_unique<PicoJson>(&a.at(pos));
+                    int i = 0;
+                    for (auto item : m_json)
+                    {
+                        if(i == pos)
+                        {
+                            m_arrayPosCache[pos] = std::make_unique<Gason>(item->value);
+                            break;
+                        }
+                    }
                 }
 
                 return *m_arrayPosCache[pos];
@@ -59,13 +63,11 @@ namespace tson
             std::vector<std::unique_ptr<IJson>> array() override
             {
                 std::vector<std::unique_ptr<IJson>> vec;
-                if(m_json->is<picojson::array>())
+                if(m_json.getTag() == gason::JSON_ARRAY)
                 {
-                    picojson::array &a = m_json->get<picojson::array>();
-                    for (auto &item : a)
+                    for (auto item : m_json)
                     {
-                        picojson::value *ptr = &item;
-                        vec.emplace_back(std::make_unique<PicoJson>(ptr));
+                        vec.emplace_back(std::make_unique<Gason>(item->value));
                     }
                 }
 
@@ -78,20 +80,15 @@ namespace tson
                 {
                     if(count(key.data()) > 0)
                     {
-                        if (isObject())
+                        if(isObject())
                         {
-                            picojson::object &obj = m_json->get<picojson::object>();
-                            picojson::value &v = obj.at(key.data());
-                            bool isArray = v.is<picojson::array>();
-                            if (isArray)
+                            gason::JsonValue v = m_objectCache[key.data()];
+                            if(v.getTag() == gason::JSON_ARRAY)
                             {
-                                picojson::array &a = v.get<picojson::array>();
-
-                                std::for_each(a.begin(), a.end(), [&](picojson::value &item)
+                                for (auto item : v)
                                 {
-                                    picojson::value *ptr = &item;
-                                    m_arrayListDataCache[key.data()].emplace_back(std::make_unique<PicoJson>(ptr));
-                                });
+                                    m_arrayListDataCache[key.data()].emplace_back(std::make_unique<Gason>(item->value));
+                                }
                             }
                         }
                     }
@@ -103,33 +100,38 @@ namespace tson
 
             [[nodiscard]] inline size_t size() const override
             {
-                if (m_json->is<picojson::object>())
-                {
-                    picojson::object obj = m_json->get<picojson::object>();
-                    return obj.size();
-                }
-                return 0;
+
+                return m_objectCache.size();
             }
 
             inline bool parse(const fs::path &path) override
             {
                 clearCache();
                 m_data = nullptr;
-                m_json = nullptr;
                 if (fs::exists(path) && fs::is_regular_file(path))
                 {
-                    m_data = std::make_unique<picojson::value>();
-                    std::ifstream i(path.u8string());
+                    std::ifstream file(path.u8string());
+                    std::string str;
+
+                    file.seekg(0, std::ios::end);
+                    str.reserve(file.tellg());
+                    file.seekg(0, std::ios::beg);
+
+                    str.assign((std::istreambuf_iterator<char>(file)),
+                               std::istreambuf_iterator<char>());
+
+                    m_data = std::make_unique<gason::JsonValue>();
+                    m_allocator = std::make_unique<gason::JsonAllocator>();
+
                     try
                     {
-                        std::string error = picojson::parse(*m_data, i);
-                        if(!error.empty())
-                        {
-                            std::cerr << "PicoJson parse error: " << error << "\n";
+                        int status = gason::jsonParse(str.data(), &m_endptr, m_data.get(), *m_allocator);
+                        if (status != gason::JSON_OK) {
+                            fprintf(stderr, "%s at %zd\n", gason::jsonStrError(status), m_endptr - str.data());
                             return false;
                         }
-                        //i >> *m_data;
-                        m_json = m_data.get();
+                        m_json = *m_data;
+                        createObjCache();
                     }
                     catch (const std::exception &error)
                     {
@@ -147,19 +149,27 @@ namespace tson
             inline bool parse(const void *data, size_t size) override
             {
                 clearCache();
-                m_json = nullptr;
-                m_data = std::make_unique<picojson::value>();
+                std::string str;
+
+                str.reserve(size);
+
                 tson::MemoryStream mem{(uint8_t *) data, size};
+                //mem >> str;
+                str.assign((std::istreambuf_iterator<char>(mem)),
+                           std::istreambuf_iterator<char>());
+
+                m_data = std::make_unique<gason::JsonValue>();
+                m_allocator = std::make_unique<gason::JsonAllocator>();
+
                 try
                 {
-                    std::string error = picojson::parse(*m_data, mem);
-                    if(!error.empty())
-                    {
-                        std::cerr << "PicoJson parse error: " << error << "\n";
+                    int status = gason::jsonParse(str.data(), &m_endptr, m_data.get(), *m_allocator);
+                    if (status != gason::JSON_OK) {
+                        fprintf(stderr, "%s at %zd\n", gason::jsonStrError(status), m_endptr - str.data());
                         return false;
                     }
-                    //mem >> *m_data;
-                    m_json = m_data.get();
+                    m_json = *m_data;
+                    createObjCache();
                 }
                 catch (const std::exception &error)
                 {
@@ -176,11 +186,10 @@ namespace tson
             {
                 if (isObject())
                 {
-                    picojson::object obj = m_json->get<picojson::object>();
-                    return obj.count(key.data());
+                    return m_objectCache.count(key.data());
                 }
 
-                return m_json->contains(key.data()) ? 1 : 0;
+                return 0;
             }
 
             [[nodiscard]] inline bool any(std::string_view key) const override
@@ -190,65 +199,57 @@ namespace tson
 
             [[nodiscard]] inline bool isArray() const override
             {
-                return m_json->is<picojson::array>();
+                return m_json.getTag() == gason::JSON_ARRAY;
             }
 
             [[nodiscard]] inline bool isObject() const override
             {
-                return m_json->is<picojson::object>();
+                return m_json.getTag() == gason::JSON_OBJECT;
             }
 
             [[nodiscard]] inline bool isNull() const override
             {
-                return m_json->is<picojson::null>();
+                return m_json.getTag() == gason::JSON_NULL;
             }
 
         protected:
             [[nodiscard]] inline int32_t getInt32(std::string_view key) override
             {
-                picojson::object obj = m_json->get<picojson::object>();
                 return getDouble(key);
             }
 
             [[nodiscard]] inline uint32_t getUInt32(std::string_view key) override
             {
-                picojson::object obj = m_json->get<picojson::object>();
                 return getDouble(key);
             }
 
             [[nodiscard]] inline int64_t getInt64(std::string_view key) override
             {
-                picojson::object obj = m_json->get<picojson::object>();
                 return getDouble(key);
             }
 
             [[nodiscard]] inline uint64_t getUInt64(std::string_view key) override
             {
-                picojson::object obj = m_json->get<picojson::object>();
                 return getDouble(key);
             }
 
             [[nodiscard]] inline double getDouble(std::string_view key) override
             {
-                picojson::object obj = m_json->get<picojson::object>();
-                return obj[key.data()].get<double>();
+                return obj(key.data())->toNumber();
             }
 
             [[nodiscard]] inline std::string getString(std::string_view key) override
             {
-                picojson::object obj = m_json->get<picojson::object>();
-                return obj[key.data()].get<std::string>();
+                return obj(key.data())->toString(); // .get<std::string>();
             }
 
             [[nodiscard]] inline bool getBool(std::string_view key) override
             {
-                picojson::object obj = m_json->get<picojson::object>();
-                return obj[key.data()].get<bool>();
+                return obj(key.data())->getTag() == gason::JSON_TRUE;
             }
 
             [[nodiscard]] float getFloat(std::string_view key) override
             {
-                picojson::object obj = m_json->get<picojson::object>();
                 return static_cast<float>(getDouble(key));
             }
 
@@ -274,17 +275,17 @@ namespace tson
 
             [[nodiscard]] inline double getDouble() override
             {
-                return m_json->get<double>();
+                return m_json.toNumber();
             }
 
             [[nodiscard]] inline std::string getString() override
             {
-                return m_json->get<std::string>();
+                return m_json.toString();
             }
 
             [[nodiscard]] inline bool getBool() override
             {
-                return m_json->get<bool>();
+                return m_json.getTag() == gason::JSON_TRUE;
             }
 
             [[nodiscard]] float getFloat() override
@@ -293,22 +294,53 @@ namespace tson
             }
 
         private:
+            /*!
+             * Creates a map of all objects if not already done, then returns them.
+             * @return
+             */
+            const gason::JsonValue *obj(std::string_view key)
+            {
+                //createObjCache();
+                return &m_objectCache[key.data()];
+            }
+
+            void createObjCache()
+            {
+                if(m_objectCache.empty())
+                {
+                    if(m_json.getTag() == gason::JSON_OBJECT)
+                    {
+                        for (auto i : m_json)
+                        {
+                            m_objectCache[i->key] = i->value;
+                        }
+                    }
+                }
+            }
+
             inline void clearCache()
             {
+                m_objectCache.clear();
                 m_arrayCache.clear();
                 m_arrayPosCache.clear();
                 m_arrayListDataCache.clear();
             }
 
-            picojson::value *m_json = nullptr;
-            std::unique_ptr<picojson::value> m_data = nullptr; //Only used if this is the owner json!
+            //Owner values
+            char *m_endptr;
+            std::unique_ptr<gason::JsonValue> m_data = nullptr; //Only used if this is the owner json!
+            std::unique_ptr<gason::JsonAllocator> m_allocator = nullptr;
+
+            gason::JsonValue m_json;
 
             //Cache!
+            std::map<std::string, gason::JsonValue> m_objectCache;
+
             std::map<std::string, std::unique_ptr<IJson>> m_arrayCache;
             std::map<size_t, std::unique_ptr<IJson>> m_arrayPosCache;
             std::map<std::string, std::vector<std::unique_ptr<IJson>>> m_arrayListDataCache;
 
     };
 }
-#endif //TILESON_PICOJSON_HPP
-#endif
+
+#endif //TILESON_GASON_HPP

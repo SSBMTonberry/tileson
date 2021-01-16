@@ -4,39 +4,15 @@
 
 #include "../external_libs/catch.hpp"
 #include "../include/external/nlohmann.hpp"
+#include "../include/external/picojson.hpp"
 #include "../include/tileson.h"
+
+
 //#include "IJsonFakes.hpp"
 
 //#include "../include/json/NlohmannJson.hpp"
 
 
-
-//TEST_CASE( "Test a simple FAKE-implementation of IJson - Expect OK.", "[json][interface]" ) {
-//    std::unique_ptr<tson::IJson> j = std::make_unique<FakeSon>();
-//    //tson::IJson &f = j->operator[]("lol");
-//    //REQUIRE( f.count("test") == 1 );
-//    REQUIRE( j->count("test") == 1 );
-//    REQUIRE( j->count("best") == 0 );
-//    REQUIRE( j->any("test"));
-//    REQUIRE( !j->any("best"));
-//    REQUIRE( j->isObject());
-//
-//    REQUIRE( j->get<int32_t>("test") == -32 );
-//    REQUIRE( j->get<int32_t>("best") == -1 );
-//    REQUIRE( j->get<uint32_t>("test") == 32 );
-//    REQUIRE( j->get<uint32_t>("best") == 0 );
-//    REQUIRE( j->get<int64_t>("test") == -64 );
-//    REQUIRE( j->get<int64_t>("best") == -1 );
-//    REQUIRE( j->get<uint64_t>("test") == 64 );
-//    REQUIRE( j->get<uint64_t>("best") == 0 );
-//    REQUIRE( j->get<double>("test") > 1337.0 );
-//    REQUIRE( j->get<double>("best") < 2 );
-//    REQUIRE( j->get<std::string>("test") == "Test" );
-//    REQUIRE( j->get<std::string>("best") == "No value" );
-//    REQUIRE( j->get<bool>("test"));
-//    REQUIRE( !j->get<bool>("best"));
-//    REQUIRE( j->get<nullptr_t>("whatever") == nullptr);
-//}
 
 TEST_CASE( "Test a nlohmann implementation of IJson", "[json][interface]" )
 {
@@ -199,6 +175,25 @@ TEST_CASE( "Test a picojson implementation of IJson", "[json][interface]" )
     fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
 
     std::unique_ptr<tson::IJson> j = std::make_unique<tson::PicoJson>();
+    tson::IJson &json = *j;
+    bool loadedFine = json.parse(pathToUse);
+    REQUIRE(loadedFine);
+
+    size_t c = json.count("compressionlevel");
+    REQUIRE(c > 0);
+
+    int compressionLevel = json["compressionlevel"].get<int>();
+    REQUIRE(compressionLevel == -1);
+}
+
+TEST_CASE( "Test a Json11 implementation of IJson", "[json][interface]" )
+{
+
+    fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
+    fs::path pathTravis {"../content/test-maps/ultimate_test.json"};
+    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+
+    std::unique_ptr<tson::IJson> j = std::make_unique<tson::Json11>();
     tson::IJson &json = *j;
     bool loadedFine = json.parse(pathToUse);
     REQUIRE(loadedFine);

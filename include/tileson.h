@@ -1,3 +1,6 @@
+///
+/// T I L E S O N   V E R S I O N   1 . 3 . 0
+/// ------------------------------------------------
 /// BSD 2-Clause License
 /// 
 /// Copyright (c) 2020, Robin Berg Pettersen
@@ -28,8 +31,7 @@
 #ifndef TILESON_TILESON_H
 #define TILESON_TILESON_H
 
-
-//#include "external/json.hpp"
+#include "external/json11.hpp"
 
 #include "tileson_parser.hpp"
 #include "common/tileson_forward.hpp"
