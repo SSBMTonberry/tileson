@@ -1,3 +1,6 @@
+///
+/// T I L E S O N   V E R S I O N   1 . 3 . 0   ( M I N I M A L )
+/// ------------------------------------------------------------------
 /// BSD 2-Clause License
 ///
 /// Copyright (c) 2020, Robin Berg Pettersen
@@ -27,11 +30,9 @@
 #ifndef TILESON_TILESON_MIN_H
 #define TILESON_TILESON_MIN_H
 
-// This is the minimal version of Tileson. You will have to provide your own version of nlohmann/json and make sure it's included before anything
+// This is the minimal version of Tileson. You will have to provide your own version of json11.hpp and make sure it's included before anything
 // Tileson related.
-//#include "external/json.hpp"
-//#include "external/picojson.hpp"
-#include "external/json11.hpp"
+//#include "external/json11.hpp"
 
 #include "tileson_parser.hpp"
 #include "common/tileson_forward.hpp"

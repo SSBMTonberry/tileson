@@ -307,8 +307,6 @@ namespace tson
             std::map<std::string, std::unique_ptr<IJson>> m_arrayCache;
             std::map<size_t, std::unique_ptr<IJson>> m_arrayPosCache;
             std::map<std::string, std::vector<std::unique_ptr<IJson>>> m_arrayListDataCache;
-            //std::map<std::string, std::vector<std::reference_wrapper<IJson>>> m_arrayListRefCache;
-            //std::vector<IJson &>
 
     };
 }

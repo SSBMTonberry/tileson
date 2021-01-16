@@ -925,9 +925,11 @@ namespace json11 {
         parser.consume_garbage();
         if (parser.failed)
             return Json();
-        if (parser.i != in.size())
+        if (parser.i != in.size() &&
+            ((parser.i + 1) != in.size() && in[parser.i] != 0)) //RBP: If there is only 1 character diff, it is probably just a terminating zero from a memory read.
+        {
             return parser.fail("unexpected trailing " + esc(in[parser.i]));
-
+        }
         return result;
     }
 

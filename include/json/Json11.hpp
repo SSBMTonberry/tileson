@@ -34,11 +34,6 @@ namespace tson
             {
                 if(m_arrayCache.count(key.data()) == 0)
                 {
-                    //if(m_json.is<picojson::object>())
-                    //{
-                    //    picojson::object &o = m_json.get<picojson::object>();
-                    //    m_arrayCache[key.data()] = std::make_unique<Json11>(&o[key.data()]);
-                    //}
                     if(m_json->is_object())
                     {
                         m_arrayCache[key.data()] = std::make_unique<Json11>(m_json->operator[](key.data()));
@@ -51,15 +46,6 @@ namespace tson
             {
                 if(m_arrayPosCache.count(pos) == 0)
                 {
-                    //int i = 0;
-                    //for (auto item : m_json)
-                    //{
-                    //    if(i == pos)
-                    //    {
-                    //        m_arrayPosCache[pos] = std::make_unique<Json11>(item->value);
-                    //        break;
-                    //    }
-                    //}
                     const std::vector<json11::Json> &a = m_json->array_items();
                     m_arrayPosCache[pos] = std::make_unique<Json11>(a.at(pos));
                 }
@@ -167,7 +153,7 @@ namespace tson
                 str.reserve(size);
 
                 tson::MemoryStream mem{(uint8_t *) data, size};
-                //mem >> str;
+
                 str.assign((std::istreambuf_iterator<char>(mem)),
                            std::istreambuf_iterator<char>());
 
@@ -176,10 +162,11 @@ namespace tson
                 try
                 {
                     std::string strError;
+
                     *m_data = json11::Json::parse(str, strError);
                     if(!strError.empty())
                     {
-                        std::cerr << strError << "\n";
+                        std::cout << strError << "\n";
                         return false;
                     }
                     m_json = m_data.get();

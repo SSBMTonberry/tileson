@@ -16,11 +16,6 @@ namespace tson
             {
                 if(m_arrayCache.count(key.data()) == 0)
                 {
-                    //if(m_json.is<picojson::object>())
-                    //{
-                    //    picojson::object &o = m_json.get<picojson::object>();
-                    //    m_arrayCache[key.data()] = std::make_unique<Gason>(&o[key.data()]);
-                    //}
                     if(m_json.getTag() == gason::JSON_OBJECT)
                     {
                         m_arrayCache[key.data()] = std::make_unique<Gason>(m_objectCache[key.data()]);
@@ -39,11 +34,6 @@ namespace tson
             {
                 if(m_arrayCache.count(key.data()) == 0)
                 {
-                    //if(m_json.is<picojson::object>())
-                    //{
-                    //    picojson::object &o = m_json.get<picojson::object>();
-                    //    m_arrayCache[key.data()] = std::make_unique<Gason>(&o[key.data()]);
-                    //}
                     if(m_json.getTag() == gason::JSON_OBJECT)
                     {
                         m_arrayCache[key.data()] = std::make_unique<Gason>(m_objectCache[key.data()]);
@@ -65,8 +55,6 @@ namespace tson
                             break;
                         }
                     }
-                    //picojson::array &a = m_json.get<picojson::array>();
-                    //m_arrayPosCache[pos] = std::make_unique<Gason>(&a.at(pos));
                 }
 
                 return *m_arrayPosCache[pos];
@@ -81,12 +69,6 @@ namespace tson
                     {
                         vec.emplace_back(std::make_unique<Gason>(item->value));
                     }
-                    //picojson::array &a = m_json.get<picojson::array>();
-                    //for (auto &item : a)
-                    //{
-                    //    picojson::value *ptr = &item;
-                    //    vec.emplace_back(std::make_unique<Gason>(ptr));
-                    //}
                 }
 
                 return vec;
@@ -103,28 +85,12 @@ namespace tson
                             gason::JsonValue v = m_objectCache[key.data()];
                             if(v.getTag() == gason::JSON_ARRAY)
                             {
-                                for (auto item : v)//m_json)
+                                for (auto item : v)
                                 {
                                     m_arrayListDataCache[key.data()].emplace_back(std::make_unique<Gason>(item->value));
                                 }
                             }
                         }
-                        //if (isObject())
-                        //{
-                        //    picojson::object &obj = m_json.get<picojson::object>();
-                        //    picojson::value &v = obj.at(key.data());
-                        //    bool isArray = v.is<picojson::array>();
-                        //    if (isArray)
-                        //    {
-                        //        picojson::array &a = v.get<picojson::array>();
-//
-                        //        std::for_each(a.begin(), a.end(), [&](picojson::value &item)
-                        //        {
-                        //            picojson::value *ptr = &item;
-                        //            m_arrayListDataCache[key.data()].emplace_back(std::make_unique<Gason>(ptr));
-                        //        });
-                        //    }
-                        //}
                     }
                 }
 
@@ -134,11 +100,6 @@ namespace tson
 
             [[nodiscard]] inline size_t size() const override
             {
-                //if (m_json.is<picojson::object>())
-                //{
-                //    picojson::object obj = m_json.get<picojson::object>();
-                //    return obj.size();
-                //}
 
                 return m_objectCache.size();
             }
@@ -226,8 +187,6 @@ namespace tson
                 if (isObject())
                 {
                     return m_objectCache.count(key.data());
-                    //picojson::object obj = m_json.get<picojson::object>();
-                    //return obj.count(key.data());
                 }
 
                 return 0;
@@ -349,12 +308,11 @@ namespace tson
             {
                 if(m_objectCache.empty())
                 {
-                    //if(m_json.getTag() == gason::JSON_ARRAY || m_json.getTag() == gason::JSON_OBJECT)
                     if(m_json.getTag() == gason::JSON_OBJECT)
                     {
                         for (auto i : m_json)
                         {
-                            m_objectCache[i->key] = i->value; //i->value.toNode();
+                            m_objectCache[i->key] = i->value;
                         }
                     }
                 }
@@ -375,17 +333,12 @@ namespace tson
 
             gason::JsonValue m_json;
 
-
-
             //Cache!
             std::map<std::string, gason::JsonValue> m_objectCache;
-            //std::map<std::string, gason::JsonValue> m_objectCache;
 
             std::map<std::string, std::unique_ptr<IJson>> m_arrayCache;
             std::map<size_t, std::unique_ptr<IJson>> m_arrayPosCache;
             std::map<std::string, std::vector<std::unique_ptr<IJson>>> m_arrayListDataCache;
-            //std::map<std::string, std::vector<std::reference_wrapper<IJson>>> m_arrayListRefCache;
-            //std::vector<IJson &>
 
     };
 }

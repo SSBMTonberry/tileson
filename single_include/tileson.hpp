@@ -1,3 +1,6 @@
+///
+/// T I L E S O N   V E R S I O N   1 . 3 . 0
+/// ------------------------------------------------
 /// BSD 2-Clause License
 ///
 /// Copyright (c) 2020, Robin Berg Pettersen
@@ -27,7 +30,991 @@
 #ifndef TILESON_TILESON_H
 #define TILESON_TILESON_H
 
-//#include "external/json.hpp"
+
+/*** Start of inlined file: json11.hpp ***/
+/*** Start of inlined file: json11.cpp ***/
+
+/*** Start of inlined file: json11.hpp ***/
+/* Copyright (c) 2013 Dropbox, Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
+#pragma once
+
+#include <string>
+#include <vector>
+#include <map>
+#include <memory>
+#include <initializer_list>
+
+#ifdef _MSC_VER
+#if _MSC_VER <= 1800 // VS 2013
+		#ifndef noexcept
+			#define noexcept throw()
+		#endif
+
+		#ifndef snprintf
+			#define snprintf _snprintf_s
+		#endif
+	#endif
+#endif
+
+namespace json11 {
+
+	enum JsonParse {
+		STANDARD, COMMENTS
+	};
+
+	class JsonValue;
+
+	class Json final {
+		public:
+			// Types
+			enum Type {
+				NUL, NUMBER, BOOL, STRING, ARRAY, OBJECT
+			};
+
+			// Array and object typedefs
+			typedef std::vector<Json> array;
+			typedef std::map<std::string, Json> object;
+
+			// Constructors for the various types of JSON value.
+			inline Json() noexcept;                // NUL
+			inline Json(std::nullptr_t) noexcept;  // NUL
+			inline Json(double value);             // NUMBER
+			inline Json(int value);                // NUMBER
+			inline Json(bool value);               // BOOL
+			inline Json(const std::string &value); // STRING
+			inline Json(std::string &&value);      // STRING
+			inline Json(const char * value);       // STRING
+			inline Json(const array &values);      // ARRAY
+			inline Json(array &&values);           // ARRAY
+			inline Json(const object &values);     // OBJECT
+			inline Json(object &&values);          // OBJECT
+
+			// Implicit constructor: anything with a to_json() function.
+			template <class T, class = decltype(&T::to_json)>
+			inline Json(const T & t) : Json(t.to_json()) {}
+
+			// Implicit constructor: map-like objects (std::map, std::unordered_map, etc)
+			template <class M, typename std::enable_if<
+					std::is_constructible<std::string, decltype(std::declval<M>().begin()->first)>::value
+					&& std::is_constructible<Json, decltype(std::declval<M>().begin()->second)>::value,
+					int>::type = 0>
+			inline Json(const M & m) : Json(object(m.begin(), m.end())) {}
+
+			// Implicit constructor: vector-like objects (std::list, std::vector, std::set, etc)
+			template <class V, typename std::enable_if<
+					std::is_constructible<Json, decltype(*std::declval<V>().begin())>::value,
+					int>::type = 0>
+			inline Json(const V & v) : Json(array(v.begin(), v.end())) {}
+
+			// This prevents Json(some_pointer) from accidentally producing a bool. Use
+			// Json(bool(some_pointer)) if that behavior is desired.
+			Json(void *) = delete;
+
+			// Accessors
+			inline Type type() const;
+
+			inline bool is_null()   const { return type() == NUL; }
+			inline bool is_number() const { return type() == NUMBER; }
+			inline bool is_bool()   const { return type() == BOOL; }
+			inline bool is_string() const { return type() == STRING; }
+			inline bool is_array()  const { return type() == ARRAY; }
+			inline bool is_object() const { return type() == OBJECT; }
+
+			// Return the enclosed value if this is a number, 0 otherwise. Note that json11 does not
+			// distinguish between integer and non-integer numbers - number_value() and int_value()
+			// can both be applied to a NUMBER-typed object.
+			inline double number_value() const;
+			inline int int_value() const;
+
+			// Return the enclosed value if this is a boolean, false otherwise.
+			inline bool bool_value() const;
+			// Return the enclosed string if this is a string, "" otherwise.
+			inline const std::string &string_value() const;
+			// Return the enclosed std::vector if this is an array, or an empty vector otherwise.
+			inline const array &array_items() const;
+			// Return the enclosed std::map if this is an object, or an empty map otherwise.
+			inline const object &object_items() const;
+
+			// Return a reference to arr[i] if this is an array, Json() otherwise.
+			inline const Json & operator[](size_t i) const;
+			// Return a reference to obj[key] if this is an object, Json() otherwise.
+			inline const Json & operator[](const std::string &key) const;
+
+			// Serialize.
+			inline void dump(std::string &out) const;
+			inline std::string dump() const {
+				std::string out;
+				dump(out);
+				return out;
+			}
+
+			// Parse. If parse fails, return Json() and assign an error message to err.
+			static inline Json parse(const std::string & in,
+							  std::string & err,
+							  JsonParse strategy = JsonParse::STANDARD);
+			static inline Json parse(const char * in,
+							  std::string & err,
+							  JsonParse strategy = JsonParse::STANDARD) {
+				if (in) {
+					return parse(std::string(in), err, strategy);
+				} else {
+					err = "null input";
+					return nullptr;
+				}
+			}
+			// Parse multiple objects, concatenated or separated by whitespace
+			static inline std::vector<Json> parse_multi(
+					const std::string & in,
+					std::string::size_type & parser_stop_pos,
+					std::string & err,
+					JsonParse strategy = JsonParse::STANDARD);
+
+			static inline std::vector<Json> parse_multi(
+					const std::string & in,
+					std::string & err,
+					JsonParse strategy = JsonParse::STANDARD) {
+				std::string::size_type parser_stop_pos;
+				return parse_multi(in, parser_stop_pos, err, strategy);
+			}
+
+			inline bool operator== (const Json &rhs) const;
+			inline bool operator<  (const Json &rhs) const;
+			inline bool operator!= (const Json &rhs) const { return !(*this == rhs); }
+			inline bool operator<= (const Json &rhs) const { return !(rhs < *this); }
+			inline bool operator>  (const Json &rhs) const { return  (rhs < *this); }
+			inline bool operator>= (const Json &rhs) const { return !(*this < rhs); }
+
+			/* has_shape(types, err)
+			 *
+			 * Return true if this is a JSON object and, for each item in types, has a field of
+			 * the given type. If not, return false and set err to a descriptive message.
+			 */
+			typedef std::initializer_list<std::pair<std::string, Type>> shape;
+			inline bool has_shape(const shape & types, std::string & err) const;
+
+		private:
+			std::shared_ptr<JsonValue> m_ptr;
+	};
+
+// Internal class hierarchy - JsonValue objects are not exposed to users of this API.
+	class JsonValue {
+		protected:
+			friend class Json;
+			friend class JsonInt;
+			friend class JsonDouble;
+			virtual Json::Type type() const = 0;
+			virtual bool equals(const JsonValue * other) const = 0;
+			virtual bool less(const JsonValue * other) const = 0;
+			virtual void dump(std::string &out) const = 0;
+			virtual double number_value() const;
+			virtual int int_value() const;
+			virtual bool bool_value() const;
+			virtual const std::string &string_value() const;
+			virtual const Json::array &array_items() const;
+			virtual const Json &operator[](size_t i) const;
+			virtual const Json::object &object_items() const;
+			virtual const Json &operator[](const std::string &key) const;
+			virtual ~JsonValue() {}
+	};
+
+} // namespace json11
+
+/*** End of inlined file: json11.hpp ***/
+
+#include <cassert>
+#include <cmath>
+#include <cstdlib>
+#include <cstdio>
+#include <limits>
+
+namespace json11 {
+
+	static const int max_depth = 200;
+
+	using std::string;
+	using std::vector;
+	using std::map;
+	using std::make_shared;
+	using std::initializer_list;
+	using std::move;
+
+/* Helper for representing null - just a do-nothing struct, plus comparison
+ * operators so the helpers in JsonValue work. We can't use nullptr_t because
+ * it may not be orderable.
+ */
+	struct NullStruct {
+		bool operator==(NullStruct) const { return true; }
+		bool operator<(NullStruct) const { return false; }
+	};
+
+/* * * * * * * * * * * * * * * * * * * *
+ * Serialization
+ */
+
+	static void dump(NullStruct, string &out) {
+		out += "null";
+	}
+
+	static void dump(double value, string &out) {
+		if (std::isfinite(value)) {
+			char buf[32];
+			snprintf(buf, sizeof buf, "%.17g", value);
+			out += buf;
+		} else {
+			out += "null";
+		}
+	}
+
+	static void dump(int value, string &out) {
+		char buf[32];
+		snprintf(buf, sizeof buf, "%d", value);
+		out += buf;
+	}
+
+	static void dump(bool value, string &out) {
+		out += value ? "true" : "false";
+	}
+
+	static void dump(const string &value, string &out) {
+		out += '"';
+		for (size_t i = 0; i < value.length(); i++) {
+			const char ch = value[i];
+			if (ch == '\\') {
+				out += "\\\\";
+			} else if (ch == '"') {
+				out += "\\\"";
+			} else if (ch == '\b') {
+				out += "\\b";
+			} else if (ch == '\f') {
+				out += "\\f";
+			} else if (ch == '\n') {
+				out += "\\n";
+			} else if (ch == '\r') {
+				out += "\\r";
+			} else if (ch == '\t') {
+				out += "\\t";
+			} else if (static_cast<uint8_t>(ch) <= 0x1f) {
+				char buf[8];
+				snprintf(buf, sizeof buf, "\\u%04x", ch);
+				out += buf;
+			} else if (static_cast<uint8_t>(ch) == 0xe2 && static_cast<uint8_t>(value[i+1]) == 0x80
+					   && static_cast<uint8_t>(value[i+2]) == 0xa8) {
+				out += "\\u2028";
+				i += 2;
+			} else if (static_cast<uint8_t>(ch) == 0xe2 && static_cast<uint8_t>(value[i+1]) == 0x80
+					   && static_cast<uint8_t>(value[i+2]) == 0xa9) {
+				out += "\\u2029";
+				i += 2;
+			} else {
+				out += ch;
+			}
+		}
+		out += '"';
+	}
+
+	static void dump(const Json::array &values, string &out) {
+		bool first = true;
+		out += "[";
+		for (const auto &value : values) {
+			if (!first)
+				out += ", ";
+			value.dump(out);
+			first = false;
+		}
+		out += "]";
+	}
+
+	static void dump(const Json::object &values, string &out) {
+		bool first = true;
+		out += "{";
+		for (const auto &kv : values) {
+			if (!first)
+				out += ", ";
+			dump(kv.first, out);
+			out += ": ";
+			kv.second.dump(out);
+			first = false;
+		}
+		out += "}";
+	}
+
+	void Json::dump(string &out) const {
+		m_ptr->dump(out);
+	}
+
+/* * * * * * * * * * * * * * * * * * * *
+ * Value wrappers
+ */
+
+	template <Json::Type tag, typename T>
+	class Value : public JsonValue {
+		protected:
+
+			// Constructors
+			explicit Value(const T &value) : m_value(value) {}
+			explicit Value(T &&value)      : m_value(move(value)) {}
+
+			// Get type tag
+			Json::Type type() const override {
+				return tag;
+			}
+
+			// Comparisons
+			bool equals(const JsonValue * other) const override {
+				return m_value == static_cast<const Value<tag, T> *>(other)->m_value;
+			}
+			bool less(const JsonValue * other) const override {
+				return m_value < static_cast<const Value<tag, T> *>(other)->m_value;
+			}
+
+			const T m_value;
+			void dump(string &out) const override { json11::dump(m_value, out); }
+	};
+
+	class JsonDouble final : public Value<Json::NUMBER, double> {
+			double number_value() const override { return m_value; }
+			int int_value() const override { return static_cast<int>(m_value); }
+			bool equals(const JsonValue * other) const override { return m_value == other->number_value(); }
+			bool less(const JsonValue * other)   const override { return m_value <  other->number_value(); }
+		public:
+			explicit JsonDouble(double value) : Value(value) {}
+	};
+
+	class JsonInt final : public Value<Json::NUMBER, int> {
+			double number_value() const override { return m_value; }
+			int int_value() const override { return m_value; }
+			bool equals(const JsonValue * other) const override { return m_value == other->number_value(); }
+			bool less(const JsonValue * other)   const override { return m_value <  other->number_value(); }
+		public:
+			explicit JsonInt(int value) : Value(value) {}
+	};
+
+	class JsonBoolean final : public Value<Json::BOOL, bool> {
+			bool bool_value() const override { return m_value; }
+		public:
+			explicit JsonBoolean(bool value) : Value(value) {}
+	};
+
+	class JsonString final : public Value<Json::STRING, string> {
+			const string &string_value() const override { return m_value; }
+		public:
+			explicit JsonString(const string &value) : Value(value) {}
+			explicit JsonString(string &&value)      : Value(move(value)) {}
+	};
+
+	class JsonArray final : public Value<Json::ARRAY, Json::array> {
+			const Json::array &array_items() const override { return m_value; }
+			const Json & operator[](size_t i) const override;
+		public:
+			explicit JsonArray(const Json::array &value) : Value(value) {}
+			explicit JsonArray(Json::array &&value)      : Value(move(value)) {}
+	};
+
+	class JsonObject final : public Value<Json::OBJECT, Json::object> {
+			const Json::object &object_items() const override { return m_value; }
+			const Json & operator[](const string &key) const override;
+		public:
+			explicit JsonObject(const Json::object &value) : Value(value) {}
+			explicit JsonObject(Json::object &&value)      : Value(move(value)) {}
+	};
+
+	class JsonNull final : public Value<Json::NUL, NullStruct> {
+		public:
+			JsonNull() : Value({}) {}
+	};
+
+/* * * * * * * * * * * * * * * * * * * *
+ * Static globals - static-init-safe
+ */
+	struct Statics {
+		const std::shared_ptr<JsonValue> null = make_shared<JsonNull>();
+		const std::shared_ptr<JsonValue> t = make_shared<JsonBoolean>(true);
+		const std::shared_ptr<JsonValue> f = make_shared<JsonBoolean>(false);
+		const string empty_string;
+		const vector<Json> empty_vector;
+		const map<string, Json> empty_map;
+		Statics() {}
+	};
+
+	static const Statics & statics() {
+		static const Statics s {};
+		return s;
+	}
+
+	static const Json & static_null() {
+		// This has to be separate, not in Statics, because Json() accesses statics().null.
+		static const Json json_null;
+		return json_null;
+	}
+
+/* * * * * * * * * * * * * * * * * * * *
+ * Constructors
+ */
+
+	Json::Json() noexcept                  : m_ptr(statics().null) {}
+	Json::Json(std::nullptr_t) noexcept    : m_ptr(statics().null) {}
+	Json::Json(double value)               : m_ptr(make_shared<JsonDouble>(value)) {}
+	Json::Json(int value)                  : m_ptr(make_shared<JsonInt>(value)) {}
+	Json::Json(bool value)                 : m_ptr(value ? statics().t : statics().f) {}
+	Json::Json(const string &value)        : m_ptr(make_shared<JsonString>(value)) {}
+	Json::Json(string &&value)             : m_ptr(make_shared<JsonString>(move(value))) {}
+	Json::Json(const char * value)         : m_ptr(make_shared<JsonString>(value)) {}
+	Json::Json(const Json::array &values)  : m_ptr(make_shared<JsonArray>(values)) {}
+	Json::Json(Json::array &&values)       : m_ptr(make_shared<JsonArray>(move(values))) {}
+	Json::Json(const Json::object &values) : m_ptr(make_shared<JsonObject>(values)) {}
+	Json::Json(Json::object &&values)      : m_ptr(make_shared<JsonObject>(move(values))) {}
+
+/* * * * * * * * * * * * * * * * * * * *
+ * Accessors
+ */
+
+	inline Json::Type Json::type()                           const { return m_ptr->type();         }
+	inline double Json::number_value()                       const { return m_ptr->number_value(); }
+	inline int Json::int_value()                             const { return m_ptr->int_value();    }
+	inline bool Json::bool_value()                           const { return m_ptr->bool_value();   }
+	inline const string & Json::string_value()               const { return m_ptr->string_value(); }
+	inline const vector<Json> & Json::array_items()          const { return m_ptr->array_items();  }
+	inline const map<string, Json> & Json::object_items()    const { return m_ptr->object_items(); }
+	inline const Json & Json::operator[] (size_t i)          const { return (*m_ptr)[i];           }
+	inline const Json & Json::operator[] (const string &key) const { return (*m_ptr)[key];         }
+
+	inline double                    JsonValue::number_value()              const { return 0; }
+	inline int                       JsonValue::int_value()                 const { return 0; }
+	inline bool                      JsonValue::bool_value()                const { return false; }
+	inline const string &            JsonValue::string_value()              const { return statics().empty_string; }
+	inline const vector<Json> &      JsonValue::array_items()               const { return statics().empty_vector; }
+	inline const map<string, Json> & JsonValue::object_items()              const { return statics().empty_map; }
+	inline const Json &              JsonValue::operator[] (size_t)         const { return static_null(); }
+	inline const Json &              JsonValue::operator[] (const string &) const { return static_null(); }
+
+	inline const Json & JsonObject::operator[] (const string &key) const {
+		auto iter = m_value.find(key);
+		return (iter == m_value.end()) ? static_null() : iter->second;
+	}
+	inline const Json & JsonArray::operator[] (size_t i) const {
+		if (i >= m_value.size()) return static_null();
+		else return m_value[i];
+	}
+
+/* * * * * * * * * * * * * * * * * * * *
+ * Comparison
+ */
+
+	bool Json::operator== (const Json &other) const {
+		if (m_ptr == other.m_ptr)
+			return true;
+		if (m_ptr->type() != other.m_ptr->type())
+			return false;
+
+		return m_ptr->equals(other.m_ptr.get());
+	}
+
+	bool Json::operator< (const Json &other) const {
+		if (m_ptr == other.m_ptr)
+			return false;
+		if (m_ptr->type() != other.m_ptr->type())
+			return m_ptr->type() < other.m_ptr->type();
+
+		return m_ptr->less(other.m_ptr.get());
+	}
+
+/* * * * * * * * * * * * * * * * * * * *
+ * Parsing
+ */
+
+/* esc(c)
+ *
+ * Format char c suitable for printing in an error message.
+ */
+	static inline string esc(char c) {
+		char buf[12];
+		if (static_cast<uint8_t>(c) >= 0x20 && static_cast<uint8_t>(c) <= 0x7f) {
+			snprintf(buf, sizeof buf, "'%c' (%d)", c, c);
+		} else {
+			snprintf(buf, sizeof buf, "(%d)", c);
+		}
+		return string(buf);
+	}
+
+	static inline bool in_range(long x, long lower, long upper) {
+		return (x >= lower && x <= upper);
+	}
+
+	namespace {
+/* JsonParser
+ *
+ * Object that tracks all state of an in-progress parse.
+ */
+		struct JsonParser final {
+
+			/* State
+			 */
+			const string &str;
+			size_t i;
+			string &err;
+			bool failed;
+			const JsonParse strategy;
+
+			/* fail(msg, err_ret = Json())
+			 *
+			 * Mark this parse as failed.
+			 */
+			Json fail(string &&msg) {
+				return fail(move(msg), Json());
+			}
+
+			template <typename T>
+			T fail(string &&msg, const T err_ret) {
+				if (!failed)
+					err = std::move(msg);
+				failed = true;
+				return err_ret;
+			}
+
+			/* consume_whitespace()
+			 *
+			 * Advance until the current character is non-whitespace.
+			 */
+			void consume_whitespace() {
+				while (str[i] == ' ' || str[i] == '\r' || str[i] == '\n' || str[i] == '\t')
+					i++;
+			}
+
+			/* consume_comment()
+			 *
+			 * Advance comments (c-style inline and multiline).
+			 */
+			bool consume_comment() {
+				bool comment_found = false;
+				if (str[i] == '/') {
+					i++;
+					if (i == str.size())
+						return fail("unexpected end of input after start of comment", false);
+					if (str[i] == '/') { // inline comment
+						i++;
+						// advance until next line, or end of input
+						while (i < str.size() && str[i] != '\n') {
+							i++;
+						}
+						comment_found = true;
+					}
+					else if (str[i] == '*') { // multiline comment
+						i++;
+						if (i > str.size()-2)
+							return fail("unexpected end of input inside multi-line comment", false);
+						// advance until closing tokens
+						while (!(str[i] == '*' && str[i+1] == '/')) {
+							i++;
+							if (i > str.size()-2)
+								return fail(
+										"unexpected end of input inside multi-line comment", false);
+						}
+						i += 2;
+						comment_found = true;
+					}
+					else
+						return fail("malformed comment", false);
+				}
+				return comment_found;
+			}
+
+			/* consume_garbage()
+			 *
+			 * Advance until the current character is non-whitespace and non-comment.
+			 */
+			void consume_garbage() {
+				consume_whitespace();
+				if(strategy == JsonParse::COMMENTS) {
+					bool comment_found = false;
+					do {
+						comment_found = consume_comment();
+						if (failed) return;
+						consume_whitespace();
+					}
+					while(comment_found);
+				}
+			}
+
+			/* get_next_token()
+			 *
+			 * Return the next non-whitespace character. If the end of the input is reached,
+			 * flag an error and return 0.
+			 */
+			char get_next_token() {
+				consume_garbage();
+				if (failed) return static_cast<char>(0);
+				if (i == str.size())
+					return fail("unexpected end of input", static_cast<char>(0));
+
+				return str[i++];
+			}
+
+			/* encode_utf8(pt, out)
+			 *
+			 * Encode pt as UTF-8 and add it to out.
+			 */
+			void encode_utf8(long pt, string & out) {
+				if (pt < 0)
+					return;
+
+				if (pt < 0x80) {
+					out += static_cast<char>(pt);
+				} else if (pt < 0x800) {
+					out += static_cast<char>((pt >> 6) | 0xC0);
+					out += static_cast<char>((pt & 0x3F) | 0x80);
+				} else if (pt < 0x10000) {
+					out += static_cast<char>((pt >> 12) | 0xE0);
+					out += static_cast<char>(((pt >> 6) & 0x3F) | 0x80);
+					out += static_cast<char>((pt & 0x3F) | 0x80);
+				} else {
+					out += static_cast<char>((pt >> 18) | 0xF0);
+					out += static_cast<char>(((pt >> 12) & 0x3F) | 0x80);
+					out += static_cast<char>(((pt >> 6) & 0x3F) | 0x80);
+					out += static_cast<char>((pt & 0x3F) | 0x80);
+				}
+			}
+
+			/* parse_string()
+			 *
+			 * Parse a string, starting at the current position.
+			 */
+			string parse_string() {
+				string out;
+				long last_escaped_codepoint = -1;
+				while (true) {
+					if (i == str.size())
+						return fail("unexpected end of input in string", "");
+
+					char ch = str[i++];
+
+					if (ch == '"') {
+						encode_utf8(last_escaped_codepoint, out);
+						return out;
+					}
+
+					if (in_range(ch, 0, 0x1f))
+						return fail("unescaped " + esc(ch) + " in string", "");
+
+					// The usual case: non-escaped characters
+					if (ch != '\\') {
+						encode_utf8(last_escaped_codepoint, out);
+						last_escaped_codepoint = -1;
+						out += ch;
+						continue;
+					}
+
+					// Handle escapes
+					if (i == str.size())
+						return fail("unexpected end of input in string", "");
+
+					ch = str[i++];
+
+					if (ch == 'u') {
+						// Extract 4-byte escape sequence
+						string esc = str.substr(i, 4);
+						// Explicitly check length of the substring. The following loop
+						// relies on std::string returning the terminating NUL when
+						// accessing str[length]. Checking here reduces brittleness.
+						if (esc.length() < 4) {
+							return fail("bad \\u escape: " + esc, "");
+						}
+						for (size_t j = 0; j < 4; j++) {
+							if (!in_range(esc[j], 'a', 'f') && !in_range(esc[j], 'A', 'F')
+								&& !in_range(esc[j], '0', '9'))
+								return fail("bad \\u escape: " + esc, "");
+						}
+
+						long codepoint = strtol(esc.data(), nullptr, 16);
+
+						// JSON specifies that characters outside the BMP shall be encoded as a pair
+						// of 4-hex-digit \u escapes encoding their surrogate pair components. Check
+						// whether we're in the middle of such a beast: the previous codepoint was an
+						// escaped lead (high) surrogate, and this is a trail (low) surrogate.
+						if (in_range(last_escaped_codepoint, 0xD800, 0xDBFF)
+							&& in_range(codepoint, 0xDC00, 0xDFFF)) {
+							// Reassemble the two surrogate pairs into one astral-plane character, per
+							// the UTF-16 algorithm.
+							encode_utf8((((last_escaped_codepoint - 0xD800) << 10)
+										 | (codepoint - 0xDC00)) + 0x10000, out);
+							last_escaped_codepoint = -1;
+						} else {
+							encode_utf8(last_escaped_codepoint, out);
+							last_escaped_codepoint = codepoint;
+						}
+
+						i += 4;
+						continue;
+					}
+
+					encode_utf8(last_escaped_codepoint, out);
+					last_escaped_codepoint = -1;
+
+					if (ch == 'b') {
+						out += '\b';
+					} else if (ch == 'f') {
+						out += '\f';
+					} else if (ch == 'n') {
+						out += '\n';
+					} else if (ch == 'r') {
+						out += '\r';
+					} else if (ch == 't') {
+						out += '\t';
+					} else if (ch == '"' || ch == '\\' || ch == '/') {
+						out += ch;
+					} else {
+						return fail("invalid escape character " + esc(ch), "");
+					}
+				}
+			}
+
+			/* parse_number()
+			 *
+			 * Parse a double.
+			 */
+			Json parse_number() {
+				size_t start_pos = i;
+
+				if (str[i] == '-')
+					i++;
+
+				// Integer part
+				if (str[i] == '0') {
+					i++;
+					if (in_range(str[i], '0', '9'))
+						return fail("leading 0s not permitted in numbers");
+				} else if (in_range(str[i], '1', '9')) {
+					i++;
+					while (in_range(str[i], '0', '9'))
+						i++;
+				} else {
+					return fail("invalid " + esc(str[i]) + " in number");
+				}
+
+				if (str[i] != '.' && str[i] != 'e' && str[i] != 'E'
+					&& (i - start_pos) <= static_cast<size_t>(std::numeric_limits<int>::digits10)) {
+					return std::atoi(str.c_str() + start_pos);
+				}
+
+				// Decimal part
+				if (str[i] == '.') {
+					i++;
+					if (!in_range(str[i], '0', '9'))
+						return fail("at least one digit required in fractional part");
+
+					while (in_range(str[i], '0', '9'))
+						i++;
+				}
+
+				// Exponent part
+				if (str[i] == 'e' || str[i] == 'E') {
+					i++;
+
+					if (str[i] == '+' || str[i] == '-')
+						i++;
+
+					if (!in_range(str[i], '0', '9'))
+						return fail("at least one digit required in exponent");
+
+					while (in_range(str[i], '0', '9'))
+						i++;
+				}
+
+				return std::strtod(str.c_str() + start_pos, nullptr);
+			}
+
+			/* expect(str, res)
+			 *
+			 * Expect that 'str' starts at the character that was just read. If it does, advance
+			 * the input and return res. If not, flag an error.
+			 */
+			Json expect(const string &expected, Json res) {
+				assert(i != 0);
+				i--;
+				if (str.compare(i, expected.length(), expected) == 0) {
+					i += expected.length();
+					return res;
+				} else {
+					return fail("parse error: expected " + expected + ", got " + str.substr(i, expected.length()));
+				}
+			}
+
+			/* parse_json()
+			 *
+			 * Parse a JSON object.
+			 */
+			Json parse_json(int depth) {
+				if (depth > max_depth) {
+					return fail("exceeded maximum nesting depth");
+				}
+
+				char ch = get_next_token();
+				if (failed)
+					return Json();
+
+				if (ch == '-' || (ch >= '0' && ch <= '9')) {
+					i--;
+					return parse_number();
+				}
+
+				if (ch == 't')
+					return expect("true", true);
+
+				if (ch == 'f')
+					return expect("false", false);
+
+				if (ch == 'n')
+					return expect("null", Json());
+
+				if (ch == '"')
+					return parse_string();
+
+				if (ch == '{') {
+					map<string, Json> data;
+					ch = get_next_token();
+					if (ch == '}')
+						return data;
+
+					while (1) {
+						if (ch != '"')
+							return fail("expected '\"' in object, got " + esc(ch));
+
+						string key = parse_string();
+						if (failed)
+							return Json();
+
+						ch = get_next_token();
+						if (ch != ':')
+							return fail("expected ':' in object, got " + esc(ch));
+
+						data[std::move(key)] = parse_json(depth + 1);
+						if (failed)
+							return Json();
+
+						ch = get_next_token();
+						if (ch == '}')
+							break;
+						if (ch != ',')
+							return fail("expected ',' in object, got " + esc(ch));
+
+						ch = get_next_token();
+					}
+					return data;
+				}
+
+				if (ch == '[') {
+					vector<Json> data;
+					ch = get_next_token();
+					if (ch == ']')
+						return data;
+
+					while (1) {
+						i--;
+						data.push_back(parse_json(depth + 1));
+						if (failed)
+							return Json();
+
+						ch = get_next_token();
+						if (ch == ']')
+							break;
+						if (ch != ',')
+							return fail("expected ',' in list, got " + esc(ch));
+
+						ch = get_next_token();
+						(void)ch;
+					}
+					return data;
+				}
+
+				return fail("expected value, got " + esc(ch));
+			}
+		};
+	}//namespace {
+
+	Json Json::parse(const string &in, string &err, JsonParse strategy) {
+		JsonParser parser { in, 0, err, false, strategy };
+		Json result = parser.parse_json(0);
+
+		// Check for any trailing garbage
+		parser.consume_garbage();
+		if (parser.failed)
+			return Json();
+		if (parser.i != in.size() &&
+			((parser.i + 1) != in.size() && in[parser.i] != 0)) //RBP: If there is only 1 character diff, it is probably just a terminating zero from a memory read.
+		{
+			return parser.fail("unexpected trailing " + esc(in[parser.i]));
+		}
+		return result;
+	}
+
+// Documented in json11.hpp
+	vector<Json> Json::parse_multi(const string &in,
+								   std::string::size_type &parser_stop_pos,
+								   string &err,
+								   JsonParse strategy) {
+		JsonParser parser { in, 0, err, false, strategy };
+		parser_stop_pos = 0;
+		vector<Json> json_vec;
+		while (parser.i != in.size() && !parser.failed) {
+			json_vec.push_back(parser.parse_json(0));
+			if (parser.failed)
+				break;
+
+			// Check for another object
+			parser.consume_garbage();
+			if (parser.failed)
+				break;
+			parser_stop_pos = parser.i;
+		}
+		return json_vec;
+	}
+
+/* * * * * * * * * * * * * * * * * * * *
+ * Shape-checking
+ */
+
+	bool Json::has_shape(const shape & types, string & err) const {
+		if (!is_object()) {
+			err = "expected JSON object, got " + dump();
+			return false;
+		}
+
+		const auto& obj_items = object_items();
+		for (auto & item : types) {
+			const auto it = obj_items.find(item.first);
+			if (it == obj_items.cend() || it->second.type() != item.second) {
+				err = "bad type for " + item.first + " in " + dump();
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+} // namespace json11
+
+/*** End of inlined file: json11.cpp ***/
+
+/*** End of inlined file: json11.hpp ***/
 
 
 /*** Start of inlined file: tileson_parser.hpp ***/
@@ -739,9 +1726,9 @@ namespace tson
 			[[nodiscard]] virtual bool parse(const void *data, size_t size) = 0;
 
 			template <typename T>
-			[[nodiscard]] T get(std::string_view key) const;
+			[[nodiscard]] T get(std::string_view key);
 			template <typename T>
-			[[nodiscard]] T get() const;
+			[[nodiscard]] T get();
 			[[nodiscard]] virtual size_t count(std::string_view key) const = 0;
 			[[nodiscard]] virtual bool any(std::string_view key) const = 0;
 			[[nodiscard]] virtual bool isArray() const = 0;
@@ -749,27 +1736,27 @@ namespace tson
 			[[nodiscard]] virtual bool isNull() const = 0;
 
 		protected:
-			[[nodiscard]] virtual int32_t getInt32(std::string_view key) const = 0;
-			[[nodiscard]] virtual uint32_t getUInt32(std::string_view key) const = 0;
-			[[nodiscard]] virtual int64_t getInt64(std::string_view key) const = 0;
-			[[nodiscard]] virtual uint64_t getUInt64(std::string_view key) const = 0;
-			[[nodiscard]] virtual double getDouble(std::string_view key) const = 0;
-			[[nodiscard]] virtual float getFloat(std::string_view key) const = 0;
-			[[nodiscard]] virtual std::string getString(std::string_view key) const = 0;
-			[[nodiscard]] virtual bool getBool(std::string_view key) const = 0;
+			[[nodiscard]] virtual int32_t getInt32(std::string_view key) = 0;
+			[[nodiscard]] virtual uint32_t getUInt32(std::string_view key) = 0;
+			[[nodiscard]] virtual int64_t getInt64(std::string_view key) = 0;
+			[[nodiscard]] virtual uint64_t getUInt64(std::string_view key) = 0;
+			[[nodiscard]] virtual double getDouble(std::string_view key) = 0;
+			[[nodiscard]] virtual float getFloat(std::string_view key) = 0;
+			[[nodiscard]] virtual std::string getString(std::string_view key) = 0;
+			[[nodiscard]] virtual bool getBool(std::string_view key) = 0;
 
-			[[nodiscard]] virtual int32_t getInt32() const = 0;
-			[[nodiscard]] virtual uint32_t getUInt32() const = 0;
-			[[nodiscard]] virtual int64_t getInt64() const = 0;
-			[[nodiscard]] virtual uint64_t getUInt64() const = 0;
-			[[nodiscard]] virtual double getDouble() const = 0;
-			[[nodiscard]] virtual float getFloat() const = 0;
-			[[nodiscard]] virtual std::string getString() const = 0;
-			[[nodiscard]] virtual bool getBool() const = 0;
+			[[nodiscard]] virtual int32_t getInt32() = 0;
+			[[nodiscard]] virtual uint32_t getUInt32() = 0;
+			[[nodiscard]] virtual int64_t getInt64() = 0;
+			[[nodiscard]] virtual uint64_t getUInt64() = 0;
+			[[nodiscard]] virtual double getDouble() = 0;
+			[[nodiscard]] virtual float getFloat() = 0;
+			[[nodiscard]] virtual std::string getString() = 0;
+			[[nodiscard]] virtual bool getBool() = 0;
 	};
 
 	template<typename T>
-	T IJson::get(std::string_view key) const
+	T IJson::get(std::string_view key)
 	{
 		if constexpr (std::is_same<T, double>::value)
 			return getDouble(key);
@@ -792,7 +1779,7 @@ namespace tson
 	}
 
 	template<typename T>
-	T IJson::get() const
+	T IJson::get()
 	{
 		if constexpr (std::is_same<T, double>::value)
 			return getDouble();
@@ -977,82 +1964,82 @@ namespace tson
 			}
 
 		protected:
-			[[nodiscard]] inline int32_t getInt32(std::string_view key) const override
+			[[nodiscard]] inline int32_t getInt32(std::string_view key) override
 			{
 				return m_json->operator[](key.data()).get<int32_t>();
 			}
 
-			[[nodiscard]] inline uint32_t getUInt32(std::string_view key) const override
+			[[nodiscard]] inline uint32_t getUInt32(std::string_view key) override
 			{
 				return m_json->operator[](key.data()).get<uint32_t>();
 			}
 
-			[[nodiscard]] inline int64_t getInt64(std::string_view key) const override
+			[[nodiscard]] inline int64_t getInt64(std::string_view key) override
 			{
 				return m_json->operator[](key.data()).get<int64_t>();
 			}
 
-			[[nodiscard]] inline uint64_t getUInt64(std::string_view key) const override
+			[[nodiscard]] inline uint64_t getUInt64(std::string_view key) override
 			{
 				return m_json->operator[](key.data()).get<uint64_t>();
 			}
 
-			[[nodiscard]] inline double getDouble(std::string_view key) const override
+			[[nodiscard]] inline double getDouble(std::string_view key) override
 			{
 				return m_json->operator[](key.data()).get<double>();
 			}
 
-			[[nodiscard]] inline std::string getString(std::string_view key) const override
+			[[nodiscard]] inline std::string getString(std::string_view key) override
 			{
 				return m_json->operator[](key.data()).get<std::string>();
 			}
 
-			[[nodiscard]] inline bool getBool(std::string_view key) const override
+			[[nodiscard]] inline bool getBool(std::string_view key) override
 			{
 				return m_json->operator[](key.data()).get<bool>();
 			}
 
-			[[nodiscard]] float getFloat(std::string_view key) const override
+			[[nodiscard]] float getFloat(std::string_view key) override
 			{
 				return m_json->operator[](key.data()).get<float>();
 			}
 
-			[[nodiscard]] inline int32_t getInt32() const override
+			[[nodiscard]] inline int32_t getInt32() override
 			{
 				return m_json->get<int32_t>();
 			}
 
-			[[nodiscard]] inline uint32_t getUInt32() const override
+			[[nodiscard]] inline uint32_t getUInt32() override
 			{
 				return m_json->get<uint32_t>();
 			}
 
-			[[nodiscard]] inline int64_t getInt64() const override
+			[[nodiscard]] inline int64_t getInt64() override
 			{
 				return m_json->get<int64_t>();
 			}
 
-			[[nodiscard]] inline uint64_t getUInt64() const override
+			[[nodiscard]] inline uint64_t getUInt64() override
 			{
 				return m_json->get<uint64_t>();
 			}
 
-			[[nodiscard]] inline double getDouble() const override
+			[[nodiscard]] inline double getDouble() override
 			{
 				return m_json->get<double>();
 			}
 
-			[[nodiscard]] inline std::string getString() const override
+			[[nodiscard]] inline std::string getString() override
 			{
 				return m_json->get<std::string>();
 			}
 
-			[[nodiscard]] inline bool getBool() const override
+			[[nodiscard]] inline bool getBool() override
 			{
 				return m_json->get<bool>();
 			}
 
-			[[nodiscard]] float getFloat() const override
+			[[nodiscard]] float getFloat() override
 			{
 				return m_json->get<float>();
 			}
@@ -1086,1161 +2073,9 @@ namespace tson
 // Created by robin on 11.01.2021.
 //
 
+#ifdef picojson_h
 #ifndef TILESON_PICOJSON_HPP
 #define TILESON_PICOJSON_HPP
-
-
-/*** Start of inlined file: picojson.hpp ***/
-#ifndef picojson_h
-#define picojson_h
-
-#include <algorithm>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <cstddef>
-#include <iostream>
-#include <iterator>
-#include <limits>
-#include <map>
-#include <stdexcept>
-#include <string>
-#include <vector>
-#include <utility>
-
-// for isnan/isinf
-#if __cplusplus >= 201103L
-#include <cmath>
-#else
-extern "C" {
-#ifdef _MSC_VER
-#include <float.h>
-#elif defined(__INTEL_COMPILER)
-#include <mathimf.h>
-#else
-#include <math.h>
-#endif
-}
-#endif
-
-#ifndef PICOJSON_USE_RVALUE_REFERENCE
-#if (defined(__cpp_rvalue_references) && __cpp_rvalue_references >= 200610) || (defined(_MSC_VER) && _MSC_VER >= 1600)
-#define PICOJSON_USE_RVALUE_REFERENCE 1
-#else
-#define PICOJSON_USE_RVALUE_REFERENCE 0
-#endif
-#endif // PICOJSON_USE_RVALUE_REFERENCE
-
-#ifndef PICOJSON_NOEXCEPT
-#if PICOJSON_USE_RVALUE_REFERENCE
-#define PICOJSON_NOEXCEPT noexcept
-#else
-#define PICOJSON_NOEXCEPT throw()
-#endif
-#endif
-
-// experimental support for int64_t (see README.mkdn for detail)
-#ifdef PICOJSON_USE_INT64
-#define __STDC_FORMAT_MACROS
-#include <cerrno>
-#if __cplusplus >= 201103L
-#include <cinttypes>
-#else
-extern "C" {
-#include <inttypes.h>
-}
-#endif
-#endif
-
-// to disable the use of localeconv(3), set PICOJSON_USE_LOCALE to 0
-#ifndef PICOJSON_USE_LOCALE
-#define PICOJSON_USE_LOCALE 1
-#endif
-#if PICOJSON_USE_LOCALE
-extern "C" {
-#include <locale.h>
-}
-#endif
-
-#ifndef PICOJSON_ASSERT
-#define PICOJSON_ASSERT(e)                                                                                                         \
-  do {                                                                                                                             \
-	if (!(e))                                                                                                                      \
-	  throw std::runtime_error(#e);                                                                                                \
-  } while (0)
-#endif
-
-#ifdef _MSC_VER
-#define SNPRINTF _snprintf_s
-#pragma warning(push)
-#pragma warning(disable : 4244) // conversion from int to char
-#pragma warning(disable : 4127) // conditional expression is constant
-#pragma warning(disable : 4702) // unreachable code
-#pragma warning(disable : 4706) // assignment within conditional expression
-#else
-#define SNPRINTF snprintf
-#endif
-
-namespace picojson {
-
-	enum {
-		null_type,
-		boolean_type,
-		number_type,
-		string_type,
-		array_type,
-		object_type
-#ifdef PICOJSON_USE_INT64
-		,
-  int64_type
-#endif
-	};
-
-	enum { INDENT_WIDTH = 2 };
-
-	struct null {};
-
-	class value {
-		public:
-			typedef std::vector<value> array;
-			typedef std::map<std::string, value> object;
-			union _storage {
-				bool boolean_;
-				double number_;
-#ifdef PICOJSON_USE_INT64
-				int64_t int64_;
-#endif
-				std::string *string_;
-				array *array_;
-				object *object_;
-			};
-
-		protected:
-			int type_;
-			_storage u_;
-
-		public:
-			value();
-			value(int type, bool);
-			explicit value(bool b);
-#ifdef PICOJSON_USE_INT64
-			explicit value(int64_t i);
-#endif
-			explicit value(double n);
-			explicit value(const std::string &s);
-			explicit value(const array &a);
-			explicit value(const object &o);
-#if PICOJSON_USE_RVALUE_REFERENCE
-			explicit value(std::string &&s);
-			explicit value(array &&a);
-			explicit value(object &&o);
-#endif
-			explicit value(const char *s);
-			value(const char *s, size_t len);
-			~value();
-			value(const value &x);
-			value &operator=(const value &x);
-#if PICOJSON_USE_RVALUE_REFERENCE
-			value(value &&x) PICOJSON_NOEXCEPT;
-			value &operator=(value &&x) PICOJSON_NOEXCEPT;
-#endif
-			void swap(value &x) PICOJSON_NOEXCEPT;
-			template <typename T> bool is() const;
-			template <typename T> const T &get() const;
-			template <typename T> T &get();
-			template <typename T> void set(const T &);
-#if PICOJSON_USE_RVALUE_REFERENCE
-			template <typename T> void set(T &&);
-#endif
-			bool evaluate_as_boolean() const;
-			const value &get(const size_t idx) const;
-			const value &get(const std::string &key) const;
-			value &get(const size_t idx);
-			value &get(const std::string &key);
-
-			bool contains(const size_t idx) const;
-			bool contains(const std::string &key) const;
-			std::string to_str() const;
-			template <typename Iter> void serialize(Iter os, bool prettify = false) const;
-			std::string serialize(bool prettify = false) const;
-
-		private:
-			template <typename T> value(const T *); // intentionally defined to block implicit conversion of pointer to bool
-			template <typename Iter> static void _indent(Iter os, int indent);
-			template <typename Iter> void _serialize(Iter os, int indent) const;
-			std::string _serialize(int indent) const;
-			void clear();
-	};
-
-	typedef value::array array;
-	typedef value::object object;
-
-	inline value::value() : type_(null_type), u_() {
-	}
-
-	inline value::value(int type, bool) : type_(type), u_() {
-		switch (type) {
-#define INIT(p, v)                                                                                                                 \
-  case p##type:                                                                                                                    \
-	u_.p = v;                                                                                                                      \
-	break
-			INIT(boolean_, false);
-			INIT(number_, 0.0);
-#ifdef PICOJSON_USE_INT64
-			INIT(int64_, 0);
-#endif
-			INIT(string_, new std::string());
-			INIT(array_, new array());
-			INIT(object_, new object());
-#undef INIT
-			default:
-				break;
-		}
-	}
-
-	inline value::value(bool b) : type_(boolean_type), u_() {
-		u_.boolean_ = b;
-	}
-
-#ifdef PICOJSON_USE_INT64
-	inline value::value(int64_t i) : type_(int64_type), u_() {
-  u_.int64_ = i;
-}
-#endif
-
-	inline value::value(double n) : type_(number_type), u_() {
-		if (
-#ifdef _MSC_VER
-!_finite(n)
-#elif __cplusplus >= 201103L
-std::isnan(n) || std::isinf(n)
-#else
-isnan(n) || isinf(n)
-#endif
-				) {
-			throw std::overflow_error("");
-		}
-		u_.number_ = n;
-	}
-
-	inline value::value(const std::string &s) : type_(string_type), u_() {
-		u_.string_ = new std::string(s);
-	}
-
-	inline value::value(const array &a) : type_(array_type), u_() {
-		u_.array_ = new array(a);
-	}
-
-	inline value::value(const object &o) : type_(object_type), u_() {
-		u_.object_ = new object(o);
-	}
-
-#if PICOJSON_USE_RVALUE_REFERENCE
-	inline value::value(std::string &&s) : type_(string_type), u_() {
-		u_.string_ = new std::string(std::move(s));
-	}
-
-	inline value::value(array &&a) : type_(array_type), u_() {
-		u_.array_ = new array(std::move(a));
-	}
-
-	inline value::value(object &&o) : type_(object_type), u_() {
-		u_.object_ = new object(std::move(o));
-	}
-#endif
-
-	inline value::value(const char *s) : type_(string_type), u_() {
-		u_.string_ = new std::string(s);
-	}
-
-	inline value::value(const char *s, size_t len) : type_(string_type), u_() {
-		u_.string_ = new std::string(s, len);
-	}
-
-	inline void value::clear() {
-		switch (type_) {
-#define DEINIT(p)                                                                                                                  \
-  case p##type:                                                                                                                    \
-	delete u_.p;                                                                                                                   \
-	break
-			DEINIT(string_);
-			DEINIT(array_);
-			DEINIT(object_);
-#undef DEINIT
-			default:
-				break;
-		}
-	}
-
-	inline value::~value() {
-		clear();
-	}
-
-	inline value::value(const value &x) : type_(x.type_), u_() {
-		switch (type_) {
-#define INIT(p, v)                                                                                                                 \
-  case p##type:                                                                                                                    \
-	u_.p = v;                                                                                                                      \
-	break
-			INIT(string_, new std::string(*x.u_.string_));
-			INIT(array_, new array(*x.u_.array_));
-			INIT(object_, new object(*x.u_.object_));
-#undef INIT
-			default:
-				u_ = x.u_;
-				break;
-		}
-	}
-
-	inline value &value::operator=(const value &x) {
-		if (this != &x) {
-			value t(x);
-			swap(t);
-		}
-		return *this;
-	}
-
-#if PICOJSON_USE_RVALUE_REFERENCE
-	inline value::value(value &&x) PICOJSON_NOEXCEPT : type_(null_type), u_() {
-		swap(x);
-	}
-	inline value &value::operator=(value &&x) PICOJSON_NOEXCEPT {
-		swap(x);
-		return *this;
-	}
-#endif
-	inline void value::swap(value &x) PICOJSON_NOEXCEPT {
-		std::swap(type_, x.type_);
-		std::swap(u_, x.u_);
-	}
-
-#define IS(ctype, jtype)                                                                                                           \
-  template <> inline bool value::is<ctype>() const {                                                                               \
-	return type_ == jtype##_type;                                                                                                  \
-  }
-	IS(null, null)
-	IS(bool, boolean)
-#ifdef PICOJSON_USE_INT64
-	IS(int64_t, int64)
-#endif
-	IS(std::string, string)
-	IS(array, array)
-	IS(object, object)
-#undef IS
-	template <> inline bool value::is<double>() const {
-		return type_ == number_type
-#ifdef PICOJSON_USE_INT64
-			|| type_ == int64_type
-#endif
-				;
-	}
-
-#define GET(ctype, var)                                                                                                            \
-  template <> inline const ctype &value::get<ctype>() const {                                                                      \
-	PICOJSON_ASSERT("type mismatch! call is<type>() before get<type>()" && is<ctype>());                                           \
-	return var;                                                                                                                    \
-  }                                                                                                                                \
-  template <> inline ctype &value::get<ctype>() {                                                                                  \
-	PICOJSON_ASSERT("type mismatch! call is<type>() before get<type>()" && is<ctype>());                                           \
-	return var;                                                                                                                    \
-  }
-	GET(bool, u_.boolean_)
-	GET(std::string, *u_.string_)
-	GET(array, *u_.array_)
-	GET(object, *u_.object_)
-#ifdef PICOJSON_USE_INT64
-	GET(double,
-	(type_ == int64_type && (const_cast<value *>(this)->type_ = number_type, const_cast<value *>(this)->u_.number_ = u_.int64_),
-	 u_.number_))
-GET(int64_t, u_.int64_)
-#else
-	GET(double, u_.number_)
-#endif
-#undef GET
-
-#define SET(ctype, jtype, setter)                                                                                                  \
-  template <> inline void value::set<ctype>(const ctype &_val) {                                                                   \
-	clear();                                                                                                                       \
-	type_ = jtype##_type;                                                                                                          \
-	setter                                                                                                                         \
-  }
-	SET(bool, boolean, u_.boolean_ = _val;)
-	SET(std::string, string, u_.string_ = new std::string(_val);)
-	SET(array, array, u_.array_ = new array(_val);)
-	SET(object, object, u_.object_ = new object(_val);)
-	SET(double, number, u_.number_ = _val;)
-#ifdef PICOJSON_USE_INT64
-	SET(int64_t, int64, u_.int64_ = _val;)
-#endif
-#undef SET
-
-#if PICOJSON_USE_RVALUE_REFERENCE
-	#define MOVESET(ctype, jtype, setter)                                                                                              \
-  template <> inline void value::set<ctype>(ctype && _val) {                                                                       \
-	clear();                                                                                                                       \
-	type_ = jtype##_type;                                                                                                          \
-	setter                                                                                                                         \
-  }
-	MOVESET(std::string, string, u_.string_ = new std::string(std::move(_val));)
-	MOVESET(array, array, u_.array_ = new array(std::move(_val));)
-	MOVESET(object, object, u_.object_ = new object(std::move(_val));)
-#undef MOVESET
-#endif
-
-	inline bool value::evaluate_as_boolean() const {
-		switch (type_) {
-			case null_type:
-				return false;
-			case boolean_type:
-				return u_.boolean_;
-			case number_type:
-				return u_.number_ != 0;
-#ifdef PICOJSON_USE_INT64
-				case int64_type:
-	return u_.int64_ != 0;
-#endif
-			case string_type:
-				return !u_.string_->empty();
-			default:
-				return true;
-		}
-	}
-
-	inline const value &value::get(const size_t idx) const {
-		static value s_null;
-		PICOJSON_ASSERT(is<array>());
-		return idx < u_.array_->size() ? (*u_.array_)[idx] : s_null;
-	}
-
-	inline value &value::get(const size_t idx) {
-		static value s_null;
-		PICOJSON_ASSERT(is<array>());
-		return idx < u_.array_->size() ? (*u_.array_)[idx] : s_null;
-	}
-
-	inline const value &value::get(const std::string &key) const {
-		static value s_null;
-		PICOJSON_ASSERT(is<object>());
-		object::const_iterator i = u_.object_->find(key);
-		return i != u_.object_->end() ? i->second : s_null;
-	}
-
-	inline value &value::get(const std::string &key) {
-		static value s_null;
-		PICOJSON_ASSERT(is<object>());
-		object::iterator i = u_.object_->find(key);
-		return i != u_.object_->end() ? i->second : s_null;
-	}
-
-	inline bool value::contains(const size_t idx) const {
-		PICOJSON_ASSERT(is<array>());
-		return idx < u_.array_->size();
-	}
-
-	inline bool value::contains(const std::string &key) const {
-		PICOJSON_ASSERT(is<object>());
-		object::const_iterator i = u_.object_->find(key);
-		return i != u_.object_->end();
-	}
-
-	inline std::string value::to_str() const {
-		switch (type_) {
-			case null_type:
-				return "null";
-			case boolean_type:
-				return u_.boolean_ ? "true" : "false";
-#ifdef PICOJSON_USE_INT64
-				case int64_type: {
-	char buf[sizeof("-9223372036854775808")];
-	SNPRINTF(buf, sizeof(buf), "%" PRId64, u_.int64_);
-	return buf;
-  }
-#endif
-			case number_type: {
-				char buf[256];
-				double tmp;
-				SNPRINTF(buf, sizeof(buf), fabs(u_.number_) < (1ULL << 53) && modf(u_.number_, &tmp) == 0 ? "%.f" : "%.17g", u_.number_);
-#if PICOJSON_USE_LOCALE
-				char *decimal_point = localeconv()->decimal_point;
-				if (strcmp(decimal_point, ".") != 0) {
-					size_t decimal_point_len = strlen(decimal_point);
-					for (char *p = buf; *p != '\0'; ++p) {
-						if (strncmp(p, decimal_point, decimal_point_len) == 0) {
-							return std::string(buf, p) + "." + (p + decimal_point_len);
-						}
-					}
-				}
-#endif
-				return buf;
-			}
-			case string_type:
-				return *u_.string_;
-			case array_type:
-				return "array";
-			case object_type:
-				return "object";
-			default:
-				PICOJSON_ASSERT(0);
-#ifdef _MSC_VER
-				__assume(0);
-#endif
-		}
-		return std::string();
-	}
-
-	template <typename Iter> void copy(const std::string &s, Iter oi) {
-		std::copy(s.begin(), s.end(), oi);
-	}
-
-	template <typename Iter> struct serialize_str_char {
-		Iter oi;
-		void operator()(char c) {
-			switch (c) {
-#define MAP(val, sym)                                                                                                              \
-  case val:                                                                                                                        \
-	copy(sym, oi);                                                                                                                 \
-	break
-				MAP('"', "\\\"");
-				MAP('\\', "\\\\");
-				MAP('/', "\\/");
-				MAP('\b', "\\b");
-				MAP('\f', "\\f");
-				MAP('\n', "\\n");
-				MAP('\r', "\\r");
-				MAP('\t', "\\t");
-#undef MAP
-				default:
-					if (static_cast<unsigned char>(c) < 0x20 || c == 0x7f) {
-						char buf[7];
-						SNPRINTF(buf, sizeof(buf), "\\u%04x", c & 0xff);
-						copy(buf, buf + 6, oi);
-					} else {
-						*oi++ = c;
-					}
-					break;
-			}
-		}
-	};
-
-	template <typename Iter> void serialize_str(const std::string &s, Iter oi) {
-		*oi++ = '"';
-		serialize_str_char<Iter> process_char = {oi};
-		std::for_each(s.begin(), s.end(), process_char);
-		*oi++ = '"';
-	}
-
-	template <typename Iter> void value::serialize(Iter oi, bool prettify) const {
-		return _serialize(oi, prettify ? 0 : -1);
-	}
-
-	inline std::string value::serialize(bool prettify) const {
-		return _serialize(prettify ? 0 : -1);
-	}
-
-	template <typename Iter> void value::_indent(Iter oi, int indent) {
-		*oi++ = '\n';
-		for (int i = 0; i < indent * INDENT_WIDTH; ++i) {
-			*oi++ = ' ';
-		}
-	}
-
-	template <typename Iter> void value::_serialize(Iter oi, int indent) const {
-		switch (type_) {
-			case string_type:
-				serialize_str(*u_.string_, oi);
-				break;
-			case array_type: {
-				*oi++ = '[';
-				if (indent != -1) {
-					++indent;
-				}
-				for (array::const_iterator i = u_.array_->begin(); i != u_.array_->end(); ++i) {
-					if (i != u_.array_->begin()) {
-						*oi++ = ',';
-					}
-					if (indent != -1) {
-						_indent(oi, indent);
-					}
-					i->_serialize(oi, indent);
-				}
-				if (indent != -1) {
-					--indent;
-					if (!u_.array_->empty()) {
-						_indent(oi, indent);
-					}
-				}
-				*oi++ = ']';
-				break;
-			}
-			case object_type: {
-				*oi++ = '{';
-				if (indent != -1) {
-					++indent;
-				}
-				for (object::const_iterator i = u_.object_->begin(); i != u_.object_->end(); ++i) {
-					if (i != u_.object_->begin()) {
-						*oi++ = ',';
-					}
-					if (indent != -1) {
-						_indent(oi, indent);
-					}
-					serialize_str(i->first, oi);
-					*oi++ = ':';
-					if (indent != -1) {
-						*oi++ = ' ';
-					}
-					i->second._serialize(oi, indent);
-				}
-				if (indent != -1) {
-					--indent;
-					if (!u_.object_->empty()) {
-						_indent(oi, indent);
-					}
-				}
-				*oi++ = '}';
-				break;
-			}
-			default:
-				copy(to_str(), oi);
-				break;
-		}
-		if (indent == 0) {
-			*oi++ = '\n';
-		}
-	}
-
-	inline std::string value::_serialize(int indent) const {
-		std::string s;
-		_serialize(std::back_inserter(s), indent);
-		return s;
-	}
-
-	template <typename Iter> class input {
-		protected:
-			Iter cur_, end_;
-			bool consumed_;
-			int line_;
-
-		public:
-			input(const Iter &first, const Iter &last) : cur_(first), end_(last), consumed_(false), line_(1) {
-			}
-			int getc() {
-				if (consumed_) {
-					if (*cur_ == '\n') {
-						++line_;
-					}
-					++cur_;
-				}
-				if (cur_ == end_) {
-					consumed_ = false;
-					return -1;
-				}
-				consumed_ = true;
-				return *cur_ & 0xff;
-			}
-			void ungetc() {
-				consumed_ = false;
-			}
-			Iter cur() const {
-				if (consumed_) {
-					input<Iter> *self = const_cast<input<Iter> *>(this);
-					self->consumed_ = false;
-					++self->cur_;
-				}
-				return cur_;
-			}
-			int line() const {
-				return line_;
-			}
-			void skip_ws() {
-				while (1) {
-					int ch = getc();
-					if (!(ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r')) {
-						ungetc();
-						break;
-					}
-				}
-			}
-			bool expect(const int expected) {
-				skip_ws();
-				if (getc() != expected) {
-					ungetc();
-					return false;
-				}
-				return true;
-			}
-			bool match(const std::string &pattern) {
-				for (std::string::const_iterator pi(pattern.begin()); pi != pattern.end(); ++pi) {
-					if (getc() != *pi) {
-						ungetc();
-						return false;
-					}
-				}
-				return true;
-			}
-	};
-
-	template <typename Iter> inline int _parse_quadhex(input<Iter> &in) {
-		int uni_ch = 0, hex;
-		for (int i = 0; i < 4; i++) {
-			if ((hex = in.getc()) == -1) {
-				return -1;
-			}
-			if ('0' <= hex && hex <= '9') {
-				hex -= '0';
-			} else if ('A' <= hex && hex <= 'F') {
-				hex -= 'A' - 0xa;
-			} else if ('a' <= hex && hex <= 'f') {
-				hex -= 'a' - 0xa;
-			} else {
-				in.ungetc();
-				return -1;
-			}
-			uni_ch = uni_ch * 16 + hex;
-		}
-		return uni_ch;
-	}
-
-	template <typename String, typename Iter> inline bool _parse_codepoint(String &out, input<Iter> &in) {
-		int uni_ch;
-		if ((uni_ch = _parse_quadhex(in)) == -1) {
-			return false;
-		}
-		if (0xd800 <= uni_ch && uni_ch <= 0xdfff) {
-			if (0xdc00 <= uni_ch) {
-				// a second 16-bit of a surrogate pair appeared
-				return false;
-			}
-			// first 16-bit of surrogate pair, get the next one
-			if (in.getc() != '\\' || in.getc() != 'u') {
-				in.ungetc();
-				return false;
-			}
-			int second = _parse_quadhex(in);
-			if (!(0xdc00 <= second && second <= 0xdfff)) {
-				return false;
-			}
-			uni_ch = ((uni_ch - 0xd800) << 10) | ((second - 0xdc00) & 0x3ff);
-			uni_ch += 0x10000;
-		}
-		if (uni_ch < 0x80) {
-			out.push_back(static_cast<char>(uni_ch));
-		} else {
-			if (uni_ch < 0x800) {
-				out.push_back(static_cast<char>(0xc0 | (uni_ch >> 6)));
-			} else {
-				if (uni_ch < 0x10000) {
-					out.push_back(static_cast<char>(0xe0 | (uni_ch >> 12)));
-				} else {
-					out.push_back(static_cast<char>(0xf0 | (uni_ch >> 18)));
-					out.push_back(static_cast<char>(0x80 | ((uni_ch >> 12) & 0x3f)));
-				}
-				out.push_back(static_cast<char>(0x80 | ((uni_ch >> 6) & 0x3f)));
-			}
-			out.push_back(static_cast<char>(0x80 | (uni_ch & 0x3f)));
-		}
-		return true;
-	}
-
-	template <typename String, typename Iter> inline bool _parse_string(String &out, input<Iter> &in) {
-		while (1) {
-			int ch = in.getc();
-			if (ch < ' ') {
-				in.ungetc();
-				return false;
-			} else if (ch == '"') {
-				return true;
-			} else if (ch == '\\') {
-				if ((ch = in.getc()) == -1) {
-					return false;
-				}
-				switch (ch) {
-#define MAP(sym, val)                                                                                                              \
-  case sym:                                                                                                                        \
-	out.push_back(val);                                                                                                            \
-	break
-					MAP('"', '\"');
-					MAP('\\', '\\');
-					MAP('/', '/');
-					MAP('b', '\b');
-					MAP('f', '\f');
-					MAP('n', '\n');
-					MAP('r', '\r');
-					MAP('t', '\t');
-#undef MAP
-					case 'u':
-						if (!_parse_codepoint(out, in)) {
-							return false;
-						}
-						break;
-					default:
-						return false;
-				}
-			} else {
-				out.push_back(static_cast<char>(ch));
-			}
-		}
-		return false;
-	}
-
-	template <typename Context, typename Iter> inline bool _parse_array(Context &ctx, input<Iter> &in) {
-		if (!ctx.parse_array_start()) {
-			return false;
-		}
-		size_t idx = 0;
-		if (in.expect(']')) {
-			return ctx.parse_array_stop(idx);
-		}
-		do {
-			if (!ctx.parse_array_item(in, idx)) {
-				return false;
-			}
-			idx++;
-		} while (in.expect(','));
-		return in.expect(']') && ctx.parse_array_stop(idx);
-	}
-
-	template <typename Context, typename Iter> inline bool _parse_object(Context &ctx, input<Iter> &in) {
-		if (!ctx.parse_object_start()) {
-			return false;
-		}
-		if (in.expect('}')) {
-			return true;
-		}
-		do {
-			std::string key;
-			if (!in.expect('"') || !_parse_string(key, in) || !in.expect(':')) {
-				return false;
-			}
-			if (!ctx.parse_object_item(in, key)) {
-				return false;
-			}
-		} while (in.expect(','));
-		return in.expect('}');
-	}
-
-	template <typename Iter> inline std::string _parse_number(input<Iter> &in) {
-		std::string num_str;
-		while (1) {
-			int ch = in.getc();
-			if (('0' <= ch && ch <= '9') || ch == '+' || ch == '-' || ch == 'e' || ch == 'E') {
-				num_str.push_back(static_cast<char>(ch));
-			} else if (ch == '.') {
-#if PICOJSON_USE_LOCALE
-				num_str += localeconv()->decimal_point;
-#else
-				num_str.push_back('.');
-#endif
-			} else {
-				in.ungetc();
-				break;
-			}
-		}
-		return num_str;
-	}
-
-	template <typename Context, typename Iter> inline bool _parse(Context &ctx, input<Iter> &in) {
-		in.skip_ws();
-		int ch = in.getc();
-		switch (ch) {
-#define IS(ch, text, op)                                                                                                           \
-  case ch:                                                                                                                         \
-	if (in.match(text) && op) {                                                                                                    \
-	  return true;                                                                                                                 \
-	} else {                                                                                                                       \
-	  return false;                                                                                                                \
-	}
-			IS('n', "ull", ctx.set_null());
-			IS('f', "alse", ctx.set_bool(false));
-			IS('t', "rue", ctx.set_bool(true));
-#undef IS
-			case '"':
-				return ctx.parse_string(in);
-			case '[':
-				return _parse_array(ctx, in);
-			case '{':
-				return _parse_object(ctx, in);
-			default:
-				if (('0' <= ch && ch <= '9') || ch == '-') {
-					double f;
-					char *endp;
-					in.ungetc();
-					std::string num_str(_parse_number(in));
-					if (num_str.empty()) {
-						return false;
-					}
-#ifdef PICOJSON_USE_INT64
-					{
-		errno = 0;
-		intmax_t ival = strtoimax(num_str.c_str(), &endp, 10);
-		if (errno == 0 && std::numeric_limits<int64_t>::min() <= ival && ival <= std::numeric_limits<int64_t>::max() &&
-			endp == num_str.c_str() + num_str.size()) {
-		  ctx.set_int64(ival);
-		  return true;
-		}
-	  }
-#endif
-					f = strtod(num_str.c_str(), &endp);
-					if (endp == num_str.c_str() + num_str.size()) {
-						ctx.set_number(f);
-						return true;
-					}
-					return false;
-				}
-				break;
-		}
-		in.ungetc();
-		return false;
-	}
-
-	class deny_parse_context {
-		public:
-			bool set_null() {
-				return false;
-			}
-			bool set_bool(bool) {
-				return false;
-			}
-#ifdef PICOJSON_USE_INT64
-			bool set_int64(int64_t) {
-	return false;
-  }
-#endif
-			bool set_number(double) {
-				return false;
-			}
-			template <typename Iter> bool parse_string(input<Iter> &) {
-				return false;
-			}
-			bool parse_array_start() {
-				return false;
-			}
-			template <typename Iter> bool parse_array_item(input<Iter> &, size_t) {
-				return false;
-			}
-			bool parse_array_stop(size_t) {
-				return false;
-			}
-			bool parse_object_start() {
-				return false;
-			}
-			template <typename Iter> bool parse_object_item(input<Iter> &, const std::string &) {
-				return false;
-			}
-	};
-
-	class default_parse_context {
-		protected:
-			value *out_;
-
-		public:
-			default_parse_context(value *out) : out_(out) {
-			}
-			bool set_null() {
-				*out_ = value();
-				return true;
-			}
-			bool set_bool(bool b) {
-				*out_ = value(b);
-				return true;
-			}
-#ifdef PICOJSON_USE_INT64
-			bool set_int64(int64_t i) {
-	*out_ = value(i);
-	return true;
-  }
-#endif
-			bool set_number(double f) {
-				*out_ = value(f);
-				return true;
-			}
-			template <typename Iter> bool parse_string(input<Iter> &in) {
-				*out_ = value(string_type, false);
-				return _parse_string(out_->get<std::string>(), in);
-			}
-			bool parse_array_start() {
-				*out_ = value(array_type, false);
-				return true;
-			}
-			template <typename Iter> bool parse_array_item(input<Iter> &in, size_t) {
-				array &a = out_->get<array>();
-				a.push_back(value());
-				default_parse_context ctx(&a.back());
-				return _parse(ctx, in);
-			}
-			bool parse_array_stop(size_t) {
-				return true;
-			}
-			bool parse_object_start() {
-				*out_ = value(object_type, false);
-				return true;
-			}
-			template <typename Iter> bool parse_object_item(input<Iter> &in, const std::string &key) {
-				object &o = out_->get<object>();
-				default_parse_context ctx(&o[key]);
-				return _parse(ctx, in);
-			}
-
-		private:
-			default_parse_context(const default_parse_context &);
-			default_parse_context &operator=(const default_parse_context &);
-	};
-
-	class null_parse_context {
-		public:
-			struct dummy_str {
-				void push_back(int) {
-				}
-			};
-
-		public:
-			null_parse_context() {
-			}
-			bool set_null() {
-				return true;
-			}
-			bool set_bool(bool) {
-				return true;
-			}
-#ifdef PICOJSON_USE_INT64
-			bool set_int64(int64_t) {
-	return true;
-  }
-#endif
-			bool set_number(double) {
-				return true;
-			}
-			template <typename Iter> bool parse_string(input<Iter> &in) {
-				dummy_str s;
-				return _parse_string(s, in);
-			}
-			bool parse_array_start() {
-				return true;
-			}
-			template <typename Iter> bool parse_array_item(input<Iter> &in, size_t) {
-				return _parse(*this, in);
-			}
-			bool parse_array_stop(size_t) {
-				return true;
-			}
-			bool parse_object_start() {
-				return true;
-			}
-			template <typename Iter> bool parse_object_item(input<Iter> &in, const std::string &) {
-				return _parse(*this, in);
-			}
-
-		private:
-			null_parse_context(const null_parse_context &);
-			null_parse_context &operator=(const null_parse_context &);
-	};
-
-// obsolete, use the version below
-	template <typename Iter> inline std::string parse(value &out, Iter &pos, const Iter &last) {
-		std::string err;
-		pos = parse(out, pos, last, &err);
-		return err;
-	}
-
-	template <typename Context, typename Iter> inline Iter _parse(Context &ctx, const Iter &first, const Iter &last, std::string *err) {
-		input<Iter> in(first, last);
-		if (!_parse(ctx, in) && err != NULL) {
-			char buf[64];
-			SNPRINTF(buf, sizeof(buf), "syntax error at line %d near: ", in.line());
-			*err = buf;
-			while (1) {
-				int ch = in.getc();
-				if (ch == -1 || ch == '\n') {
-					break;
-				} else if (ch >= ' ') {
-					err->push_back(static_cast<char>(ch));
-				}
-			}
-		}
-		return in.cur();
-	}
-
-	template <typename Iter> inline Iter parse(value &out, const Iter &first, const Iter &last, std::string *err) {
-		default_parse_context ctx(&out);
-		return _parse(ctx, first, last, err);
-	}
-
-	inline std::string parse(value &out, const std::string &s) {
-		std::string err;
-		parse(out, s.begin(), s.end(), &err);
-		return err;
-	}
-
-	inline std::string parse(value &out, std::istream &is) {
-		std::string err;
-		parse(out, std::istreambuf_iterator<char>(is.rdbuf()), std::istreambuf_iterator<char>(), &err);
-		return err;
-	}
-
-	template <typename T> struct last_error_t { static std::string s; };
-	template <typename T> std::string last_error_t<T>::s;
-
-	inline void set_last_error(const std::string &s) {
-		last_error_t<bool>::s = s;
-	}
-
-	inline const std::string &get_last_error() {
-		return last_error_t<bool>::s;
-	}
-
-	inline bool operator==(const value &x, const value &y) {
-		if (x.is<null>())
-			return y.is<null>();
-#define PICOJSON_CMP(type)                                                                                                         \
-  if (x.is<type>())                                                                                                                \
-  return y.is<type>() && x.get<type>() == y.get<type>()
-		PICOJSON_CMP(bool);
-		PICOJSON_CMP(double);
-		PICOJSON_CMP(std::string);
-		PICOJSON_CMP(array);
-		PICOJSON_CMP(object);
-#undef PICOJSON_CMP
-		PICOJSON_ASSERT(0);
-#ifdef _MSC_VER
-		__assume(0);
-#endif
-		return false;
-	}
-
-	inline bool operator!=(const value &x, const value &y) {
-		return !(x == y);
-	}
-}
-
-#if !PICOJSON_USE_RVALUE_REFERENCE
-namespace std {
-	template <> inline void swap(picojson::value &x, picojson::value &y) {
-		x.swap(y);
-	}
-}
-#endif
-
-inline std::istream &operator>>(std::istream &is, picojson::value &x) {
-	picojson::set_last_error(std::string());
-	const std::string err(picojson::parse(x, is));
-	if (!err.empty()) {
-		picojson::set_last_error(err);
-		is.setstate(std::ios::failbit);
-	}
-	return is;
-}
-
-inline std::ostream &operator<<(std::ostream &os, const picojson::value &x) {
-	x.serialize(std::ostream_iterator<char>(os));
-	return os;
-}
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-
-#endif
-
-/*** End of inlined file: picojson.hpp ***/
 
 namespace tson
 {
@@ -2439,90 +2274,90 @@ namespace tson
 			}
 
 		protected:
-			[[nodiscard]] inline int32_t getInt32(std::string_view key) const override
+			[[nodiscard]] inline int32_t getInt32(std::string_view key) override
 			{
 				picojson::object obj = m_json->get<picojson::object>();
 				return getDouble(key);
 			}
 
-			[[nodiscard]] inline uint32_t getUInt32(std::string_view key) const override
+			[[nodiscard]] inline uint32_t getUInt32(std::string_view key) override
 			{
 				picojson::object obj = m_json->get<picojson::object>();
 				return getDouble(key);
 			}
 
-			[[nodiscard]] inline int64_t getInt64(std::string_view key) const override
+			[[nodiscard]] inline int64_t getInt64(std::string_view key) override
 			{
 				picojson::object obj = m_json->get<picojson::object>();
 				return getDouble(key);
 			}
 
-			[[nodiscard]] inline uint64_t getUInt64(std::string_view key) const override
+			[[nodiscard]] inline uint64_t getUInt64(std::string_view key) override
 			{
 				picojson::object obj = m_json->get<picojson::object>();
 				return getDouble(key);
 			}
 
-			[[nodiscard]] inline double getDouble(std::string_view key) const override
+			[[nodiscard]] inline double getDouble(std::string_view key) override
 			{
 				picojson::object obj = m_json->get<picojson::object>();
 				return obj[key.data()].get<double>();
 			}
 
-			[[nodiscard]] inline std::string getString(std::string_view key) const override
+			[[nodiscard]] inline std::string getString(std::string_view key) override
 			{
 				picojson::object obj = m_json->get<picojson::object>();
 				return obj[key.data()].get<std::string>();
 			}
 
-			[[nodiscard]] inline bool getBool(std::string_view key) const override
+			[[nodiscard]] inline bool getBool(std::string_view key) override
 			{
 				picojson::object obj = m_json->get<picojson::object>();
 				return obj[key.data()].get<bool>();
 			}
 
-			[[nodiscard]] float getFloat(std::string_view key) const override
+			[[nodiscard]] float getFloat(std::string_view key) override
 			{
 				picojson::object obj = m_json->get<picojson::object>();
 				return static_cast<float>(getDouble(key));
 			}
 
-			[[nodiscard]] inline int32_t getInt32() const override
+			[[nodiscard]] inline int32_t getInt32() override
 			{
 				return getDouble();
 			}
 
-			[[nodiscard]] inline uint32_t getUInt32() const override
+			[[nodiscard]] inline uint32_t getUInt32() override
 			{
 				return getDouble();
 			}
 
-			[[nodiscard]] inline int64_t getInt64() const override
+			[[nodiscard]] inline int64_t getInt64() override
 			{
 				return getDouble();
 			}
 
-			[[nodiscard]] inline uint64_t getUInt64() const override
+			[[nodiscard]] inline uint64_t getUInt64() override
 			{
 				return getDouble();
 			}
 
-			[[nodiscard]] inline double getDouble() const override
+			[[nodiscard]] inline double getDouble() override
 			{
 				return m_json->get<double>();
 			}
 
-			[[nodiscard]] inline std::string getString() const override
+			[[nodiscard]] inline std::string getString() override
 			{
 				return m_json->get<std::string>();
 			}
 
-			[[nodiscard]] inline bool getBool() const override
+			[[nodiscard]] inline bool getBool() override
 			{
 				return m_json->get<bool>();
 			}
 
-			[[nodiscard]] float getFloat() const override
+			[[nodiscard]] float getFloat() override
 			{
 				return static_cast<float>(getDouble());
 			}
@@ -2542,15 +2377,340 @@ namespace tson
 			std::map<std::string, std::unique_ptr<IJson>> m_arrayCache;
 			std::map<size_t, std::unique_ptr<IJson>> m_arrayPosCache;
 			std::map<std::string, std::vector<std::unique_ptr<IJson>>> m_arrayListDataCache;
-			//std::map<std::string, std::vector<std::reference_wrapper<IJson>>> m_arrayListRefCache;
-			//std::vector<IJson &>
+
+	};
+}
+#endif //TILESON_PICOJSON_HPP
+#endif
+
+/*** End of inlined file: PicoJson.hpp ***/
+
+//#include "../json/Gason.hpp" //Unsupported
+
+/*** Start of inlined file: Json11.hpp ***/
+//
+// Created by robin on 16.01.2021.
+//
+
+#ifndef TILESON_JSON11_HPP
+#define TILESON_JSON11_HPP
+
+namespace tson
+{
+	class Json11 : public tson::IJson
+	{
+		public:
+			inline Json11() = default;
+
+			IJson &operator[](std::string_view key) override
+			{
+				if(m_arrayCache.count(key.data()) == 0)
+				{
+					if(m_json->is_object())
+					{
+						m_arrayCache[key.data()] = std::make_unique<Json11>(m_json->operator[](key.data()));
+					}
+				}
+
+				return *m_arrayCache[key.data()].get();
+			}
+
+			inline explicit Json11(const json11::Json &json) : m_json {&json}
+			{
+
+			}
+
+			inline IJson& at(std::string_view key) override
+			{
+				if(m_arrayCache.count(key.data()) == 0)
+				{
+					if(m_json->is_object())
+					{
+						m_arrayCache[key.data()] = std::make_unique<Json11>(m_json->operator[](key.data()));
+					}
+				}
+				return *m_arrayCache[key.data()].get();
+			}
+
+			inline IJson& at(size_t pos) override
+			{
+				if(m_arrayPosCache.count(pos) == 0)
+				{
+					const std::vector<json11::Json> &a = m_json->array_items();
+					m_arrayPosCache[pos] = std::make_unique<Json11>(a.at(pos));
+				}
+
+				return *m_arrayPosCache[pos];
+			}
+
+			std::vector<std::unique_ptr<IJson>> array() override
+			{
+				std::vector<std::unique_ptr<IJson>> vec;
+				if(m_json->is_array())
+				{
+					for (const json11::Json &item : m_json->array_items())
+					{
+						vec.emplace_back(std::make_unique<Json11>(item));
+					}
+				}
+
+				return vec;
+			}
+
+			inline std::vector<std::unique_ptr<IJson>> &array(std::string_view key) override
+			{
+				if(m_arrayListDataCache.count(key.data()) == 0)
+				{
+					if(count(key.data()) > 0)
+					{
+						if(isObject())
+						{
+							const json11::Json &v = m_json->operator[](key.data());
+							if(v.is_array())
+							{
+								for (const json11::Json &item : v.array_items())
+								{
+									m_arrayListDataCache[key.data()].emplace_back(std::make_unique<Json11>(item));
+								}
+							}
+						}
+					}
+				}
+
+				return m_arrayListDataCache[key.data()];
+			}
+
+			[[nodiscard]] inline size_t size() const override
+			{
+				if(m_json->is_object())
+					return m_json->object_items().size();
+				else if(m_json->is_array())
+					return m_json->array_items().size();
+
+				return 0;
+			}
+
+			inline bool parse(const fs::path &path) override
+			{
+				clearCache();
+				m_data = nullptr;
+				m_json = nullptr;
+				if (fs::exists(path) && fs::is_regular_file(path))
+				{
+					std::ifstream file(path.u8string());
+					std::string str;
+
+					file.seekg(0, std::ios::end);
+					str.reserve(file.tellg());
+					file.seekg(0, std::ios::beg);
+
+					str.assign((std::istreambuf_iterator<char>(file)),
+							   std::istreambuf_iterator<char>());
+
+					m_data = std::make_unique<json11::Json>();
+
+					try
+					{
+						std::string strError;
+						*m_data = json11::Json::parse(str, strError);
+						if(!strError.empty())
+						{
+							std::cerr << strError << "\n";
+							return false;
+						}
+						m_json = m_data.get();
+					}
+					catch (const std::exception &error)
+					{
+						std::string message = "Json11 parse error: ";
+						message += std::string(error.what());
+						message += std::string("\n");
+						std::cerr << message;
+						return false;
+					}
+					return true;
+				}
+				return false;
+			}
+
+			inline bool parse(const void *data, size_t size) override
+			{
+				clearCache();
+				m_json = nullptr;
+				std::string str;
+
+				str.reserve(size);
+
+				tson::MemoryStream mem{(uint8_t *) data, size};
+
+				str.assign((std::istreambuf_iterator<char>(mem)),
+						   std::istreambuf_iterator<char>());
+
+				m_data = std::make_unique<json11::Json>();
+
+				try
+				{
+					std::string strError;
+
+					*m_data = json11::Json::parse(str, strError);
+					if(!strError.empty())
+					{
+						std::cout << strError << "\n";
+						return false;
+					}
+					m_json = m_data.get();
+				}
+				catch (const std::exception &error)
+				{
+					std::string message = "Json11 parse error: ";
+					message += std::string(error.what());
+					message += std::string("\n");
+					std::cerr << message;
+					return false;
+				}
+				return true;
+			}
+
+			[[nodiscard]] inline size_t count(std::string_view key) const override
+			{
+				if (isObject())
+				{
+					//const json11::Json &j = m_json->operator[](key.data());
+					//size_t s1 = j.object_items().size();
+					return m_json->object_items().count(key.data());
+				}
+
+				return 0;
+			}
+
+			[[nodiscard]] inline bool any(std::string_view key) const override
+			{
+				return count(key) > 0;
+			}
+
+			[[nodiscard]] inline bool isArray() const override
+			{
+				return m_json->is_array();
+			}
+
+			[[nodiscard]] inline bool isObject() const override
+			{
+				return m_json->is_object();
+			}
+
+			[[nodiscard]] inline bool isNull() const override
+			{
+				return m_json->is_null();
+			}
+
+		protected:
+			[[nodiscard]] inline int32_t getInt32(std::string_view key) override
+			{
+				return getDouble(key);
+			}
+
+			[[nodiscard]] inline uint32_t getUInt32(std::string_view key) override
+			{
+				return getDouble(key);
+			}
+
+			[[nodiscard]] inline int64_t getInt64(std::string_view key) override
+			{
+				return getDouble(key);
+			}
+
+			[[nodiscard]] inline uint64_t getUInt64(std::string_view key) override
+			{
+				return getDouble(key);
+			}
+
+			[[nodiscard]] inline double getDouble(std::string_view key) override
+			{
+				return m_json->operator[](key.data()).number_value();
+			}
+
+			[[nodiscard]] inline std::string getString(std::string_view key) override
+			{
+				return m_json->operator[](key.data()).string_value(); // .get<std::string>();
+			}
+
+			[[nodiscard]] inline bool getBool(std::string_view key) override
+			{
+				return m_json->operator[](key.data()).bool_value();
+			}
+
+			[[nodiscard]] float getFloat(std::string_view key) override
+			{
+				return static_cast<float>(getDouble(key));
+			}
+
+			[[nodiscard]] inline int32_t getInt32() override
+			{
+				return getDouble();
+			}
+
+			[[nodiscard]] inline uint32_t getUInt32() override
+			{
+				return getDouble();
+			}
+
+			[[nodiscard]] inline int64_t getInt64() override
+			{
+				return getDouble();
+			}
+
+			[[nodiscard]] inline uint64_t getUInt64() override
+			{
+				return getDouble();
+			}
+
+			[[nodiscard]] inline double getDouble() override
+			{
+				return m_json->number_value();
+			}
+
+			[[nodiscard]] inline std::string getString() override
+			{
+				return m_json->string_value();
+			}
+
+			[[nodiscard]] inline bool getBool() override
+			{
+				return m_json->bool_value();
+			}
+
+			[[nodiscard]] float getFloat() override
+			{
+				return static_cast<float>(getDouble());
+			}
+
+		private:
+
+			inline void clearCache()
+			{
+				m_arrayCache.clear();
+				m_arrayPosCache.clear();
+				m_arrayListDataCache.clear();
+			}
+
+			//Owner values
+			char *m_endptr;
+			std::unique_ptr<json11::Json> m_data = nullptr; //Only used if this is the owner json!
+
+			const json11::Json *m_json = nullptr;
+
+			//Cache!
+			std::map<std::string, std::unique_ptr<IJson>> m_arrayCache;
+			std::map<size_t, std::unique_ptr<IJson>> m_arrayPosCache;
+			std::map<std::string, std::vector<std::unique_ptr<IJson>>> m_arrayListDataCache;
 
 	};
 }
 
-#endif //TILESON_PICOJSON_HPP
+#endif //TILESON_JSON11_HPP
 
-/*** End of inlined file: PicoJson.hpp ***/
+/*** End of inlined file: Json11.hpp ***/
+
 
 
 /*** Start of inlined file: Layer.hpp ***/
@@ -4026,7 +4186,7 @@ bool tson::Layer::parse(IJson &json, tson::Map *map)
 		m_offset = {json["offsetx"].get<float>(), json["offsety"].get<float>()}; //Optional
 	if(json.count("opacity") > 0) m_opacity = json["opacity"].get<float>(); else allFound = false;
 	if(json.count("width") > 0 && json.count("height") > 0)
-		m_size = {json["width"].get<int>(), json["height"].get<int>()}; else allFound = false;
+		m_size = {json["width"].get<int>(), json["height"].get<int>()}; //else allFound = false; - Not mandatory for all layers!
 	if(json.count("transparentcolor") > 0) m_transparentcolor = tson::Colori(json["transparentcolor"].get<std::string>()); //Optional
 	if(json.count("type") > 0) m_typeStr = json["type"].get<std::string>(); else allFound = false;
 	if(json.count("visible") > 0) m_visible = json["visible"].get<bool>(); else allFound = false;
@@ -6445,11 +6605,11 @@ namespace tson
 	class World
 	{
 		public:
-			inline explicit World(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>()) : m_json {std::move(jsonParser)}
+			inline explicit World(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>()) : m_json {std::move(jsonParser)}
 			{
 			}
 
-			inline explicit World(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>());
+			inline explicit World(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>());
 			inline bool parse(const fs::path &path);
 			inline int loadMaps(tson::Tileson *parser); //tileson_forward.hpp
 			inline bool contains(std::string_view filename);
@@ -6710,11 +6870,11 @@ namespace tson
 	class Project
 	{
 		public:
-			inline explicit Project(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>()) : m_json {std::move(jsonParser)}
+			inline explicit Project(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>()) : m_json {std::move(jsonParser)}
 			{
 
 			}
-			inline explicit Project(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>());
+			inline explicit Project(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>());
 			inline bool parse(const fs::path &path);
 
 			[[nodiscard]] inline const ProjectData &getData() const;
@@ -6813,7 +6973,7 @@ namespace tson
 	class Tileson
 	{
 		public:
-			inline explicit Tileson(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::PicoJson>(), bool includeBase64Decoder = true);
+			inline explicit Tileson(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>(), bool includeBase64Decoder = true);
 
 			inline std::unique_ptr<tson::Map> parse(const fs::path &path);
 			inline std::unique_ptr<tson::Map> parse(const void * data, size_t size);
@@ -6863,12 +7023,10 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
  */
 std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size)
 {
-	//std::istringstream i;
-	//i.rdbuf()->pubsetbuf((char *)data, size);
 
-	tson::MemoryStream mem {(uint8_t *)data, size};
-
-	if(!m_json->parse(data, size))
+	//tson::MemoryStream mem {(uint8_t *)data, size};
+	bool result = m_json->parse(data, size);
+	if(!result)
 		return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, "Memory error");
 
 	return std::move(parseJson());

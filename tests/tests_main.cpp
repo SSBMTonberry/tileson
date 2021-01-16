@@ -197,6 +197,26 @@ TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" )
     }
 }
 
+TEST_CASE( "Parse a whole map by file - minimal", "[complete][parse][file]" )
+{
+    tson::Tileson t;
+
+    fs::path pathLocal {"../../content/test-maps/ultimate_test_min.json"};
+    fs::path pathTravis {"../content/test-maps/ultimate_test_min.json"};
+    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+
+    std::unique_ptr<tson::Map> map = t.parse({pathToUse});
+    if(map->getStatus() == tson::ParseStatus::OK)
+    {
+        performMainAsserts(map.get());
+    }
+    else
+    {
+        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
+        REQUIRE(true);
+    }
+}
+
 TEST_CASE( "Test set", "[set]" )
 {
     std::set<uint32_t> s;
