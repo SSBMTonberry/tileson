@@ -13,11 +13,8 @@
 
 #include "../external_libs/catch.hpp"
 
-//Must be added manually to be able to test.
-#include "../include/external/gason.hpp"
-#include "../include/json/Gason.hpp"
 
-TEST_CASE( "Gason - Parse a Map from Tiled's documentation", "[tiled][map]" )
+TEST_CASE( "Json11 - Parse a Map from Tiled's documentation", "[tiled][map]" )
 {
 
     std::string jstr = "{\n"
@@ -47,15 +44,14 @@ TEST_CASE( "Gason - Parse a Map from Tiled's documentation", "[tiled][map]" )
                        "  \"width\":4\n"
                        "}";
 
-    gason::JsonValue j;
-    gason::JsonAllocator allocator;
-    char * endptr;
 
-    int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-    REQUIRE(result == 0);
+
+    std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
 
     tson::Map map;
-    std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+    std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
 
     bool parseOk = map.parse(*json, nullptr);
     //bool hasCorrectValues = (
@@ -79,7 +75,7 @@ TEST_CASE( "Gason - Parse a Map from Tiled's documentation", "[tiled][map]" )
 
 }
 
-TEST_CASE( "Gason - Parse a Layer from Tiled's documentation - read simple values", "[tiled][layer]" )
+TEST_CASE( "Json11 - Parse a Layer from Tiled's documentation - read simple values", "[tiled][layer]" )
 {
 
     SECTION("Layer - Tile Layer format")
@@ -103,16 +99,13 @@ TEST_CASE( "Gason - Parse a Layer from Tiled's documentation - read simple value
                            "  \"y\":0\n"
                            "}";
 
-        gason::JsonValue j;
-        gason::JsonAllocator allocator;
-        char * endptr;
-
-        int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-        REQUIRE(result == 0);
+        std::string error;
+        json11::Json j = json11::Json::parse(jstr, error);
+        REQUIRE(error.empty());
 
         tson::Layer layer;
 
-        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
         bool parseOk = layer.parse(*json, nullptr);
         bool hasCorrectValues = (
                 layer.getData().size() == 16 &&
@@ -155,14 +148,12 @@ TEST_CASE( "Gason - Parse a Layer from Tiled's documentation - read simple value
                            "  \"y\":0\n"
                            "}";
 
-        gason::JsonValue j;
-        gason::JsonAllocator allocator;
-        char * endptr;
+        std::string error;
+        json11::Json j = json11::Json::parse(jstr, error);
+        REQUIRE(error.empty());
 
-        int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-        REQUIRE(result == 0);
         tson::Layer layer;
-        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
         bool parseOk = layer.parse(*json, nullptr);
         bool hasCorrectValues = (
                 layer.getDrawOrder() == "topdown" &&
@@ -183,7 +174,7 @@ TEST_CASE( "Gason - Parse a Layer from Tiled's documentation - read simple value
     }
 }
 
-TEST_CASE( "Gason - Parse a Chunk from Tiled's documentation - read simple values", "[tiled][chunk]" )
+TEST_CASE( "Json11 - Parse a Chunk from Tiled's documentation - read simple values", "[tiled][chunk]" )
 {
     std::string jstr = "{\n"
                        "  \"data\":[1, 2, 1, 2, 3, 1, 3, 1, 2, 2, 3, 3, 4, 4, 4, 1],\n"
@@ -192,14 +183,13 @@ TEST_CASE( "Gason - Parse a Chunk from Tiled's documentation - read simple value
                        "  \"x\":4,\n"
                        "  \"y\":-16\n"
                        "}";
-    gason::JsonValue j;
-    gason::JsonAllocator allocator;
-    char * endptr;
 
-    int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-    REQUIRE(result == 0);
+    std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
+
     tson::Chunk chunk;
-    std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+    std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
     bool parseOk = chunk.parse(*json);
     bool hasCorrectValues = (
             chunk.getData().size() == 16 &&
@@ -210,7 +200,7 @@ TEST_CASE( "Gason - Parse a Chunk from Tiled's documentation - read simple value
     REQUIRE((parseOk && hasCorrectValues));
 }
 
-TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple values", "[tiled][object]" )
+TEST_CASE( "Json11 - Parse an Object from Tiled's documentation - read simple values", "[tiled][object]" )
 {
     SECTION("Object - regular")
     {
@@ -232,15 +222,13 @@ TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple val
                            "  \"x\":32,\n"
                            "  \"y\":32\n"
                            "}";
-        gason::JsonValue j;
-        gason::JsonAllocator allocator;
-        char * endptr;
+        std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
 
-        int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-        REQUIRE(result == 0);
 
         tson::Object obj;
-        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
         bool parseOk = obj.parse(*json);
         bool hasCorrectValues = (
                 obj.getGid() == 5 &&
@@ -275,15 +263,13 @@ TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple val
                            "  \"x\":560,\n"
                            "  \"y\":808\n"
                            "}";
-        gason::JsonValue j;
-        gason::JsonAllocator allocator;
-        char * endptr;
+        std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
 
-        int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-        REQUIRE(result == 0);
 
         tson::Object obj;
-        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
         bool parseOk = obj.parse(*json);
         bool hasCorrectValues = (
                 obj.isEllipse() &&
@@ -313,14 +299,12 @@ TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple val
                            "  \"x\":576,\n"
                            "  \"y\":584\n"
                            "}";
-        gason::JsonValue j;
-        gason::JsonAllocator allocator;
-        char * endptr;
+        std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
 
-        int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-        REQUIRE(result == 0);
         tson::Object obj;
-        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
         bool parseOk = obj.parse(*json);
         bool hasCorrectValues = (
                 obj.getId() == 14 &&
@@ -350,15 +334,13 @@ TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple val
                            "  \"x\":220,\n"
                            "  \"y\":350\n"
                            "}";
-        gason::JsonValue j;
-        gason::JsonAllocator allocator;
-        char * endptr;
+        std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
 
-        int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-        REQUIRE(result == 0);
 
         tson::Object obj;
-        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
         bool parseOk = obj.parse(*json);
         bool hasCorrectValues = (
                 obj.isPoint() &&
@@ -409,14 +391,12 @@ TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple val
                            "  \"x\":-176,\n"
                            "  \"y\":432\n"
                            "}";
-        gason::JsonValue j;
-        gason::JsonAllocator allocator;
-        char * endptr;
+        std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
 
-        int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-        REQUIRE(result == 0);
         tson::Object obj;
-        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
         bool parseOk = obj.parse(*json);
         bool hasCorrectValues = (
                 obj.getId() == 15 &&
@@ -469,15 +449,13 @@ TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple val
                            "  \"x\":240,\n"
                            "  \"y\":88\n"
                            "}";
-        gason::JsonValue j;
-        gason::JsonAllocator allocator;
-        char * endptr;
+        std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
 
-        int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-        REQUIRE(result == 0);
         tson::Object obj;
 
-        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
         bool parseOk = obj.parse(*json);
         bool hasCorrectValues = (
                 obj.getId() == 16 &&
@@ -512,14 +490,12 @@ TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple val
                            "  \"x\":48,\n"
                            "  \"y\":136\n"
                            "}";
-        gason::JsonValue j;
-        gason::JsonAllocator allocator;
-        char * endptr;
+        std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
 
-        int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-        REQUIRE(result == 0);
         tson::Object obj;
-        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
 
         bool parseOk = obj.parse(*json);
         bool hasCorrectValues = (
@@ -546,14 +522,12 @@ TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple val
                            "    \"x\":104,\n"
                            "    \"y\":34\n"
                            "}";
-        gason::JsonValue j;
-        gason::JsonAllocator allocator;
-        char * endptr;
+        std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
 
-        int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-        REQUIRE(result == 0);
         tson::Object obj;
-        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
         bool parseOk = obj.parse(*json);
         bool hasCorrectValues = (
                 obj.getId() == 13 &&
@@ -566,7 +540,7 @@ TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple val
     }
 }
 
-TEST_CASE( "Gason - Parse a Tileset from Tiled's documentation - read simple values", "[tiled][tileset]" )
+TEST_CASE( "Json11 - Parse a Tileset from Tiled's documentation - read simple values", "[tiled][tileset]" )
 {
     std::string jstr = "{\n"
                        " \"columns\":19,\n"
@@ -588,14 +562,13 @@ TEST_CASE( "Gason - Parse a Tileset from Tiled's documentation - read simple val
                        " \"tileheight\":32,\n"
                        " \"tilewidth\":32\n"
                        "}";
-    gason::JsonValue j;
-    gason::JsonAllocator allocator;
-    char * endptr;
 
-    int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-    REQUIRE(result == 0);
+    std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
+
     tson::Tileset tileset;
-    std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+    std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
     bool parseOk = tileset.parse(*json, nullptr);
     bool hasCorrectValues = (
             tileset.getColumns() == 19 &&
@@ -616,7 +589,7 @@ TEST_CASE( "Gason - Parse a Tileset from Tiled's documentation - read simple val
     REQUIRE((parseOk && hasCorrectValues));
 }
 
-TEST_CASE( "Gason - Parse a Tile from Tiled's documentation - read simple values", "[tiled][tile]" )
+TEST_CASE( "Json11 - Parse a Tile from Tiled's documentation - read simple values", "[tiled][tile]" )
 {
     std::string jstr = "{\n"
                        "  \"id\":11,\n"
@@ -628,14 +601,13 @@ TEST_CASE( "Gason - Parse a Tile from Tiled's documentation - read simple values
                        "    }],\n"
                        "  \"terrain\":[0, 1, 0, 1]\n"
                        "}";
-    gason::JsonValue j;
-    gason::JsonAllocator allocator;
-    char * endptr;
 
-    int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-    REQUIRE(result == 0);
+    std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
+
     tson::Tile tile;
-    std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+    std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
     bool parseOk = tile.parse(*json, nullptr, nullptr);
     REQUIRE(parseOk);
     REQUIRE(tile.getId() == 12);
@@ -648,20 +620,19 @@ TEST_CASE( "Gason - Parse a Tile from Tiled's documentation - read simple values
 
 }
 
-TEST_CASE( "Gason - Parse a Frame", "[tiled][frame]" )
+TEST_CASE( "Json11 - Parse a Frame", "[tiled][frame]" )
 {
     std::string jstr = "{\n"
                        "  \"duration\":100,\n"
                        "  \"tileid\":6\n"
                        "}";
-    gason::JsonValue j;
-    gason::JsonAllocator allocator;
-    char * endptr;
 
-    int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-    REQUIRE(result == 0);
+    std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
+
     tson::Frame frame;
-    std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+    std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
     bool parseOk = frame.parse(*json);
     bool hasCorrectValues = (
             frame.getDuration() == 100 &&
@@ -671,20 +642,18 @@ TEST_CASE( "Gason - Parse a Frame", "[tiled][frame]" )
     REQUIRE((parseOk && hasCorrectValues));
 }
 
-TEST_CASE( "Gason - Parse a Terrain from Tiled's documentation", "[tiled][terrain]" )
+TEST_CASE( "Json11 - Parse a Terrain from Tiled's documentation", "[tiled][terrain]" )
 {
     std::string jstr = "{\n"
                        "  \"name\":\"chasm\",\n"
                        "  \"tile\":12\n"
                        "}";
-    gason::JsonValue j;
-    gason::JsonAllocator allocator;
-    char * endptr;
+    std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
 
-    int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-    REQUIRE(result == 0);
     tson::Terrain terrain;
-    std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+    std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
     bool parseOk = terrain.parse(*json);
     bool hasCorrectValues = (
             terrain.getName() == "chasm" &&
@@ -694,7 +663,7 @@ TEST_CASE( "Gason - Parse a Terrain from Tiled's documentation", "[tiled][terrai
     REQUIRE((parseOk && hasCorrectValues));
 }
 
-TEST_CASE( "Gason - Wang-tests - everything Wang - simple", "[tiled][wang]" )
+TEST_CASE( "Json11 - Wang-tests - everything Wang - simple", "[tiled][wang]" )
 {
     SECTION("WangSet")
     {
@@ -817,14 +786,12 @@ TEST_CASE( "Gason - Wang-tests - everything Wang - simple", "[tiled][wang]" )
                            "            \"wangid\":[3, 0, 3, 0, 1, 0, 1, 0]\n"
                            "        }]\n"
                            "}";
-        gason::JsonValue j;
-        gason::JsonAllocator allocator;
-        char * endptr;
+        std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
 
-        int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-        REQUIRE(result == 0);
         tson::WangSet wangset;
-        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
         bool parseOk = wangset.parse(*json);
         bool hasCorrectValues = (
                 wangset.getTile() == -1 &&
@@ -849,15 +816,13 @@ TEST_CASE( "Gason - Wang-tests - everything Wang - simple", "[tiled][wang]" )
                            "  \"probability\": 1,\n"
                            "  \"tile\": 18\n"
                            "}";
-        gason::JsonValue j;
-        gason::JsonAllocator allocator;
-        char * endptr;
+        std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
 
-        int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-        REQUIRE(result == 0);
         tson::WangColor wangColor;
         tson::Color colorMatch = tson::Colori("#d31313");
-        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
         bool parseOk = wangColor.parse(*json);
         bool hasCorrectValues = (
                 wangColor.getColor() == colorMatch &&
@@ -878,14 +843,12 @@ TEST_CASE( "Gason - Wang-tests - everything Wang - simple", "[tiled][wang]" )
                            "  \"vflip\": false,\n"
                            "  \"wangid\": [2, 0, 1, 0, 1, 0, 2, 0]\n"
                            "}";
-        gason::JsonValue j;
-        gason::JsonAllocator allocator;
-        char * endptr;
+        std::string error;
+        json11::Json j = json11::Json::parse(jstr, error);
+        REQUIRE(error.empty());
 
-        int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-        REQUIRE(result == 0);
         tson::WangTile wangTile;
-        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+        std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
         bool parseOk = wangTile.parse(*json);
         bool hasCorrectValues = (
                 !wangTile.hasDFlip() &&
@@ -900,7 +863,7 @@ TEST_CASE( "Gason - Wang-tests - everything Wang - simple", "[tiled][wang]" )
     }
 }
 
-TEST_CASE( "Gason - Property-tests - Set properties from json", "[tiled][wang]" )
+TEST_CASE( "Json11 - Property-tests - Set properties from json", "[tiled][wang]" )
 {
     std::string jstr = "[\n"
                        "{\n"
@@ -933,14 +896,12 @@ TEST_CASE( "Gason - Property-tests - Set properties from json", "[tiled][wang]" 
                        "    \"type\":\"string\",\n"
                        "    \"value\":\"Mario\"\n"
                        "}]";
-    gason::JsonValue j;
-    gason::JsonAllocator allocator;
-    char * endptr;
+    std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
 
-    int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-    REQUIRE(result == 0);
     tson::PropertyCollection properties;
-    std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
+    std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
     for(auto &item : json->array())
     {
         properties.add(*item);
@@ -961,7 +922,7 @@ TEST_CASE( "Gason - Property-tests - Set properties from json", "[tiled][wang]" 
     REQUIRE(properties.getProperty("name")->getType() == tson::Type::String);
 }
 
-TEST_CASE( "Gason - Simulate several layers in file - expect okay!", "[tiled][wang]" )
+TEST_CASE( "Json11 - Simulate several layers in file - expect okay!", "[tiled][wang]" )
 {
     std::string jstr = "{ \n"
                        "    \"backgroundcolor\":\"#3288c1\",\n"
@@ -1320,16 +1281,14 @@ TEST_CASE( "Gason - Simulate several layers in file - expect okay!", "[tiled][wa
                        "           }\n"
                        "        ]\n"
                        "}";
-    gason::JsonValue j;
-    gason::JsonAllocator allocator;
-    char * endptr;
 
-    int result = gason::jsonParse(jstr.data(), &endptr, &j, allocator);
-    REQUIRE(result == 0);
+    std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
 
     tson::Map map;
     std::vector<tson::Layer> layers;
-    std::unique_ptr<tson::IJson> js = std::make_unique<tson::Gason>(j);
+    std::unique_ptr<tson::IJson> js = std::make_unique<tson::Json11>(j);
     tson::IJson &json = *js;
     if(json.count("layers") > 0 && json["layers"].isArray())
     {
@@ -1353,7 +1312,7 @@ TEST_CASE( "Gason - Simulate several layers in file - expect okay!", "[tiled][wa
     REQUIRE(l3.getName() == "Object Layer");
 }
 
-TEST_CASE( "Gason - Tileset - Set object alignment by string - expect right value", "[tiled][tileset][alignment]" )
+TEST_CASE( "Json11 - Tileset - Set object alignment by string - expect right value", "[tiled][tileset][alignment]" )
 {
 
     REQUIRE(tson::Tileset::StringToAlignment("unspecified") == tson::ObjectAlignment::Unspecified);

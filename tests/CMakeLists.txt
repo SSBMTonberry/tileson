@@ -7,7 +7,7 @@ include_directories(${PROJECT_SOURCE_DIR}/../external_libs/ ${PROJECT_SOURCE_DIR
 
 add_executable(tileson_tests tests_main.cpp tests_objects.cpp tests_tiled_nlohmann.cpp tests_reported_issues.cpp
         tests_compression_or_encoding.cpp tests_projects_and_worlds.cpp tests_interfaces.cpp tests_tiled_picojson.cpp
-        tests_benchmarks.cpp tests_tiled_gason.cpp)
+        tests_benchmarks.cpp tests_tiled_gason.cpp tests_tiled_json11.cpp)
 
 #add_executable(tileson_tests tests_main.cpp tests_tiled_picojson.cpp)
 

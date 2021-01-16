@@ -165,6 +165,7 @@ namespace gason
     #include <stdlib.h>
 
     #define JSON_ZONE_SIZE 4096
+    //#define JSON_ZONE_SIZE 16384
     #define JSON_STACK_SIZE 32
 
         inline const char *jsonStrError(int err) {

@@ -174,7 +174,7 @@ bool tson::Layer::parse(IJson &json, tson::Map *map)
         m_offset = {json["offsetx"].get<float>(), json["offsety"].get<float>()}; //Optional
     if(json.count("opacity") > 0) m_opacity = json["opacity"].get<float>(); else allFound = false;
     if(json.count("width") > 0 && json.count("height") > 0)
-        m_size = {json["width"].get<int>(), json["height"].get<int>()}; else allFound = false;
+        m_size = {json["width"].get<int>(), json["height"].get<int>()}; //else allFound = false; - Not mandatory for all layers!
     if(json.count("transparentcolor") > 0) m_transparentcolor = tson::Colori(json["transparentcolor"].get<std::string>()); //Optional
     if(json.count("type") > 0) m_typeStr = json["type"].get<std::string>(); else allFound = false;
     if(json.count("visible") > 0) m_visible = json["visible"].get<bool>(); else allFound = false;

@@ -4,7 +4,12 @@
 
 #include "../external_libs/catch.hpp"
 #include "../include/external/nlohmann.hpp"
+#include "../include/external/picojson.hpp"
+#include "../include/external/gason.hpp"
 #include "../include/tileson.h"
+
+//Must be defined after Tileson
+#include "../include/json/Gason.hpp"
 
 TEST_CASE( "Run benchmarks on PicoJson and NlohmannJson", "[json][benchmarks]" )
 {
@@ -14,7 +19,7 @@ TEST_CASE( "Run benchmarks on PicoJson and NlohmannJson", "[json][benchmarks]" )
 
     tson::Tileson nlohmann {std::make_unique<tson::NlohmannJson>()};
     tson::Tileson picojson {std::make_unique<tson::PicoJson>()};
-    tson::Tileson gason {std::make_unique<tson::Gason>()};
+    tson::Tileson g {std::make_unique<tson::Gason>()};
 
     auto startNlohmann = std::chrono::steady_clock::now();
     auto nlohmannMap = nlohmann.parse(pathToUse);
@@ -27,7 +32,7 @@ TEST_CASE( "Run benchmarks on PicoJson and NlohmannJson", "[json][benchmarks]" )
     std::chrono::duration<double> msPicoJson = (endPicoJson-startPicoJson) * 1000;
 
     auto startGason = std::chrono::steady_clock::now();
-    auto gasonMap = gason.parse(pathToUse);
+    auto gasonMap = g.parse(pathToUse);
     auto endGason = std::chrono::steady_clock::now();
     std::chrono::duration<double> msGason = (endGason-startGason) * 1000;
 

@@ -30,8 +30,8 @@
 // This is the minimal version of Tileson. You will have to provide your own version of nlohmann/json and make sure it's included before anything
 // Tileson related.
 //#include "external/json.hpp"
-
-#include "external/picojson.hpp"
+//#include "external/picojson.hpp"
+#include "external/json11.hpp"
 
 #include "tileson_parser.hpp"
 #include "common/tileson_forward.hpp"
