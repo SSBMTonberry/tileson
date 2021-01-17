@@ -1203,8 +1203,26 @@ namespace tson
 			 */
 			[[nodiscard]] virtual const std::string &name() const = 0;
 
-			//virtual std::string decompress(std::string_view s) = 0;
-			virtual TOut decompress(const TIn &s) = 0;
+			/*!
+			 * Used primarily for Tiled related decompression.
+			 * @param input Input data
+			 * @return Decompressed data
+			 */
+			virtual TOut decompress(const TIn &input) = 0;
+
+			/*!
+			 * Used for whole file decompression. Not related to Tiled
+			 * @param path
+			 * @return
+			 */
+			virtual TOut decompressFile(const fs::path &path) = 0;
+
+			/*!
+			 * Used for whole file decompression. Not related to Tiled
+			 * @param path
+			 * @return
+			 */
+			virtual TOut decompress(const void *data, size_t size) = 0;
 	};
 }
 
@@ -1222,6 +1240,9 @@ namespace tson
 			[[nodiscard]] inline const std::string &name() const override;
 
 			inline std::string decompress(const std::string_view &s) override;
+
+			inline std::string decompressFile(const std::filesystem::path &path) override;
+			inline std::string decompress(const void *data, size_t size) override;
 
 		private:
 			inline unsigned int pos_of_char(const unsigned char chr);
@@ -1288,11 +1309,106 @@ namespace tson
 
 		throw "If input is correct, this line should never be reached.";
 	}
+
+	/*!
+	 * UNUSED! Does nothing
+	 * @param path
+	 * @return
+	 */
+	std::string Base64Decompressor::decompressFile(const std::filesystem::path &path)
+	{
+		return std::string();
+	}
+
+	/*!
+	 * UNUSED! Does nothing
+	 * @param path
+	 * @return
+	 */
+	std::string Base64Decompressor::decompress(const void *data, size_t size)
+	{
+		return std::string();
+	}
 }
 
 #endif //TILESON_BASE64DECOMPRESSOR_HPP
 
 /*** End of inlined file: Base64Decompressor.hpp ***/
+
+
+/*** Start of inlined file: Lzma.hpp ***/
+//
+// Created by robin on 16.01.2021.
+//
+//#include "../../extras/pocketlzma.hpp"
+#ifdef POCKETLZMA_POCKETLZMA_H
+
+#ifndef TILESON_LZMA_HPP
+#define TILESON_LZMA_HPP
+
+namespace tson
+{
+	class Lzma : public IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>
+	{
+		public:
+			inline const std::string &name() const override
+			{
+				return NAME;
+			}
+
+			inline std::vector<uint8_t> decompress(const std::vector<uint8_t> &input) override
+			{
+				std::vector<uint8_t> out;
+
+				plz::PocketLzma p;
+				plz::StatusCode status = p.decompress(input, out);
+
+				if(status != plz::StatusCode::Ok)
+					return std::vector<uint8_t>();
+
+				return out;
+			}
+
+			inline std::vector<uint8_t> decompressFile(const std::filesystem::path &path) override
+			{
+				std::vector<uint8_t> in;
+				std::vector<uint8_t> out;
+
+				plz::PocketLzma p;
+				plz::FileStatus fileStatus = plz::File::FromFile(path, in);
+				if(fileStatus.status() != plz::FileStatus::Code::Ok)
+					return std::vector<uint8_t>();
+
+				plz::StatusCode status = p.decompress(in, out);
+
+				if(status != plz::StatusCode::Ok)
+					return std::vector<uint8_t>();
+
+				return out;
+			}
+
+			inline std::vector<uint8_t> decompress(const void *data, size_t size) override
+			{
+				std::vector<uint8_t> out;
+
+				plz::PocketLzma p;
+				plz::StatusCode status = p.decompress((uint8_t*) data, size, out);
+
+				if(status != plz::StatusCode::Ok)
+					return std::vector<uint8_t>();
+
+				return out;
+			}
+
+		private:
+			inline static const std::string NAME {"lzma"};
+	};
+}
+
+#endif //TILESON_LZMA_HPP
+
+#endif
+/*** End of inlined file: Lzma.hpp ***/
 
 
 /*** Start of inlined file: DecompressorContainer.hpp ***/
@@ -3064,7 +3180,8 @@ namespace tson
 			OK = 0, //OK unless otherwise stated
 			FileNotFound = 1,
 			ParseError = 2,
-			MissingData = 3
+			MissingData = 3,
+			DecompressionError = 4
 	};
 
 	/*!
@@ -6975,8 +7092,8 @@ namespace tson
 		public:
 			inline explicit Tileson(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>(), bool includeBase64Decoder = true);
 
-			inline std::unique_ptr<tson::Map> parse(const fs::path &path);
-			inline std::unique_ptr<tson::Map> parse(const void * data, size_t size);
+			inline std::unique_ptr<tson::Map> parse(const fs::path &path, std::unique_ptr<IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>> decompressor = nullptr);
+			inline std::unique_ptr<tson::Map> parse(const void * data, size_t size, std::unique_ptr<IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>> decompressor = nullptr);
 			inline tson::DecompressorContainer *decompressors();
 
 		private:
@@ -7002,10 +7119,22 @@ tson::Tileson::Tileson(std::unique_ptr<tson::IJson> jsonParser, bool includeBase
  * @param path path to file
  * @return parsed data as Map
  */
-std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
+std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path, std::unique_ptr<IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>> decompressor)
 {
 
-	if(m_json->parse(path))
+	bool result = false;
+
+	if(decompressor != nullptr)
+	{
+		std::vector<uint8_t> decompressed = decompressor->decompressFile(path);
+		result = (decompressed.empty()) ? false : true;
+		if(!result)
+			return std::make_unique<tson::Map>(tson::ParseStatus::DecompressionError, "Error during decompression");
+		result = m_json->parse(&decompressed[0], decompressed.size());
+		if(result)
+			return std::move(parseJson());
+	}
+	else if(m_json->parse(path))
 	{
 		return std::move(parseJson());
 	}
@@ -7021,11 +7150,21 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
  * @param size The size of the data to parse
  * @return parsed data as Map
  */
-std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size)
+std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size, std::unique_ptr<IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>> decompressor)
 {
+	bool result = false;
 
-	//tson::MemoryStream mem {(uint8_t *)data, size};
-	bool result = m_json->parse(data, size);
+	if(decompressor != nullptr)
+	{
+		std::vector<uint8_t> decompressed = decompressor->decompress(data, size);
+		result = (decompressed.empty()) ? false : true;
+		if(!result)
+			return std::make_unique<tson::Map>(tson::ParseStatus::DecompressionError, "Error during decompression");
+		result = m_json->parse(&decompressed[0], decompressed.size());
+	}
+	else
+		result = m_json->parse(data, size);
+
 	if(!result)
 		return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, "Memory error");
 
