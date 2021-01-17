@@ -12,6 +12,9 @@
 #include "../include/external/nlohmann.hpp"
 #include "../include/external/picojson.hpp"
 
+#define POCKETLZMA_LZMA_C_DEFINE
+#include "../extras/pocketlzma.hpp"
+
 #ifdef TILESON_UNIT_TEST_USE_SINGLE_HEADER
     #include "../single_include/tileson.hpp"
 #else
@@ -194,6 +197,51 @@ TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" )
     {
         std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
         REQUIRE(true);
+    }
+}
+
+TEST_CASE( "Parse a whole COMPRESSED map by file", "[complete][parse][file][compression]" )
+{
+    tson::Tileson t;
+
+    fs::path pathLocal {"../../content/test-maps/ultimate_test.lzma"};
+    fs::path pathTravis {"../content/test-maps/ultimate_test.lzma"};
+    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+
+    std::unique_ptr<tson::Map> map = t.parse({pathToUse}, std::make_unique<tson::Lzma>());
+    if(map->getStatus() == tson::ParseStatus::OK)
+    {
+        performMainAsserts(map.get());
+        checkChangesAfterTiledVersion124(map.get());
+        //Just check the colors here
+        tson::Colori color = map->getLayer("Object Layer")->firstObj("text")->getText().color;
+        REQUIRE(color.r == 254);
+        REQUIRE(color.g == 254);
+        REQUIRE(color.b == 254);
+        REQUIRE(color.a == 255);
+    }
+    else
+    {
+        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
+        REQUIRE(true);
+    }
+}
+
+TEST_CASE( "Parse a whole COMPRESSED map by memory", "[complete][parse][file][compression]" )
+{
+    tson::Tileson t;
+
+    std::unique_ptr<tson::Map> map = t.parse(tson_files_mapper::_ULTIMATE_TEST_LZMA, tson_files_mapper::_ULTIMATE_TEST_LZMA_SIZE, std::make_unique<tson::Lzma>());
+    if(map->getStatus() == tson::ParseStatus::OK)
+    {
+        performMainAsserts(map.get());
+        checkChangesAfterTiledVersion124(map.get());
+        //Just check the colors here
+        tson::Colori color = map->getLayer("Object Layer")->firstObj("text")->getText().color;
+        REQUIRE(color.r == 254);
+        REQUIRE(color.g == 254);
+        REQUIRE(color.b == 254);
+        REQUIRE(color.a == 255);
     }
 }
 

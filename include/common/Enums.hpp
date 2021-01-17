@@ -44,7 +44,8 @@ namespace tson
             OK = 0, //OK unless otherwise stated
             FileNotFound = 1,
             ParseError = 2,
-            MissingData = 3
+            MissingData = 3,
+            DecompressionError = 4
     };
 
     /*!

@@ -41,6 +41,7 @@
 
 #include "common/Tools.hpp"
 #include "common/Base64Decompressor.hpp"
+#include "common/Lzma.hpp"
 #include "common/DecompressorContainer.hpp"
 #include "misc/MemoryStream.hpp"
 #include "tiled/Map.hpp"
@@ -54,8 +55,8 @@ namespace tson
         public:
             inline explicit Tileson(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>(), bool includeBase64Decoder = true);
 
-            inline std::unique_ptr<tson::Map> parse(const fs::path &path);
-            inline std::unique_ptr<tson::Map> parse(const void * data, size_t size);
+            inline std::unique_ptr<tson::Map> parse(const fs::path &path, std::unique_ptr<IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>> decompressor = nullptr);
+            inline std::unique_ptr<tson::Map> parse(const void * data, size_t size, std::unique_ptr<IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>> decompressor = nullptr);
             inline tson::DecompressorContainer *decompressors();
 
         private:
@@ -81,10 +82,22 @@ tson::Tileson::Tileson(std::unique_ptr<tson::IJson> jsonParser, bool includeBase
  * @param path path to file
  * @return parsed data as Map
  */
-std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
+std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path, std::unique_ptr<IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>> decompressor)
 {
 
-    if(m_json->parse(path))
+    bool result = false;
+
+    if(decompressor != nullptr)
+    {
+        std::vector<uint8_t> decompressed = decompressor->decompressFile(path);
+        result = (decompressed.empty()) ? false : true;
+        if(!result)
+            return std::make_unique<tson::Map>(tson::ParseStatus::DecompressionError, "Error during decompression");
+        result = m_json->parse(&decompressed[0], decompressed.size());
+        if(result)
+            return std::move(parseJson());
+    }
+    else if(m_json->parse(path))
     {
         return std::move(parseJson());
     }
@@ -100,11 +113,21 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path)
  * @param size The size of the data to parse
  * @return parsed data as Map
  */
-std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size)
+std::unique_ptr<tson::Map> tson::Tileson::parse(const void *data, size_t size, std::unique_ptr<IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>> decompressor)
 {
+    bool result = false;
 
-    //tson::MemoryStream mem {(uint8_t *)data, size};
-    bool result = m_json->parse(data, size);
+    if(decompressor != nullptr)
+    {
+        std::vector<uint8_t> decompressed = decompressor->decompress(data, size);
+        result = (decompressed.empty()) ? false : true;
+        if(!result)
+            return std::make_unique<tson::Map>(tson::ParseStatus::DecompressionError, "Error during decompression");
+        result = m_json->parse(&decompressed[0], decompressed.size());
+    }
+    else
+        result = m_json->parse(data, size);
+
     if(!result)
         return std::make_unique<tson::Map>(tson::ParseStatus::ParseError, "Memory error");
 

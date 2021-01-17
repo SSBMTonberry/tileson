@@ -34,6 +34,16 @@ class DummyDecompressor : public tson::IDecompressor<std::string_view, std::stri
             return m_result;
         }
 
+        std::string decompressFile(const std::filesystem::path &path) override
+        {
+            return std::string();
+        }
+
+        std::string decompress(const void *data, size_t size) override
+        {
+            return std::string();
+        }
+
     private:
         std::string m_name;
         std::string m_result;
