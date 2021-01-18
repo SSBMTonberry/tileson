@@ -215,22 +215,22 @@ namespace tson
         protected:
             [[nodiscard]] inline int32_t getInt32(std::string_view key) override
             {
-                return getDouble(key);
+                return static_cast<int32_t>(getDouble(key));
             }
 
             [[nodiscard]] inline uint32_t getUInt32(std::string_view key) override
             {
-                return getDouble(key);
+                return static_cast<uint32_t>(getDouble(key));
             }
 
             [[nodiscard]] inline int64_t getInt64(std::string_view key) override
             {
-                return getDouble(key);
+                return static_cast<int64_t>(getDouble(key));
             }
 
             [[nodiscard]] inline uint64_t getUInt64(std::string_view key) override
             {
-                return getDouble(key);
+                return static_cast<uint64_t>(getDouble(key));
             }
 
             [[nodiscard]] inline double getDouble(std::string_view key) override
@@ -255,22 +255,22 @@ namespace tson
 
             [[nodiscard]] inline int32_t getInt32() override
             {
-                return getDouble();
+                return static_cast<int32_t>(getDouble());
             }
 
             [[nodiscard]] inline uint32_t getUInt32() override
             {
-                return getDouble();
+                return static_cast<uint32_t>(getDouble());
             }
 
             [[nodiscard]] inline int64_t getInt64() override
             {
-                return getDouble();
+                return static_cast<int64_t>(getDouble());
             }
 
             [[nodiscard]] inline uint64_t getUInt64() override
             {
-                return getDouble();
+                return static_cast<uint64_t>(getDouble());
             }
 
             [[nodiscard]] inline double getDouble() override
