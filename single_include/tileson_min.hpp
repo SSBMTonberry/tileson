@@ -259,7 +259,7 @@ namespace tson
 
 			inline std::string decompress(const std::string_view &s) override;
 
-			inline std::string decompressFile(const std::filesystem::path &path) override;
+			inline std::string decompressFile(const fs::path &path) override;
 			inline std::string decompress(const void *data, size_t size) override;
 
 		private:
@@ -333,7 +333,7 @@ namespace tson
 	 * @param path
 	 * @return
 	 */
-	std::string Base64Decompressor::decompressFile(const std::filesystem::path &path)
+	std::string Base64Decompressor::decompressFile(const fs::path &path)
 	{
 		return std::string();
 	}
@@ -387,13 +387,13 @@ namespace tson
 				return out;
 			}
 
-			inline std::vector<uint8_t> decompressFile(const std::filesystem::path &path) override
+			inline std::vector<uint8_t> decompressFile(const fs::path &path) override
 			{
 				std::vector<uint8_t> in;
 				std::vector<uint8_t> out;
 
 				plz::PocketLzma p;
-				plz::FileStatus fileStatus = plz::File::FromFile(path, in);
+				plz::FileStatus fileStatus = plz::File::FromFile(path.u8string(), in);
 				if(fileStatus.status() != plz::FileStatus::Code::Ok)
 					return std::vector<uint8_t>();
 
@@ -1411,25 +1411,25 @@ namespace tson
 			[[nodiscard]] inline int32_t getInt32(std::string_view key) override
 			{
 				picojson::object obj = m_json->get<picojson::object>();
-				return getDouble(key);
+				return static_cast<int32_t>(getDouble(key));
 			}
 
 			[[nodiscard]] inline uint32_t getUInt32(std::string_view key) override
 			{
 				picojson::object obj = m_json->get<picojson::object>();
-				return getDouble(key);
+				return static_cast<uint32_t>(getDouble(key));
 			}
 
 			[[nodiscard]] inline int64_t getInt64(std::string_view key) override
 			{
 				picojson::object obj = m_json->get<picojson::object>();
-				return getDouble(key);
+				return static_cast<int64_t>(getDouble(key));
 			}
 
 			[[nodiscard]] inline uint64_t getUInt64(std::string_view key) override
 			{
 				picojson::object obj = m_json->get<picojson::object>();
-				return getDouble(key);
+				return static_cast<uint64_t>(getDouble(key));
 			}
 
 			[[nodiscard]] inline double getDouble(std::string_view key) override
@@ -1458,22 +1458,22 @@ namespace tson
 
 			[[nodiscard]] inline int32_t getInt32() override
 			{
-				return getDouble();
+				return static_cast<int32_t>(getDouble());
 			}
 
 			[[nodiscard]] inline uint32_t getUInt32() override
 			{
-				return getDouble();
+				return static_cast<uint32_t>(getDouble());
 			}
 
 			[[nodiscard]] inline int64_t getInt64() override
 			{
-				return getDouble();
+				return static_cast<int64_t>(getDouble());
 			}
 
 			[[nodiscard]] inline uint64_t getUInt64() override
 			{
-				return getDouble();
+				return static_cast<uint64_t>(getDouble());
 			}
 
 			[[nodiscard]] inline double getDouble() override
@@ -1740,22 +1740,22 @@ namespace tson
 		protected:
 			[[nodiscard]] inline int32_t getInt32(std::string_view key) override
 			{
-				return getDouble(key);
+				return static_cast<int32_t>(getDouble(key));
 			}
 
 			[[nodiscard]] inline uint32_t getUInt32(std::string_view key) override
 			{
-				return getDouble(key);
+				return static_cast<uint32_t>(getDouble(key));
 			}
 
 			[[nodiscard]] inline int64_t getInt64(std::string_view key) override
 			{
-				return getDouble(key);
+				return static_cast<int64_t>(getDouble(key));
 			}
 
 			[[nodiscard]] inline uint64_t getUInt64(std::string_view key) override
 			{
-				return getDouble(key);
+				return static_cast<uint64_t>(getDouble(key));
 			}
 
 			[[nodiscard]] inline double getDouble(std::string_view key) override
@@ -1780,22 +1780,22 @@ namespace tson
 
 			[[nodiscard]] inline int32_t getInt32() override
 			{
-				return getDouble();
+				return static_cast<int32_t>(getDouble());
 			}
 
 			[[nodiscard]] inline uint32_t getUInt32() override
 			{
-				return getDouble();
+				return static_cast<uint32_t>(getDouble());
 			}
 
 			[[nodiscard]] inline int64_t getInt64() override
 			{
-				return getDouble();
+				return static_cast<int64_t>(getDouble());
 			}
 
 			[[nodiscard]] inline uint64_t getUInt64() override
 			{
-				return getDouble();
+				return static_cast<uint64_t>(getDouble());
 			}
 
 			[[nodiscard]] inline double getDouble() override

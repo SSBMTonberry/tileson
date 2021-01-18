@@ -30,7 +30,7 @@ namespace tson
                 return out;
             }
 
-            inline std::vector<uint8_t> decompressFile(const std::filesystem::path &path) override
+            inline std::vector<uint8_t> decompressFile(const fs::path &path) override
             {
                 std::vector<uint8_t> in;
                 std::vector<uint8_t> out;
