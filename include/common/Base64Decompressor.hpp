@@ -18,7 +18,7 @@ namespace tson
 
             inline std::string decompress(const std::string_view &s) override;
 
-            inline std::string decompressFile(const std::filesystem::path &path) override;
+            inline std::string decompressFile(const fs::path &path) override;
             inline std::string decompress(const void *data, size_t size) override;
 
         private:
@@ -92,7 +92,7 @@ namespace tson
      * @param path
      * @return
      */
-    std::string Base64Decompressor::decompressFile(const std::filesystem::path &path)
+    std::string Base64Decompressor::decompressFile(const fs::path &path)
     {
         return std::string();
     }
