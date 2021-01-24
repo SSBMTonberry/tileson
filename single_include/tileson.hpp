@@ -5244,6 +5244,7 @@ namespace tson
 			inline Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map);
 			inline Tile(uint32_t id, tson::Map *map); //v1.2.0
 			inline bool parse(IJson &json, tson::Tileset *tileset, tson::Map *map);
+			inline bool parseId(IJson &json);
 
 			[[nodiscard]] inline uint32_t getId() const;
 
@@ -5360,18 +5361,9 @@ bool tson::Tile::parse(IJson &json, tson::Tileset *tileset, tson::Map *map)
 	m_tileset = tileset;
 	m_map = map;
 
-	bool allFound = true;
-
 	if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); //Optional
 
-	if(json.count("id") > 0)
-	{
-		m_id = json["id"].get<uint32_t>() + 1;
-		m_gid = m_id;
-		manageFlipFlagsByIdThenRemoveFlags(m_gid);
-	}
-	else
-		allFound = false;
+	bool allFound = parseId(json);
 
 	if(json.count("type") > 0) m_type = json["type"].get<std::string>(); //Optional
 	if(json.count("objectgroup") > 0) m_objectgroup = tson::Layer(json["objectgroup"], m_map); //Optional
@@ -6376,7 +6368,7 @@ void tson::Map::processData()
 	m_tileMap.clear();
 	for(auto &tileset : m_tilesets)
 	{
-		std::for_each(tileset.getTiles().begin(), tileset.getTiles().end(), [&](tson::Tile &tile) { m_tileMap[tile.getId()] = &tile; });
+		std::for_each(tileset.getTiles().begin(), tileset.getTiles().end(), [&](tson::Tile &tile) { m_tileMap[tile.getGid()] = &tile; });
 	}
 	std::for_each(m_layers.begin(), m_layers.end(), [&](tson::Layer &layer)
 	{
@@ -7233,6 +7225,21 @@ const tson::Vector2i tson::Tile::getTileSize() const
 		return m_map->getTileSize();
 	else
 		return {0,0};
+}
+
+bool tson::Tile::parseId(IJson &json)
+{
+	if(json.count("id") > 0)
+	{
+		m_id = json["id"].get<uint32_t>() + 1;
+		if (m_tileset != nullptr)
+			m_gid = m_tileset->getFirstgid() + m_id - 1;
+		else
+			m_gid = m_id;
+		manageFlipFlagsByIdThenRemoveFlags(m_gid);
+		return true;
+	}
+	return false;
 }
 
 /*!
