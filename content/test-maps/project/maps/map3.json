@@ -54,7 +54,7 @@
  "nextobjectid":2,
  "orientation":"orthogonal",
  "renderorder":"left-down",
- "tiledversion":"1.4.1",
+ "tiledversion":"1.4.3",
  "tileheight":16,
  "tilesets":[
         {
@@ -81,6 +81,15 @@
          "spacing":0,
          "tilecount":48,
          "tileheight":16,
+         "tiles":[
+                {
+                 "animation":[
+                        {
+                         "duration":500,
+                         "tileid":1
+                        }],
+                 "id":1
+                }],
          "tilewidth":16
         }],
  "tilewidth":16,

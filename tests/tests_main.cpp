@@ -494,7 +494,9 @@ TEST_CASE( "Parse map3.json - expect correct tileset data for all TileObjects", 
                 }
             }
         }
-
+        tson::Layer *layer = map->getLayer("Main Layer");
+        tson::Tile *tile = layer->getTileData(3, 0);
+        REQUIRE(tile->getTileset()->getName() == "demo-tileset");
     }
     else
     {

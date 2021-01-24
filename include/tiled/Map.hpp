@@ -219,7 +219,7 @@ void tson::Map::processData()
     m_tileMap.clear();
     for(auto &tileset : m_tilesets)
     {
-        std::for_each(tileset.getTiles().begin(), tileset.getTiles().end(), [&](tson::Tile &tile) { m_tileMap[tile.getId()] = &tile; });
+        std::for_each(tileset.getTiles().begin(), tileset.getTiles().end(), [&](tson::Tile &tile) { m_tileMap[tile.getGid()] = &tile; });
     }
     std::for_each(m_layers.begin(), m_layers.end(), [&](tson::Layer &layer)
     {

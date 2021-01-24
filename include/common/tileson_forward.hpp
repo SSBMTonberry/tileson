@@ -30,6 +30,21 @@ const tson::Vector2i tson::Tile::getTileSize() const
         return {0,0};
 }
 
+bool tson::Tile::parseId(IJson &json)
+{
+    if(json.count("id") > 0)
+    {
+        m_id = json["id"].get<uint32_t>() + 1;
+        if (m_tileset != nullptr)
+            m_gid = m_tileset->getFirstgid() + m_id - 1;
+        else
+            m_gid = m_id;
+        manageFlipFlagsByIdThenRemoveFlags(m_gid);
+        return true;
+    }
+    return false;
+}
+
 /*!
  * Uses tson::Tileset and tson::Map data to calculate related values for tson::Tile.
  * Added in v1.2.0
