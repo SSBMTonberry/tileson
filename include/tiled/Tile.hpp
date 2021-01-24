@@ -25,7 +25,7 @@ namespace tson
             inline Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map);
             inline Tile(uint32_t id, tson::Map *map); //v1.2.0
             inline bool parse(IJson &json, tson::Tileset *tileset, tson::Map *map);
-
+            inline bool parseId(IJson &json);
 
 
             [[nodiscard]] inline uint32_t getId() const;
@@ -144,18 +144,9 @@ bool tson::Tile::parse(IJson &json, tson::Tileset *tileset, tson::Map *map)
     m_tileset = tileset;
     m_map = map;
 
-    bool allFound = true;
-
     if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); //Optional
 
-    if(json.count("id") > 0)
-    {
-        m_id = json["id"].get<uint32_t>() + 1;
-        m_gid = m_id;
-        manageFlipFlagsByIdThenRemoveFlags(m_gid);
-    }
-    else
-        allFound = false;
+    bool allFound = parseId(json);
 
     if(json.count("type") > 0) m_type = json["type"].get<std::string>(); //Optional
     if(json.count("objectgroup") > 0) m_objectgroup = tson::Layer(json["objectgroup"], m_map); //Optional

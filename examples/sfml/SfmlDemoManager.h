@@ -15,8 +15,8 @@
 #include "vera_font.h"
 
 #include "../../include/external/nlohmann.hpp"
-#include "../../include/tileson.h"
-//#include "../../single_include/tileson.hpp"
+//#include "../../include/tileson.h"
+#include "../../single_include/tileson.hpp"
 //#include "../../include/external/json.hpp"
 //#include "../../single_include/tileson_min.hpp"
 
