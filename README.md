@@ -15,16 +15,21 @@ Be sure to take a look at the release notes to see what's new!
 
 There is a `Doxygen` generated documentation of Tileson that can be found [HERE](https://ssbmtonberry.github.io/tileson/html)
 
+### IMPORTANT: Tileson requires that everything it needs in a map is embedded into it, to be able to resolve their related objects. Maps having external references to tilesets etc. will not work.
+
 
 # Tileson is header-only!
 This means that all you need is one file, `single_include/tileson.hpp` to have Tileson going
-in your project! The single-file is generated, and is quite large, as it uses the nlohmann/json as a built-in dependency,
-and might thus be a bit heavy to load (26 000 lines of code). 
-
-There is also an option to use a `tileson_min.hpp` file which only contains the `Tileson` related code (~5000 lines of code), but this requires you to include your own version of [nlohmann/json](https://github.com/nlohmann/json) before including `tileson_min.hpp`
+in your project! The single-file is generated using only ~7000 lines of code with everything included. There is also a `tileson_min.hpp` where no Json parser is bundled. See the `extras` folder for supported Json backends.
 
 You may alternatively copy the `include` directory and all its contents if you
-want to have every component in their own file. This will probably be way less heavy for your IDE, but you will still only need to include the `tileson.h` file in the top level. 
+want to have every component in their own file. This will probably be less heavy on your IDE, but you will still only need to include the `tileson.h` file in the top level. 
+
+# What's new in v1.3.0 alpha?
+- Tileson now uses a `tson::IJson` abstraction layer, which means the user is no longer restricted to use one Json parser. In fact, there are now three parsers with default implementations: `Json11`, `Nlohmann` and `Picojson`. You may even create your own!
+- The code base of Tileson is reduced from ~26000 to ~7000 lines of code. In addition Tileson is slightly faster due to switching default/main backend from `Nlohmann` to `Json11`.
+- Tileson now has support for reading `LZMA` compressed maps using [PocketLzma](https://github.com/SSBMTonberry/pocketlzma).  Example: The `ultimate_test.json` map gets reduced from `68,6 KiB` to `2,4 KiB` when LZMA compressed.
+- See release notes for more details!
 
 # What is Tiled?
 Tiled is a general purpose map editor developed by `Thorbjørn Lindeijer`.
@@ -313,9 +318,7 @@ for(const auto &folder : m_project.getFolders())
 ```
 
 # Compiling
-The program is cross-platform. However, it does not compile on all compilers.
-`std::filesystem` is used as a default for Linux and Windows systems, as it has been 
-supported for a while. Unfortunately, the default compiler, `Apple Clang`, shipped with todays Apple OSX (as of `24.08.2019`) does not support `std::filesystem` at all. For this reason, `std::filesystem` is disabled as default for `Apple` systems. As of v1.1.0 filesystem is in use unless `DISABLE_CPP17_FILESYSTEM` is defined (`#define`). This can also be controlled as a CMake parameter. Also, the library itself is header-only, and will only need the headers to work (see top of README for details). 
+The program is cross-platform. It utilizes the features of modern C++ (C++17), which requires the user to have a pretty up to date compiler. Tileson specifically supports the compilers `MSVC` (Windows), `GCC` (Linux) and `Clang` (Mac/OSX), but other compilers supporting all C++17 features should be fine.
 
 As a default, compiling examples are disabled due to CI, but it can easily be enabled through the CMakeLists.txt file on the root level of the project. Also keep in mind that the examples are using content from the `tileson/content` folder and are using relative paths. This is where the executable usually is located when compiling, and must have the same relative path to find the files:
 
@@ -367,8 +370,15 @@ Simply call it like this: `sh amalgamate_script.sh`. There is also a .bat-versio
 # Libraries used by Tileson
 
 - [Catch2](https://github.com/catchorg/Catch2/) - For Unit Tests
-- [JSON for Modern C++](https://github.com/nlohmann/json) - For JSON read/write
-- [Amalgamate](https://github.com/SSBMTonberry/Amalgamate) - Fork of [vinniefalco/Amalgamate](https://github.com/vinniefalco/Amalgamate) - For generating single-header include of `tileson.hpp`
+- [json11](https://github.com/dropbox/json11) - For JSON read/write
+- [PocketLzma](https://github.com/SSBMTonberry/pocketlzma) - For LZMA compression.
+- [Amalgamate](https://github.com/SSBMTonberry/Amalgamate) - Fork of [vinniefalco/Amalgamate](https://github.com/vinniefalco/Amalgamate) - For generating single-header include of `tileson.hpp` and `tileson_min.hpp`
+
+## Optional Json parsers supported by Tileson 
+- [JSON for Modern C++](https://github.com/nlohmann/json) - At least version 3.9.1
+- [Picojson](https://github.com/kazuho/picojson).
+
+The json libraries supported can all be found in a single-header format inside the `extras` folder.
 
 # Libraries used for examples/demo
 
