@@ -13,11 +13,19 @@ namespace tson
     class World
     {
         public:
+            #ifdef JSON11_IS_DEFINED
             inline explicit World(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>()) : m_json {std::move(jsonParser)}
             {
             }
 
             inline explicit World(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>());
+            #else
+            inline explicit World(std::unique_ptr<tson::IJson> jsonParser) : m_json {std::move(jsonParser)}
+            {
+            }
+
+            inline explicit World(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser);
+            #endif
             inline bool parse(const fs::path &path);
             inline int loadMaps(tson::Tileson *parser); //tileson_forward.hpp
             inline bool contains(std::string_view filename);

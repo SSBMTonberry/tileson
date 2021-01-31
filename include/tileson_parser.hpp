@@ -53,7 +53,11 @@ namespace tson
     class Tileson
     {
         public:
+            #ifdef JSON11_IS_DEFINED
             inline explicit Tileson(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>(), bool includeBase64Decoder = true);
+            #else
+            inline explicit Tileson(std::unique_ptr<tson::IJson> jsonParser, bool includeBase64Decoder = true);
+            #endif
 
             inline std::unique_ptr<tson::Map> parse(const fs::path &path, std::unique_ptr<IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>> decompressor = nullptr);
             inline std::unique_ptr<tson::Map> parse(const void * data, size_t size, std::unique_ptr<IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>> decompressor = nullptr);

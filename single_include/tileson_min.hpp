@@ -5732,11 +5732,19 @@ namespace tson
 	class World
 	{
 		public:
+			#ifdef JSON11_IS_DEFINED
 			inline explicit World(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>()) : m_json {std::move(jsonParser)}
 			{
 			}
 
 			inline explicit World(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>());
+			#else
+			inline explicit World(std::unique_ptr<tson::IJson> jsonParser) : m_json {std::move(jsonParser)}
+			{
+			}
+
+			inline explicit World(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser);
+			#endif
 			inline bool parse(const fs::path &path);
 			inline int loadMaps(tson::Tileson *parser); //tileson_forward.hpp
 			inline bool contains(std::string_view filename);
@@ -5997,11 +6005,19 @@ namespace tson
 	class Project
 	{
 		public:
+			#ifdef JSON11_IS_DEFINED
 			inline explicit Project(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>()) : m_json {std::move(jsonParser)}
 			{
 
 			}
 			inline explicit Project(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>());
+			#else
+			inline explicit Project(std::unique_ptr<tson::IJson> jsonParser) : m_json {std::move(jsonParser)}
+			{
+
+			}
+			inline explicit Project(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser);
+			#endif
 			inline bool parse(const fs::path &path);
 
 			[[nodiscard]] inline const ProjectData &getData() const;
@@ -6100,7 +6116,11 @@ namespace tson
 	class Tileson
 	{
 		public:
+			#ifdef JSON11_IS_DEFINED
 			inline explicit Tileson(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>(), bool includeBase64Decoder = true);
+			#else
+			inline explicit Tileson(std::unique_ptr<tson::IJson> jsonParser, bool includeBase64Decoder = true);
+			#endif
 
 			inline std::unique_ptr<tson::Map> parse(const fs::path &path, std::unique_ptr<IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>> decompressor = nullptr);
 			inline std::unique_ptr<tson::Map> parse(const void * data, size_t size, std::unique_ptr<IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>> decompressor = nullptr);
