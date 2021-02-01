@@ -31,6 +31,8 @@
 #include <memory>
 #include <initializer_list>
 
+#define JSON11_IS_DEFINED
+
 #ifdef _MSC_VER
 #if _MSC_VER <= 1800 // VS 2013
 		#ifndef noexcept
