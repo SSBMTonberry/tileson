@@ -51,8 +51,8 @@ Parsing a Tiled json
 
 //Tileson uses an alias fs for std::filesystem.
 int main()
-    tson::Tileson parser;
-    std::unique_ptr<tson::Map> map = parser.parse(fs::path("./path/to/map.json"));
+    tson::Tileson t;
+    std::unique_ptr<tson::Map> map = t.parse(tson_files::_ULTIMATE_TEST_JSON, tson_files::_ULTIMATE_TEST_JSON_SIZE);
 
     if(map->getStatus() == tson::ParseStatus::OK)
     {
@@ -153,11 +153,9 @@ int main()
         bool myBool = layer->get<bool>("my_bool");
         std::string myString = layer->get<std::string>("my_string");
         tson::Colori myColor = layer->get<tson::Colori>("my_color");
-        #ifndef DISABLE_CPP17_FILESYSTEM
+
         fs::path file = layer->get<fs::path>("my_file");
-        #else
-        std::string file = layer->get<std::string>("my_file");
-        #endif
+
         tson::Property *prop = layer->getProp("my_property");
     }
     else //Error occured
@@ -279,7 +277,7 @@ if(map->getStatus() == tson::ParseStatus::OK)
 
 ### Parsing worlds
 
-- Tileson now supports `Tiled worlds`. These contains a collection of several maps that can be tied together, but the files themselves must be parsed separately using `Tileson`. **NB! This functionality requires `std::filesystem` to be enabled (DISABLE_CPP17_FILESYSTEM not defined (default))**. (See `examples` to get a full idea how worlds works):
+- Tileson now supports `Tiled worlds`. These contains a collection of several maps that can be tied together, but the files themselves must be parsed separately using `Tileson`. (See `examples` to get a full idea how worlds works):
 
 ```c++
 tson::Tileson t;
@@ -298,7 +296,7 @@ for(const auto &data : world.getMapData())
 
 ### Parsing Tiled-projects
 
-- Tileson now supports `Tiled projects`. These contains all `map` and `world` data, but the files themselves must be parsed separately using `Tileson`. **NB! This functionality requires `std::filesystem` to be enabled (DISABLE_CPP17_FILESYSTEM not defined (default))**. (See `examples` to get a full idea how projects works).
+- Tileson now supports `Tiled projects`. These contains all `map` and `world` data, but the files themselves must be parsed separately using `Tileson`. (See `examples` to get a full idea how projects works).
 
 ```c++
 tson::Tileson t;
