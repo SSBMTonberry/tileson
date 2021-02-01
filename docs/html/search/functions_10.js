@@ -1,10 +1,12 @@
 var searchData=
 [
-  ['terrain_543',['Terrain',['../classtson_1_1Terrain.html#a7c8e6376dd169f808da21b8f55476553',1,'tson::Terrain::Terrain()=default'],['../classtson_1_1Terrain.html#ad25d10b36ef8737acd40aa46b8e2b7ea',1,'tson::Terrain::Terrain(std::string name, int tile)'],['../classtson_1_1Terrain.html#ad716007e9d23471846bcefd837504f66',1,'tson::Terrain::Terrain(const nlohmann::json &amp;json)']]],
-  ['text_544',['Text',['../classtson_1_1Text.html#a8679fc61171e54e53efa5a847b49d1a7',1,'tson::Text::Text()=default'],['../classtson_1_1Text.html#ac8aff8138b580a53c71515bf339d6ce4',1,'tson::Text::Text(std::string _text, bool _wrap, tson::Colori _color)']]],
-  ['tile_545',['Tile',['../classtson_1_1Tile.html#aca71685c1fa4d607d9717921776684a2',1,'tson::Tile::Tile()=default'],['../classtson_1_1Tile.html#ab8476a75c18d20e1237f47a73038ea18',1,'tson::Tile::Tile(const nlohmann::json &amp;json, tson::Tileset *tileset, tson::Map *map)'],['../classtson_1_1Tile.html#a5be615113663e3a0f5ea32895c9e6fdd',1,'tson::Tile::Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map)'],['../classtson_1_1Tile.html#a0758c6ca1f0ae75ccc4acc7b703501e5',1,'tson::Tile::Tile(uint32_t id, tson::Map *map)']]],
-  ['tileobject_546',['TileObject',['../classtson_1_1TileObject.html#af7732202c305b8272b493802979e753b',1,'tson::TileObject::TileObject()=default'],['../classtson_1_1TileObject.html#ae5678b4a11f6268a82cc9a1d7fd60269',1,'tson::TileObject::TileObject(const std::tuple&lt; int, int &gt; &amp;posInTileUnits, tson::Tile *tile)']]],
-  ['tileset_547',['Tileset',['../classtson_1_1Tileset.html#adfeeb332e1214f9efe57311ae6ee74e5',1,'tson::Tileset::Tileset()=default'],['../classtson_1_1Tileset.html#a81c56a3ff2bed4de8c9feeb641f698ae',1,'tson::Tileset::Tileset(const nlohmann::json &amp;json, tson::Map *map)']]],
-  ['tileson_548',['Tileson',['../classtson_1_1Tileson.html#a0e28083c5cd0c86e466a02ba1cc1ba7b',1,'tson::Tileson']]],
-  ['tools_549',['Tools',['../classtson_1_1Tools.html#a3362b967e4290c3956c571893fc09808',1,'tson::Tools']]]
+  ['setid_601',['setId',['../classtson_1_1PropertyCollection.html#ac7946632c038ef7dcc10881229f29c18',1,'tson::PropertyCollection']]],
+  ['setname_602',['setName',['../classtson_1_1Property.html#aec8cb237c1dac262589cd2b52189bde1',1,'tson::Property']]],
+  ['setproperties_603',['setProperties',['../classtson_1_1Tile.html#adb96bdf1188305319e358360db8e1742',1,'tson::Tile']]],
+  ['setstrvalue_604',['setStrValue',['../classtson_1_1Property.html#ad9df5aff4283d1ffdf40abf12090e034',1,'tson::Property']]],
+  ['settypebystring_605',['setTypeByString',['../classtson_1_1Property.html#a69849575fcc65abcfed6ea0e3990c367',1,'tson::Property']]],
+  ['setvalue_606',['setValue',['../classtson_1_1Property.html#a8ff1dae4110fac51d024407303552b1b',1,'tson::Property::setValue()'],['../classtson_1_1PropertyCollection.html#a80470b96535b25aae6bc09c6ea3d51d6',1,'tson::PropertyCollection::setValue()']]],
+  ['setvaluebytype_607',['setValueByType',['../classtson_1_1Property.html#abe7fb87228cccdc1dd3218a961859fff',1,'tson::Property']]],
+  ['size_608',['size',['../classtson_1_1DecompressorContainer.html#ac9d3d5fe080d63295be67b626f094f8e',1,'tson::DecompressorContainer::size()'],['../classtson_1_1IJson.html#ac98b2ad71ae5b9607b48c7f0e428bf1d',1,'tson::IJson::size()'],['../classtson_1_1Gason.html#ac4bfeec219f3755b3d04397e7e0604f6',1,'tson::Gason::size()'],['../classtson_1_1Json11.html#ae37af4aeffc96b60e336fd2f9b55dbd1',1,'tson::Json11::size()']]],
+  ['stringtoalignment_609',['StringToAlignment',['../classtson_1_1Tileset.html#a1722647f6375d4be676563b6daef0068',1,'tson::Tileset']]]
 ];

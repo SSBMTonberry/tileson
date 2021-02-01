@@ -1,13 +1,19 @@
 var searchData=
 [
-  ['id_169',['id',['../classtson_1_1FlaggedTile.html#a722fc130f36de3b97397263da36552f9',1,'tson::FlaggedTile']]],
-  ['idecompressor_170',['IDecompressor',['../classtson_1_1IDecompressor.html',1,'tson']]],
-  ['idecompressor_2ehpp_171',['IDecompressor.hpp',['../IDecompressor_8hpp.html',1,'']]],
-  ['imagelayer_172',['ImageLayer',['../namespacetson.html#ac06ac2288d940483c17a83daf587780da4f1851a3abdf8696a00a4e22d5ec178c',1,'tson']]],
-  ['initialize_173',['initialize',['../classtson_1_1TileObject.html#adeaeefb6ddd5c4551404b2311695edd6',1,'tson::TileObject']]],
-  ['int_174',['Int',['../namespacetson.html#a072f9f86eaa4189282ed315ddfde0094a1686a6c336b71b36d77354cea19a8b52',1,'tson']]],
-  ['isellipse_175',['isEllipse',['../classtson_1_1Object.html#ad4e021ff8d2eaa7c660d8b90db3ec005',1,'tson::Object']]],
-  ['isinfinite_176',['isInfinite',['../classtson_1_1Map.html#aeb7fd31ac283a3e7156d2ff528215932',1,'tson::Map']]],
-  ['ispoint_177',['isPoint',['../classtson_1_1Object.html#afda3ed8a906aef01e4b834ece6965e50',1,'tson::Object']]],
-  ['isvisible_178',['isVisible',['../classtson_1_1Layer.html#a9f15627018a6cd843babcd177c910bce',1,'tson::Layer::isVisible()'],['../classtson_1_1Object.html#ab2c504d55d8ddadd40cef0ca3711d49d',1,'tson::Object::isVisible()']]]
+  ['id_189',['id',['../classtson_1_1FlaggedTile.html#a722fc130f36de3b97397263da36552f9',1,'tson::FlaggedTile']]],
+  ['idecompressor_190',['IDecompressor',['../classtson_1_1IDecompressor.html',1,'tson']]],
+  ['idecompressor_2ehpp_191',['IDecompressor.hpp',['../IDecompressor_8hpp.html',1,'']]],
+  ['idecompressor_3c_20std_3a_3astring_5fview_2c_20std_3a_3astring_20_3e_192',['IDecompressor&lt; std::string_view, std::string &gt;',['../classtson_1_1IDecompressor.html',1,'tson']]],
+  ['ijson_193',['IJson',['../classtson_1_1IJson.html',1,'tson']]],
+  ['ijson_2ehpp_194',['IJson.hpp',['../IJson_8hpp.html',1,'']]],
+  ['imagelayer_195',['ImageLayer',['../namespacetson.html#ac06ac2288d940483c17a83daf587780da4f1851a3abdf8696a00a4e22d5ec178c',1,'tson']]],
+  ['initialize_196',['initialize',['../classtson_1_1TileObject.html#adeaeefb6ddd5c4551404b2311695edd6',1,'tson::TileObject']]],
+  ['int_197',['Int',['../namespacetson.html#a072f9f86eaa4189282ed315ddfde0094a1686a6c336b71b36d77354cea19a8b52',1,'tson']]],
+  ['isarray_198',['isArray',['../classtson_1_1Json11.html#ace315177f312c92e6ddd6bc3241fca55',1,'tson::Json11::isArray()'],['../classtson_1_1Gason.html#a1390ae21a6bea26f16244ba446b5e5cc',1,'tson::Gason::isArray()'],['../classtson_1_1IJson.html#a50556d6382b1ee0115bcbf809ab8b24b',1,'tson::IJson::isArray()']]],
+  ['isellipse_199',['isEllipse',['../classtson_1_1Object.html#ad4e021ff8d2eaa7c660d8b90db3ec005',1,'tson::Object']]],
+  ['isinfinite_200',['isInfinite',['../classtson_1_1Map.html#aeb7fd31ac283a3e7156d2ff528215932',1,'tson::Map']]],
+  ['isnull_201',['isNull',['../classtson_1_1IJson.html#acf9e508caae75864a133be58a4b4a735',1,'tson::IJson::isNull()'],['../classtson_1_1Gason.html#ae6f159427787c504751971693771b10b',1,'tson::Gason::isNull()'],['../classtson_1_1Json11.html#a558927c83f79146b21ae5e784d8ada2f',1,'tson::Json11::isNull()']]],
+  ['isobject_202',['isObject',['../classtson_1_1IJson.html#ada9c28cb45525cc600eae1b6dc59e886',1,'tson::IJson::isObject()'],['../classtson_1_1Gason.html#a55740d8644d7e0fe2a10c3587edcd59d',1,'tson::Gason::isObject()'],['../classtson_1_1Json11.html#a77384c8ee5dfa0d8e75325871f1ebce3',1,'tson::Json11::isObject()']]],
+  ['ispoint_203',['isPoint',['../classtson_1_1Object.html#afda3ed8a906aef01e4b834ece6965e50',1,'tson::Object']]],
+  ['isvisible_204',['isVisible',['../classtson_1_1Layer.html#a9f15627018a6cd843babcd177c910bce',1,'tson::Layer::isVisible()'],['../classtson_1_1Object.html#ab2c504d55d8ddadd40cef0ca3711d49d',1,'tson::Object::isVisible()']]]
 ];
