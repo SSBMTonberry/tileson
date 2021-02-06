@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['layer_179',['Layer',['../classtson_1_1Layer.html',1,'tson::Layer'],['../classtson_1_1Tile.html#a834e4e869446be644f61b4b456604f31',1,'tson::Tile::Layer()'],['../classtson_1_1Layer.html#ac744d2ba56eb9e2e11063db895c7318b',1,'tson::Layer::Layer()=default'],['../classtson_1_1Layer.html#a609a3673599840415869ab05cc473318',1,'tson::Layer::Layer(const nlohmann::json &amp;json, tson::Map *map)']]],
-  ['layer_2ehpp_180',['Layer.hpp',['../Layer_8hpp.html',1,'']]],
-  ['layertype_181',['LayerType',['../namespacetson.html#ac06ac2288d940483c17a83daf587780d',1,'tson']]],
-  ['left_182',['Left',['../namespacetson.html#ada2375f45be683cd0407a7b43ad8e5e7a945d5e233cf7d6240f6b783b36a374ff',1,'tson']]],
-  ['loadmaps_183',['loadMaps',['../classtson_1_1World.html#a013ba94da8ae973705365456abee9dfa',1,'tson::World']]]
+  ['json11_205',['Json11',['../classtson_1_1Json11.html#a3a0814dd5a36ae71d0dc39953ae12c77',1,'tson::Json11::Json11()=default'],['../classtson_1_1Json11.html#a776d1489605701a59d368d480214ded8',1,'tson::Json11::Json11(const json11::Json &amp;json)'],['../classtson_1_1Json11.html',1,'tson::Json11']]],
+  ['json11_2ehpp_206',['Json11.hpp',['../Json11_8hpp.html',1,'']]]
 ];

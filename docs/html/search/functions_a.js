@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['map_510',['Map',['../classtson_1_1Map.html#a4f027c90796e8e1e2d73d4ec0d2181fb',1,'tson::Map::Map()=default'],['../classtson_1_1Map.html#a2bee12cd32029f85cc83cd8a3bb97a0d',1,'tson::Map::Map(ParseStatus status, std::string description)'],['../classtson_1_1Map.html#a30321322ef6e04079e10070c9ec1e02f',1,'tson::Map::Map(const nlohmann::json &amp;json, tson::DecompressorContainer *decompressors)']]],
-  ['memorybuffer_511',['MemoryBuffer',['../classtson_1_1MemoryBuffer.html#ad5909c0e584fac40207ae3cd55383afe',1,'tson::MemoryBuffer']]],
-  ['memorystream_512',['MemoryStream',['../classtson_1_1MemoryStream.html#ac620548e40859ed1b5f814399ba3cb1f',1,'tson::MemoryStream']]]
+  ['layer_573',['Layer',['../classtson_1_1Layer.html#ac744d2ba56eb9e2e11063db895c7318b',1,'tson::Layer::Layer()=default'],['../classtson_1_1Layer.html#aa0278ab14f6ed1f74534767efbd624cf',1,'tson::Layer::Layer(IJson &amp;json, tson::Map *map)']]],
+  ['loadmaps_574',['loadMaps',['../classtson_1_1World.html#a013ba94da8ae973705365456abee9dfa',1,'tson::World']]]
 ];

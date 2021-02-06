@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['name_513',['name',['../classtson_1_1Base64Decompressor.html#aa68ecadc13e74d724780b6eba200d657',1,'tson::Base64Decompressor::name()'],['../classtson_1_1IDecompressor.html#a1f98ddd8214fcf5ca516ffdd2c87f02e',1,'tson::IDecompressor::name()']]]
+  ['map_575',['Map',['../classtson_1_1Map.html#a4f027c90796e8e1e2d73d4ec0d2181fb',1,'tson::Map::Map()=default'],['../classtson_1_1Map.html#a2bee12cd32029f85cc83cd8a3bb97a0d',1,'tson::Map::Map(ParseStatus status, std::string description)'],['../classtson_1_1Map.html#a553cf6e2a475c6cadea047dec3aaf753',1,'tson::Map::Map(IJson &amp;json, tson::DecompressorContainer *decompressors)']]],
+  ['memorybuffer_576',['MemoryBuffer',['../classtson_1_1MemoryBuffer.html#ad5909c0e584fac40207ae3cd55383afe',1,'tson::MemoryBuffer']]],
+  ['memorystream_577',['MemoryStream',['../classtson_1_1MemoryStream.html#ac620548e40859ed1b5f814399ba3cb1f',1,'tson::MemoryStream']]]
 ];
