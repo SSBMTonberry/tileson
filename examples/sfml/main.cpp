@@ -6,7 +6,6 @@
 int main()
 {
     SfmlDemoManager demo;
-    demo.initialize({400 * 3, 240 * 3}, {600, 360});
     if(demo.initialize({400 * 3, 240 * 3}, {600, 360}))
     {
         demo.run();
