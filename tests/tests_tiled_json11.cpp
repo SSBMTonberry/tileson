@@ -5,6 +5,8 @@
 
 #include "../TilesonConfig.h"
 
+#define TSON_TEST_ENABLED
+
 #ifdef TILESON_UNIT_TEST_USE_SINGLE_HEADER
     #include "../single_include/tileson.hpp"
 #else
@@ -1326,4 +1328,15 @@ TEST_CASE( "Json11 - Tileset - Set object alignment by string - expect right val
     REQUIRE(tson::Tileset::StringToAlignment("bottomleft") == tson::ObjectAlignment::BottomLeft);
     REQUIRE(tson::Tileset::StringToAlignment("bottom") == tson::ObjectAlignment::Bottom);
     REQUIRE(tson::Tileset::StringToAlignment("bottomright") == tson::ObjectAlignment::BottomRight);
+}
+
+TEST_CASE( "Json11 - Tileset - Calculate offset based on margin and spacing in pixels - expect right result", "[tiled][tileset][spacing]" )
+{
+    tson::Tileset tileset;
+    tileset.m_margin = 3;
+    tileset.m_spacing = 2;
+
+    REQUIRE(tileset.getMarginSpacingOffset({0,0}) == tson::Vector2i (3,3));
+    REQUIRE(tileset.getMarginSpacingOffset({0,2}) == tson::Vector2i (3,7));
+    REQUIRE(tileset.getMarginSpacingOffset({1,4}) == tson::Vector2i (5,11));
 }
