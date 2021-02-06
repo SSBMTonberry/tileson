@@ -4,7 +4,7 @@
 
 #include "SfmlDemoManager.h"
 
-void SfmlDemoManager::initialize(const sf::Vector2i &windowSize, const sf::Vector2i &resolution, const std::string &title, const fs::path &basePath)
+bool SfmlDemoManager::initialize(const sf::Vector2i &windowSize, const sf::Vector2i &resolution, const std::string &title, const fs::path &basePath)
 {
     m_window.create(sf::VideoMode(windowSize.x, windowSize.y), title, sf::Style::Titlebar | sf::Style::Close);
     m_window.setView(sf::View(sf::FloatRect(0.f, 0.f, (float) resolution.x, (float)resolution.y)));
@@ -16,27 +16,34 @@ void SfmlDemoManager::initialize(const sf::Vector2i &windowSize, const sf::Vecto
     m_font.loadFromMemory(vera_font::_VERA_TTF, vera_font::_VERA_TTF_SIZE);
     ImGui::SFML::Init(m_window);
     ImGui::GetIO().IniFilename = nullptr;
+
+    //Initialize maps
+    m_map = parseMap("ultimate_test.json");
+    m_marginSpaceMap = parseMap("margin-space-map.lzma", std::make_unique<tson::Lzma>());
+    bool projectOk = parseProject();
+
+    return (m_map != nullptr && m_marginSpaceMap != nullptr && projectOk);
 }
 
-bool SfmlDemoManager::parseMap(const std::string &filename)
+std::unique_ptr<tson::Map> SfmlDemoManager::parseMap(const std::string &filename, std::unique_ptr<tson::IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>> decompressor)
 {
     tson::Tileson t;
-    m_map = t.parse(fs::path(m_basePath / filename));
+    std::unique_ptr<tson::Map> map = t.parse(fs::path(m_basePath / filename), std::move(decompressor));
 
-    if(m_map->getStatus() == tson::ParseStatus::OK)
+    if(map->getStatus() == tson::ParseStatus::OK)
     {
-        for(auto &tileset : m_map->getTilesets())
+        for(auto &tileset : map->getTilesets())
         {
             fs::path tilesetPath = getTilesetImagePath(tileset); //tileset.getImage().u8string()
             storeAndLoadImage(tilesetPath.string(), {0, 0});
         }
 
-        return true;
+        return std::move(map);
     }
     else
-        std::cout << "Parse error: " << m_map->getStatusMessage() << std::endl;
+        std::cout << "Parse error: " << map->getStatusMessage() << std::endl;
 
-    return false;
+    return nullptr;
 }
 
 bool SfmlDemoManager::parseProject(const std::string &filename)
@@ -134,8 +141,13 @@ void SfmlDemoManager::drawMap()
         m_currentMap = m_projectMaps["map3.json"].get();
         m_currentInfo = m_projectMapInfo.at(2);
     }
+    else if(m_mapIndex == 4)
+    {
+        m_currentMap = m_marginSpaceMap.get();
+        m_currentInfo = "This map uses margin and spacing in tileset and is also LZMA-compressed!";
+    }
 
-    if(m_mapIndex < 4)
+    if(m_mapIndex < 5)
     {
         if (m_currentMap != nullptr)
         {
@@ -204,7 +216,7 @@ void SfmlDemoManager::drawImgui()
     //ImGui::LabelText("###second", );
 
     //World related data
-    if(m_mapIndex > 3 && m_currentMap != nullptr)
+    if(m_mapIndex > 4 && m_currentMap != nullptr)
     {
         //RBP: Add info here
         for(int i = 0; i < m_worldVisibilityFlags.size(); ++i)
