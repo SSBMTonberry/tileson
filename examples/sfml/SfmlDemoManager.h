@@ -16,6 +16,7 @@
 
 #include "../../include/external/nlohmann.hpp"
 //#include "../../include/tileson.h"
+#include "../../extras/pocketlzma.hpp"
 #include "../../single_include/tileson.hpp"
 //#include "../../include/external/json.hpp"
 //#include "../../single_include/tileson_min.hpp"
@@ -29,10 +30,10 @@ class SfmlDemoManager
     public:
         SfmlDemoManager() = default;
 
-        void initialize( const sf::Vector2i &windowSize, const sf::Vector2i &resolution = {400, 240},
+        bool initialize( const sf::Vector2i &windowSize, const sf::Vector2i &resolution = {400, 240},
                          const std::string &title = "SFML Tileson demo",
                          const fs::path &basePath = fs::path("../../../content/test-maps/"));
-        bool parseMap(const std::string &filename = "ultimate_test.json");
+        std::unique_ptr<tson::Map> parseMap(const std::string &filename = "ultimate_test.json", std::unique_ptr<tson::IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>> decompressor = nullptr);
         bool parseProject(const std::string &filename = "test.tiled-project");
         void run();
 
@@ -59,6 +60,7 @@ class SfmlDemoManager
         fs::path m_basePath {};
         sf::RenderWindow m_window;
         std::unique_ptr<tson::Map> m_map;
+        std::unique_ptr<tson::Map> m_marginSpaceMap;
 
         std::map<std::string, std::unique_ptr<tson::Map>> m_projectMaps; //Non-world maps in project
 
@@ -78,7 +80,7 @@ class SfmlDemoManager
         sf::Text m_demoText;
 
         int m_mapIndex {0};
-        const int m_maxMapIndex {4};
+        const int m_maxMapIndex {5};
         tson::Vector2i m_positionOffset {0,0}; //Used for world related stuff
 
         std::map<std::string, std::unique_ptr<sf::Texture>> m_textures;

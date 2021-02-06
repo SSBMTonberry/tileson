@@ -61,7 +61,12 @@ namespace tson
 
             inline static tson::ObjectAlignment StringToAlignment(std::string_view str);
 
+            //v1.3.0
+            inline tson::Vector2i getMarginSpacingOffset(const tson::Vector2i &posInTileUnits);
+
+            #ifndef TSON_TEST_ENABLED
         private:
+            #endif
             inline void generateMissingTiles();
 
             int                           m_columns {};       /*! 'columns': The number of tile columns in the tileset */
@@ -421,6 +426,22 @@ tson::ObjectAlignment tson::Tileset::StringToAlignment(std::string_view str)
 tson::ObjectAlignment tson::Tileset::getObjectAlignment() const
 {
     return m_objectAlignment;
+}
+
+/*!
+ * Helper function to calculate the correct additional offset when margin and/or spacing is used in a tileset
+ * Created to solve issue #31.
+ *
+ * @param posInTileUnits Position of the current tile in tile units.
+ * @return Calculated additional offset in pixels.
+ */
+tson::Vector2i tson::Tileset::getMarginSpacingOffset(const tson::Vector2i &posInTileUnits)
+{
+    if(m_margin == 0 && m_spacing == 0)
+        return {0,0};
+
+    tson::Vector2i offset {(posInTileUnits.x * m_spacing) + m_margin, (posInTileUnits.y * m_spacing) + m_margin};
+    return offset;
 }
 
 

@@ -37,3 +37,5 @@ cmake-build-minsizerel/
 *.tiled-session
 
 cmake-build-debug-x64/
+
+.vscode/
