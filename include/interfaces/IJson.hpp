@@ -39,6 +39,14 @@ namespace tson
             [[nodiscard]] virtual bool isObject() const = 0;
             [[nodiscard]] virtual bool isNull() const = 0;
 
+            /*!
+             * Get the path where the json was loaded.
+             * Only assigned if json is parsed by file.
+             * @return
+             */
+            [[nodiscard]] virtual fs::path path() const = 0;
+
+
         protected:
             [[nodiscard]] virtual int32_t getInt32(std::string_view key) = 0;
             [[nodiscard]] virtual uint32_t getUInt32(std::string_view key) = 0;

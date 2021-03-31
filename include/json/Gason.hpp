@@ -212,6 +212,11 @@ namespace tson
                 return m_json.getTag() == gason::JSON_NULL;
             }
 
+            fs::path path() const override
+            {
+                return m_path;
+            }
+
         protected:
             [[nodiscard]] inline int32_t getInt32(std::string_view key) override
             {
@@ -332,6 +337,7 @@ namespace tson
             std::unique_ptr<gason::JsonAllocator> m_allocator = nullptr;
 
             gason::JsonValue m_json;
+            fs::path m_path;
 
             //Cache!
             std::map<std::string, gason::JsonValue> m_objectCache;

@@ -10,6 +10,7 @@
          "offsetx":0,
          "offsety":-256,
          "opacity":1,
+         "parallaxx":1.4,
          "properties":[
                 {
                  "name":"repeat_bg",
@@ -32,8 +33,6 @@
          "id":7,
          "name":"Wangio",
          "opacity":1,
-         "parallaxx":1.2,
-         "parallaxy":1.2,
          "type":"tilelayer",
          "visible":true,
          "width":32,

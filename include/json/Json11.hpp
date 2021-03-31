@@ -214,6 +214,11 @@ namespace tson
                 return m_json->is_null();
             }
 
+            fs::path path() const override
+            {
+                return m_path;
+            }
+
         protected:
             [[nodiscard]] inline int32_t getInt32(std::string_view key) override
             {
@@ -309,6 +314,7 @@ namespace tson
             std::unique_ptr<json11::Json> m_data = nullptr; //Only used if this is the owner json!
 
             const json11::Json *m_json = nullptr;
+            fs::path m_path;
 
             //Cache!
             std::map<std::string, std::unique_ptr<IJson>> m_arrayCache;
