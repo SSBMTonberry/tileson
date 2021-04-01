@@ -17,7 +17,7 @@
 //Must be defined after Tileson
 #include "../include/json/Gason.hpp"
 
-TEST_CASE( "Run benchmarks on all supported json-backends + Gason", "[json][benchmarks]" )
+TEST_CASE( "Run benchmarks on all supported json-backends", "[json][benchmarks]" )
 {
     fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
     fs::path pathTravis {"../content/test-maps/ultimate_test.json"};
@@ -29,7 +29,6 @@ TEST_CASE( "Run benchmarks on all supported json-backends + Gason", "[json][benc
 
     tson::Tileson nlohmann {std::make_unique<tson::NlohmannJson>()};
     tson::Tileson picojson {std::make_unique<tson::PicoJson>()};
-    tson::Tileson g {std::make_unique<tson::Gason>()};
     tson::Tileson j11 {std::make_unique<tson::Json11>()};
 
     auto startNlohmann = std::chrono::steady_clock::now();
@@ -41,11 +40,6 @@ TEST_CASE( "Run benchmarks on all supported json-backends + Gason", "[json][benc
     auto picojsonMap = picojson.parse(pathToUse);
     auto endPicoJson = std::chrono::steady_clock::now();
     std::chrono::duration<double> msPicoJson = (endPicoJson-startPicoJson) * 1000;
-
-    auto startGason = std::chrono::steady_clock::now();
-    auto gasonMap = g.parse(pathToUse);
-    auto endGason = std::chrono::steady_clock::now();
-    std::chrono::duration<double> msGason = (endGason-startGason) * 1000;
 
     auto startJ11 = std::chrono::steady_clock::now();
     auto j11Map = j11.parse(pathToUse);
@@ -64,15 +58,38 @@ TEST_CASE( "Run benchmarks on all supported json-backends + Gason", "[json][benc
 
     std::cout << "Nlohmann parse time:             " << msNlohmann.count() << " ms\n";
     std::cout << "PicoJson parse time:             " << msPicoJson.count() << " ms\n";
-    std::cout << "Gason parse time:                " << msGason.count() << " ms\n";
     std::cout << "Json11 parse time:               " << msJ11.count() << " ms\n";
     std::cout << "Json11 parse time (LZMA):        " << msJ11Lzma.count() << " ms\n";
     std::cout << "Json11 memory parse time (LZMA): " << msJ11LzmaMemory.count() << " ms\n";
 
     REQUIRE(nlohmannMap->getStatus() == tson::ParseStatus::OK);
     REQUIRE(picojsonMap->getStatus() == tson::ParseStatus::OK);
-    REQUIRE(gasonMap->getStatus() == tson::ParseStatus::OK);
     REQUIRE(j11Map->getStatus() == tson::ParseStatus::OK);
     REQUIRE(j11MapLzma->getStatus() == tson::ParseStatus::OK);
     REQUIRE(j11MapLzmaMemory->getStatus() == tson::ParseStatus::OK);
 }
+
+//
+// Removed due to Gason being unsupported and thus unknown errors during parsing are expected
+//
+//TEST_CASE( "Run benchmarks on Gason (unsupported)", "[json][benchmarks]" )
+//{
+//    fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
+//    fs::path pathTravis {"../content/test-maps/ultimate_test.json"};
+//    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+//
+//    fs::path pathLzmaLocal {"../../content/test-maps/ultimate_test.lzma"};
+//    fs::path pathLzmaTravis {"../content/test-maps/ultimate_test.lzma"};
+//    fs::path pathLzmaToUse = (fs::exists(pathLzmaLocal)) ? pathLzmaLocal : pathLzmaTravis;
+//
+//    tson::Tileson g {std::make_unique<tson::Gason>()};
+//
+//    auto startGason = std::chrono::steady_clock::now();
+//    auto gasonMap = g.parse(pathToUse);
+//    auto endGason = std::chrono::steady_clock::now();
+//    std::chrono::duration<double> msGason = (endGason-startGason) * 1000;
+//
+//    std::cout << "Gason parse time:                " << msGason.count() << " ms\n";
+//
+//    REQUIRE(gasonMap->getStatus() == tson::ParseStatus::OK);
+//}

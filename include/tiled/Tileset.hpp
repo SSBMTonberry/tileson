@@ -95,6 +95,10 @@ namespace tson
             //v1.2.0-stuff
             tson::ObjectAlignment         m_objectAlignment{tson::ObjectAlignment::Unspecified};  /*! 'objectalignment': Alignment to use for tile objects. Tiled 1.4.*/
             tson::Map *                   m_map;              /*! The map who owns this tileset */
+
+            //v1.3.0-stuff
+            fs::path                      m_source {};           /*! 'source': exists only when tileset is contained in an external file*/
+            fs::path                      m_path {};             /*! Has the full path to the tileset if 'source' has an existing value */
     };
 
     /*!
@@ -120,8 +124,24 @@ bool tson::Tileset::parse(IJson &json, tson::Map *map)
     m_map = map;
     bool allFound = true;
 
-    if(json.count("columns") > 0) m_columns = json["columns"].get<int>(); else allFound = false;
     if(json.count("firstgid") > 0) m_firstgid = json["firstgid"].get<int>(); else allFound = false;
+
+    //Tileset is stored in external file if 'source' exists
+    if(json.count("source") > 0)
+    {
+        if(!allFound)
+            return allFound;
+
+        std::string sourceStr = json["source"].get<std::string>();
+        m_source = fs::path(sourceStr);
+        m_path = json.directory() / m_source;
+
+        if(!json.parse(m_path))
+            return false;
+    }
+
+
+    if(json.count("columns") > 0) m_columns = json["columns"].get<int>(); else allFound = false;
 
     if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); else allFound = false;
 

@@ -86,6 +86,7 @@ namespace tson
                 m_json = nullptr;
                 if (fs::exists(path) && fs::is_regular_file(path))
                 {
+                    m_path = path.parent_path();
                     m_data = std::make_unique<nlohmann::json>();
                     std::ifstream i(path.u8string());
                     try
@@ -151,6 +152,16 @@ namespace tson
             [[nodiscard]] inline bool isNull() const override
             {
                 return m_json->is_null();
+            }
+
+            fs::path directory() const override
+            {
+                return m_path;
+            }
+
+            void directory(const fs::path &directory) override
+            {
+                m_path = directory;
             }
 
         protected:
@@ -244,6 +255,7 @@ namespace tson
 
             nlohmann::json *m_json = nullptr;
             std::unique_ptr<nlohmann::json> m_data = nullptr; //Only used if this is the owner json!
+            fs::path m_path;
 
             //Cache!
             std::map<std::string, std::unique_ptr<IJson>> m_arrayCache;

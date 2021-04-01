@@ -31,8 +31,12 @@
 
 //#include "../include/json/NlohmannJson.hpp"
 
-
-void performMainAsserts(tson::Map *map)
+/*!
+ *
+ * @param map The parsed map to assert.
+ * @param isOldMap Set to true if map is before Tiled v1.5 - false otherwise
+ */
+void performMainAsserts(tson::Map *map, bool isOldMap = true)
 {
     std::map<int, bool> tests;
     auto main = map->getLayer("Main Layer");
@@ -62,9 +66,12 @@ void performMainAsserts(tson::Map *map)
     REQUIRE(map->getTileset("demo-tileset") != nullptr);
     REQUIRE(map->getTileset("demo-tileset")->getTile(36) != nullptr);
     REQUIRE(map->getTileset("demo-tileset")->getTile(36)->getAnimation().size() == 2);
-    REQUIRE(map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProperties().getSize() == 2);
-    REQUIRE(map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProp("i_like_this")->getType() == tson::Type::Boolean);
-    REQUIRE(!map->getTileset("demo-tileset")->getTerrain("test_terrain")->get<std::string>("description").empty());
+    if(isOldMap)
+    {
+        REQUIRE(map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProperties().getSize() == 2);
+        REQUIRE(map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProp("i_like_this")->getType() == tson::Type::Boolean);
+        REQUIRE(!map->getTileset("demo-tileset")->getTerrain("test_terrain")->get<std::string>("description").empty());
+    }
     REQUIRE(map->getTileMap().size() > 10);
     REQUIRE(tileData[{4,4}] != nullptr);
     REQUIRE(tileData[{4,4}]->getId() == 1);
@@ -85,6 +92,18 @@ void performMainAsserts(tson::Map *map)
     REQUIRE(main->getTileData(8,14)->getTileset() != nullptr);
     REQUIRE(main->getTileData(8,14)->getPosition({8,14}) == main->getTileObject(8,14)->getPosition());
     REQUIRE(main->getTileData().size() == main->getTileObjects().size());
+}
+
+/*!
+ * Asserts related to Tiled v1.5
+ * @param map
+ */
+void performAssertsOnTiled15Changes(tson::Map *map)
+{
+    //RBP: Add the Tiled v1.5 equivalent of these tests.
+    //REQUIRE(map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProperties().getSize() == 2);
+    //REQUIRE(map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProp("i_like_this")->getType() == tson::Type::Boolean);
+    //REQUIRE(!map->getTileset("demo-tiles")->getTerrain("test_terrain")->get<std::string>("description").empty());
 }
 
 void checkChangesAfterTiledVersion124(tson::Map *map)
@@ -186,6 +205,34 @@ TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" )
     {
         performMainAsserts(map.get());
         checkChangesAfterTiledVersion124(map.get());
+        //Just check the colors here
+        tson::Colori color = map->getLayer("Object Layer")->firstObj("text")->getText().color;
+        REQUIRE(color.r == 254);
+        REQUIRE(color.g == 254);
+        REQUIRE(color.b == 254);
+        REQUIRE(color.a == 255);
+    }
+    else
+    {
+        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
+        REQUIRE(true);
+    }
+}
+
+TEST_CASE( "Parse a Tiled v1.5 map with external tileset by file - Expect no errors and correct data", "[complete][parse][file]" )
+{
+    tson::Tileson t;
+
+    fs::path pathLocal {"../../content/test-maps/ultimate_test_v1.5.json"};
+    fs::path pathTravis {"../content/test-maps/ultimate_test_v1.5.json"};
+    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+
+    std::unique_ptr<tson::Map> map = t.parse({pathToUse});
+    if(map->getStatus() == tson::ParseStatus::OK)
+    {
+        performMainAsserts(map.get(), false);
+        checkChangesAfterTiledVersion124(map.get());
+        performAssertsOnTiled15Changes(map.get());
         //Just check the colors here
         tson::Colori color = map->getLayer("Object Layer")->firstObj("text")->getText().color;
         REQUIRE(color.r == 254);
