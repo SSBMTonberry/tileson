@@ -86,6 +86,7 @@ namespace tson
                 m_json = nullptr;
                 if (fs::exists(path) && fs::is_regular_file(path))
                 {
+                    m_path = path.parent_path();
                     m_data = std::make_unique<nlohmann::json>();
                     std::ifstream i(path.u8string());
                     try
@@ -153,9 +154,14 @@ namespace tson
                 return m_json->is_null();
             }
 
-            fs::path path() const override
+            fs::path directory() const override
             {
                 return m_path;
+            }
+
+            void directory(const fs::path &directory) override
+            {
+                m_path = directory;
             }
 
         protected:

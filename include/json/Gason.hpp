@@ -112,6 +112,7 @@ namespace tson
                 {
                     std::ifstream file(path.u8string());
                     std::string str;
+                    m_path = path.parent_path();
 
                     file.seekg(0, std::ios::end);
                     str.reserve(file.tellg());
@@ -212,9 +213,14 @@ namespace tson
                 return m_json.getTag() == gason::JSON_NULL;
             }
 
-            fs::path path() const override
+            fs::path directory() const override
             {
                 return m_path;
+            }
+
+            void directory(const fs::path &directory) override
+            {
+                m_path = directory;
             }
 
         protected:

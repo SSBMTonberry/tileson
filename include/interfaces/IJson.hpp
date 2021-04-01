@@ -40,11 +40,12 @@ namespace tson
             [[nodiscard]] virtual bool isNull() const = 0;
 
             /*!
-             * Get the path where the json was loaded.
+             * Get the directory where the json was loaded.
              * Only assigned if json is parsed by file.
              * @return
              */
-            [[nodiscard]] virtual fs::path path() const = 0;
+            [[nodiscard]] virtual fs::path directory() const = 0;
+            virtual void directory(const fs::path &directory) = 0;
 
 
         protected:

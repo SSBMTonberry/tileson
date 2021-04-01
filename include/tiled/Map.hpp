@@ -66,7 +66,7 @@ namespace tson
 
 
         private:
-            inline void createTilesetData(IJson &json);
+            inline bool createTilesetData(IJson &json);
             inline void processData();
 
             Colori                                 m_backgroundColor;   /*! 'backgroundcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)*/;
@@ -181,7 +181,9 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
             m_properties.add(*item);
         });
     }
-    createTilesetData(json);
+    if(!createTilesetData(json))
+        allFound = false;
+
     processData();
 
     return allFound;
@@ -190,8 +192,9 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
 /*!
  * Tileset data must be created in two steps to prevent malformed tson::Tileset pointers inside tson::Tile
  */
-void tson::Map::createTilesetData(IJson &json)
+bool tson::Map::createTilesetData(IJson &json)
 {
+    bool ok = true;
     if(json.count("tilesets") > 0 && json["tilesets"].isArray())
     {
         //First created tileset objects
@@ -205,10 +208,14 @@ void tson::Map::createTilesetData(IJson &json)
         //Then do the parsing
         std::for_each(tilesets.begin(), tilesets.end(), [&](std::unique_ptr<IJson> &item)
         {
-            m_tilesets[i].parse(*item, this);
+            item->directory(json.directory());
+            if(!m_tilesets[i].parse(*item, this))
+                ok = false;
+
             ++i;
         });
     }
+    return ok;
 }
 
 /*!

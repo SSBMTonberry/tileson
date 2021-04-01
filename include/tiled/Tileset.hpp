@@ -134,7 +134,7 @@ bool tson::Tileset::parse(IJson &json, tson::Map *map)
 
         std::string sourceStr = json["source"].get<std::string>();
         m_source = fs::path(sourceStr);
-        m_path = json.path() / m_source;
+        m_path = json.directory() / m_source;
 
         if(!json.parse(m_path))
             return false;
