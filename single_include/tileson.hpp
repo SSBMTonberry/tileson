@@ -1853,6 +1853,14 @@ namespace tson
 			[[nodiscard]] virtual bool isObject() const = 0;
 			[[nodiscard]] virtual bool isNull() const = 0;
 
+			/*!
+			 * Get the directory where the json was loaded.
+			 * Only assigned if json is parsed by file.
+			 * @return
+			 */
+			[[nodiscard]] virtual fs::path directory() const = 0;
+			virtual void directory(const fs::path &directory) = 0;
+
 		protected:
 			[[nodiscard]] virtual int32_t getInt32(std::string_view key) = 0;
 			[[nodiscard]] virtual uint32_t getUInt32(std::string_view key) = 0;
@@ -2014,6 +2022,7 @@ namespace tson
 				m_json = nullptr;
 				if (fs::exists(path) && fs::is_regular_file(path))
 				{
+					m_path = path.parent_path();
 					m_data = std::make_unique<nlohmann::json>();
 					std::ifstream i(path.u8string());
 					try
@@ -2079,6 +2088,16 @@ namespace tson
 			[[nodiscard]] inline bool isNull() const override
 			{
 				return m_json->is_null();
+			}
+
+			fs::path directory() const override
+			{
+				return m_path;
+			}
+
+			void directory(const fs::path &directory) override
+			{
+				m_path = directory;
 			}
 
 		protected:
@@ -2172,6 +2191,7 @@ namespace tson
 
 			nlohmann::json *m_json = nullptr;
 			std::unique_ptr<nlohmann::json> m_data = nullptr; //Only used if this is the owner json!
+			fs::path m_path;
 
 			//Cache!
 			std::map<std::string, std::unique_ptr<IJson>> m_arrayCache;
@@ -2306,6 +2326,7 @@ namespace tson
 				m_json = nullptr;
 				if (fs::exists(path) && fs::is_regular_file(path))
 				{
+					m_path = path.parent_path();
 					m_data = std::make_unique<picojson::value>();
 					std::ifstream i(path.u8string());
 					try
@@ -2389,6 +2410,16 @@ namespace tson
 			[[nodiscard]] inline bool isNull() const override
 			{
 				return m_json->is<picojson::null>();
+			}
+
+			fs::path directory() const override
+			{
+				return m_path;
+			}
+
+			void directory(const fs::path &directory) override
+			{
+				m_path = directory;
 			}
 
 		protected:
@@ -2490,6 +2521,7 @@ namespace tson
 
 			picojson::value *m_json = nullptr;
 			std::unique_ptr<picojson::value> m_data = nullptr; //Only used if this is the owner json!
+			fs::path m_path;
 
 			//Cache!
 			std::map<std::string, std::unique_ptr<IJson>> m_arrayCache;
@@ -2617,6 +2649,7 @@ namespace tson
 				{
 					std::ifstream file(path.u8string());
 					std::string str;
+					m_path = path.parent_path();
 
 					file.seekg(0, std::ios::end);
 					str.reserve(file.tellg());
@@ -2721,6 +2754,16 @@ namespace tson
 				return m_json->is_null();
 			}
 
+			fs::path directory() const override
+			{
+				return m_path;
+			}
+
+			void directory(const fs::path &directory) override
+			{
+				m_path = directory;
+			}
+
 		protected:
 			[[nodiscard]] inline int32_t getInt32(std::string_view key) override
 			{
@@ -2816,6 +2859,7 @@ namespace tson
 			std::unique_ptr<json11::Json> m_data = nullptr; //Only used if this is the owner json!
 
 			const json11::Json *m_json = nullptr;
+			fs::path m_path;
 
 			//Cache!
 			std::map<std::string, std::unique_ptr<IJson>> m_arrayCache;
@@ -5840,6 +5884,10 @@ namespace tson
 			//v1.2.0-stuff
 			tson::ObjectAlignment         m_objectAlignment{tson::ObjectAlignment::Unspecified};  /*! 'objectalignment': Alignment to use for tile objects. Tiled 1.4.*/
 			tson::Map *                   m_map;              /*! The map who owns this tileset */
+
+			//v1.3.0-stuff
+			fs::path                      m_source {};           /*! 'source': exists only when tileset is contained in an external file*/
+			fs::path                      m_path {};             /*! Has the full path to the tileset if 'source' has an existing value */
 	};
 
 	/*!
@@ -5865,8 +5913,23 @@ bool tson::Tileset::parse(IJson &json, tson::Map *map)
 	m_map = map;
 	bool allFound = true;
 
-	if(json.count("columns") > 0) m_columns = json["columns"].get<int>(); else allFound = false;
 	if(json.count("firstgid") > 0) m_firstgid = json["firstgid"].get<int>(); else allFound = false;
+
+	//Tileset is stored in external file if 'source' exists
+	if(json.count("source") > 0)
+	{
+		if(!allFound)
+			return allFound;
+
+		std::string sourceStr = json["source"].get<std::string>();
+		m_source = fs::path(sourceStr);
+		m_path = json.directory() / m_source;
+
+		if(!json.parse(m_path))
+			return false;
+	}
+
+	if(json.count("columns") > 0) m_columns = json["columns"].get<int>(); else allFound = false;
 
 	if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); else allFound = false;
 
@@ -6238,7 +6301,7 @@ namespace tson
 			inline Tileset * getTilesetByGid(uint32_t gid);
 
 		private:
-			inline void createTilesetData(IJson &json);
+			inline bool createTilesetData(IJson &json);
 			inline void processData();
 
 			Colori                                 m_backgroundColor;   /*! 'backgroundcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) (optional)*/;
@@ -6353,7 +6416,9 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
 			m_properties.add(*item);
 		});
 	}
-	createTilesetData(json);
+	if(!createTilesetData(json))
+		allFound = false;
+
 	processData();
 
 	return allFound;
@@ -6362,8 +6427,9 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
 /*!
  * Tileset data must be created in two steps to prevent malformed tson::Tileset pointers inside tson::Tile
  */
-void tson::Map::createTilesetData(IJson &json)
+bool tson::Map::createTilesetData(IJson &json)
 {
+	bool ok = true;
 	if(json.count("tilesets") > 0 && json["tilesets"].isArray())
 	{
 		//First created tileset objects
@@ -6377,10 +6443,14 @@ void tson::Map::createTilesetData(IJson &json)
 		//Then do the parsing
 		std::for_each(tilesets.begin(), tilesets.end(), [&](std::unique_ptr<IJson> &item)
 		{
-			m_tilesets[i].parse(*item, this);
+			item->directory(json.directory());
+			if(!m_tilesets[i].parse(*item, this))
+				ok = false;
+
 			++i;
 		});
 	}
+	return ok;
 }
 
 /*!
