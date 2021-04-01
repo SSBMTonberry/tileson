@@ -17,7 +17,7 @@
 #include "../../include/external/nlohmann.hpp"
 //#include "../../include/tileson.h"
 #include "../../extras/pocketlzma.hpp"
-#include "../../single_include/tileson.hpp"
+#include "../../tileson.hpp"
 //#include "../../include/external/json.hpp"
 //#include "../../single_include/tileson_min.hpp"
 
