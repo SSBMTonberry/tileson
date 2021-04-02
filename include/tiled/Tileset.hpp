@@ -63,6 +63,8 @@ namespace tson
 
             //v1.3.0
             inline tson::Vector2i getMarginSpacingOffset(const tson::Vector2i &posInTileUnits);
+            inline tson::WangSet * getWangset(const std::string &name);
+
 
             #ifndef TSON_TEST_ENABLED
         private:
@@ -462,6 +464,21 @@ tson::Vector2i tson::Tileset::getMarginSpacingOffset(const tson::Vector2i &posIn
 
     tson::Vector2i offset {(posInTileUnits.x * m_spacing) + m_margin, (posInTileUnits.y * m_spacing) + m_margin};
     return offset;
+}
+
+/*!
+ * Get a wangset by name
+ * @param name
+ * @return
+ */
+tson::WangSet *tson::Tileset::getWangset(const std::string &name)
+{
+    auto wangset = std::find_if(m_wangsets.begin(), m_wangsets.end(), [&](const auto &w) { return w.getName() == name; });
+
+    if(wangset != m_wangsets.end())
+        return wangset.base();
+
+    return nullptr;
 }
 
 
