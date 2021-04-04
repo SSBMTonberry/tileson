@@ -93,6 +93,13 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0f45a9049f5c452641f44ef3834e1ec0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addfd9874733ef694af43cdfb33b95d47"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1WangColor.html#addfd9874733ef694af43cdfb33b95d47">getTile</a> () const</td></tr>
 <tr class="separator:addfd9874733ef694af43cdfb33b95d47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5a8245a64a00f269c8350dc20a1288c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1PropertyCollection.html">PropertyCollection</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1WangColor.html#ac5a8245a64a00f269c8350dc20a1288c">getProperties</a> ()</td></tr>
+<tr class="separator:ac5a8245a64a00f269c8350dc20a1288c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37c14ca94f6d2dc9cf465b0f4a014dcd"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a37c14ca94f6d2dc9cf465b0f4a014dcd"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtson_1_1WangColor.html#a37c14ca94f6d2dc9cf465b0f4a014dcd">get</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:a37c14ca94f6d2dc9cf465b0f4a014dcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a096cb1ee1fdfb64736d6ba881e642279"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1Property.html">tson::Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1WangColor.html#a096cb1ee1fdfb64736d6ba881e642279">getProp</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:a096cb1ee1fdfb64736d6ba881e642279"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ab63531d43ad1c8e0c90e6ad971fd3612"></a>
@@ -147,6 +154,47 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a37c14ca94f6d2dc9cf465b0f4a014dcd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37c14ca94f6d2dc9cf465b0f4a014dcd">&#9670;&nbsp;</a></span>get()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T tson::WangColor::get </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>A shortcut for getting a property. Alternative to <a class="el" href="classtson_1_1WangColor.html#ac5a8245a64a00f269c8350dc20a1288c">getProperties()</a>.getValue&lt;T&gt;("&lt;name&gt;") </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The template value </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Name of the property </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The actual value, if it exists. Otherwise: The default value of the type. </dd></dl>
+
+</div>
+</div>
 <a id="ad71da21d00ed5cd397a76fa035e796fb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad71da21d00ed5cd397a76fa035e796fb">&#9670;&nbsp;</a></span>getColor()</h2>
 
@@ -222,6 +270,65 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 <p>'probability': Probability used when randomizing </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="a096cb1ee1fdfb64736d6ba881e642279"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a096cb1ee1fdfb64736d6ba881e642279">&#9670;&nbsp;</a></span>getProp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtson_1_1Property.html">tson::Property</a> * tson::WangColor::getProp </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Shortcut for getting a property object. Alternative to <a class="el" href="classtson_1_1WangColor.html#ac5a8245a64a00f269c8350dc20a1288c">getProperties()</a>.getProperty("&lt;name&gt;"); </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>Name of the property </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="ac5a8245a64a00f269c8350dc20a1288c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5a8245a64a00f269c8350dc20a1288c">&#9670;&nbsp;</a></span>getProperties()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtson_1_1PropertyCollection.html">tson::PropertyCollection</a> &amp; tson::WangColor::getProperties </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>New property in Tiled v1.5 when data is contained in 'colors' of a wangset 'properties': A list of properties (name, value, type). </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>

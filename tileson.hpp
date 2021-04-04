@@ -4216,6 +4216,7 @@ namespace tson
 			[[nodiscard]] inline float getOpacity() const;
 			[[nodiscard]] inline const Vector2i &getSize() const;
 			[[nodiscard]] inline const Colori &getTransparentcolor() const;
+			[[nodiscard]] inline const Vector2f &getParallax() const;
 
 			[[nodiscard]] inline LayerType getType() const;
 
@@ -4281,6 +4282,8 @@ namespace tson
 			bool                                           m_visible{};                       /*! 'visible': Whether layer is shown or hidden in editor */
 			int                                            m_x{};                             /*! 'x': Horizontal layer offset in tiles. Always 0. */
 			int                                            m_y{};                             /*! 'y': Vertical layer offset in tiles. Always 0. */
+			tson::Vector2f                                 m_parallax{1.f, 1.f};    /*! Tiled v1.5: parallax factor for this layer. Defaults to 1.
+																								  x = 'parallaxx', y = 'parallaxy'*/
 
 			std::map<uint32_t, tson::Tile*>                *m_tileMap;
 			std::map<std::tuple<int, int>, tson::Tile*>    m_tileData;                        /*! Key: Tuple of x and y pos in tile units. */
@@ -4355,6 +4358,14 @@ bool tson::Layer::parse(IJson &json, tson::Map *map)
 	if(json.count("visible") > 0) m_visible = json["visible"].get<bool>(); else allFound = false;
 	if(json.count("x") > 0) m_x = json["x"].get<int>(); else allFound = false;
 	if(json.count("y") > 0) m_y = json["y"].get<int>(); else allFound = false;
+
+	tson::Vector2f parallax {1.f, 1.f};
+	if(json.count("parallaxx") > 0)
+		parallax.x = json["parallaxx"].get<float>();
+	if(json.count("parallaxy") > 0)
+		parallax.y = json["parallaxy"].get<float>();
+
+	m_parallax = parallax;
 
 	//Handle DATA (Optional)
 	if(json.count("data") > 0)
@@ -4798,6 +4809,16 @@ const tson::Colori &tson::Layer::getTintColor() const
 	return m_tintcolor;
 }
 
+/*!
+ * New in Tiled v1.5
+ * Gets the parallax factor for current layer. Defaults to 1.
+ * @return A vector with the x and y values of the parallax factor.
+ */
+const tson::Vector2f &tson::Layer::getParallax() const
+{
+	return m_parallax;
+}
+
 #endif //TILESON_LAYER_HPP
 
 /*** End of inlined file: Layer.hpp ***/
@@ -4812,6 +4833,92 @@ const tson::Colori &tson::Layer::getTintColor() const
 #define TILESON_TILESET_HPP
 
 //#include "../external/json.hpp"
+
+
+/*** Start of inlined file: Transformations.hpp ***/
+//
+// Created by robin on 04.04.2021.
+//
+
+#ifndef TILESON_TRANSFORMATIONS_HPP
+#define TILESON_TRANSFORMATIONS_HPP
+
+namespace tson
+{
+	class Transformations
+	{
+		public:
+			inline Transformations() = default;
+			inline explicit Transformations(IJson &json);
+			inline bool parse(IJson &json);
+
+			inline bool allowHflip() const;
+			inline bool allowPreferuntransformed() const;
+			inline bool allowRotation() const;
+			inline bool allowVflip() const;
+
+		private:
+			bool m_hflip {};                /*! hflip: Whether the tiles in this set can be flipped horizontally (default false) */
+			bool m_preferuntransformed {};  /*! preferuntransformed: Whether untransformed tiles remain preferred, otherwise transformed tiles are used to produce more variations (default false) */
+			bool m_rotate {};               /*! rotate: Whether the tiles in this set can be rotated in 90 degree increments (default false) */
+			bool m_vflip {};                /*! vflip: Whether the tiles in this set can be flipped vertically (default false) */
+	};
+
+	Transformations::Transformations(IJson &json)
+	{
+		parse(json);
+	}
+
+	bool Transformations::parse(IJson &json)
+	{
+		if(json.count("hflip") > 0) m_hflip = json["hflip"].get<bool>(); //Optional
+		if(json.count("preferuntransformed") > 0) m_preferuntransformed = json["preferuntransformed"].get<bool>(); //Optional
+		if(json.count("rotate") > 0) m_rotate = json["rotate"].get<bool>(); //Optional
+		if(json.count("vflip") > 0) m_vflip = json["vflip"].get<bool>(); //Optional
+
+		return true;
+	}
+
+	/*!
+	 *
+	 * @return hflip: Whether the tiles in this set can be flipped horizontally (default false)
+	 */
+	bool Transformations::allowHflip() const
+	{
+		return m_hflip;
+	}
+
+	/*!
+	 *
+	 * @return preferuntransformed: Whether untransformed tiles remain preferred, otherwise transformed tiles are used to produce more variations (default false)
+	 */
+	bool Transformations::allowPreferuntransformed() const
+	{
+		return m_preferuntransformed;
+	}
+
+	/*!
+	 *
+	 * @return rotate: Whether the tiles in this set can be rotated in 90 degree increments (default false)
+	 */
+	bool Transformations::allowRotation() const
+	{
+		return m_rotate;
+	}
+
+	/*!
+	 *
+	 * @return vflip: Whether the tiles in this set can be flipped vertically (default false)
+	 */
+	bool Transformations::allowVflip() const
+	{
+		return m_vflip;
+	}
+}
+
+#endif //TILESON_TRANSFORMATIONS_HPP
+
+/*** End of inlined file: Transformations.hpp ***/
 
 
 /*** Start of inlined file: WangSet.hpp ***/
@@ -4848,11 +4955,19 @@ namespace tson
 			[[nodiscard]] inline float getProbability() const;
 			[[nodiscard]] inline int getTile() const;
 
+			inline PropertyCollection &getProperties();
+			template <typename T>
+			inline T get(const std::string &name);
+			inline tson::Property * getProp(const std::string &name);
+
 		private:
 			tson::Colori      m_color;              /*! 'color': Hex-formatted color (#RRGGBB or #AARRGGBB) */
 			std::string       m_name;               /*! 'name': Name of the Wang color */
 			float             m_probability{};      /*! 'probability': Probability used when randomizing */
 			int               m_tile{};             /*! 'tile': Local ID of tile representing the Wang color */
+
+			//New in Tiled v1.5
+			tson::PropertyCollection     m_properties; 	  /*! 'properties': A list of properties (name, value, type). */
 	};
 }
 
@@ -4869,6 +4984,12 @@ bool tson::WangColor::parse(IJson &json)
 	if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
 	if(json.count("probability") > 0) m_probability = json["probability"].get<float>(); else allFound = false;
 	if(json.count("tile") > 0) m_tile = json["tile"].get<int>(); else allFound = false;
+
+	if(json.count("properties") > 0 && json["properties"].isArray())
+	{
+		auto &properties = json.array("properties");
+		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
+	}
 
 	return allFound;
 }
@@ -4909,6 +5030,41 @@ int tson::WangColor::getTile() const
 	return m_tile;
 }
 
+/*!
+ * New property in Tiled v1.5 when data is contained in 'colors' of a wangset
+ * 'properties': A list of properties (name, value, type).
+ * @return
+ */
+tson::PropertyCollection &tson::WangColor::getProperties()
+{
+	return m_properties;
+}
+
+/*!
+ * A shortcut for getting a property. Alternative to getProperties().getValue<T>("<name>")
+ * @tparam T The template value
+ * @param name Name of the property
+ * @return The actual value, if it exists. Otherwise: The default value of the type.
+ */
+template<typename T>
+T tson::WangColor::get(const std::string &name)
+{
+	return m_properties.getValue<T>(name);
+}
+
+/*!
+ * Shortcut for getting a property object. Alternative to getProperties().getProperty("<name>");
+ * @param name Name of the property
+ * @return
+ */
+tson::Property *tson::WangColor::getProp(const std::string &name)
+{
+	if(m_properties.hasProperty(name))
+		return m_properties.getProperty(name);
+
+	return nullptr;
+}
+
 #endif //TILESON_WANGCOLOR_HPP
 
 /*** End of inlined file: WangColor.hpp ***/
@@ -4936,17 +5092,17 @@ namespace tson
 
 			[[nodiscard]] inline bool hasDFlip() const;
 			[[nodiscard]] inline bool hasHFlip() const;
-			[[nodiscard]] inline int getTileid() const;
+			[[nodiscard]] inline uint32_t getTileid() const;
 			[[nodiscard]] inline bool hasVFlip() const;
 
-			[[nodiscard]] inline const std::vector<int> &getWangIds() const;
+			[[nodiscard]] inline const std::vector<uint32_t> &getWangIds() const;
 
 		private:
-			bool                 m_dflip{};     /*! 'dflip': Tile is flipped diagonally */
-			bool                 m_hflip{};     /*! 'hflip': Tile is flipped horizontally */
-			int                  m_tileid{};    /*! 'tileid': Local ID of tile */
-			bool                 m_vflip{};     /*! 'vflip': Tile is flipped vertically */
-			std::vector<int>     m_wangId;      /*! 'wangid': Array of Wang color indexes (uchar[8])*/
+			bool                    m_dflip{};     /*! 'dflip': Tile is flipped diagonally */
+			bool                    m_hflip{};     /*! 'hflip': Tile is flipped horizontally */
+			uint32_t                m_tileid{};    /*! 'tileid': Local ID of tile */
+			bool                    m_vflip{};     /*! 'vflip': Tile is flipped vertically */
+			std::vector<uint32_t>   m_wangId;      /*! 'wangid': Array of Wang color indexes (uchar[8])*/
 	};
 }
 
@@ -4964,15 +5120,15 @@ bool tson::WangTile::parse(IJson &json)
 {
 	bool allFound = true;
 
-	if(json.count("dflip") > 0) m_dflip = json["dflip"].get<bool>(); else allFound = false;
-	if(json.count("hflip") > 0) m_hflip = json["hflip"].get<bool>(); else allFound = false;
-	if(json.count("vflip") > 0) m_vflip = json["vflip"].get<bool>(); else allFound = false;
-	if(json.count("tileid") > 0) m_tileid = json["tileid"].get<int>(); else allFound = false;
+	if(json.count("dflip") > 0) m_dflip = json["dflip"].get<bool>(); //Removed in Tiled v1.5 and is now optional
+	if(json.count("hflip") > 0) m_hflip = json["hflip"].get<bool>(); //Removed in Tiled v1.5 and is now optional
+	if(json.count("vflip") > 0) m_vflip = json["vflip"].get<bool>(); //Removed in Tiled v1.5 and is now optional
 
+	if(json.count("tileid") > 0) m_tileid = json["tileid"].get<uint32_t>(); else allFound = false;
 	if(json.count("wangid") > 0 && json["wangid"].isArray())
 	{
 		auto &wangid = json.array("wangid");
-		std::for_each(wangid.begin(), wangid.end(), [&](std::unique_ptr<IJson> &item) { m_wangId.emplace_back(item->get<int>()); });
+		std::for_each(wangid.begin(), wangid.end(), [&](std::unique_ptr<IJson> &item) { m_wangId.emplace_back(item->get<uint32_t>()); });
 	}
 
 	return allFound;
@@ -4980,6 +5136,8 @@ bool tson::WangTile::parse(IJson &json)
 
 /*!
  * 'dflip': Tile is flipped diagonally
+ *
+ * NB! This property got removed in Tiled v1.5
  * @return
  */
 bool tson::WangTile::hasDFlip() const
@@ -4989,6 +5147,8 @@ bool tson::WangTile::hasDFlip() const
 
 /*!
  * 'hflip': Tile is flipped horizontally
+ *
+ * NB! This property got removed in Tiled v1.5
  * @return
  */
 bool tson::WangTile::hasHFlip() const
@@ -5000,13 +5160,15 @@ bool tson::WangTile::hasHFlip() const
  * 'tileid': Local ID of tile
  * @return
  */
-int tson::WangTile::getTileid() const
+uint32_t tson::WangTile::getTileid() const
 {
 	return m_tileid;
 }
 
 /*!
  * 'vflip': Tile is flipped vertically
+ *
+ * NB! This property got removed in Tiled v1.5
  * @return
  */
 bool tson::WangTile::hasVFlip() const
@@ -5018,7 +5180,7 @@ bool tson::WangTile::hasVFlip() const
  * 'wangid': Array of Wang color indexes (uchar[8])
  * @return
  */
-const std::vector<int> &tson::WangTile::getWangIds() const
+const std::vector<uint32_t> &tson::WangTile::getWangIds() const
 {
 	return m_wangId;
 }
@@ -5043,6 +5205,8 @@ namespace tson
 			[[nodiscard]] inline const std::vector<tson::WangColor> &getCornerColors() const;
 			[[nodiscard]] inline const std::vector<tson::WangColor> &getEdgeColors() const;
 
+			inline tson::WangColor * getColor(const std::string &name);
+			inline const std::vector<tson::WangColor> &getColors() const;
 			inline PropertyCollection &getProperties();
 
 			template <typename T>
@@ -5050,12 +5214,18 @@ namespace tson
 			inline tson::Property * getProp(const std::string &name);
 
 		private:
+
+			inline bool parseTiled15Props(IJson &json);
+
 			std::string                  m_name;          /*! 'name': Name of the Wang set */
 			int                          m_tile{};        /*! 'tile': Local ID of tile representing the Wang set */
 			std::vector<tson::WangTile>  m_wangTiles;     /*! 'wangtiles': Array of Wang tiles */
 			std::vector<tson::WangColor> m_cornerColors;  /*! 'cornercolors': Array of Wang colors */
 			std::vector<tson::WangColor> m_edgeColors;    /*! 'edgecolors': Array of Wang colors */
 			tson::PropertyCollection     m_properties; 	  /*! 'properties': A list of properties (name, value, type). */
+
+			//Tiled v1.5
+			std::vector<tson::WangColor> m_colors;        /*! 'colors': */
 
 	};
 
@@ -5106,7 +5276,26 @@ bool tson::WangSet::parse(IJson &json)
 		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
 	}
 
+	if(!parseTiled15Props(json))
+		allFound = false;
+
 	return allFound;
+}
+
+/*!
+ * Parsing data related to Tiled v1.5 changes
+ * @param json The json containing data
+ * @return Returns true if success
+ */
+
+bool tson::WangSet::parseTiled15Props(tson::IJson &json)
+{
+	if(json.count("colors") > 0 && json["colors"].isArray())
+	{
+		auto &colors = json.array("colors");
+		std::for_each(colors.begin(), colors.end(), [&](std::unique_ptr<IJson> &item) { m_colors.emplace_back(*item); });
+	}
+	return true;
 }
 
 /*!
@@ -5172,6 +5361,32 @@ tson::Property *tson::WangSet::getProp(const std::string &name)
 {
 	if(m_properties.hasProperty(name))
 		return m_properties.getProperty(name);
+
+	return nullptr;
+}
+
+/*!
+ * Get Wangset colors (new in Tiled v1.5)
+ * @return
+ */
+const std::vector<tson::WangColor> &tson::WangSet::getColors() const
+{
+	return m_colors;
+}
+
+/*!
+ * NB! Will only work with maps created/modified by Tiled v1.5 or later!
+ * Gets a color from a wangset by its name.
+ *
+ * @param name 'name' of WangColor
+ * @return The WangColor with the given name or nullptr if it doesn't exist.
+ */
+tson::WangColor *tson::WangSet::getColor(const std::string &name)
+{
+	auto color = std::find_if(m_colors.begin(), m_colors.end(), [&](const auto &c) { return c.getName() == name; });
+
+	if(color != m_colors.end())
+		return color.base();
 
 	return nullptr;
 }
@@ -5852,6 +6067,8 @@ namespace tson
 
 			//v1.3.0
 			inline tson::Vector2i getMarginSpacingOffset(const tson::Vector2i &posInTileUnits);
+			inline tson::WangSet * getWangset(const std::string &name);
+			inline const Transformations &getTransformations() const;
 
 			#ifndef TSON_TEST_ENABLED
 		private:
@@ -5888,6 +6105,8 @@ namespace tson
 			//v1.3.0-stuff
 			fs::path                      m_source {};           /*! 'source': exists only when tileset is contained in an external file*/
 			fs::path                      m_path {};             /*! Has the full path to the tileset if 'source' has an existing value */
+			Transformations               m_transformations {};  /*! New in Tiled v1.5 - This element is used to describe which transformations can be applied to
+																	 the tiles (e.g. to extend a Wang set by transforming existing tiles).*/
 	};
 
 	/*!
@@ -5975,6 +6194,11 @@ bool tson::Tileset::parse(IJson &json, tson::Map *map)
 	{
 		std::string alignment = json["objectalignment"].get<std::string>();
 		m_objectAlignment = StringToAlignment(alignment);
+	}
+
+	if(json.count("transformations") > 0)
+	{
+		m_transformations.parse(json["transformations"]);
 	}
 
 	generateMissingTiles();
@@ -6250,6 +6474,32 @@ tson::Vector2i tson::Tileset::getMarginSpacingOffset(const tson::Vector2i &posIn
 
 	tson::Vector2i offset {(posInTileUnits.x * m_spacing) + m_margin, (posInTileUnits.y * m_spacing) + m_margin};
 	return offset;
+}
+
+/*!
+ * Get a wangset by name
+ * @param name
+ * @return
+ */
+tson::WangSet *tson::Tileset::getWangset(const std::string &name)
+{
+	auto wangset = std::find_if(m_wangsets.begin(), m_wangsets.end(), [&](const auto &w) { return w.getName() == name; });
+
+	if(wangset != m_wangsets.end())
+		return wangset.base();
+
+	return nullptr;
+}
+
+/*!
+ * New in Tiled v1.5 - This element is used to describe which transformations can be applied to
+ * the tiles (e.g. to extend a Wang set by transforming existing tiles).
+ *
+ * @return
+ */
+const tson::Transformations &tson::Tileset::getTransformations() const
+{
+	return m_transformations;
 }
 
 #endif //TILESON_TILESET_HPP

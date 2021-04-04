@@ -99,124 +99,163 @@ $(function() {
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;            [[nodiscard]] <span class="keyword">inline</span> <span class="keyword">const</span> std::vector&lt;tson::WangColor&gt; &amp;<a class="code" href="classtson_1_1WangSet.html#addc926be72148d1f5a3727b492e0cf9b">getCornerColors</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;            [[nodiscard]] <span class="keyword">inline</span> <span class="keyword">const</span> std::vector&lt;tson::WangColor&gt; &amp;<a class="code" href="classtson_1_1WangSet.html#aabed471f20fd092bfc55311cec45e967">getEdgeColors</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;            <span class="keyword">inline</span> <a class="code" href="classtson_1_1PropertyCollection.html">PropertyCollection</a> &amp;<a class="code" href="classtson_1_1WangSet.html#a6e718fb0fcb5fadfa50711a35a8445c7">getProperties</a>();</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;            <span class="keyword">inline</span> T <a class="code" href="classtson_1_1WangSet.html#af384e6f13f1d1421a5da410ff00963ff">get</a>(<span class="keyword">const</span> std::string &amp;name);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;            <span class="keyword">inline</span> <a class="code" href="classtson_1_1Property.html">tson::Property</a> * <a class="code" href="classtson_1_1WangSet.html#ae45fc2035820338b8d2b8f62db6993c9">getProp</a>(<span class="keyword">const</span> std::string &amp;name);</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;            std::string                  m_name;          </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;            <span class="keywordtype">int</span>                          m_tile{};        </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;            std::vector&lt;tson::WangTile&gt;  m_wangTiles;     </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            std::vector&lt;tson::WangColor&gt; m_cornerColors;  </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;            std::vector&lt;tson::WangColor&gt; m_edgeColors;    </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            <a class="code" href="classtson_1_1PropertyCollection.html">tson::PropertyCollection</a>     m_properties;    </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    };</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#af384e6f13f1d1421a5da410ff00963ff">   52</a></span>&#160;    T <a class="code" href="classtson_1_1WangSet.html#af384e6f13f1d1421a5da410ff00963ff">tson::WangSet::get</a>(<span class="keyword">const</span> std::string &amp;name)</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    {</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordflow">return</span> m_properties.getValue&lt;T&gt;(name);</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    }</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#a15a53d7661d790da797b90a52f210f58">   58</a></span>&#160;<a class="code" href="classtson_1_1WangSet.html#a4b1a092a2db68d023af50db93f7479bb">tson::WangSet::WangSet</a>(<a class="code" href="classtson_1_1IJson.html">IJson</a> &amp;json)</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;{</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <a class="code" href="classtson_1_1WangSet.html#a483712737e789d763e232f2fb51eb071">parse</a>(json);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;}</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#a483712737e789d763e232f2fb51eb071">   63</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classtson_1_1WangSet.html#a483712737e789d763e232f2fb51eb071">tson::WangSet::parse</a>(<a class="code" href="classtson_1_1IJson.html">IJson</a> &amp;json)</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;{</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">bool</span> allFound = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;tile&quot;</span>) &gt; 0) m_tile = json[<span class="stringliteral">&quot;tile&quot;</span>].<a class="code" href="classtson_1_1IJson.html#a33e0e84aa8ce0636b2045a8c0e8ece66">get</a>&lt;<span class="keywordtype">int</span>&gt;(); <span class="keywordflow">else</span> allFound = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;name&quot;</span>) &gt; 0) m_name = json[<span class="stringliteral">&quot;name&quot;</span>].get&lt;std::string&gt;(); <span class="keywordflow">else</span> allFound = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="comment">//More advanced data</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;wangtiles&quot;</span>) &gt; 0 &amp;&amp; json[<span class="stringliteral">&quot;wangtiles&quot;</span>].<a class="code" href="classtson_1_1IJson.html#a50556d6382b1ee0115bcbf809ab8b24b">isArray</a>())</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    {</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keyword">auto</span> &amp;wangtiles = json.<a class="code" href="classtson_1_1IJson.html#aec3e1d9035fab9de5daf162797545015">array</a>(<span class="stringliteral">&quot;wangtiles&quot;</span>);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        std::for_each(wangtiles.begin(), wangtiles.end(), [&amp;](std::unique_ptr&lt;IJson&gt; &amp;item) { m_wangTiles.emplace_back(*item); });</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;cornercolors&quot;</span>) &gt; 0 &amp;&amp; json[<span class="stringliteral">&quot;cornercolors&quot;</span>].<a class="code" href="classtson_1_1IJson.html#a50556d6382b1ee0115bcbf809ab8b24b">isArray</a>())</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    {</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keyword">auto</span> &amp;cornercolors = json.<a class="code" href="classtson_1_1IJson.html#aec3e1d9035fab9de5daf162797545015">array</a>(<span class="stringliteral">&quot;cornercolors&quot;</span>);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        std::for_each(cornercolors.begin(), cornercolors.end(), [&amp;](std::unique_ptr&lt;IJson&gt; &amp;item) { m_cornerColors.emplace_back(*item); });</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    }</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;edgecolors&quot;</span>) &gt; 0 &amp;&amp; json[<span class="stringliteral">&quot;edgecolors&quot;</span>].<a class="code" href="classtson_1_1IJson.html#a50556d6382b1ee0115bcbf809ab8b24b">isArray</a>())</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    {</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keyword">auto</span> &amp;edgecolors = json.<a class="code" href="classtson_1_1IJson.html#aec3e1d9035fab9de5daf162797545015">array</a>(<span class="stringliteral">&quot;edgecolors&quot;</span>);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        std::for_each(edgecolors.begin(), edgecolors.end(), [&amp;](std::unique_ptr&lt;IJson&gt; &amp;item) { m_edgeColors.emplace_back(*item); });</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    }</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;properties&quot;</span>) &gt; 0 &amp;&amp; json[<span class="stringliteral">&quot;properties&quot;</span>].<a class="code" href="classtson_1_1IJson.html#a50556d6382b1ee0115bcbf809ab8b24b">isArray</a>())</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    {</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keyword">auto</span> &amp;properties = json.<a class="code" href="classtson_1_1IJson.html#aec3e1d9035fab9de5daf162797545015">array</a>(<span class="stringliteral">&quot;properties&quot;</span>);</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        std::for_each(properties.begin(), properties.end(), [&amp;](std::unique_ptr&lt;IJson&gt; &amp;item) { m_properties.add(*item); });</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    }</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordflow">return</span> allFound;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#aa002fb1015dbff989c2b6d873b5a237c">   99</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtson_1_1WangSet.html#aa002fb1015dbff989c2b6d873b5a237c">tson::WangSet::getName</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordflow">return</span> m_name;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;}</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#a2d3b0eb85584744f4c1b806af3d999b2">  108</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classtson_1_1WangSet.html#a2d3b0eb85584744f4c1b806af3d999b2">tson::WangSet::getTile</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordflow">return</span> m_tile;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;}</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#a8d90b5f1f993ec88a0979ce652982ca6">  117</a></span>&#160;<span class="keyword">const</span> std::vector&lt;tson::WangTile&gt; &amp;<a class="code" href="classtson_1_1WangSet.html#a8d90b5f1f993ec88a0979ce652982ca6">tson::WangSet::getWangTiles</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordflow">return</span> m_wangTiles;</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;            <span class="keyword">inline</span> <a class="code" href="classtson_1_1WangColor.html">tson::WangColor</a> * <a class="code" href="classtson_1_1WangSet.html#ab3f53ac1136807583226dcfa0fd6621d">getColor</a>(<span class="keyword">const</span> std::string &amp;name);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;            <span class="keyword">inline</span> <span class="keyword">const</span> std::vector&lt;tson::WangColor&gt; &amp;<a class="code" href="classtson_1_1WangSet.html#a16537ccda9a63d1a9a349356d2ac8484">getColors</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            <span class="keyword">inline</span> <a class="code" href="classtson_1_1PropertyCollection.html">PropertyCollection</a> &amp;<a class="code" href="classtson_1_1WangSet.html#a6e718fb0fcb5fadfa50711a35a8445c7">getProperties</a>();</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;            <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;            <span class="keyword">inline</span> T <a class="code" href="classtson_1_1WangSet.html#af384e6f13f1d1421a5da410ff00963ff">get</a>(<span class="keyword">const</span> std::string &amp;name);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;            <span class="keyword">inline</span> <a class="code" href="classtson_1_1Property.html">tson::Property</a> * <a class="code" href="classtson_1_1WangSet.html#ae45fc2035820338b8d2b8f62db6993c9">getProp</a>(<span class="keyword">const</span> std::string &amp;name);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;            <span class="keyword">inline</span> <span class="keywordtype">bool</span> parseTiled15Props(<a class="code" href="classtson_1_1IJson.html">IJson</a> &amp;json);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;            std::string                  m_name;          </div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;            <span class="keywordtype">int</span>                          m_tile{};        </div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;            std::vector&lt;tson::WangTile&gt;  m_wangTiles;     </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;            std::vector&lt;tson::WangColor&gt; m_cornerColors;  </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;            std::vector&lt;tson::WangColor&gt; m_edgeColors;    </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;            <a class="code" href="classtson_1_1PropertyCollection.html">tson::PropertyCollection</a>     m_properties;    </div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            <span class="comment">//Tiled v1.5</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            std::vector&lt;tson::WangColor&gt; m_colors;        </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    };</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#af384e6f13f1d1421a5da410ff00963ff">   60</a></span>&#160;    T <a class="code" href="classtson_1_1WangSet.html#af384e6f13f1d1421a5da410ff00963ff">tson::WangSet::get</a>(<span class="keyword">const</span> std::string &amp;name)</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    {</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        <span class="keywordflow">return</span> m_properties.getValue&lt;T&gt;(name);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    }</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;}</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#a15a53d7661d790da797b90a52f210f58">   66</a></span>&#160;<a class="code" href="classtson_1_1WangSet.html#a4b1a092a2db68d023af50db93f7479bb">tson::WangSet::WangSet</a>(<a class="code" href="classtson_1_1IJson.html">IJson</a> &amp;json)</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;{</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <a class="code" href="classtson_1_1WangSet.html#a483712737e789d763e232f2fb51eb071">parse</a>(json);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#a483712737e789d763e232f2fb51eb071">   71</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classtson_1_1WangSet.html#a483712737e789d763e232f2fb51eb071">tson::WangSet::parse</a>(<a class="code" href="classtson_1_1IJson.html">IJson</a> &amp;json)</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;{</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordtype">bool</span> allFound = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;tile&quot;</span>) &gt; 0) m_tile = json[<span class="stringliteral">&quot;tile&quot;</span>].<a class="code" href="classtson_1_1IJson.html#a33e0e84aa8ce0636b2045a8c0e8ece66">get</a>&lt;<span class="keywordtype">int</span>&gt;(); <span class="keywordflow">else</span> allFound = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;name&quot;</span>) &gt; 0) m_name = json[<span class="stringliteral">&quot;name&quot;</span>].get&lt;std::string&gt;(); <span class="keywordflow">else</span> allFound = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="comment">//More advanced data</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;wangtiles&quot;</span>) &gt; 0 &amp;&amp; json[<span class="stringliteral">&quot;wangtiles&quot;</span>].<a class="code" href="classtson_1_1IJson.html#a50556d6382b1ee0115bcbf809ab8b24b">isArray</a>())</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keyword">auto</span> &amp;wangtiles = json.<a class="code" href="classtson_1_1IJson.html#aec3e1d9035fab9de5daf162797545015">array</a>(<span class="stringliteral">&quot;wangtiles&quot;</span>);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        std::for_each(wangtiles.begin(), wangtiles.end(), [&amp;](std::unique_ptr&lt;IJson&gt; &amp;item) { m_wangTiles.emplace_back(*item); });</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    }</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;cornercolors&quot;</span>) &gt; 0 &amp;&amp; json[<span class="stringliteral">&quot;cornercolors&quot;</span>].<a class="code" href="classtson_1_1IJson.html#a50556d6382b1ee0115bcbf809ab8b24b">isArray</a>())</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    {</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <span class="keyword">auto</span> &amp;cornercolors = json.<a class="code" href="classtson_1_1IJson.html#aec3e1d9035fab9de5daf162797545015">array</a>(<span class="stringliteral">&quot;cornercolors&quot;</span>);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        std::for_each(cornercolors.begin(), cornercolors.end(), [&amp;](std::unique_ptr&lt;IJson&gt; &amp;item) { m_cornerColors.emplace_back(*item); });</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    }</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;edgecolors&quot;</span>) &gt; 0 &amp;&amp; json[<span class="stringliteral">&quot;edgecolors&quot;</span>].<a class="code" href="classtson_1_1IJson.html#a50556d6382b1ee0115bcbf809ab8b24b">isArray</a>())</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keyword">auto</span> &amp;edgecolors = json.<a class="code" href="classtson_1_1IJson.html#aec3e1d9035fab9de5daf162797545015">array</a>(<span class="stringliteral">&quot;edgecolors&quot;</span>);</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        std::for_each(edgecolors.begin(), edgecolors.end(), [&amp;](std::unique_ptr&lt;IJson&gt; &amp;item) { m_edgeColors.emplace_back(*item); });</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    }</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;properties&quot;</span>) &gt; 0 &amp;&amp; json[<span class="stringliteral">&quot;properties&quot;</span>].<a class="code" href="classtson_1_1IJson.html#a50556d6382b1ee0115bcbf809ab8b24b">isArray</a>())</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    {</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keyword">auto</span> &amp;properties = json.<a class="code" href="classtson_1_1IJson.html#aec3e1d9035fab9de5daf162797545015">array</a>(<span class="stringliteral">&quot;properties&quot;</span>);</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        std::for_each(properties.begin(), properties.end(), [&amp;](std::unique_ptr&lt;IJson&gt; &amp;item) { m_properties.add(*item); });</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    }</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordflow">if</span>(!parseTiled15Props(json))</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        allFound = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">return</span> allFound;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;}</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keywordtype">bool</span> tson::WangSet::parseTiled15Props(<a class="code" href="classtson_1_1IJson.html">tson::IJson</a> &amp;json)</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;{</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;colors&quot;</span>) &gt; 0 &amp;&amp; json[<span class="stringliteral">&quot;colors&quot;</span>].isArray())</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    {</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="keyword">auto</span> &amp;colors = json.<a class="code" href="classtson_1_1IJson.html#aec3e1d9035fab9de5daf162797545015">array</a>(<span class="stringliteral">&quot;colors&quot;</span>);</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        std::for_each(colors.begin(), colors.end(), [&amp;](std::unique_ptr&lt;IJson&gt; &amp;item) { m_colors.emplace_back(*item); });</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    }</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;}</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
-<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#addc926be72148d1f5a3727b492e0cf9b">  126</a></span>&#160;<span class="keyword">const</span> std::vector&lt;tson::WangColor&gt; &amp;<a class="code" href="classtson_1_1WangSet.html#addc926be72148d1f5a3727b492e0cf9b">tson::WangSet::getCornerColors</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#aa002fb1015dbff989c2b6d873b5a237c">  126</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtson_1_1WangSet.html#aa002fb1015dbff989c2b6d873b5a237c">tson::WangSet::getName</a>()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordflow">return</span> m_cornerColors;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordflow">return</span> m_name;</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;}</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160; </div>
-<div class="line"><a name="l00135"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#aabed471f20fd092bfc55311cec45e967">  135</a></span>&#160;<span class="keyword">const</span> std::vector&lt;tson::WangColor&gt; &amp;<a class="code" href="classtson_1_1WangSet.html#aabed471f20fd092bfc55311cec45e967">tson::WangSet::getEdgeColors</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00135"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#a2d3b0eb85584744f4c1b806af3d999b2">  135</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classtson_1_1WangSet.html#a2d3b0eb85584744f4c1b806af3d999b2">tson::WangSet::getTile</a>()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keywordflow">return</span> m_edgeColors;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keywordflow">return</span> m_tile;</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;}</div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
-<div class="line"><a name="l00144"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#a6e718fb0fcb5fadfa50711a35a8445c7">  144</a></span>&#160;<a class="code" href="classtson_1_1PropertyCollection.html">tson::PropertyCollection</a> &amp;<a class="code" href="classtson_1_1WangSet.html#a6e718fb0fcb5fadfa50711a35a8445c7">tson::WangSet::getProperties</a>()</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;{</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="keywordflow">return</span> m_properties;</div>
+<div class="line"><a name="l00144"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#a8d90b5f1f993ec88a0979ce652982ca6">  144</a></span>&#160;<span class="keyword">const</span> std::vector&lt;tson::WangTile&gt; &amp;<a class="code" href="classtson_1_1WangSet.html#a8d90b5f1f993ec88a0979ce652982ca6">tson::WangSet::getWangTiles</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="keywordflow">return</span> m_wangTiles;</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;}</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160; </div>
-<div class="line"><a name="l00154"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#ae45fc2035820338b8d2b8f62db6993c9">  154</a></span>&#160;<a class="code" href="classtson_1_1Property.html">tson::Property</a> *<a class="code" href="classtson_1_1WangSet.html#ae45fc2035820338b8d2b8f62db6993c9">tson::WangSet::getProp</a>(<span class="keyword">const</span> std::string &amp;name)</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;{</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keywordflow">if</span>(m_properties.hasProperty(name))</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        <span class="keywordflow">return</span> m_properties.getProperty(name);</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160; </div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;}</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160; </div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//TILESON_WANGSET_HPP</span></div>
+<div class="line"><a name="l00153"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#addc926be72148d1f5a3727b492e0cf9b">  153</a></span>&#160;<span class="keyword">const</span> std::vector&lt;tson::WangColor&gt; &amp;<a class="code" href="classtson_1_1WangSet.html#addc926be72148d1f5a3727b492e0cf9b">tson::WangSet::getCornerColors</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keywordflow">return</span> m_cornerColors;</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;}</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
+<div class="line"><a name="l00162"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#aabed471f20fd092bfc55311cec45e967">  162</a></span>&#160;<span class="keyword">const</span> std::vector&lt;tson::WangColor&gt; &amp;<a class="code" href="classtson_1_1WangSet.html#aabed471f20fd092bfc55311cec45e967">tson::WangSet::getEdgeColors</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    <span class="keywordflow">return</span> m_edgeColors;</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;}</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160; </div>
+<div class="line"><a name="l00171"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#a6e718fb0fcb5fadfa50711a35a8445c7">  171</a></span>&#160;<a class="code" href="classtson_1_1PropertyCollection.html">tson::PropertyCollection</a> &amp;<a class="code" href="classtson_1_1WangSet.html#a6e718fb0fcb5fadfa50711a35a8445c7">tson::WangSet::getProperties</a>()</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;{</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <span class="keywordflow">return</span> m_properties;</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;}</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160; </div>
+<div class="line"><a name="l00181"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#ae45fc2035820338b8d2b8f62db6993c9">  181</a></span>&#160;<a class="code" href="classtson_1_1Property.html">tson::Property</a> *<a class="code" href="classtson_1_1WangSet.html#ae45fc2035820338b8d2b8f62db6993c9">tson::WangSet::getProp</a>(<span class="keyword">const</span> std::string &amp;name)</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;{</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    <span class="keywordflow">if</span>(m_properties.hasProperty(name))</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        <span class="keywordflow">return</span> m_properties.getProperty(name);</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160; </div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;}</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160; </div>
+<div class="line"><a name="l00193"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#a16537ccda9a63d1a9a349356d2ac8484">  193</a></span>&#160;<span class="keyword">const</span> std::vector&lt;tson::WangColor&gt; &amp;<a class="code" href="classtson_1_1WangSet.html#a16537ccda9a63d1a9a349356d2ac8484">tson::WangSet::getColors</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="keywordflow">return</span> m_colors;</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;}</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160; </div>
+<div class="line"><a name="l00205"></a><span class="lineno"><a class="line" href="classtson_1_1WangSet.html#ab3f53ac1136807583226dcfa0fd6621d">  205</a></span>&#160;<a class="code" href="classtson_1_1WangColor.html">tson::WangColor</a> *<a class="code" href="classtson_1_1WangSet.html#ab3f53ac1136807583226dcfa0fd6621d">tson::WangSet::getColor</a>(<span class="keyword">const</span> std::string &amp;name)</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;{</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;    <span class="keyword">auto</span> color = std::find_if(m_colors.begin(), m_colors.end(), [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;c) { return c.getName() == name; });</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160; </div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    <span class="keywordflow">if</span>(color != m_colors.end())</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        <span class="keywordflow">return</span> color.base();</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160; </div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;}</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160; </div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160; </div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//TILESON_WANGSET_HPP</span></div>
 <div class="ttc" id="aWangColor_8hpp_html"><div class="ttname"><a href="WangColor_8hpp.html">WangColor.hpp</a></div></div>
 <div class="ttc" id="aWangTile_8hpp_html"><div class="ttname"><a href="WangTile_8hpp.html">WangTile.hpp</a></div></div>
 <div class="ttc" id="aclasstson_1_1IJson_html"><div class="ttname"><a href="classtson_1_1IJson.html">tson::IJson</a></div><div class="ttdef"><b>Definition:</b> IJson.hpp:11</div></div>
-<div class="ttc" id="aclasstson_1_1IJson_html_a33e0e84aa8ce0636b2045a8c0e8ece66"><div class="ttname"><a href="classtson_1_1IJson.html#a33e0e84aa8ce0636b2045a8c0e8ece66">tson::IJson::get</a></div><div class="ttdeci">T get(std::string_view key)</div><div class="ttdef"><b>Definition:</b> IJson.hpp:63</div></div>
+<div class="ttc" id="aclasstson_1_1IJson_html_a33e0e84aa8ce0636b2045a8c0e8ece66"><div class="ttname"><a href="classtson_1_1IJson.html#a33e0e84aa8ce0636b2045a8c0e8ece66">tson::IJson::get</a></div><div class="ttdeci">T get(std::string_view key)</div><div class="ttdef"><b>Definition:</b> IJson.hpp:72</div></div>
 <div class="ttc" id="aclasstson_1_1IJson_html_a50556d6382b1ee0115bcbf809ab8b24b"><div class="ttname"><a href="classtson_1_1IJson.html#a50556d6382b1ee0115bcbf809ab8b24b">tson::IJson::isArray</a></div><div class="ttdeci">virtual bool isArray() const =0</div></div>
 <div class="ttc" id="aclasstson_1_1IJson_html_ad742cdf1ffd8577e147c42836a1bb9bb"><div class="ttname"><a href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">tson::IJson::count</a></div><div class="ttdeci">virtual size_t count(std::string_view key) const =0</div></div>
 <div class="ttc" id="aclasstson_1_1IJson_html_aec3e1d9035fab9de5daf162797545015"><div class="ttname"><a href="classtson_1_1IJson.html#aec3e1d9035fab9de5daf162797545015">tson::IJson::array</a></div><div class="ttdeci">virtual std::vector&lt; std::unique_ptr&lt; IJson &gt; &gt; array()=0</div></div>
 <div class="ttc" id="aclasstson_1_1PropertyCollection_html"><div class="ttname"><a href="classtson_1_1PropertyCollection.html">tson::PropertyCollection</a></div><div class="ttdef"><b>Definition:</b> PropertyCollection.hpp:15</div></div>
 <div class="ttc" id="aclasstson_1_1Property_html"><div class="ttname"><a href="classtson_1_1Property.html">tson::Property</a></div><div class="ttdef"><b>Definition:</b> Property.hpp:21</div></div>
+<div class="ttc" id="aclasstson_1_1WangColor_html"><div class="ttname"><a href="classtson_1_1WangColor.html">tson::WangColor</a></div><div class="ttdef"><b>Definition:</b> WangColor.hpp:14</div></div>
 <div class="ttc" id="aclasstson_1_1WangSet_html"><div class="ttname"><a href="classtson_1_1WangSet.html">tson::WangSet</a></div><div class="ttdef"><b>Definition:</b> WangSet.hpp:16</div></div>
-<div class="ttc" id="aclasstson_1_1WangSet_html_a2d3b0eb85584744f4c1b806af3d999b2"><div class="ttname"><a href="classtson_1_1WangSet.html#a2d3b0eb85584744f4c1b806af3d999b2">tson::WangSet::getTile</a></div><div class="ttdeci">int getTile() const</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:108</div></div>
-<div class="ttc" id="aclasstson_1_1WangSet_html_a483712737e789d763e232f2fb51eb071"><div class="ttname"><a href="classtson_1_1WangSet.html#a483712737e789d763e232f2fb51eb071">tson::WangSet::parse</a></div><div class="ttdeci">bool parse(IJson &amp;json)</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:63</div></div>
+<div class="ttc" id="aclasstson_1_1WangSet_html_a16537ccda9a63d1a9a349356d2ac8484"><div class="ttname"><a href="classtson_1_1WangSet.html#a16537ccda9a63d1a9a349356d2ac8484">tson::WangSet::getColors</a></div><div class="ttdeci">const std::vector&lt; tson::WangColor &gt; &amp; getColors() const</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:193</div></div>
+<div class="ttc" id="aclasstson_1_1WangSet_html_a2d3b0eb85584744f4c1b806af3d999b2"><div class="ttname"><a href="classtson_1_1WangSet.html#a2d3b0eb85584744f4c1b806af3d999b2">tson::WangSet::getTile</a></div><div class="ttdeci">int getTile() const</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:135</div></div>
+<div class="ttc" id="aclasstson_1_1WangSet_html_a483712737e789d763e232f2fb51eb071"><div class="ttname"><a href="classtson_1_1WangSet.html#a483712737e789d763e232f2fb51eb071">tson::WangSet::parse</a></div><div class="ttdeci">bool parse(IJson &amp;json)</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:71</div></div>
 <div class="ttc" id="aclasstson_1_1WangSet_html_a4b1a092a2db68d023af50db93f7479bb"><div class="ttname"><a href="classtson_1_1WangSet.html#a4b1a092a2db68d023af50db93f7479bb">tson::WangSet::WangSet</a></div><div class="ttdeci">WangSet()=default</div></div>
-<div class="ttc" id="aclasstson_1_1WangSet_html_a6e718fb0fcb5fadfa50711a35a8445c7"><div class="ttname"><a href="classtson_1_1WangSet.html#a6e718fb0fcb5fadfa50711a35a8445c7">tson::WangSet::getProperties</a></div><div class="ttdeci">PropertyCollection &amp; getProperties()</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:144</div></div>
-<div class="ttc" id="aclasstson_1_1WangSet_html_a8d90b5f1f993ec88a0979ce652982ca6"><div class="ttname"><a href="classtson_1_1WangSet.html#a8d90b5f1f993ec88a0979ce652982ca6">tson::WangSet::getWangTiles</a></div><div class="ttdeci">const std::vector&lt; tson::WangTile &gt; &amp; getWangTiles() const</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:117</div></div>
-<div class="ttc" id="aclasstson_1_1WangSet_html_aa002fb1015dbff989c2b6d873b5a237c"><div class="ttname"><a href="classtson_1_1WangSet.html#aa002fb1015dbff989c2b6d873b5a237c">tson::WangSet::getName</a></div><div class="ttdeci">const std::string &amp; getName() const</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:99</div></div>
-<div class="ttc" id="aclasstson_1_1WangSet_html_aabed471f20fd092bfc55311cec45e967"><div class="ttname"><a href="classtson_1_1WangSet.html#aabed471f20fd092bfc55311cec45e967">tson::WangSet::getEdgeColors</a></div><div class="ttdeci">const std::vector&lt; tson::WangColor &gt; &amp; getEdgeColors() const</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:135</div></div>
-<div class="ttc" id="aclasstson_1_1WangSet_html_addc926be72148d1f5a3727b492e0cf9b"><div class="ttname"><a href="classtson_1_1WangSet.html#addc926be72148d1f5a3727b492e0cf9b">tson::WangSet::getCornerColors</a></div><div class="ttdeci">const std::vector&lt; tson::WangColor &gt; &amp; getCornerColors() const</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:126</div></div>
-<div class="ttc" id="aclasstson_1_1WangSet_html_ae45fc2035820338b8d2b8f62db6993c9"><div class="ttname"><a href="classtson_1_1WangSet.html#ae45fc2035820338b8d2b8f62db6993c9">tson::WangSet::getProp</a></div><div class="ttdeci">tson::Property * getProp(const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:154</div></div>
-<div class="ttc" id="aclasstson_1_1WangSet_html_af384e6f13f1d1421a5da410ff00963ff"><div class="ttname"><a href="classtson_1_1WangSet.html#af384e6f13f1d1421a5da410ff00963ff">tson::WangSet::get</a></div><div class="ttdeci">T get(const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:52</div></div>
+<div class="ttc" id="aclasstson_1_1WangSet_html_a6e718fb0fcb5fadfa50711a35a8445c7"><div class="ttname"><a href="classtson_1_1WangSet.html#a6e718fb0fcb5fadfa50711a35a8445c7">tson::WangSet::getProperties</a></div><div class="ttdeci">PropertyCollection &amp; getProperties()</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:171</div></div>
+<div class="ttc" id="aclasstson_1_1WangSet_html_a8d90b5f1f993ec88a0979ce652982ca6"><div class="ttname"><a href="classtson_1_1WangSet.html#a8d90b5f1f993ec88a0979ce652982ca6">tson::WangSet::getWangTiles</a></div><div class="ttdeci">const std::vector&lt; tson::WangTile &gt; &amp; getWangTiles() const</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:144</div></div>
+<div class="ttc" id="aclasstson_1_1WangSet_html_aa002fb1015dbff989c2b6d873b5a237c"><div class="ttname"><a href="classtson_1_1WangSet.html#aa002fb1015dbff989c2b6d873b5a237c">tson::WangSet::getName</a></div><div class="ttdeci">const std::string &amp; getName() const</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:126</div></div>
+<div class="ttc" id="aclasstson_1_1WangSet_html_aabed471f20fd092bfc55311cec45e967"><div class="ttname"><a href="classtson_1_1WangSet.html#aabed471f20fd092bfc55311cec45e967">tson::WangSet::getEdgeColors</a></div><div class="ttdeci">const std::vector&lt; tson::WangColor &gt; &amp; getEdgeColors() const</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:162</div></div>
+<div class="ttc" id="aclasstson_1_1WangSet_html_ab3f53ac1136807583226dcfa0fd6621d"><div class="ttname"><a href="classtson_1_1WangSet.html#ab3f53ac1136807583226dcfa0fd6621d">tson::WangSet::getColor</a></div><div class="ttdeci">tson::WangColor * getColor(const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:205</div></div>
+<div class="ttc" id="aclasstson_1_1WangSet_html_addc926be72148d1f5a3727b492e0cf9b"><div class="ttname"><a href="classtson_1_1WangSet.html#addc926be72148d1f5a3727b492e0cf9b">tson::WangSet::getCornerColors</a></div><div class="ttdeci">const std::vector&lt; tson::WangColor &gt; &amp; getCornerColors() const</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:153</div></div>
+<div class="ttc" id="aclasstson_1_1WangSet_html_ae45fc2035820338b8d2b8f62db6993c9"><div class="ttname"><a href="classtson_1_1WangSet.html#ae45fc2035820338b8d2b8f62db6993c9">tson::WangSet::getProp</a></div><div class="ttdeci">tson::Property * getProp(const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:181</div></div>
+<div class="ttc" id="aclasstson_1_1WangSet_html_af384e6f13f1d1421a5da410ff00963ff"><div class="ttname"><a href="classtson_1_1WangSet.html#af384e6f13f1d1421a5da410ff00963ff">tson::WangSet::get</a></div><div class="ttdeci">T get(const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> WangSet.hpp:60</div></div>
 <div class="ttc" id="anamespacetson_html"><div class="ttname"><a href="namespacetson.html">tson</a></div><div class="ttdef"><b>Definition:</b> Base64.hpp:12</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

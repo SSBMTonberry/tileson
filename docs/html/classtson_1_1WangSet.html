@@ -95,6 +95,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:addc926be72148d1f5a3727b492e0cf9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aabed471f20fd092bfc55311cec45e967"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="classtson_1_1WangColor.html">tson::WangColor</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1WangSet.html#aabed471f20fd092bfc55311cec45e967">getEdgeColors</a> () const</td></tr>
 <tr class="separator:aabed471f20fd092bfc55311cec45e967"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3f53ac1136807583226dcfa0fd6621d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1WangColor.html">tson::WangColor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1WangSet.html#ab3f53ac1136807583226dcfa0fd6621d">getColor</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:ab3f53ac1136807583226dcfa0fd6621d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16537ccda9a63d1a9a349356d2ac8484"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; <a class="el" href="classtson_1_1WangColor.html">tson::WangColor</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1WangSet.html#a16537ccda9a63d1a9a349356d2ac8484">getColors</a> () const</td></tr>
+<tr class="separator:a16537ccda9a63d1a9a349356d2ac8484"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e718fb0fcb5fadfa50711a35a8445c7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1PropertyCollection.html">PropertyCollection</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1WangSet.html#a6e718fb0fcb5fadfa50711a35a8445c7">getProperties</a> ()</td></tr>
 <tr class="separator:a6e718fb0fcb5fadfa50711a35a8445c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af384e6f13f1d1421a5da410ff00963ff"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
@@ -194,6 +198,66 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The actual value, if it exists. Otherwise: The default value of the type. </dd></dl>
+
+</div>
+</div>
+<a id="ab3f53ac1136807583226dcfa0fd6621d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3f53ac1136807583226dcfa0fd6621d">&#9670;&nbsp;</a></span>getColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtson_1_1WangColor.html">tson::WangColor</a> * tson::WangSet::getColor </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>NB! Will only work with maps created/modified by Tiled v1.5 or later! Gets a color from a wangset by its name.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>'name' of <a class="el" href="classtson_1_1WangColor.html">WangColor</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The <a class="el" href="classtson_1_1WangColor.html">WangColor</a> with the given name or nullptr if it doesn't exist. </dd></dl>
+
+</div>
+</div>
+<a id="a16537ccda9a63d1a9a349356d2ac8484"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a16537ccda9a63d1a9a349356d2ac8484">&#9670;&nbsp;</a></span>getColors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const std::vector&lt; <a class="el" href="classtson_1_1WangColor.html">tson::WangColor</a> &gt; &amp; tson::WangSet::getColors </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get Wangset colors (new in Tiled v1.5) </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>

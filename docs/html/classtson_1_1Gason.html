@@ -119,6 +119,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a55740d8644d7e0fe2a10c3587edcd59d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6f159427787c504751971693771b10b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Gason.html#ae6f159427787c504751971693771b10b">isNull</a> () const override</td></tr>
 <tr class="separator:ae6f159427787c504751971693771b10b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa67a641884162b54ed73f1b3f8e17bc8"><td class="memItemLeft" align="right" valign="top">fs::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Gason.html#aa67a641884162b54ed73f1b3f8e17bc8">directory</a> () const override</td></tr>
+<tr class="separator:aa67a641884162b54ed73f1b3f8e17bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9886802cb61d84753746af0ba08abe6a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Gason.html#a9886802cb61d84753746af0ba08abe6a">directory</a> (const fs::path &amp;directory) override</td></tr>
+<tr class="separator:a9886802cb61d84753746af0ba08abe6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classtson_1_1IJson"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classtson_1_1IJson')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classtson_1_1IJson.html">tson::IJson</a></td></tr>
 <tr class="memitem:a33e0e84aa8ce0636b2045a8c0e8ece66 inherit pub_methods_classtson_1_1IJson"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a33e0e84aa8ce0636b2045a8c0e8ece66 inherit pub_methods_classtson_1_1IJson"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classtson_1_1IJson.html#a33e0e84aa8ce0636b2045a8c0e8ece66">get</a> (std::string_view key)</td></tr>
@@ -380,6 +384,62 @@ Protected Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">tson::IJson</a>.</p>
+
+</div>
+</div>
+<a id="aa67a641884162b54ed73f1b3f8e17bc8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa67a641884162b54ed73f1b3f8e17bc8">&#9670;&nbsp;</a></span>directory() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">fs::path tson::Gason::directory </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get the directory where the json was loaded. Only assigned if json is parsed by file. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+<p>Implements <a class="el" href="classtson_1_1IJson.html#a7dde0e27f91cb713846d32fa8ca92dac">tson::IJson</a>.</p>
+
+</div>
+</div>
+<a id="a9886802cb61d84753746af0ba08abe6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9886802cb61d84753746af0ba08abe6a">&#9670;&nbsp;</a></span>directory() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tson::Gason::directory </td>
+          <td>(</td>
+          <td class="paramtype">const fs::path &amp;&#160;</td>
+          <td class="paramname"><em>directory</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implements <a class="el" href="classtson_1_1IJson.html#ab24276d81f82d876026af0087fee5e9e">tson::IJson</a>.</p>
 
 </div>
 </div>

@@ -92,6 +92,22 @@ void performMainAsserts(tson::Map *map, bool isOldMap = true)
     REQUIRE(main->getTileData(8,14)->getTileset() != nullptr);
     REQUIRE(main->getTileData(8,14)->getPosition({8,14}) == main->getTileObject(8,14)->getPosition());
     REQUIRE(main->getTileData().size() == main->getTileObjects().size());
+
+    //v1.3.0
+    if(isOldMap)
+    {
+        REQUIRE(!map->getTileset("demo-tileset")->getTransformations().allowHflip());
+        REQUIRE(!map->getTileset("demo-tileset")->getTransformations().allowVflip());
+        REQUIRE(!map->getTileset("demo-tileset")->getTransformations().allowPreferuntransformed());
+        REQUIRE(!map->getTileset("demo-tileset")->getTransformations().allowRotation());
+    }
+    else
+    {
+        REQUIRE(map->getTileset("demo-tileset")->getTransformations().allowHflip());
+        REQUIRE(map->getTileset("demo-tileset")->getTransformations().allowVflip());
+        REQUIRE(map->getTileset("demo-tileset")->getTransformations().allowPreferuntransformed());
+        REQUIRE(map->getTileset("demo-tileset")->getTransformations().allowRotation());
+    }
 }
 
 /*!

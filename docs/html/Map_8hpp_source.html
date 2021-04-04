@@ -139,7 +139,7 @@ $(function() {
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keyword">inline</span> <span class="keywordtype">void</span> createTilesetData(<a class="code" href="classtson_1_1IJson.html">IJson</a> &amp;json);</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keyword">inline</span> <span class="keywordtype">bool</span> createTilesetData(<a class="code" href="classtson_1_1IJson.html">IJson</a> &amp;json);</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            <span class="keyword">inline</span> <span class="keywordtype">void</span> processData();</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            <a class="code" href="classtson_1_1Color.html">Colori</a>                                 m_backgroundColor;   ;</div>
@@ -229,260 +229,267 @@ $(function() {
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;            m_properties.add(*item);</div>
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        });</div>
 <div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    }</div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    createTilesetData(json);</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    processData();</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    <span class="keywordflow">if</span>(!createTilesetData(json))</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        allFound = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160; </div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <span class="keywordflow">return</span> allFound;</div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;}</div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160; </div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="keywordtype">void</span> tson::Map::createTilesetData(<a class="code" href="classtson_1_1IJson.html">IJson</a> &amp;json)</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;{</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;tilesets&quot;</span>) &gt; 0 &amp;&amp; json[<span class="stringliteral">&quot;tilesets&quot;</span>].isArray())</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    {</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        <span class="comment">//First created tileset objects</span></div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        <span class="keyword">auto</span> &amp;tilesets = json.<a class="code" href="classtson_1_1IJson.html#aec3e1d9035fab9de5daf162797545015">array</a>(<span class="stringliteral">&quot;tilesets&quot;</span>);</div>
-<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        std::for_each(tilesets.begin(), tilesets.end(), [&amp;](std::unique_ptr&lt;IJson&gt; &amp;item)</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        {</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;            m_tilesets.emplace_back();</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;        });</div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160; </div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;        <span class="keywordtype">int</span> i = 0;</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;        <span class="comment">//Then do the parsing</span></div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;        std::for_each(tilesets.begin(), tilesets.end(), [&amp;](std::unique_ptr&lt;IJson&gt; &amp;item)</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        {</div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;            m_tilesets[i].parse(*item, this);</div>
-<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;            ++i;</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        });</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    }</div>
-<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;}</div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
-<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;<span class="keywordtype">void</span> tson::Map::processData()</div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;{</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    m_tileMap.clear();</div>
-<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    <span class="keywordflow">for</span>(<span class="keyword">auto</span> &amp;tileset : m_tilesets)</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    {</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;        std::for_each(tileset.getTiles().begin(), tileset.getTiles().end(), [&amp;](<a class="code" href="classtson_1_1Tile.html">tson::Tile</a> &amp;tile) { m_tileMap[tile.getGid()] = &amp;tile; });</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    }</div>
-<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;    std::for_each(m_layers.begin(), m_layers.end(), [&amp;](<a class="code" href="classtson_1_1Layer.html">tson::Layer</a> &amp;layer)</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    {</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;        layer.assignTileMap(&amp;m_tileMap);</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;        layer.createTileData(m_size, m_isInfinite);</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;        const std::set&lt;uint32_t&gt; &amp;flaggedTiles = layer.getUniqueFlaggedTiles();</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;        for(uint32_t ftile : flaggedTiles)</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;        {</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;            tson::Tile tile {ftile, layer.getMap()};</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;            if(m_tileMap.count(tile.getGid()))</div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;            {</div>
-<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;                tson::Tile *originalTile = m_tileMap[tile.getGid()];</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;                tile.addTilesetAndPerformCalculations(originalTile-&gt;getTileset());</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;                tile.setProperties(originalTile-&gt;getProperties());</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;                m_flaggedTileMap[ftile] = tile;</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;                m_tileMap[ftile] = &amp;m_flaggedTileMap[ftile];</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;            }</div>
-<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;        }</div>
-<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;        layer.<a class="code" href="classtson_1_1Layer.html#a6f27802a9e68c9c6539921af7a42a81f">resolveFlaggedTiles</a>();</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    });</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;}</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160; </div>
-<div class="line"><a name="l00249"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#ace22e4fc62cc254dd59e49d99290e42d">  249</a></span>&#160;<span class="keyword">const</span> <a class="code" href="classtson_1_1Color.html">tson::Colori</a> &amp;<a class="code" href="classtson_1_1Map.html#ace22e4fc62cc254dd59e49d99290e42d">tson::Map::getBackgroundColor</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    <span class="keywordflow">return</span> m_backgroundColor;</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;}</div>
-<div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160; </div>
-<div class="line"><a name="l00258"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a07ed1a319af0a299f0171503b6f428ab">  258</a></span>&#160;<span class="keyword">const</span> <a class="code" href="classtson_1_1Vector2.html">tson::Vector2&lt;int&gt;</a> &amp;<a class="code" href="classtson_1_1Map.html#a07ed1a319af0a299f0171503b6f428ab">tson::Map::getSize</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    <span class="keywordflow">return</span> m_size;</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;}</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160; </div>
-<div class="line"><a name="l00267"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#adb4efe0e81877f3520eac658b2183da0">  267</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classtson_1_1Map.html#adb4efe0e81877f3520eac658b2183da0">tson::Map::getHexsideLength</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    <span class="keywordflow">return</span> m_hexsideLength;</div>
-<div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;}</div>
-<div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160; </div>
-<div class="line"><a name="l00276"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#aeb7fd31ac283a3e7156d2ff528215932">  276</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classtson_1_1Map.html#aeb7fd31ac283a3e7156d2ff528215932">tson::Map::isInfinite</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    <span class="keywordflow">return</span> m_isInfinite;</div>
-<div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;}</div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160; </div>
-<div class="line"><a name="l00285"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#ad5a19a6df769e3e95c61ff770b1a2475">  285</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classtson_1_1Map.html#ad5a19a6df769e3e95c61ff770b1a2475">tson::Map::getNextLayerId</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;    <span class="keywordflow">return</span> m_nextLayerId;</div>
-<div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;}</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160; </div>
-<div class="line"><a name="l00294"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a956db7db0c35b459487659edf9d747ac">  294</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classtson_1_1Map.html#a956db7db0c35b459487659edf9d747ac">tson::Map::getNextObjectId</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;    <span class="keywordflow">return</span> m_nextObjectId;</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;}</div>
-<div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
-<div class="line"><a name="l00303"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a5b11a1be170b252486990c629717f3cb">  303</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtson_1_1Map.html#a5b11a1be170b252486990c629717f3cb">tson::Map::getOrientation</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    <span class="keywordflow">return</span> m_orientation;</div>
-<div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;}</div>
-<div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160; </div>
-<div class="line"><a name="l00312"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a5214730ea1010bad1379a042da6bbf68">  312</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtson_1_1Map.html#a5214730ea1010bad1379a042da6bbf68">tson::Map::getRenderOrder</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    <span class="keywordflow">return</span> m_renderOrder;</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;}</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160; </div>
-<div class="line"><a name="l00321"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a732d1868ca09f85e142c4d1f6709b006">  321</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtson_1_1Map.html#a732d1868ca09f85e142c4d1f6709b006">tson::Map::getStaggerAxis</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;    <span class="keywordflow">return</span> m_staggerAxis;</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;}</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160; </div>
-<div class="line"><a name="l00330"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a7f176d9e4efc46fd3937864fc13a3c00">  330</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtson_1_1Map.html#a7f176d9e4efc46fd3937864fc13a3c00">tson::Map::getStaggerIndex</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;    <span class="keywordflow">return</span> m_staggerIndex;</div>
-<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;}</div>
-<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160; </div>
-<div class="line"><a name="l00339"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#acab042e9e2c7aad6470068f5c687aae0">  339</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtson_1_1Map.html#acab042e9e2c7aad6470068f5c687aae0">tson::Map::getTiledVersion</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    <span class="keywordflow">return</span> m_tiledVersion;</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;}</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160; </div>
-<div class="line"><a name="l00348"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a4d10866b65f3ad1ae7fd79f0806f8b77">  348</a></span>&#160;<span class="keyword">const</span> <a class="code" href="classtson_1_1Vector2.html">tson::Vector2&lt;int&gt;</a> &amp;<a class="code" href="classtson_1_1Map.html#a4d10866b65f3ad1ae7fd79f0806f8b77">tson::Map::getTileSize</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;    <span class="keywordflow">return</span> m_tileSize;</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;}</div>
-<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160; </div>
-<div class="line"><a name="l00357"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a30c467f1ccad3ce8cc2d0139fa75d0d8">  357</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtson_1_1Map.html#a30c467f1ccad3ce8cc2d0139fa75d0d8">tson::Map::getType</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;    <span class="keywordflow">return</span> m_type;</div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;}</div>
-<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160; </div>
-<div class="line"><a name="l00366"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#ae5bad246ffcf2b652850b83a77b07386">  366</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classtson_1_1Map.html#ae5bad246ffcf2b652850b83a77b07386">tson::Map::getVersion</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    <span class="keywordflow">return</span> m_version;</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;}</div>
-<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160; </div>
-<div class="line"><a name="l00375"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a3cfe36ddb40018ee5ebe70bad5cf37ff">  375</a></span>&#160;std::vector&lt;tson::Layer&gt; &amp;<a class="code" href="classtson_1_1Map.html#a3cfe36ddb40018ee5ebe70bad5cf37ff">tson::Map::getLayers</a>()</div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;{</div>
-<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;    <span class="keywordflow">return</span> m_layers;</div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;}</div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160; </div>
-<div class="line"><a name="l00384"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#ac6060e10672261f4e80026aa2f29d2c2">  384</a></span>&#160;<a class="code" href="classtson_1_1PropertyCollection.html">tson::PropertyCollection</a> &amp;<a class="code" href="classtson_1_1Map.html#ac6060e10672261f4e80026aa2f29d2c2">tson::Map::getProperties</a>()</div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;{</div>
-<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    <span class="keywordflow">return</span> m_properties;</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;}</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160; </div>
-<div class="line"><a name="l00393"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a6d31956672b6d52acc4ffac140f8248a">  393</a></span>&#160;std::vector&lt;tson::Tileset&gt; &amp;<a class="code" href="classtson_1_1Map.html#a6d31956672b6d52acc4ffac140f8248a">tson::Map::getTilesets</a>()</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;{</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;    <span class="keywordflow">return</span> m_tilesets;</div>
-<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;}</div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160; </div>
-<div class="line"><a name="l00398"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#ab672b9c6ff2a25a213500e6a658fe9a1">  398</a></span>&#160;<a class="code" href="classtson_1_1Layer.html">tson::Layer</a> *<a class="code" href="classtson_1_1Map.html#ab672b9c6ff2a25a213500e6a658fe9a1">tson::Map::getLayer</a>(<span class="keyword">const</span> std::string &amp;name)</div>
-<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;{</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;    <span class="keyword">auto</span> result = std::find_if(m_layers.begin(), m_layers.end(), [&amp;](<span class="keyword">const</span> <a class="code" href="classtson_1_1Layer.html">tson::Layer</a> &amp;item) { return item.getName() == name; });</div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;    <span class="keywordflow">if</span>(result == m_layers.end())</div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160; </div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;    <span class="keywordflow">return</span> &amp;result.operator*();</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;}</div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160; </div>
-<div class="line"><a name="l00413"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a76699792ff662b6b41329ca9f4aaa874">  413</a></span>&#160;<a class="code" href="classtson_1_1Tileset.html">tson::Tileset</a> *<a class="code" href="classtson_1_1Map.html#a76699792ff662b6b41329ca9f4aaa874">tson::Map::getTileset</a>(<span class="keyword">const</span> std::string &amp;name)</div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;{</div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;    <span class="keyword">auto</span> result = std::find_if(m_tilesets.begin(), m_tilesets.end(), [&amp;](<span class="keyword">const</span> <a class="code" href="classtson_1_1Tileset.html">tson::Tileset</a> &amp;item) {return item.getName() == name; });</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;    <span class="keywordflow">if</span>(result == m_tilesets.end())</div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160; </div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;    <span class="keywordflow">return</span> &amp;result.operator*();</div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;}</div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160; </div>
-<div class="line"><a name="l00428"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#aab8c74daf2b9dbb03b3032c2a0486960">  428</a></span>&#160;<a class="code" href="classtson_1_1Tileset.html">tson::Tileset</a> *<a class="code" href="classtson_1_1Map.html#aab8c74daf2b9dbb03b3032c2a0486960">tson::Map::getTilesetByGid</a>(uint32_t gid)</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;{</div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;    <span class="keyword">auto</span> result = std::find_if(m_tilesets.begin(), m_tilesets.end(), [&amp;](<span class="keyword">const</span> <a class="code" href="classtson_1_1Tileset.html">tson::Tileset</a> &amp;tileset)</div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;    {</div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;        int firstId = tileset.getFirstgid(); <span class="comment">//First tile id of the tileset</span></div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;        int lastId = (firstId + tileset.getTileCount()) - 1;</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160; </div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;        return (gid &gt;= firstId &amp;&amp; gid &lt;= lastId);</div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;    });</div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;    <span class="keywordflow">if</span>(result == m_tilesets.end())</div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160; </div>
-<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;    <span class="keywordflow">return</span> &amp;result.operator*();</div>
-<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;}</div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160; </div>
-<div class="line"><a name="l00448"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a92cb642358d387c57811c56d584decd0">  448</a></span>&#160;<a class="code" href="classtson_1_1Property.html">tson::Property</a> *<a class="code" href="classtson_1_1Map.html#a92cb642358d387c57811c56d584decd0">tson::Map::getProp</a>(<span class="keyword">const</span> std::string &amp;name)</div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;{</div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;    <span class="keywordflow">if</span>(m_properties.hasProperty(name))</div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;        <span class="keywordflow">return</span> m_properties.getProperty(name);</div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;}</div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160; </div>
-<div class="line"><a name="l00455"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a1068efbdf303356d045e0c0c5d89bdb8">  455</a></span>&#160;<a class="code" href="namespacetson.html#a7e7be825d3bd60100bb41677df44168b">tson::ParseStatus</a> <a class="code" href="classtson_1_1Map.html#a1068efbdf303356d045e0c0c5d89bdb8">tson::Map::getStatus</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;    <span class="keywordflow">return</span> m_status;</div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;}</div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160; </div>
-<div class="line"><a name="l00460"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#aee099a435757c3480b3a0bbfceda19d1">  460</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtson_1_1Map.html#aee099a435757c3480b3a0bbfceda19d1">tson::Map::getStatusMessage</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;    <span class="keywordflow">return</span> m_statusMessage;</div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;}</div>
-<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160; </div>
-<div class="line"><a name="l00469"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#acc4ba123d6073ce239ec12b824077e64">  469</a></span>&#160;<span class="keyword">const</span> std::map&lt;uint32_t, tson::Tile *&gt; &amp;<a class="code" href="classtson_1_1Map.html#acc4ba123d6073ce239ec12b824077e64">tson::Map::getTileMap</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;    <span class="keywordflow">return</span> m_tileMap;</div>
-<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;}</div>
-<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160; </div>
-<div class="line"><a name="l00474"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#adcb35251825a8e480165d13a4bd4ee57">  474</a></span>&#160;<a class="code" href="classtson_1_1DecompressorContainer.html">tson::DecompressorContainer</a> *<a class="code" href="classtson_1_1Map.html#adcb35251825a8e480165d13a4bd4ee57">tson::Map::getDecompressors</a>()</div>
-<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;{</div>
-<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;    <span class="keywordflow">return</span> m_decompressors;</div>
-<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;}</div>
-<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160; </div>
-<div class="line"><a name="l00484"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a6c7fd33d3fd1e06c44abc395c255b9e8">  484</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classtson_1_1Map.html#a6c7fd33d3fd1e06c44abc395c255b9e8">tson::Map::getCompressionLevel</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;    <span class="keywordflow">return</span> m_compressionLevel;</div>
-<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;}</div>
-<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160; </div>
-<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160; </div>
-<div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160; </div>
-<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160; </div>
-<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//TILESON_MAP_HPP</span></div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    processData();</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160; </div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="keywordflow">return</span> allFound;</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;}</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160; </div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;<span class="keywordtype">bool</span> tson::Map::createTilesetData(<a class="code" href="classtson_1_1IJson.html">IJson</a> &amp;json)</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;{</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    <span class="keywordtype">bool</span> ok = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;tilesets&quot;</span>) &gt; 0 &amp;&amp; json[<span class="stringliteral">&quot;tilesets&quot;</span>].isArray())</div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    {</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        <span class="comment">//First created tileset objects</span></div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        <span class="keyword">auto</span> &amp;tilesets = json.<a class="code" href="classtson_1_1IJson.html#aec3e1d9035fab9de5daf162797545015">array</a>(<span class="stringliteral">&quot;tilesets&quot;</span>);</div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;        std::for_each(tilesets.begin(), tilesets.end(), [&amp;](std::unique_ptr&lt;IJson&gt; &amp;item)</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;        {</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;            m_tilesets.emplace_back();</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;        });</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160; </div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        <span class="keywordtype">int</span> i = 0;</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;        <span class="comment">//Then do the parsing</span></div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;        std::for_each(tilesets.begin(), tilesets.end(), [&amp;](std::unique_ptr&lt;IJson&gt; &amp;item)</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        {</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;            item-&gt;directory(json.directory());</div>
+<div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;            if(!m_tilesets[i].parse(*item, this))</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;                ok = false;</div>
+<div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160; </div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;            ++i;</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;        });</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    }</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    <span class="keywordflow">return</span> ok;</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;}</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160; </div>
+<div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="keywordtype">void</span> tson::Map::processData()</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;{</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;    m_tileMap.clear();</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;    <span class="keywordflow">for</span>(<span class="keyword">auto</span> &amp;tileset : m_tilesets)</div>
+<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    {</div>
+<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;        std::for_each(tileset.getTiles().begin(), tileset.getTiles().end(), [&amp;](<a class="code" href="classtson_1_1Tile.html">tson::Tile</a> &amp;tile) { m_tileMap[tile.getGid()] = &amp;tile; });</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    }</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    std::for_each(m_layers.begin(), m_layers.end(), [&amp;](<a class="code" href="classtson_1_1Layer.html">tson::Layer</a> &amp;layer)</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;    {</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;        layer.assignTileMap(&amp;m_tileMap);</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;        layer.createTileData(m_size, m_isInfinite);</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;        const std::set&lt;uint32_t&gt; &amp;flaggedTiles = layer.getUniqueFlaggedTiles();</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;        for(uint32_t ftile : flaggedTiles)</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;        {</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;            tson::Tile tile {ftile, layer.getMap()};</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;            if(m_tileMap.count(tile.getGid()))</div>
+<div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;            {</div>
+<div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;                tson::Tile *originalTile = m_tileMap[tile.getGid()];</div>
+<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;                tile.addTilesetAndPerformCalculations(originalTile-&gt;getTileset());</div>
+<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;                tile.setProperties(originalTile-&gt;getProperties());</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;                m_flaggedTileMap[ftile] = tile;</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;                m_tileMap[ftile] = &amp;m_flaggedTileMap[ftile];</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;            }</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;        }</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;        layer.<a class="code" href="classtson_1_1Layer.html#a6f27802a9e68c9c6539921af7a42a81f">resolveFlaggedTiles</a>();</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    });</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;}</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160; </div>
+<div class="line"><a name="l00256"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#ace22e4fc62cc254dd59e49d99290e42d">  256</a></span>&#160;<span class="keyword">const</span> <a class="code" href="classtson_1_1Color.html">tson::Colori</a> &amp;<a class="code" href="classtson_1_1Map.html#ace22e4fc62cc254dd59e49d99290e42d">tson::Map::getBackgroundColor</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    <span class="keywordflow">return</span> m_backgroundColor;</div>
+<div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;}</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160; </div>
+<div class="line"><a name="l00265"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a07ed1a319af0a299f0171503b6f428ab">  265</a></span>&#160;<span class="keyword">const</span> <a class="code" href="classtson_1_1Vector2.html">tson::Vector2&lt;int&gt;</a> &amp;<a class="code" href="classtson_1_1Map.html#a07ed1a319af0a299f0171503b6f428ab">tson::Map::getSize</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;    <span class="keywordflow">return</span> m_size;</div>
+<div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;}</div>
+<div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160; </div>
+<div class="line"><a name="l00274"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#adb4efe0e81877f3520eac658b2183da0">  274</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classtson_1_1Map.html#adb4efe0e81877f3520eac658b2183da0">tson::Map::getHexsideLength</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    <span class="keywordflow">return</span> m_hexsideLength;</div>
+<div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;}</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160; </div>
+<div class="line"><a name="l00283"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#aeb7fd31ac283a3e7156d2ff528215932">  283</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classtson_1_1Map.html#aeb7fd31ac283a3e7156d2ff528215932">tson::Map::isInfinite</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    <span class="keywordflow">return</span> m_isInfinite;</div>
+<div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;}</div>
+<div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
+<div class="line"><a name="l00292"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#ad5a19a6df769e3e95c61ff770b1a2475">  292</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classtson_1_1Map.html#ad5a19a6df769e3e95c61ff770b1a2475">tson::Map::getNextLayerId</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;    <span class="keywordflow">return</span> m_nextLayerId;</div>
+<div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;}</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160; </div>
+<div class="line"><a name="l00301"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a956db7db0c35b459487659edf9d747ac">  301</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classtson_1_1Map.html#a956db7db0c35b459487659edf9d747ac">tson::Map::getNextObjectId</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    <span class="keywordflow">return</span> m_nextObjectId;</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;}</div>
+<div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160; </div>
+<div class="line"><a name="l00310"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a5b11a1be170b252486990c629717f3cb">  310</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtson_1_1Map.html#a5b11a1be170b252486990c629717f3cb">tson::Map::getOrientation</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    <span class="keywordflow">return</span> m_orientation;</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;}</div>
+<div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160; </div>
+<div class="line"><a name="l00319"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a5214730ea1010bad1379a042da6bbf68">  319</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtson_1_1Map.html#a5214730ea1010bad1379a042da6bbf68">tson::Map::getRenderOrder</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;    <span class="keywordflow">return</span> m_renderOrder;</div>
+<div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;}</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160; </div>
+<div class="line"><a name="l00328"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a732d1868ca09f85e142c4d1f6709b006">  328</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtson_1_1Map.html#a732d1868ca09f85e142c4d1f6709b006">tson::Map::getStaggerAxis</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;    <span class="keywordflow">return</span> m_staggerAxis;</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;}</div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160; </div>
+<div class="line"><a name="l00337"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a7f176d9e4efc46fd3937864fc13a3c00">  337</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtson_1_1Map.html#a7f176d9e4efc46fd3937864fc13a3c00">tson::Map::getStaggerIndex</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    <span class="keywordflow">return</span> m_staggerIndex;</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;}</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160; </div>
+<div class="line"><a name="l00346"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#acab042e9e2c7aad6470068f5c687aae0">  346</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtson_1_1Map.html#acab042e9e2c7aad6470068f5c687aae0">tson::Map::getTiledVersion</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    <span class="keywordflow">return</span> m_tiledVersion;</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;}</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160; </div>
+<div class="line"><a name="l00355"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a4d10866b65f3ad1ae7fd79f0806f8b77">  355</a></span>&#160;<span class="keyword">const</span> <a class="code" href="classtson_1_1Vector2.html">tson::Vector2&lt;int&gt;</a> &amp;<a class="code" href="classtson_1_1Map.html#a4d10866b65f3ad1ae7fd79f0806f8b77">tson::Map::getTileSize</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;    <span class="keywordflow">return</span> m_tileSize;</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;}</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160; </div>
+<div class="line"><a name="l00364"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a30c467f1ccad3ce8cc2d0139fa75d0d8">  364</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtson_1_1Map.html#a30c467f1ccad3ce8cc2d0139fa75d0d8">tson::Map::getType</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    <span class="keywordflow">return</span> m_type;</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;}</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160; </div>
+<div class="line"><a name="l00373"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#ae5bad246ffcf2b652850b83a77b07386">  373</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classtson_1_1Map.html#ae5bad246ffcf2b652850b83a77b07386">tson::Map::getVersion</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;    <span class="keywordflow">return</span> m_version;</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;}</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160; </div>
+<div class="line"><a name="l00382"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a3cfe36ddb40018ee5ebe70bad5cf37ff">  382</a></span>&#160;std::vector&lt;tson::Layer&gt; &amp;<a class="code" href="classtson_1_1Map.html#a3cfe36ddb40018ee5ebe70bad5cf37ff">tson::Map::getLayers</a>()</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;{</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;    <span class="keywordflow">return</span> m_layers;</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;}</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160; </div>
+<div class="line"><a name="l00391"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#ac6060e10672261f4e80026aa2f29d2c2">  391</a></span>&#160;<a class="code" href="classtson_1_1PropertyCollection.html">tson::PropertyCollection</a> &amp;<a class="code" href="classtson_1_1Map.html#ac6060e10672261f4e80026aa2f29d2c2">tson::Map::getProperties</a>()</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;{</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;    <span class="keywordflow">return</span> m_properties;</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;}</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160; </div>
+<div class="line"><a name="l00400"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a6d31956672b6d52acc4ffac140f8248a">  400</a></span>&#160;std::vector&lt;tson::Tileset&gt; &amp;<a class="code" href="classtson_1_1Map.html#a6d31956672b6d52acc4ffac140f8248a">tson::Map::getTilesets</a>()</div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;{</div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;    <span class="keywordflow">return</span> m_tilesets;</div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;}</div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160; </div>
+<div class="line"><a name="l00405"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#ab672b9c6ff2a25a213500e6a658fe9a1">  405</a></span>&#160;<a class="code" href="classtson_1_1Layer.html">tson::Layer</a> *<a class="code" href="classtson_1_1Map.html#ab672b9c6ff2a25a213500e6a658fe9a1">tson::Map::getLayer</a>(<span class="keyword">const</span> std::string &amp;name)</div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;{</div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;    <span class="keyword">auto</span> result = std::find_if(m_layers.begin(), m_layers.end(), [&amp;](<span class="keyword">const</span> <a class="code" href="classtson_1_1Layer.html">tson::Layer</a> &amp;item) { return item.getName() == name; });</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;    <span class="keywordflow">if</span>(result == m_layers.end())</div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160; </div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;    <span class="keywordflow">return</span> &amp;result.operator*();</div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;}</div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160; </div>
+<div class="line"><a name="l00420"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a76699792ff662b6b41329ca9f4aaa874">  420</a></span>&#160;<a class="code" href="classtson_1_1Tileset.html">tson::Tileset</a> *<a class="code" href="classtson_1_1Map.html#a76699792ff662b6b41329ca9f4aaa874">tson::Map::getTileset</a>(<span class="keyword">const</span> std::string &amp;name)</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;{</div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;    <span class="keyword">auto</span> result = std::find_if(m_tilesets.begin(), m_tilesets.end(), [&amp;](<span class="keyword">const</span> <a class="code" href="classtson_1_1Tileset.html">tson::Tileset</a> &amp;item) {return item.getName() == name; });</div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;    <span class="keywordflow">if</span>(result == m_tilesets.end())</div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160; </div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;    <span class="keywordflow">return</span> &amp;result.operator*();</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;}</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160; </div>
+<div class="line"><a name="l00435"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#aab8c74daf2b9dbb03b3032c2a0486960">  435</a></span>&#160;<a class="code" href="classtson_1_1Tileset.html">tson::Tileset</a> *<a class="code" href="classtson_1_1Map.html#aab8c74daf2b9dbb03b3032c2a0486960">tson::Map::getTilesetByGid</a>(uint32_t gid)</div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;{</div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;    <span class="keyword">auto</span> result = std::find_if(m_tilesets.begin(), m_tilesets.end(), [&amp;](<span class="keyword">const</span> <a class="code" href="classtson_1_1Tileset.html">tson::Tileset</a> &amp;tileset)</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;    {</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;        int firstId = tileset.getFirstgid(); <span class="comment">//First tile id of the tileset</span></div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;        int lastId = (firstId + tileset.getTileCount()) - 1;</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160; </div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;        return (gid &gt;= firstId &amp;&amp; gid &lt;= lastId);</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;    });</div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;    <span class="keywordflow">if</span>(result == m_tilesets.end())</div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160; </div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;    <span class="keywordflow">return</span> &amp;result.operator*();</div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;}</div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160; </div>
+<div class="line"><a name="l00455"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a92cb642358d387c57811c56d584decd0">  455</a></span>&#160;<a class="code" href="classtson_1_1Property.html">tson::Property</a> *<a class="code" href="classtson_1_1Map.html#a92cb642358d387c57811c56d584decd0">tson::Map::getProp</a>(<span class="keyword">const</span> std::string &amp;name)</div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;{</div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;    <span class="keywordflow">if</span>(m_properties.hasProperty(name))</div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;        <span class="keywordflow">return</span> m_properties.getProperty(name);</div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;}</div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160; </div>
+<div class="line"><a name="l00462"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a1068efbdf303356d045e0c0c5d89bdb8">  462</a></span>&#160;<a class="code" href="namespacetson.html#a7e7be825d3bd60100bb41677df44168b">tson::ParseStatus</a> <a class="code" href="classtson_1_1Map.html#a1068efbdf303356d045e0c0c5d89bdb8">tson::Map::getStatus</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;    <span class="keywordflow">return</span> m_status;</div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;}</div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160; </div>
+<div class="line"><a name="l00467"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#aee099a435757c3480b3a0bbfceda19d1">  467</a></span>&#160;<span class="keyword">const</span> std::string &amp;<a class="code" href="classtson_1_1Map.html#aee099a435757c3480b3a0bbfceda19d1">tson::Map::getStatusMessage</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;    <span class="keywordflow">return</span> m_statusMessage;</div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;}</div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160; </div>
+<div class="line"><a name="l00476"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#acc4ba123d6073ce239ec12b824077e64">  476</a></span>&#160;<span class="keyword">const</span> std::map&lt;uint32_t, tson::Tile *&gt; &amp;<a class="code" href="classtson_1_1Map.html#acc4ba123d6073ce239ec12b824077e64">tson::Map::getTileMap</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;    <span class="keywordflow">return</span> m_tileMap;</div>
+<div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;}</div>
+<div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160; </div>
+<div class="line"><a name="l00481"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#adcb35251825a8e480165d13a4bd4ee57">  481</a></span>&#160;<a class="code" href="classtson_1_1DecompressorContainer.html">tson::DecompressorContainer</a> *<a class="code" href="classtson_1_1Map.html#adcb35251825a8e480165d13a4bd4ee57">tson::Map::getDecompressors</a>()</div>
+<div class="line"><a name="l00482"></a><span class="lineno">  482</span>&#160;{</div>
+<div class="line"><a name="l00483"></a><span class="lineno">  483</span>&#160;    <span class="keywordflow">return</span> m_decompressors;</div>
+<div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;}</div>
+<div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160; </div>
+<div class="line"><a name="l00491"></a><span class="lineno"><a class="line" href="classtson_1_1Map.html#a6c7fd33d3fd1e06c44abc395c255b9e8">  491</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classtson_1_1Map.html#a6c7fd33d3fd1e06c44abc395c255b9e8">tson::Map::getCompressionLevel</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;    <span class="keywordflow">return</span> m_compressionLevel;</div>
+<div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;}</div>
+<div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160; </div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160; </div>
+<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160; </div>
+<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160; </div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//TILESON_MAP_HPP</span></div>
 <div class="ttc" id="aLayer_8hpp_html"><div class="ttname"><a href="Layer_8hpp.html">Layer.hpp</a></div></div>
 <div class="ttc" id="aTileset_8hpp_html"><div class="ttname"><a href="Tileset_8hpp.html">Tileset.hpp</a></div></div>
 <div class="ttc" id="aclasstson_1_1Color_html"><div class="ttname"><a href="classtson_1_1Color.html">tson::Color&lt; uint8_t &gt;</a></div></div>
 <div class="ttc" id="aclasstson_1_1DecompressorContainer_html"><div class="ttname"><a href="classtson_1_1DecompressorContainer.html">tson::DecompressorContainer</a></div><div class="ttdef"><b>Definition:</b> DecompressorContainer.hpp:16</div></div>
 <div class="ttc" id="aclasstson_1_1IJson_html"><div class="ttname"><a href="classtson_1_1IJson.html">tson::IJson</a></div><div class="ttdef"><b>Definition:</b> IJson.hpp:11</div></div>
-<div class="ttc" id="aclasstson_1_1IJson_html_a33e0e84aa8ce0636b2045a8c0e8ece66"><div class="ttname"><a href="classtson_1_1IJson.html#a33e0e84aa8ce0636b2045a8c0e8ece66">tson::IJson::get</a></div><div class="ttdeci">T get(std::string_view key)</div><div class="ttdef"><b>Definition:</b> IJson.hpp:63</div></div>
+<div class="ttc" id="aclasstson_1_1IJson_html_a33e0e84aa8ce0636b2045a8c0e8ece66"><div class="ttname"><a href="classtson_1_1IJson.html#a33e0e84aa8ce0636b2045a8c0e8ece66">tson::IJson::get</a></div><div class="ttdeci">T get(std::string_view key)</div><div class="ttdef"><b>Definition:</b> IJson.hpp:72</div></div>
 <div class="ttc" id="aclasstson_1_1IJson_html_a50556d6382b1ee0115bcbf809ab8b24b"><div class="ttname"><a href="classtson_1_1IJson.html#a50556d6382b1ee0115bcbf809ab8b24b">tson::IJson::isArray</a></div><div class="ttdeci">virtual bool isArray() const =0</div></div>
 <div class="ttc" id="aclasstson_1_1IJson_html_ad742cdf1ffd8577e147c42836a1bb9bb"><div class="ttname"><a href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">tson::IJson::count</a></div><div class="ttdeci">virtual size_t count(std::string_view key) const =0</div></div>
 <div class="ttc" id="aclasstson_1_1IJson_html_aec3e1d9035fab9de5daf162797545015"><div class="ttname"><a href="classtson_1_1IJson.html#aec3e1d9035fab9de5daf162797545015">tson::IJson::array</a></div><div class="ttdeci">virtual std::vector&lt; std::unique_ptr&lt; IJson &gt; &gt; array()=0</div></div>
 <div class="ttc" id="aclasstson_1_1Layer_html"><div class="ttname"><a href="classtson_1_1Layer.html">tson::Layer</a></div><div class="ttdef"><b>Definition:</b> Layer.hpp:26</div></div>
-<div class="ttc" id="aclasstson_1_1Layer_html_a6f27802a9e68c9c6539921af7a42a81f"><div class="ttname"><a href="classtson_1_1Layer.html#a6f27802a9e68c9c6539921af7a42a81f">tson::Layer::resolveFlaggedTiles</a></div><div class="ttdeci">void resolveFlaggedTiles()</div><div class="ttdef"><b>Definition:</b> Layer.hpp:606</div></div>
+<div class="ttc" id="aclasstson_1_1Layer_html_a6f27802a9e68c9c6539921af7a42a81f"><div class="ttname"><a href="classtson_1_1Layer.html#a6f27802a9e68c9c6539921af7a42a81f">tson::Layer::resolveFlaggedTiles</a></div><div class="ttdeci">void resolveFlaggedTiles()</div><div class="ttdef"><b>Definition:</b> Layer.hpp:617</div></div>
 <div class="ttc" id="aclasstson_1_1Map_html"><div class="ttname"><a href="classtson_1_1Map.html">tson::Map</a></div><div class="ttdef"><b>Definition:</b> Map.hpp:25</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_a07ed1a319af0a299f0171503b6f428ab"><div class="ttname"><a href="classtson_1_1Map.html#a07ed1a319af0a299f0171503b6f428ab">tson::Map::getSize</a></div><div class="ttdeci">const Vector2i &amp; getSize() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:258</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_a1068efbdf303356d045e0c0c5d89bdb8"><div class="ttname"><a href="classtson_1_1Map.html#a1068efbdf303356d045e0c0c5d89bdb8">tson::Map::getStatus</a></div><div class="ttdeci">ParseStatus getStatus() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:455</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_a30c467f1ccad3ce8cc2d0139fa75d0d8"><div class="ttname"><a href="classtson_1_1Map.html#a30c467f1ccad3ce8cc2d0139fa75d0d8">tson::Map::getType</a></div><div class="ttdeci">const std::string &amp; getType() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:357</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_a3cfe36ddb40018ee5ebe70bad5cf37ff"><div class="ttname"><a href="classtson_1_1Map.html#a3cfe36ddb40018ee5ebe70bad5cf37ff">tson::Map::getLayers</a></div><div class="ttdeci">std::vector&lt; tson::Layer &gt; &amp; getLayers()</div><div class="ttdef"><b>Definition:</b> Map.hpp:375</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_a4d10866b65f3ad1ae7fd79f0806f8b77"><div class="ttname"><a href="classtson_1_1Map.html#a4d10866b65f3ad1ae7fd79f0806f8b77">tson::Map::getTileSize</a></div><div class="ttdeci">const Vector2i &amp; getTileSize() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:348</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_a07ed1a319af0a299f0171503b6f428ab"><div class="ttname"><a href="classtson_1_1Map.html#a07ed1a319af0a299f0171503b6f428ab">tson::Map::getSize</a></div><div class="ttdeci">const Vector2i &amp; getSize() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:265</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_a1068efbdf303356d045e0c0c5d89bdb8"><div class="ttname"><a href="classtson_1_1Map.html#a1068efbdf303356d045e0c0c5d89bdb8">tson::Map::getStatus</a></div><div class="ttdeci">ParseStatus getStatus() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:462</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_a30c467f1ccad3ce8cc2d0139fa75d0d8"><div class="ttname"><a href="classtson_1_1Map.html#a30c467f1ccad3ce8cc2d0139fa75d0d8">tson::Map::getType</a></div><div class="ttdeci">const std::string &amp; getType() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:364</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_a3cfe36ddb40018ee5ebe70bad5cf37ff"><div class="ttname"><a href="classtson_1_1Map.html#a3cfe36ddb40018ee5ebe70bad5cf37ff">tson::Map::getLayers</a></div><div class="ttdeci">std::vector&lt; tson::Layer &gt; &amp; getLayers()</div><div class="ttdef"><b>Definition:</b> Map.hpp:382</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_a4d10866b65f3ad1ae7fd79f0806f8b77"><div class="ttname"><a href="classtson_1_1Map.html#a4d10866b65f3ad1ae7fd79f0806f8b77">tson::Map::getTileSize</a></div><div class="ttdeci">const Vector2i &amp; getTileSize() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:355</div></div>
 <div class="ttc" id="aclasstson_1_1Map_html_a4f027c90796e8e1e2d73d4ec0d2181fb"><div class="ttname"><a href="classtson_1_1Map.html#a4f027c90796e8e1e2d73d4ec0d2181fb">tson::Map::Map</a></div><div class="ttdeci">Map()=default</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_a5214730ea1010bad1379a042da6bbf68"><div class="ttname"><a href="classtson_1_1Map.html#a5214730ea1010bad1379a042da6bbf68">tson::Map::getRenderOrder</a></div><div class="ttdeci">const std::string &amp; getRenderOrder() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:312</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_a5b11a1be170b252486990c629717f3cb"><div class="ttname"><a href="classtson_1_1Map.html#a5b11a1be170b252486990c629717f3cb">tson::Map::getOrientation</a></div><div class="ttdeci">const std::string &amp; getOrientation() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:303</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_a6c7fd33d3fd1e06c44abc395c255b9e8"><div class="ttname"><a href="classtson_1_1Map.html#a6c7fd33d3fd1e06c44abc395c255b9e8">tson::Map::getCompressionLevel</a></div><div class="ttdeci">int getCompressionLevel() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:484</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_a6d31956672b6d52acc4ffac140f8248a"><div class="ttname"><a href="classtson_1_1Map.html#a6d31956672b6d52acc4ffac140f8248a">tson::Map::getTilesets</a></div><div class="ttdeci">std::vector&lt; tson::Tileset &gt; &amp; getTilesets()</div><div class="ttdef"><b>Definition:</b> Map.hpp:393</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_a732d1868ca09f85e142c4d1f6709b006"><div class="ttname"><a href="classtson_1_1Map.html#a732d1868ca09f85e142c4d1f6709b006">tson::Map::getStaggerAxis</a></div><div class="ttdeci">const std::string &amp; getStaggerAxis() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:321</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_a76699792ff662b6b41329ca9f4aaa874"><div class="ttname"><a href="classtson_1_1Map.html#a76699792ff662b6b41329ca9f4aaa874">tson::Map::getTileset</a></div><div class="ttdeci">Tileset * getTileset(const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> Map.hpp:413</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_a7f176d9e4efc46fd3937864fc13a3c00"><div class="ttname"><a href="classtson_1_1Map.html#a7f176d9e4efc46fd3937864fc13a3c00">tson::Map::getStaggerIndex</a></div><div class="ttdeci">const std::string &amp; getStaggerIndex() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:330</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_a5214730ea1010bad1379a042da6bbf68"><div class="ttname"><a href="classtson_1_1Map.html#a5214730ea1010bad1379a042da6bbf68">tson::Map::getRenderOrder</a></div><div class="ttdeci">const std::string &amp; getRenderOrder() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:319</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_a5b11a1be170b252486990c629717f3cb"><div class="ttname"><a href="classtson_1_1Map.html#a5b11a1be170b252486990c629717f3cb">tson::Map::getOrientation</a></div><div class="ttdeci">const std::string &amp; getOrientation() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:310</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_a6c7fd33d3fd1e06c44abc395c255b9e8"><div class="ttname"><a href="classtson_1_1Map.html#a6c7fd33d3fd1e06c44abc395c255b9e8">tson::Map::getCompressionLevel</a></div><div class="ttdeci">int getCompressionLevel() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:491</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_a6d31956672b6d52acc4ffac140f8248a"><div class="ttname"><a href="classtson_1_1Map.html#a6d31956672b6d52acc4ffac140f8248a">tson::Map::getTilesets</a></div><div class="ttdeci">std::vector&lt; tson::Tileset &gt; &amp; getTilesets()</div><div class="ttdef"><b>Definition:</b> Map.hpp:400</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_a732d1868ca09f85e142c4d1f6709b006"><div class="ttname"><a href="classtson_1_1Map.html#a732d1868ca09f85e142c4d1f6709b006">tson::Map::getStaggerAxis</a></div><div class="ttdeci">const std::string &amp; getStaggerAxis() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:328</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_a76699792ff662b6b41329ca9f4aaa874"><div class="ttname"><a href="classtson_1_1Map.html#a76699792ff662b6b41329ca9f4aaa874">tson::Map::getTileset</a></div><div class="ttdeci">Tileset * getTileset(const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> Map.hpp:420</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_a7f176d9e4efc46fd3937864fc13a3c00"><div class="ttname"><a href="classtson_1_1Map.html#a7f176d9e4efc46fd3937864fc13a3c00">tson::Map::getStaggerIndex</a></div><div class="ttdeci">const std::string &amp; getStaggerIndex() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:337</div></div>
 <div class="ttc" id="aclasstson_1_1Map_html_a916580d35a1036ae5bcc7c13b7c3d023"><div class="ttname"><a href="classtson_1_1Map.html#a916580d35a1036ae5bcc7c13b7c3d023">tson::Map::get</a></div><div class="ttdeci">T get(const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> Map.hpp:110</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_a92cb642358d387c57811c56d584decd0"><div class="ttname"><a href="classtson_1_1Map.html#a92cb642358d387c57811c56d584decd0">tson::Map::getProp</a></div><div class="ttdeci">tson::Property * getProp(const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> Map.hpp:448</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_a956db7db0c35b459487659edf9d747ac"><div class="ttname"><a href="classtson_1_1Map.html#a956db7db0c35b459487659edf9d747ac">tson::Map::getNextObjectId</a></div><div class="ttdeci">int getNextObjectId() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:294</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_aab8c74daf2b9dbb03b3032c2a0486960"><div class="ttname"><a href="classtson_1_1Map.html#aab8c74daf2b9dbb03b3032c2a0486960">tson::Map::getTilesetByGid</a></div><div class="ttdeci">Tileset * getTilesetByGid(uint32_t gid)</div><div class="ttdef"><b>Definition:</b> Map.hpp:428</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_a92cb642358d387c57811c56d584decd0"><div class="ttname"><a href="classtson_1_1Map.html#a92cb642358d387c57811c56d584decd0">tson::Map::getProp</a></div><div class="ttdeci">tson::Property * getProp(const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> Map.hpp:455</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_a956db7db0c35b459487659edf9d747ac"><div class="ttname"><a href="classtson_1_1Map.html#a956db7db0c35b459487659edf9d747ac">tson::Map::getNextObjectId</a></div><div class="ttdeci">int getNextObjectId() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:301</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_aab8c74daf2b9dbb03b3032c2a0486960"><div class="ttname"><a href="classtson_1_1Map.html#aab8c74daf2b9dbb03b3032c2a0486960">tson::Map::getTilesetByGid</a></div><div class="ttdeci">Tileset * getTilesetByGid(uint32_t gid)</div><div class="ttdef"><b>Definition:</b> Map.hpp:435</div></div>
 <div class="ttc" id="aclasstson_1_1Map_html_aad9cfc0af4f94a6bccb1e6bf091e952f"><div class="ttname"><a href="classtson_1_1Map.html#aad9cfc0af4f94a6bccb1e6bf091e952f">tson::Map::parse</a></div><div class="ttdeci">bool parse(IJson &amp;json, tson::DecompressorContainer *decompressors)</div><div class="ttdef"><b>Definition:</b> Map.hpp:141</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_ab672b9c6ff2a25a213500e6a658fe9a1"><div class="ttname"><a href="classtson_1_1Map.html#ab672b9c6ff2a25a213500e6a658fe9a1">tson::Map::getLayer</a></div><div class="ttdeci">Layer * getLayer(const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> Map.hpp:398</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_ac6060e10672261f4e80026aa2f29d2c2"><div class="ttname"><a href="classtson_1_1Map.html#ac6060e10672261f4e80026aa2f29d2c2">tson::Map::getProperties</a></div><div class="ttdeci">PropertyCollection &amp; getProperties()</div><div class="ttdef"><b>Definition:</b> Map.hpp:384</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_acab042e9e2c7aad6470068f5c687aae0"><div class="ttname"><a href="classtson_1_1Map.html#acab042e9e2c7aad6470068f5c687aae0">tson::Map::getTiledVersion</a></div><div class="ttdeci">const std::string &amp; getTiledVersion() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:339</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_acc4ba123d6073ce239ec12b824077e64"><div class="ttname"><a href="classtson_1_1Map.html#acc4ba123d6073ce239ec12b824077e64">tson::Map::getTileMap</a></div><div class="ttdeci">const std::map&lt; uint32_t, tson::Tile * &gt; &amp; getTileMap() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:469</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_ace22e4fc62cc254dd59e49d99290e42d"><div class="ttname"><a href="classtson_1_1Map.html#ace22e4fc62cc254dd59e49d99290e42d">tson::Map::getBackgroundColor</a></div><div class="ttdeci">const Colori &amp; getBackgroundColor() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:249</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_ad5a19a6df769e3e95c61ff770b1a2475"><div class="ttname"><a href="classtson_1_1Map.html#ad5a19a6df769e3e95c61ff770b1a2475">tson::Map::getNextLayerId</a></div><div class="ttdeci">int getNextLayerId() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:285</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_adb4efe0e81877f3520eac658b2183da0"><div class="ttname"><a href="classtson_1_1Map.html#adb4efe0e81877f3520eac658b2183da0">tson::Map::getHexsideLength</a></div><div class="ttdeci">int getHexsideLength() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:267</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_adcb35251825a8e480165d13a4bd4ee57"><div class="ttname"><a href="classtson_1_1Map.html#adcb35251825a8e480165d13a4bd4ee57">tson::Map::getDecompressors</a></div><div class="ttdeci">DecompressorContainer * getDecompressors()</div><div class="ttdef"><b>Definition:</b> Map.hpp:474</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_ae5bad246ffcf2b652850b83a77b07386"><div class="ttname"><a href="classtson_1_1Map.html#ae5bad246ffcf2b652850b83a77b07386">tson::Map::getVersion</a></div><div class="ttdeci">int getVersion() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:366</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_aeb7fd31ac283a3e7156d2ff528215932"><div class="ttname"><a href="classtson_1_1Map.html#aeb7fd31ac283a3e7156d2ff528215932">tson::Map::isInfinite</a></div><div class="ttdeci">bool isInfinite() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:276</div></div>
-<div class="ttc" id="aclasstson_1_1Map_html_aee099a435757c3480b3a0bbfceda19d1"><div class="ttname"><a href="classtson_1_1Map.html#aee099a435757c3480b3a0bbfceda19d1">tson::Map::getStatusMessage</a></div><div class="ttdeci">const std::string &amp; getStatusMessage() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:460</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_ab672b9c6ff2a25a213500e6a658fe9a1"><div class="ttname"><a href="classtson_1_1Map.html#ab672b9c6ff2a25a213500e6a658fe9a1">tson::Map::getLayer</a></div><div class="ttdeci">Layer * getLayer(const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> Map.hpp:405</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_ac6060e10672261f4e80026aa2f29d2c2"><div class="ttname"><a href="classtson_1_1Map.html#ac6060e10672261f4e80026aa2f29d2c2">tson::Map::getProperties</a></div><div class="ttdeci">PropertyCollection &amp; getProperties()</div><div class="ttdef"><b>Definition:</b> Map.hpp:391</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_acab042e9e2c7aad6470068f5c687aae0"><div class="ttname"><a href="classtson_1_1Map.html#acab042e9e2c7aad6470068f5c687aae0">tson::Map::getTiledVersion</a></div><div class="ttdeci">const std::string &amp; getTiledVersion() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:346</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_acc4ba123d6073ce239ec12b824077e64"><div class="ttname"><a href="classtson_1_1Map.html#acc4ba123d6073ce239ec12b824077e64">tson::Map::getTileMap</a></div><div class="ttdeci">const std::map&lt; uint32_t, tson::Tile * &gt; &amp; getTileMap() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:476</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_ace22e4fc62cc254dd59e49d99290e42d"><div class="ttname"><a href="classtson_1_1Map.html#ace22e4fc62cc254dd59e49d99290e42d">tson::Map::getBackgroundColor</a></div><div class="ttdeci">const Colori &amp; getBackgroundColor() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:256</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_ad5a19a6df769e3e95c61ff770b1a2475"><div class="ttname"><a href="classtson_1_1Map.html#ad5a19a6df769e3e95c61ff770b1a2475">tson::Map::getNextLayerId</a></div><div class="ttdeci">int getNextLayerId() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:292</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_adb4efe0e81877f3520eac658b2183da0"><div class="ttname"><a href="classtson_1_1Map.html#adb4efe0e81877f3520eac658b2183da0">tson::Map::getHexsideLength</a></div><div class="ttdeci">int getHexsideLength() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:274</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_adcb35251825a8e480165d13a4bd4ee57"><div class="ttname"><a href="classtson_1_1Map.html#adcb35251825a8e480165d13a4bd4ee57">tson::Map::getDecompressors</a></div><div class="ttdeci">DecompressorContainer * getDecompressors()</div><div class="ttdef"><b>Definition:</b> Map.hpp:481</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_ae5bad246ffcf2b652850b83a77b07386"><div class="ttname"><a href="classtson_1_1Map.html#ae5bad246ffcf2b652850b83a77b07386">tson::Map::getVersion</a></div><div class="ttdeci">int getVersion() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:373</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_aeb7fd31ac283a3e7156d2ff528215932"><div class="ttname"><a href="classtson_1_1Map.html#aeb7fd31ac283a3e7156d2ff528215932">tson::Map::isInfinite</a></div><div class="ttdeci">bool isInfinite() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:283</div></div>
+<div class="ttc" id="aclasstson_1_1Map_html_aee099a435757c3480b3a0bbfceda19d1"><div class="ttname"><a href="classtson_1_1Map.html#aee099a435757c3480b3a0bbfceda19d1">tson::Map::getStatusMessage</a></div><div class="ttdeci">const std::string &amp; getStatusMessage() const</div><div class="ttdef"><b>Definition:</b> Map.hpp:467</div></div>
 <div class="ttc" id="aclasstson_1_1PropertyCollection_html"><div class="ttname"><a href="classtson_1_1PropertyCollection.html">tson::PropertyCollection</a></div><div class="ttdef"><b>Definition:</b> PropertyCollection.hpp:15</div></div>
 <div class="ttc" id="aclasstson_1_1Property_html"><div class="ttname"><a href="classtson_1_1Property.html">tson::Property</a></div><div class="ttdef"><b>Definition:</b> Property.hpp:21</div></div>
 <div class="ttc" id="aclasstson_1_1Tile_html"><div class="ttname"><a href="classtson_1_1Tile.html">tson::Tile</a></div><div class="ttdef"><b>Definition:</b> Tile.hpp:21</div></div>
-<div class="ttc" id="aclasstson_1_1Tileset_html"><div class="ttname"><a href="classtson_1_1Tileset.html">tson::Tileset</a></div><div class="ttdef"><b>Definition:</b> Tileset.hpp:23</div></div>
+<div class="ttc" id="aclasstson_1_1Tileset_html"><div class="ttname"><a href="classtson_1_1Tileset.html">tson::Tileset</a></div><div class="ttdef"><b>Definition:</b> Tileset.hpp:24</div></div>
 <div class="ttc" id="aclasstson_1_1Vector2_html"><div class="ttname"><a href="classtson_1_1Vector2.html">tson::Vector2&lt; int &gt;</a></div></div>
 <div class="ttc" id="anamespacetson_html"><div class="ttname"><a href="namespacetson.html">tson</a></div><div class="ttdef"><b>Definition:</b> Base64.hpp:12</div></div>
 <div class="ttc" id="anamespacetson_html_a7e7be825d3bd60100bb41677df44168b"><div class="ttname"><a href="namespacetson.html#a7e7be825d3bd60100bb41677df44168b">tson::ParseStatus</a></div><div class="ttdeci">ParseStatus</div><div class="ttdef"><b>Definition:</b> Enums.hpp:43</div></div>

@@ -1371,6 +1371,13 @@
             }
         }],
  "tilewidth":16,
+ "transformations":
+    {
+     "hflip":true,
+     "preferuntransformed":true,
+     "rotate":true,
+     "vflip":true
+    },
  "type":"tileset",
  "version":1.5,
  "wangsets":[
