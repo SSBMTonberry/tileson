@@ -135,6 +135,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a88fdc4fdec3eee3ae05f6fd7a075cfd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1dc53dc4beb9f9d8a336d8e18a57f119"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetson.html#ada2375f45be683cd0407a7b43ad8e5e7">ObjectAlignment</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Tileset.html#a1dc53dc4beb9f9d8a336d8e18a57f119">getObjectAlignment</a> () const</td></tr>
 <tr class="separator:a1dc53dc4beb9f9d8a336d8e18a57f119"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd66472f7e8bee2a8a45f52a3e2d2e1c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespacetson.html#ad9b8bc05e1220a920f03acae32e72245">tson::Vector2i</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Tileset.html#afd66472f7e8bee2a8a45f52a3e2d2e1c">getMarginSpacingOffset</a> (const <a class="el" href="namespacetson.html#ad9b8bc05e1220a920f03acae32e72245">tson::Vector2i</a> &amp;posInTileUnits)</td></tr>
+<tr class="separator:afd66472f7e8bee2a8a45f52a3e2d2e1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc363ff2934658bf99d65f0c22a5f2c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classtson_1_1WangSet.html">tson::WangSet</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Tileset.html#afc363ff2934658bf99d65f0c22a5f2c9">getWangset</a> (const std::string &amp;name)</td></tr>
+<tr class="separator:afc363ff2934658bf99d65f0c22a5f2c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8db6f715eb8cd17a6699305162873706"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classtson_1_1Transformations.html">Transformations</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1Tileset.html#a8db6f715eb8cd17a6699305162873706">getTransformations</a> () const</td></tr>
+<tr class="separator:a8db6f715eb8cd17a6699305162873706"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -450,6 +456,40 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 <p>'margin': Buffer between image edge and first tile (pixels) </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="afd66472f7e8bee2a8a45f52a3e2d2e1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd66472f7e8bee2a8a45f52a3e2d2e1c">&#9670;&nbsp;</a></span>getMarginSpacingOffset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespacetson.html#ad9b8bc05e1220a920f03acae32e72245">tson::Vector2i</a> tson::Tileset::getMarginSpacingOffset </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="namespacetson.html#ad9b8bc05e1220a920f03acae32e72245">tson::Vector2i</a> &amp;&#160;</td>
+          <td class="paramname"><em>posInTileUnits</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Helper function to calculate the correct additional offset when margin and/or spacing is used in a tileset Created to solve issue #31.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">posInTileUnits</td><td>Position of the current tile in tile units. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Calculated additional offset in pixels. </dd></dl>
 
 </div>
 </div>
@@ -785,6 +825,33 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="a8db6f715eb8cd17a6699305162873706"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8db6f715eb8cd17a6699305162873706">&#9670;&nbsp;</a></span>getTransformations()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classtson_1_1Transformations.html">tson::Transformations</a> &amp; tson::Tileset::getTransformations </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>New in Tiled v1.5 - This element is used to describe which transformations can be applied to the tiles (e.g. to extend a Wang set by transforming existing tiles).</p>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
 <a id="ad8ccd22b9417bdbca393cac57993ef2d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad8ccd22b9417bdbca393cac57993ef2d">&#9670;&nbsp;</a></span>getTransparentColor()</h2>
 
@@ -834,6 +901,39 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 <p>'type': tileset (for tileset files, since 1.0) </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+</div>
+</div>
+<a id="afc363ff2934658bf99d65f0c22a5f2c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afc363ff2934658bf99d65f0c22a5f2c9">&#9670;&nbsp;</a></span>getWangset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classtson_1_1WangSet.html">tson::WangSet</a> * tson::Tileset::getWangset </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get a wangset by name </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd></dd></dl>
 
 </div>
 </div>

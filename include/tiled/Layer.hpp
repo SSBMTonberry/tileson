@@ -41,6 +41,7 @@ namespace tson
             [[nodiscard]] inline float getOpacity() const;
             [[nodiscard]] inline const Vector2i &getSize() const;
             [[nodiscard]] inline const Colori &getTransparentcolor() const;
+            [[nodiscard]] inline const Vector2f &getParallax() const;
 
             [[nodiscard]] inline LayerType getType() const;
 
@@ -106,6 +107,8 @@ namespace tson
             bool                                           m_visible{};                       /*! 'visible': Whether layer is shown or hidden in editor */
             int                                            m_x{};                             /*! 'x': Horizontal layer offset in tiles. Always 0. */
             int                                            m_y{};                             /*! 'y': Vertical layer offset in tiles. Always 0. */
+            tson::Vector2f                                 m_parallax{1.f, 1.f};    /*! Tiled v1.5: parallax factor for this layer. Defaults to 1.
+                                                                                                  x = 'parallaxx', y = 'parallaxy'*/
 
             std::map<uint32_t, tson::Tile*>                *m_tileMap;
             std::map<std::tuple<int, int>, tson::Tile*>    m_tileData;                        /*! Key: Tuple of x and y pos in tile units. */
@@ -180,6 +183,14 @@ bool tson::Layer::parse(IJson &json, tson::Map *map)
     if(json.count("visible") > 0) m_visible = json["visible"].get<bool>(); else allFound = false;
     if(json.count("x") > 0) m_x = json["x"].get<int>(); else allFound = false;
     if(json.count("y") > 0) m_y = json["y"].get<int>(); else allFound = false;
+
+    tson::Vector2f parallax {1.f, 1.f};
+    if(json.count("parallaxx") > 0)
+        parallax.x = json["parallaxx"].get<float>();
+    if(json.count("parallaxy") > 0)
+        parallax.y = json["parallaxy"].get<float>();
+
+    m_parallax = parallax;
 
     //Handle DATA (Optional)
     if(json.count("data") > 0)
@@ -623,6 +634,16 @@ void tson::Layer::resolveFlaggedTiles()
 const tson::Colori &tson::Layer::getTintColor() const
 {
     return m_tintcolor;
+}
+
+/*!
+ * New in Tiled v1.5
+ * Gets the parallax factor for current layer. Defaults to 1.
+ * @return A vector with the x and y values of the parallax factor.
+ */
+const tson::Vector2f &tson::Layer::getParallax() const
+{
+    return m_parallax;
 }
 
 

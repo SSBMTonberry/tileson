@@ -122,6 +122,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ada9c28cb45525cc600eae1b6dc59e886"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf9e508caae75864a133be58a4b4a735"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1IJson.html#acf9e508caae75864a133be58a4b4a735">isNull</a> () const =0</td></tr>
 <tr class="separator:acf9e508caae75864a133be58a4b4a735"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7dde0e27f91cb713846d32fa8ca92dac"><td class="memItemLeft" align="right" valign="top">virtual fs::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1IJson.html#a7dde0e27f91cb713846d32fa8ca92dac">directory</a> () const =0</td></tr>
+<tr class="separator:a7dde0e27f91cb713846d32fa8ca92dac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab24276d81f82d876026af0087fee5e9e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtson_1_1IJson.html#ab24276d81f82d876026af0087fee5e9e">directory</a> (const fs::path &amp;directory)=0</td></tr>
+<tr class="separator:ab24276d81f82d876026af0087fee5e9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -324,6 +328,62 @@ Protected Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classtson_1_1Json11.html#a663f383e8985a8d5bcae4fafbb628033">tson::Json11</a>, and <a class="el" href="classtson_1_1Gason.html#ae0f313213906f96f73fc491c487b6e92">tson::Gason</a>.</p>
+
+</div>
+</div>
+<a id="a7dde0e27f91cb713846d32fa8ca92dac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7dde0e27f91cb713846d32fa8ca92dac">&#9670;&nbsp;</a></span>directory() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual fs::path tson::IJson::directory </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get the directory where the json was loaded. Only assigned if json is parsed by file. </p><dl class="section return"><dt>Returns</dt><dd></dd></dl>
+
+<p>Implemented in <a class="el" href="classtson_1_1Json11.html#a6fd5c3a1bd168945297c1ab241b64c8e">tson::Json11</a>, and <a class="el" href="classtson_1_1Gason.html#aa67a641884162b54ed73f1b3f8e17bc8">tson::Gason</a>.</p>
+
+</div>
+</div>
+<a id="ab24276d81f82d876026af0087fee5e9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab24276d81f82d876026af0087fee5e9e">&#9670;&nbsp;</a></span>directory() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void tson::IJson::directory </td>
+          <td>(</td>
+          <td class="paramtype">const fs::path &amp;&#160;</td>
+          <td class="paramname"><em>directory</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classtson_1_1Json11.html#a8d1a5a443826e4cb50f46bc4bc7173b1">tson::Json11</a>, and <a class="el" href="classtson_1_1Gason.html#a9886802cb61d84753746af0ba08abe6a">tson::Gason</a>.</p>
 
 </div>
 </div>

@@ -11,6 +11,7 @@
          "offsety":-256,
          "opacity":1,
          "parallaxx":1.4,
+         "parallaxy":1.02,
          "properties":[
                 {
                  "name":"repeat_bg",

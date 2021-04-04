@@ -92,6 +92,22 @@ void performMainAsserts(tson::Map *map, bool isOldMap = true)
     REQUIRE(main->getTileData(8,14)->getTileset() != nullptr);
     REQUIRE(main->getTileData(8,14)->getPosition({8,14}) == main->getTileObject(8,14)->getPosition());
     REQUIRE(main->getTileData().size() == main->getTileObjects().size());
+
+    //v1.3.0
+    if(isOldMap)
+    {
+        REQUIRE(!map->getTileset("demo-tileset")->getTransformations().allowHflip());
+        REQUIRE(!map->getTileset("demo-tileset")->getTransformations().allowVflip());
+        REQUIRE(!map->getTileset("demo-tileset")->getTransformations().allowPreferuntransformed());
+        REQUIRE(!map->getTileset("demo-tileset")->getTransformations().allowRotation());
+    }
+    else
+    {
+        REQUIRE(map->getTileset("demo-tileset")->getTransformations().allowHflip());
+        REQUIRE(map->getTileset("demo-tileset")->getTransformations().allowVflip());
+        REQUIRE(map->getTileset("demo-tileset")->getTransformations().allowPreferuntransformed());
+        REQUIRE(map->getTileset("demo-tileset")->getTransformations().allowRotation());
+    }
 }
 
 /*!
@@ -100,7 +116,27 @@ void performMainAsserts(tson::Map *map, bool isOldMap = true)
  */
 void performAssertsOnTiled15Changes(tson::Map *map)
 {
-    //RBP: Add the Tiled v1.5 equivalent of these tests.
+    auto *bgLayer = map->getLayer("Background Image");
+    REQUIRE(bgLayer->getParallax().x > 1.39f);
+    REQUIRE(bgLayer->getParallax().y > 1.01f);
+
+    tson::WangSet *nonexisting = map->getTileset("demo-tileset")->getWangset("non-existing");
+    tson::WangSet *terrainWang = map->getTileset("demo-tileset")->getWangset("Terrains");
+
+    REQUIRE(nonexisting == nullptr);
+    REQUIRE(terrainWang != nullptr);
+
+    tson::WangColor *nonexistingcolor = terrainWang->getColor("nonexisting");
+    tson::WangColor *color = terrainWang->getColor("test_terrain");
+
+    REQUIRE(nonexistingcolor == nullptr);
+    REQUIRE(color != nullptr);
+
+    REQUIRE(color->getProperties().getSize() == 2);
+    REQUIRE(color->getProp("i_like_this")->getType() == tson::Type::Boolean);
+    REQUIRE(!color->get<std::string>("description").empty());
+
+    //Data previously retrieved like this:
     //REQUIRE(map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProperties().getSize() == 2);
     //REQUIRE(map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProp("i_like_this")->getType() == tson::Type::Boolean);
     //REQUIRE(!map->getTileset("demo-tiles")->getTerrain("test_terrain")->get<std::string>("description").empty());

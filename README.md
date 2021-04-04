@@ -31,6 +31,11 @@ want to have every component in their own file. This will probably be less heavy
 - Tileson now has support for reading `LZMA` compressed maps using [PocketLzma](https://github.com/SSBMTonberry/pocketlzma).  Example: The `ultimate_test.json` map gets reduced from `68,6 KiB` to `2,4 KiB` when LZMA compressed.
 - See release notes for more details!
 
+# Unreleased features available in master-branch
+- Tiled v1.5 support. ([#34](https://github.com/SSBMTonberry/tileson/issues/34))
+- Support for external tilesets ([#33](https://github.com/SSBMTonberry/tileson/issues/33))
+- `tileson.hpp` and `tileson_min.hpp` is now located in root folder. ([#36](https://github.com/SSBMTonberry/tileson/issues/36))
+
 # What is Tiled?
 Tiled is a general purpose map editor developed by `Thorbjørn Lindeijer`.
 Tiled is perfect if you want to create any map for 2D games, and is very popular.

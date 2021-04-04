@@ -26,6 +26,8 @@ namespace tson
             [[nodiscard]] inline const std::vector<tson::WangColor> &getCornerColors() const;
             [[nodiscard]] inline const std::vector<tson::WangColor> &getEdgeColors() const;
 
+            inline tson::WangColor * getColor(const std::string &name);
+            inline const std::vector<tson::WangColor> &getColors() const;
             inline PropertyCollection &getProperties();
 
             template <typename T>
@@ -33,12 +35,18 @@ namespace tson
             inline tson::Property * getProp(const std::string &name);
 
         private:
+
+            inline bool parseTiled15Props(IJson &json);
+
             std::string                  m_name;          /*! 'name': Name of the Wang set */
             int                          m_tile{};        /*! 'tile': Local ID of tile representing the Wang set */
             std::vector<tson::WangTile>  m_wangTiles;     /*! 'wangtiles': Array of Wang tiles */
             std::vector<tson::WangColor> m_cornerColors;  /*! 'cornercolors': Array of Wang colors */
             std::vector<tson::WangColor> m_edgeColors;    /*! 'edgecolors': Array of Wang colors */
             tson::PropertyCollection     m_properties; 	  /*! 'properties': A list of properties (name, value, type). */
+
+            //Tiled v1.5
+            std::vector<tson::WangColor> m_colors;        /*! 'colors': */
 
     };
 
@@ -89,7 +97,26 @@ bool tson::WangSet::parse(IJson &json)
         std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
     }
 
+    if(!parseTiled15Props(json))
+        allFound = false;
+
     return allFound;
+}
+
+/*!
+ * Parsing data related to Tiled v1.5 changes
+ * @param json The json containing data
+ * @return Returns true if success
+ */
+
+bool tson::WangSet::parseTiled15Props(tson::IJson &json)
+{
+    if(json.count("colors") > 0 && json["colors"].isArray())
+    {
+        auto &colors = json.array("colors");
+        std::for_each(colors.begin(), colors.end(), [&](std::unique_ptr<IJson> &item) { m_colors.emplace_back(*item); });
+    }
+    return true;
 }
 
 /*!
@@ -158,5 +185,32 @@ tson::Property *tson::WangSet::getProp(const std::string &name)
 
     return nullptr;
 }
+
+/*!
+ * Get Wangset colors (new in Tiled v1.5)
+ * @return
+ */
+const std::vector<tson::WangColor> &tson::WangSet::getColors() const
+{
+    return m_colors;
+}
+
+/*!
+ * NB! Will only work with maps created/modified by Tiled v1.5 or later!
+ * Gets a color from a wangset by its name.
+ *
+ * @param name 'name' of WangColor
+ * @return The WangColor with the given name or nullptr if it doesn't exist.
+ */
+tson::WangColor *tson::WangSet::getColor(const std::string &name)
+{
+    auto color = std::find_if(m_colors.begin(), m_colors.end(), [&](const auto &c) { return c.getName() == name; });
+
+    if(color != m_colors.end())
+        return color.base();
+
+    return nullptr;
+}
+
 
 #endif //TILESON_WANGSET_HPP

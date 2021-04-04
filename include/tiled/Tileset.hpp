@@ -10,6 +10,7 @@
 #include "../objects/Vector2.hpp"
 #include "../objects/Color.hpp"
 #include "../objects/PropertyCollection.hpp"
+#include "Transformations.hpp"
 #include "WangSet.hpp"
 #include "Tile.hpp"
 #include "Terrain.hpp"
@@ -63,6 +64,9 @@ namespace tson
 
             //v1.3.0
             inline tson::Vector2i getMarginSpacingOffset(const tson::Vector2i &posInTileUnits);
+            inline tson::WangSet * getWangset(const std::string &name);
+            inline const Transformations &getTransformations() const;
+
 
             #ifndef TSON_TEST_ENABLED
         private:
@@ -99,6 +103,8 @@ namespace tson
             //v1.3.0-stuff
             fs::path                      m_source {};           /*! 'source': exists only when tileset is contained in an external file*/
             fs::path                      m_path {};             /*! Has the full path to the tileset if 'source' has an existing value */
+            Transformations               m_transformations {};  /*! New in Tiled v1.5 - This element is used to describe which transformations can be applied to
+                                                                     the tiles (e.g. to extend a Wang set by transforming existing tiles).*/
     };
 
     /*!
@@ -187,6 +193,11 @@ bool tson::Tileset::parse(IJson &json, tson::Map *map)
     {
         std::string alignment = json["objectalignment"].get<std::string>();
         m_objectAlignment = StringToAlignment(alignment);
+    }
+
+    if(json.count("transformations") > 0)
+    {
+        m_transformations.parse(json["transformations"]);
     }
 
     generateMissingTiles();
@@ -462,6 +473,32 @@ tson::Vector2i tson::Tileset::getMarginSpacingOffset(const tson::Vector2i &posIn
 
     tson::Vector2i offset {(posInTileUnits.x * m_spacing) + m_margin, (posInTileUnits.y * m_spacing) + m_margin};
     return offset;
+}
+
+/*!
+ * Get a wangset by name
+ * @param name
+ * @return
+ */
+tson::WangSet *tson::Tileset::getWangset(const std::string &name)
+{
+    auto wangset = std::find_if(m_wangsets.begin(), m_wangsets.end(), [&](const auto &w) { return w.getName() == name; });
+
+    if(wangset != m_wangsets.end())
+        return wangset.base();
+
+    return nullptr;
+}
+
+/*!
+ * New in Tiled v1.5 - This element is used to describe which transformations can be applied to
+ * the tiles (e.g. to extend a Wang set by transforming existing tiles).
+ *
+ * @return
+ */
+const tson::Transformations &tson::Tileset::getTransformations() const
+{
+    return m_transformations;
 }
 
 

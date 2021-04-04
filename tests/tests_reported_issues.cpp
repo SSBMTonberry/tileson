@@ -6,7 +6,7 @@
 //#include "../src/Tileson.h"
 //#include "../include/tileson.hpp"
 #include "../TilesonConfig.h"
-#include "../single_include/tileson.hpp"
+#include "../tileson.hpp"
 //#include "../include/tileson.h"
 
 #include "tson_files_mapper.h"
