@@ -207,7 +207,7 @@ tson::WangColor *tson::WangSet::getColor(const std::string &name)
     auto color = std::find_if(m_colors.begin(), m_colors.end(), [&](const auto &c) { return c.getName() == name; });
 
     if(color != m_colors.end())
-        return color.base();
+        return &color.operator*();
 
     return nullptr;
 }
