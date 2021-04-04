@@ -4402,7 +4402,7 @@ tson::WangColor *tson::WangSet::getColor(const std::string &name)
 	auto color = std::find_if(m_colors.begin(), m_colors.end(), [&](const auto &c) { return c.getName() == name; });
 
 	if(color != m_colors.end())
-		return color.base();
+		return &color.operator*();
 
 	return nullptr;
 }
@@ -5432,7 +5432,7 @@ void tson::Tileset::generateMissingTiles()
 	for(auto &tile : m_tiles)
 		tileIds.push_back(tile.getId());
 
-	for(uint32_t i = m_firstgid; i < m_firstgid + m_tileCount; ++i)
+	for(uint32_t i = m_firstgid; i < m_firstgid + (uint32_t) m_tileCount; ++i)
 	{
 		if(std::count(tileIds.begin(), tileIds.end(), i) == 0)
 		{
@@ -5502,7 +5502,7 @@ tson::WangSet *tson::Tileset::getWangset(const std::string &name)
 	auto wangset = std::find_if(m_wangsets.begin(), m_wangsets.end(), [&](const auto &w) { return w.getName() == name; });
 
 	if(wangset != m_wangsets.end())
-		return wangset.base();
+		return &wangset.operator*();
 
 	return nullptr;
 }
