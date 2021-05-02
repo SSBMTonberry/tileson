@@ -42,7 +42,7 @@ namespace tson
             [[nodiscard]] inline const std::string &getTiledVersion() const;
             [[nodiscard]] inline const Vector2i &getTileSize() const;
             [[nodiscard]] inline const std::string &getType() const;
-            [[nodiscard]] inline int getVersion() const;
+            //[[nodiscard]] inline int getVersion() const; //Removed - Tileson v1.3.0
 
             [[nodiscard]] inline std::vector<tson::Layer> &getLayers();
             [[nodiscard]] inline PropertyCollection &getProperties();
@@ -85,7 +85,7 @@ namespace tson
             Vector2i                               m_tileSize;          /*! 'tilewidth': and 'tileheight' of a map */
             std::vector<tson::Tileset>             m_tilesets;          /*! 'tilesets': Array of Tilesets */
             std::string                            m_type;              /*! 'type': map (since 1.0) */
-            int                                    m_version{};         /*! 'version': The JSON format version*/
+            //int                                    m_version{};       /*! 'version': The JSON format version - Removed in Tileson v1.3.0*/
 
             ParseStatus                            m_status {ParseStatus::OK};
             std::string                            m_statusMessage {"OK"};
@@ -161,7 +161,10 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
     if(json.count("tilewidth") > 0 && json.count("tileheight") > 0 )
         m_tileSize = {json["tilewidth"].get<int>(), json["tileheight"].get<int>()}; else allFound = false;
     if(json.count("type") > 0) m_type = json["type"].get<std::string>();                            //Optional
-    if(json.count("version") > 0) m_version = json["version"].get<int>(); else allFound = false;
+
+    //Removed - Changed from a float to string in Tiled v1.6, and old spec said int.
+    //Reason for removal is that it seems to have no real use, as TiledVersion is stored in another variable.
+    //if(json.count("version") > 0) m_version = json["version"].get<int>(); else allFound = false;
 
     //More advanced data
     if(json.count("layers") > 0 && json["layers"].isArray())
@@ -370,10 +373,10 @@ const std::string &tson::Map::getType() const
  * 'version': The JSON format version
  * @return
  */
-int tson::Map::getVersion() const
-{
-    return m_version;
-}
+//int tson::Map::getVersion() const
+//{
+//    return m_version;
+//}
 
 /*!
  * 'layers': Array of layers. group on
