@@ -32,6 +32,8 @@ want to have every component in their own file. This will probably be less heavy
 - See release notes for more details!
 
 # Unreleased features available in master-branch
+- `tson::Layer`: Function `getTransparentcolor()`renamed to `getTransparentColor()` ([#38](https://github.com/SSBMTonberry/tileson/issues/38)) - Thanks to [RobLoach](https://github.com/RobLoach)
+- Tiled v1.6 support. ([#37](https://github.com/SSBMTonberry/tileson/issues/37))
 - Tiled v1.5 support. ([#34](https://github.com/SSBMTonberry/tileson/issues/34))
 - Support for external tilesets ([#33](https://github.com/SSBMTonberry/tileson/issues/33))
 - `tileson.hpp` and `tileson_min.hpp` is now located in root folder. ([#36](https://github.com/SSBMTonberry/tileson/issues/36))
