@@ -4215,7 +4215,7 @@ namespace tson
 			[[nodiscard]] inline const Vector2f &getOffset() const;
 			[[nodiscard]] inline float getOpacity() const;
 			[[nodiscard]] inline const Vector2i &getSize() const;
-			[[nodiscard]] inline const Colori &getTransparentcolor() const;
+			[[nodiscard]] inline const Colori &getTransparentColor() const;
 			[[nodiscard]] inline const Vector2f &getParallax() const;
 
 			[[nodiscard]] inline LayerType getType() const;
@@ -4588,7 +4588,7 @@ const tson::Vector2i &tson::Layer::getSize() const
  * 'transparentcolor': Color created from a hex color (#RRGGBB) (optional, imagelayer only)
  * @return color as color object with rgba channel.
  */
-const tson::Colori &tson::Layer::getTransparentcolor() const
+const tson::Colori &tson::Layer::getTransparentColor() const
 {
 	return m_transparentcolor;
 }
