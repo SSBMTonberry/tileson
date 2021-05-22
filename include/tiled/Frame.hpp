@@ -56,7 +56,7 @@ bool tson::Frame::parse(IJson &json)
     bool allFound = true;
 
     if(json.count("duration") > 0) m_duration = json["duration"].get<int>(); else allFound = false;
-    if(json.count("tileid") > 0) m_tileId = json["tileid"].get<uint32_t>(); else allFound = false;
+    if(json.count("tileid") > 0) m_tileId = json["tileid"].get<uint32_t>() + 1; else allFound = false;
 
     return allFound;
 }

@@ -5466,7 +5466,7 @@ bool tson::Frame::parse(IJson &json)
 	bool allFound = true;
 
 	if(json.count("duration") > 0) m_duration = json["duration"].get<int>(); else allFound = false;
-	if(json.count("tileid") > 0) m_tileId = json["tileid"].get<uint32_t>(); else allFound = false;
+	if(json.count("tileid") > 0) m_tileId = json["tileid"].get<uint32_t>() + 1; else allFound = false;
 
 	return allFound;
 }
@@ -6193,7 +6193,7 @@ namespace tson
 			[[nodiscard]] inline const Vector2i &getTileOffset() const;
 			[[nodiscard]] inline const Grid &getGrid() const;
 
-			inline tson::Tile * getTile(int id);
+			inline tson::Tile * getTile(uint32_t id);
 			inline tson::Terrain * getTerrain(const std::string &name);
 
 			template <typename T>
@@ -6512,7 +6512,7 @@ const tson::Grid &tson::Tileset::getGrid() const
  * This is to make sure the IDs of tiles matches their references in containers.
  * @return A pointer to the Tile if found. nullptr otherwise.
  */
-tson::Tile *tson::Tileset::getTile(int id)
+tson::Tile *tson::Tileset::getTile(uint32_t id)
 {
 	auto result = std::find_if(m_tiles.begin(), m_tiles.end(), [&](const tson::Tile & item) { return item.getId() == id;});
 	if(result == m_tiles.end())

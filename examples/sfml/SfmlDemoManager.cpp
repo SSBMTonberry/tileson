@@ -276,7 +276,7 @@ void SfmlDemoManager::drawTileLayer(tson::Layer& layer)//, tson::Tileset* tilese
         else
         {
             tileObject.getTile()->getAnimation().update(m_timeDelta.asMilliseconds());
-            int tileId = (int)tileObject.getTile()->getAnimation().getCurrentTileId();
+            uint32_t tileId = tileObject.getTile()->getAnimation().getCurrentTileId();
             tson::Tile *animatedTile = tileset->getTile(tileId);
             drawingRect = animatedTile->getDrawingRect();
         }

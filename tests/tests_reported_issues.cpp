@@ -26,7 +26,7 @@ TEST_CASE( "Nullptr error on getposition when parsing json (Issue #17)", "[help]
         {
             if(layer.getType() == tson::LayerType::TileLayer)
             {
-                for (const auto &[id, obj] : layer.getTileObjects())
+                for (auto &[id, obj] : layer.getTileObjects())
                 {
                     tson::Vector2f groundPos = tson::Vector2f(obj.getPosition().x, obj.getPosition().y);
                     tson::Vector2f groundSize = tson::Vector2f(obj.getTile()->getTileSize().x, obj.getTile()->getTileSize().y);
