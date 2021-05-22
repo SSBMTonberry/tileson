@@ -24,9 +24,9 @@ TEST_CASE( "Create simple animation with 3 frames. Expect right values after upd
     REQUIRE(a.getCurrentFrame()->getTileId() == 2);
     REQUIRE(a.getTimeDelta() == 5);
 
-    a.update(194);
+    a.update(195);
     REQUIRE(a.getCurrentFrameNumber() == 2);
-    REQUIRE(a.getCurrentFrame()->getDuration() == 300);
+    REQUIRE(a.getCurrentFrame()->getDuration() == 100);
     REQUIRE(a.getCurrentFrame()->getTileId() == 3);
     REQUIRE(a.getTimeDelta() == 0);
 

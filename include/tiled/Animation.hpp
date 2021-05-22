@@ -14,12 +14,19 @@ namespace tson
             inline Animation(const std::vector<tson::Frame> &frames) : m_frames {frames} {};
 
             inline void update(int timeDeltaMs);
-            inline const std::vector<tson::Frame> &getFrames() const;
             inline void reset();
+
+            inline void setFrames(const std::vector<tson::Frame> &frames);
+            inline void setCurrentFrame(uint32_t currentFrame);
+            inline void setTimeDelta(int timeDelta);
+
+            inline const std::vector<tson::Frame> &getFrames() const;
             inline const tson::Frame *getCurrentFrame() const;
             inline uint32_t getCurrentFrameNumber() const;
             inline uint32_t getCurrentTileId() const;
             inline int getTimeDelta() const;
+
+            inline bool any() const;
             inline size_t size() const;
 
         private:
@@ -34,12 +41,19 @@ namespace tson
         return m_frames;
     }
 
+    /*!
+     * Resets the current frame and time delta to 0.
+     */
     void Animation::reset()
     {
         m_currentFrame = 0;
         m_timeDelta = 0;
     }
 
+    /*!
+     * Gets the current frame or nullptr if no frame is found.
+     * @return
+     */
     const tson::Frame *Animation::getCurrentFrame() const
     {
         return (m_frames.size() == 0 || m_currentFrame >= m_frames.size()) ? nullptr : &m_frames.at(m_currentFrame);
@@ -86,6 +100,30 @@ namespace tson
     uint32_t Animation::getCurrentTileId() const
     {
         return (getCurrentFrame() != nullptr) ? getCurrentFrame()->getTileId() : 0;
+    }
+
+    void Animation::setFrames(const std::vector<tson::Frame> &frames)
+    {
+        m_frames = frames;
+    }
+
+    void Animation::setCurrentFrame(uint32_t currentFrame)
+    {
+        m_currentFrame = currentFrame;
+    }
+
+    void Animation::setTimeDelta(int timeDelta)
+    {
+        m_timeDelta = timeDelta;
+    }
+
+    /*!
+     * True if any frames exists, false otherwise
+     * @return
+     */
+    bool Animation::any() const
+    {
+        return m_frames.size() > 0;
     }
 }
 

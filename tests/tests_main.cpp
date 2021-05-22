@@ -72,6 +72,7 @@ void performMainAsserts(tson::Map *map, bool isOldMap = true)
         REQUIRE(map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProp("i_like_this")->getType() == tson::Type::Boolean);
         REQUIRE(!map->getTileset("demo-tileset")->getTerrain("test_terrain")->get<std::string>("description").empty());
     }
+    REQUIRE(!tileData[{4,4}]->getAnimation().any());
     REQUIRE(map->getTileMap().size() > 10);
     REQUIRE(tileData[{4,4}] != nullptr);
     REQUIRE(tileData[{4,4}]->getId() == 1);

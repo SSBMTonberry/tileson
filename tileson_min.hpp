@@ -4439,17 +4439,17 @@ namespace tson
 	{
 		public:
 			inline Frame() = default;
-			inline Frame(int duration, int tileId);
+			inline Frame(int duration, uint32_t tileId);
 			inline explicit Frame(IJson &json);
 
 			inline bool parse(IJson &json);
 
 			[[nodiscard]] inline int getDuration() const;
-			[[nodiscard]] inline int getTileId() const;
+			[[nodiscard]] inline uint32_t getTileId() const;
 
 		private:
 			int m_duration {};  /*! 'duration': Frame duration in milliseconds */
-			int m_tileId {};    /*! 'tileid': Local tile ID representing this frame */
+			uint32_t m_tileId {};    /*! 'tileid': Local tile ID representing this frame */
 	};
 }
 
@@ -4458,7 +4458,7 @@ namespace tson
  * @param duration duration in milliseconds
  * @param tileId TileId
  */
-tson::Frame::Frame(int duration, int tileId) : m_duration {duration}, m_tileId {tileId}
+tson::Frame::Frame(int duration, uint32_t tileId) : m_duration {duration}, m_tileId {tileId}
 {
 
 }
@@ -4482,7 +4482,7 @@ bool tson::Frame::parse(IJson &json)
 	bool allFound = true;
 
 	if(json.count("duration") > 0) m_duration = json["duration"].get<int>(); else allFound = false;
-	if(json.count("tileid") > 0) m_tileId = json["tileid"].get<int>(); else allFound = false;
+	if(json.count("tileid") > 0) m_tileId = json["tileid"].get<uint32_t>(); else allFound = false;
 
 	return allFound;
 }
@@ -4500,7 +4500,7 @@ int tson::Frame::getDuration() const
  * 'tileid': Local tile ID representing this frame
  * @return tile id
  */
-int tson::Frame::getTileId() const
+uint32_t tson::Frame::getTileId() const
 {
 	return m_tileId;
 }
@@ -4508,6 +4508,141 @@ int tson::Frame::getTileId() const
 #endif //TILESON_FRAME_HPP
 
 /*** End of inlined file: Frame.hpp ***/
+
+
+/*** Start of inlined file: Animation.hpp ***/
+//
+// Created by robin on 21.05.2021.
+//
+
+#ifndef TILESON_ANIMATION_HPP
+#define TILESON_ANIMATION_HPP
+
+namespace tson
+{
+	class Animation
+	{
+		public:
+			inline Animation() = default;
+			inline Animation(const std::vector<tson::Frame> &frames) : m_frames {frames} {};
+
+			inline void update(int timeDeltaMs);
+			inline void reset();
+
+			inline void setFrames(const std::vector<tson::Frame> &frames);
+			inline void setCurrentFrame(uint32_t currentFrame);
+			inline void setTimeDelta(int timeDelta);
+
+			inline const std::vector<tson::Frame> &getFrames() const;
+			inline const tson::Frame *getCurrentFrame() const;
+			inline uint32_t getCurrentFrameNumber() const;
+			inline uint32_t getCurrentTileId() const;
+			inline int getTimeDelta() const;
+
+			inline bool any() const;
+			inline size_t size() const;
+
+		private:
+			inline int nextFrame();
+			std::vector<tson::Frame> m_frames;
+			uint32_t m_currentFrame {0};
+			int m_timeDelta {0};
+	};
+
+	const std::vector<tson::Frame> &Animation::getFrames() const
+	{
+		return m_frames;
+	}
+
+	/*!
+	 * Resets the current frame and time delta to 0.
+	 */
+	void Animation::reset()
+	{
+		m_currentFrame = 0;
+		m_timeDelta = 0;
+	}
+
+	/*!
+	 * Gets the current frame or nullptr if no frame is found.
+	 * @return
+	 */
+	const tson::Frame *Animation::getCurrentFrame() const
+	{
+		return (m_frames.size() == 0 || m_currentFrame >= m_frames.size()) ? nullptr : &m_frames.at(m_currentFrame);
+	}
+
+	size_t Animation::size() const
+	{
+		return m_frames.size();
+	}
+
+	/*!
+	 * Update animation based on the fra
+	 * @param timedeltaMs Time in milliseconds
+	 */
+	void Animation::update(int timeDeltaMs)
+	{
+		const tson::Frame *frame = getCurrentFrame();
+		if(frame != nullptr)
+		{
+			m_timeDelta += timeDeltaMs;
+			if(m_timeDelta >= frame->getDuration())
+			{
+				m_timeDelta = m_timeDelta % frame->getDuration();
+				m_currentFrame = nextFrame();
+			}
+		}
+	}
+
+	int Animation::nextFrame()
+	{
+		return (m_currentFrame+1 >= m_frames.size()) ? 0 : m_currentFrame + 1;
+	}
+
+	int Animation::getTimeDelta() const
+	{
+		return m_timeDelta;
+	}
+
+	uint32_t Animation::getCurrentFrameNumber() const
+	{
+		return m_currentFrame;
+	}
+
+	uint32_t Animation::getCurrentTileId() const
+	{
+		return (getCurrentFrame() != nullptr) ? getCurrentFrame()->getTileId() : 0;
+	}
+
+	void Animation::setFrames(const std::vector<tson::Frame> &frames)
+	{
+		m_frames = frames;
+	}
+
+	void Animation::setCurrentFrame(uint32_t currentFrame)
+	{
+		m_currentFrame = currentFrame;
+	}
+
+	void Animation::setTimeDelta(int timeDelta)
+	{
+		m_timeDelta = timeDelta;
+	}
+
+	/*!
+	 * True if any frames exists, false otherwise
+	 * @return
+	 */
+	bool Animation::any() const
+	{
+		return m_frames.size() > 0;
+	}
+}
+
+#endif //TILESON_ANIMATION_HPP
+
+/*** End of inlined file: Animation.hpp ***/
 
 namespace tson
 {
@@ -4530,7 +4665,8 @@ namespace tson
 			[[nodiscard]] inline const Vector2i &getImageSize() const;
 			[[nodiscard]] inline const std::string &getType() const;
 
-			[[nodiscard]] inline const std::vector<tson::Frame> &getAnimation() const;
+			//[[nodiscard]] inline const std::vector<tson::Frame> &getAnimation() const;
+			[[nodiscard]] inline const tson::Animation &getAnimation() const;
 			[[nodiscard]] inline const Layer &getObjectgroup() const;
 			[[nodiscard]] inline PropertyCollection &getProperties();
 			[[nodiscard]] inline const std::vector<int> &getTerrain() const;
@@ -4556,16 +4692,16 @@ namespace tson
 			inline void addTilesetAndPerformCalculations(tson::Tileset *tileset); //v1.2.0
 
 		private:
-			std::vector<tson::Frame>    m_animation; 	    /*! 'animation': Array of Frames */
-			uint32_t                    m_id {};            /*! 'id': Local ID of the tile */
+			tson::Animation                  m_animation{};      /*! 'animation': Array of Frames */
+			uint32_t                         m_id {};            /*! 'id': Local ID of the tile */
 
-			fs::path                    m_image;            /*! 'image': Image representing this tile (optional)*/
+			fs::path                         m_image;            /*! 'image': Image representing this tile (optional)*/
 
-			tson::Vector2i              m_imageSize;        /*! x = 'imagewidth' and y = 'imageheight': in pixels */
-			tson::Layer                 m_objectgroup; 	 	/*! 'objectgroup': Layer with type objectgroup (optional) */
-			tson::PropertyCollection    m_properties; 	    /*! 'properties': A list of properties (name, value, type). */
-			std::vector<int>            m_terrain;          /*! 'terrain': Index of terrain for each corner of tile */
-			std::string                 m_type;             /*! 'type': The type of the tile (optional) */
+			tson::Vector2i                   m_imageSize;        /*! x = 'imagewidth' and y = 'imageheight': in pixels */
+			tson::Layer                      m_objectgroup; 	 	/*! 'objectgroup': Layer with type objectgroup (optional) */
+			tson::PropertyCollection         m_properties; 	    /*! 'properties': A list of properties (name, value, type). */
+			std::vector<int>                 m_terrain;          /*! 'terrain': Index of terrain for each corner of tile */
+			std::string                      m_type;             /*! 'type': The type of the tile (optional) */
 
 			//v1.2.0-stuff
 			uint32_t                    m_gid {};                                    /*! id without flip flags */
@@ -4652,7 +4788,12 @@ bool tson::Tile::parse(IJson &json, tson::Tileset *tileset, tson::Map *map)
 	if(json.count("animation") > 0 && json["animation"].isArray())
 	{
 		auto &animation = json.array("animation");
-		std::for_each(animation.begin(), animation.end(), [&](std::unique_ptr<IJson> &item) { m_animation.emplace_back(*item); });
+		std::vector<tson::Frame> frames;
+		std::for_each(animation.begin(), animation.end(), [&](std::unique_ptr<IJson> &item) { frames.emplace_back(*item); });
+		if(frames.size() > 0)
+		{
+			m_animation.setFrames(frames);
+		}
 	}
 	if(json.count("terrain") > 0 && json["terrain"].isArray())
 	{
@@ -4709,7 +4850,7 @@ const std::string &tson::Tile::getType() const
  * 'animation': Array of Frames
  * @return
  */
-const std::vector<tson::Frame> &tson::Tile::getAnimation() const
+const tson::Animation &tson::Tile::getAnimation() const
 {
 	return m_animation;
 }
