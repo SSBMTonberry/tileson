@@ -9,6 +9,7 @@
 #include "../objects/Vector2.hpp"
 #include "../objects/Color.hpp"
 #include "Frame.hpp"
+#include "Animation.hpp"
 #include "../objects/PropertyCollection.hpp"
 #include "Layer.hpp"
 #include "../objects/Rect.hpp"
