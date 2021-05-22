@@ -250,8 +250,8 @@ void SfmlDemoManager::run()
             if (event.type == sf::Event::Closed)
                 m_window.close();
         }
-        ImGui::SFML::Update(m_window, deltaClock.restart());
-
+        m_timeDelta = deltaClock.restart();
+        ImGui::SFML::Update(m_window, m_timeDelta);
         // Clear screen
         m_window.clear({35, 65, 90, 255});
         drawMap();
@@ -261,14 +261,25 @@ void SfmlDemoManager::run()
     }
 }
 
-void SfmlDemoManager::drawTileLayer(const tson::Layer& layer)//, tson::Tileset* tileset)
+void SfmlDemoManager::drawTileLayer(tson::Layer& layer)//, tson::Tileset* tileset)
 {
     //pos = position in tile units
-    for (const auto& [pos, tileObject] : layer.getTileObjects()) //Loops through absolutely all existing tiles
+    for (auto& [pos, tileObject] : layer.getTileObjects()) //Loops through absolutely all existing tiles
     {
         //Set sprite data to draw the tile
         tson::Tileset *tileset = tileObject.getTile()->getTileset();
-        tson::Rect drawingRect = tileObject.getDrawingRect();
+        bool hasAnimation = tileObject.getTile()->getAnimation().any();
+        tson::Rect drawingRect;
+
+        if(!hasAnimation)
+            drawingRect = tileObject.getDrawingRect();
+        else
+        {
+            tileObject.getTile()->getAnimation().update(m_timeDelta.asMilliseconds());
+            int tileId = (int)tileObject.getTile()->getAnimation().getCurrentTileId();
+            tson::Tile *animatedTile = tileset->getTile(tileId);
+            drawingRect = animatedTile->getDrawingRect();
+        }
         tson::Vector2f position = tileObject.getPosition();
         position = {position.x + (float)m_positionOffset.x, position.y + (float)m_positionOffset.y};
         //sf::Vector2f position = {(float)obj.getPosition().x + (float)m_positionOffset.x, (float)obj.getPosition().y + (float)m_positionOffset.y};

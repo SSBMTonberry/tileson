@@ -3128,7 +3128,7 @@ namespace tson
 
 			inline void initialize(const std::tuple<int, int> &posInTileUnits, tson::Tile *tile); //Defined in tileson_forward.hpp
 
-			inline Tile *getTile() const;
+			inline Tile *getTile();
 			inline const Vector2i &getPositionInTileUnits() const;
 			inline const Vector2f &getPosition() const;
 			inline const tson::Rect &getDrawingRect() const; //Defined in tileson_forward.hpp
@@ -3149,7 +3149,7 @@ namespace tson
 	 * Get a pointer to the related tile
 	 * @return
 	 */
-	Tile *TileObject::getTile() const
+	Tile *TileObject::getTile()
 	{
 		return m_tile;
 	}
@@ -3265,7 +3265,7 @@ namespace tson
 			[[nodiscard]] inline const Colori &getTintColor() const;
 			[[nodiscard]] inline tson::Map *getMap() const;
 
-			[[nodiscard]] inline const std::map<std::tuple<int, int>, tson::TileObject> &getTileObjects() const;
+			[[nodiscard]] inline std::map<std::tuple<int, int>, tson::TileObject> &getTileObjects();
 			inline tson::TileObject * getTileObject(int x, int y);
 			[[nodiscard]] inline const std::set<uint32_t> &getUniqueFlaggedTiles() const;
 			inline void resolveFlaggedTiles();
@@ -3788,7 +3788,7 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
 	}
 }
 
-const std::map<std::tuple<int, int>, tson::TileObject> &tson::Layer::getTileObjects() const
+std::map<std::tuple<int, int>, tson::TileObject> &tson::Layer::getTileObjects()
 {
 	return m_tileObjects;
 }
@@ -4666,7 +4666,7 @@ namespace tson
 			[[nodiscard]] inline const std::string &getType() const;
 
 			//[[nodiscard]] inline const std::vector<tson::Frame> &getAnimation() const;
-			[[nodiscard]] inline const tson::Animation &getAnimation() const;
+			[[nodiscard]] inline tson::Animation &getAnimation();
 			[[nodiscard]] inline const Layer &getObjectgroup() const;
 			[[nodiscard]] inline PropertyCollection &getProperties();
 			[[nodiscard]] inline const std::vector<int> &getTerrain() const;
@@ -4850,7 +4850,7 @@ const std::string &tson::Tile::getType() const
  * 'animation': Array of Frames
  * @return
  */
-const tson::Animation &tson::Tile::getAnimation() const
+tson::Animation &tson::Tile::getAnimation()
 {
 	return m_animation;
 }

@@ -39,3 +39,7 @@ cmake-build-minsizerel/
 cmake-build-debug-x64/
 
 .vscode/
+
+cmake-build-relwithdebinfo/
+
+.idea_old/

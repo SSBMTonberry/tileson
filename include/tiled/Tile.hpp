@@ -37,7 +37,7 @@ namespace tson
             [[nodiscard]] inline const std::string &getType() const;
 
             //[[nodiscard]] inline const std::vector<tson::Frame> &getAnimation() const;
-            [[nodiscard]] inline const tson::Animation &getAnimation() const;
+            [[nodiscard]] inline tson::Animation &getAnimation();
             [[nodiscard]] inline const Layer &getObjectgroup() const;
             [[nodiscard]] inline PropertyCollection &getProperties();
             [[nodiscard]] inline const std::vector<int> &getTerrain() const;
@@ -222,7 +222,7 @@ const std::string &tson::Tile::getType() const
  * 'animation': Array of Frames
  * @return
  */
-const tson::Animation &tson::Tile::getAnimation() const
+tson::Animation &tson::Tile::getAnimation()
 {
     return m_animation;
 }
