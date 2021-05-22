@@ -236,6 +236,15 @@ void SfmlDemoManager::drawImgui()
     ImGui::End();
 }
 
+void SfmlDemoManager::updateAnimations()
+{
+    for(auto &[id, animation] : m_animationUpdateQueue)
+    {
+        int ms = m_timeDelta.asMilliseconds();
+        animation->update(ms);
+    }
+}
+
 void SfmlDemoManager::run()
 {
     sf::Clock deltaClock;
@@ -251,6 +260,7 @@ void SfmlDemoManager::run()
                 m_window.close();
         }
         m_timeDelta = deltaClock.restart();
+        updateAnimations();
         ImGui::SFML::Update(m_window, m_timeDelta);
         // Clear screen
         m_window.clear({35, 65, 90, 255});
@@ -275,7 +285,11 @@ void SfmlDemoManager::drawTileLayer(tson::Layer& layer)//, tson::Tileset* tilese
             drawingRect = tileObject.getDrawingRect();
         else
         {
-            tileObject.getTile()->getAnimation().update(m_timeDelta.asMilliseconds());
+            //tileObject.getTile()->getAnimation().update(m_timeDelta.asMilliseconds());
+            uint32_t ownerId = tileObject.getTile()->getId();
+            if(m_animationUpdateQueue.count(ownerId) == 0) //This is only built once to track all tile IDs with animations
+                m_animationUpdateQueue[ownerId] = &tileObject.getTile()->getAnimation();
+
             uint32_t tileId = tileObject.getTile()->getAnimation().getCurrentTileId();
             tson::Tile *animatedTile = tileset->getTile(tileId);
             drawingRect = animatedTile->getDrawingRect();

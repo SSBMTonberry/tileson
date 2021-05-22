@@ -56,6 +56,7 @@ class SfmlDemoManager
 
         sf::Sprite * storeAndLoadImage(const std::string &image, const sf::Vector2f &position);
         fs::path getTilesetImagePath(const tson::Tileset &tileset);
+        void updateAnimations();
 
         fs::path m_basePath {};
         sf::RenderWindow m_window;
@@ -87,6 +88,7 @@ class SfmlDemoManager
 
         std::map<std::string, std::unique_ptr<sf::Texture>> m_textures;
         std::map<std::string, std::unique_ptr<sf::Sprite>> m_sprites;
+        std::map<uint32_t, tson::Animation*> m_animationUpdateQueue;
 };
 
 
