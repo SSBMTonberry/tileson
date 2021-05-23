@@ -31,7 +31,9 @@ want to have every component in their own file. This will probably be less heavy
 - Tileson now has support for reading `LZMA` compressed maps using [PocketLzma](https://github.com/SSBMTonberry/pocketlzma).  Example: The `ultimate_test.json` map gets reduced from `68,6 KiB` to `2,4 KiB` when LZMA compressed.
 - See release notes for more details!
 
-# Unreleased features available in master-branch
+# Unreleased features available in the master-branch
+- Animations are now handled by an own `tson::Animation` object, which is also now showcased with a working animation in the example program ([#40](https://github.com/SSBMTonberry/tileson/issues/40), [#32](https://github.com/SSBMTonberry/tileson/issues/32))
+- Fixed a bug in `tson::Frame` where you would get the wrong tile ID stored. ([#41](https://github.com/SSBMTonberry/tileson/issues/41))
 - `tson::Layer`: Function `getTransparentcolor()`renamed to `getTransparentColor()` ([#38](https://github.com/SSBMTonberry/tileson/issues/38)) - Thanks to [RobLoach](https://github.com/RobLoach)
 - Tiled v1.6 support. ([#37](https://github.com/SSBMTonberry/tileson/issues/37))
 - Tiled v1.5 support. ([#34](https://github.com/SSBMTonberry/tileson/issues/34))
