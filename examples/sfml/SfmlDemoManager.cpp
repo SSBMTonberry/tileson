@@ -8,6 +8,8 @@ bool SfmlDemoManager::initialize(const sf::Vector2i &windowSize, const sf::Vecto
 {
     m_window.create(sf::VideoMode(windowSize.x, windowSize.y), title, sf::Style::Titlebar | sf::Style::Close);
     m_window.setView(sf::View(sf::FloatRect(0.f, 0.f, (float) resolution.x, (float)resolution.y)));
+    m_window.setFramerateLimit(60);
+
     m_basePath = basePath;
     #if __clang__
     fs::path appRoot = getMacApplicationFolder(true);
@@ -189,6 +191,10 @@ void SfmlDemoManager::drawImgui()
         m_isImguiSizeSet = true;
     }
     ImGui::Begin("Maps");
+    float timeDeltaMs = (float)((double)m_timeDelta.asMicroseconds() / 1000);
+    float fps = 1000.f / timeDeltaMs;
+    ImGui::TextWrapped("FPS: %.1f (Time delta: %.3f ms)", fps, timeDeltaMs);
+
     std::string mapsStr = std::to_string(m_mapIndex) + " of " + std::to_string(m_maxMapIndex);
     ImGui::PushItemWidth(45);
     ImGui::LabelText(mapsStr.c_str(), "Map: ");
@@ -211,9 +217,6 @@ void SfmlDemoManager::drawImgui()
     }
     if(ImGui::IsItemHovered())
         ImGui::SetTooltip("Next");
-    //ImGui::PopItemWidth();
-    //ImGui::SameLine();
-    //ImGui::LabelText("###second", );
 
     //World related data
     if(m_mapIndex > 4 && m_currentMap != nullptr)
@@ -233,7 +236,28 @@ void SfmlDemoManager::drawImgui()
         ImGui::TextWrapped("%s", m_currentInfo.c_str());
     }
 
+
+    if(m_mapIndex == 0)
+    {
+        ImGui::Text("Animation data:");
+        for(auto &[id, animation] : m_animationUpdateQueue)
+        {
+            ImGui::TextWrapped("Frame %d (duration %d of %d) - tile: %d", animation->getCurrentFrameNumber(), (int)animation->getTimeDelta(),
+                        animation->getCurrentFrame()->getDuration(), animation->getCurrentTileId());
+        }
+    }
+
     ImGui::End();
+}
+
+void SfmlDemoManager::updateAnimations()
+{
+    for(auto &[id, animation] : m_animationUpdateQueue)
+    {
+        //Time needs to be received as microseconds to get the right precision.
+        float ms = (float)((double)m_timeDelta.asMicroseconds() / 1000);
+        animation->update(ms);
+    }
 }
 
 void SfmlDemoManager::run()
@@ -250,8 +274,9 @@ void SfmlDemoManager::run()
             if (event.type == sf::Event::Closed)
                 m_window.close();
         }
-        ImGui::SFML::Update(m_window, deltaClock.restart());
-
+        m_timeDelta = deltaClock.restart();
+        updateAnimations();
+        ImGui::SFML::Update(m_window, m_timeDelta);
         // Clear screen
         m_window.clear({35, 65, 90, 255});
         drawMap();
@@ -261,14 +286,29 @@ void SfmlDemoManager::run()
     }
 }
 
-void SfmlDemoManager::drawTileLayer(const tson::Layer& layer)//, tson::Tileset* tileset)
+void SfmlDemoManager::drawTileLayer(tson::Layer& layer)//, tson::Tileset* tileset)
 {
     //pos = position in tile units
-    for (const auto& [pos, tileObject] : layer.getTileObjects()) //Loops through absolutely all existing tiles
+    for (auto& [pos, tileObject] : layer.getTileObjects()) //Loops through absolutely all existing tiles
     {
         //Set sprite data to draw the tile
         tson::Tileset *tileset = tileObject.getTile()->getTileset();
-        tson::Rect drawingRect = tileObject.getDrawingRect();
+        bool hasAnimation = tileObject.getTile()->getAnimation().any();
+        tson::Rect drawingRect;
+
+        if(!hasAnimation)
+            drawingRect = tileObject.getDrawingRect();
+        else
+        {
+            //tileObject.getTile()->getAnimation().update(m_timeDelta.asMilliseconds());
+            uint32_t ownerId = tileObject.getTile()->getId();
+            if(m_animationUpdateQueue.count(ownerId) == 0) //This is only built once to track all tile IDs with animations
+                m_animationUpdateQueue[ownerId] = &tileObject.getTile()->getAnimation();
+
+            uint32_t tileId = tileObject.getTile()->getAnimation().getCurrentTileId();
+            tson::Tile *animatedTile = tileset->getTile(tileId);
+            drawingRect = animatedTile->getDrawingRect();
+        }
         tson::Vector2f position = tileObject.getPosition();
         position = {position.x + (float)m_positionOffset.x, position.y + (float)m_positionOffset.y};
         //sf::Vector2f position = {(float)obj.getPosition().x + (float)m_positionOffset.x, (float)obj.getPosition().y + (float)m_positionOffset.y};

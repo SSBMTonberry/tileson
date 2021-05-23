@@ -74,7 +74,7 @@ namespace tson
             [[nodiscard]] inline const Colori &getTintColor() const;
             [[nodiscard]] inline tson::Map *getMap() const;
 
-            [[nodiscard]] inline const std::map<std::tuple<int, int>, tson::TileObject> &getTileObjects() const;
+            [[nodiscard]] inline std::map<std::tuple<int, int>, tson::TileObject> &getTileObjects();
             inline tson::TileObject * getTileObject(int x, int y);
             [[nodiscard]] inline const std::set<uint32_t> &getUniqueFlaggedTiles() const;
             inline void resolveFlaggedTiles();
@@ -599,7 +599,7 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
     }
 }
 
-const std::map<std::tuple<int, int>, tson::TileObject> &tson::Layer::getTileObjects() const
+std::map<std::tuple<int, int>, tson::TileObject> &tson::Layer::getTileObjects()
 {
     return m_tileObjects;
 }

@@ -72,6 +72,7 @@ void performMainAsserts(tson::Map *map, bool isOldMap = true)
         REQUIRE(map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProp("i_like_this")->getType() == tson::Type::Boolean);
         REQUIRE(!map->getTileset("demo-tileset")->getTerrain("test_terrain")->get<std::string>("description").empty());
     }
+    REQUIRE(!tileData[{4,4}]->getAnimation().any());
     REQUIRE(map->getTileMap().size() > 10);
     REQUIRE(tileData[{4,4}] != nullptr);
     REQUIRE(tileData[{4,4}]->getId() == 1);
@@ -557,11 +558,11 @@ TEST_CASE( "Parse map3.json - expect correct tileset data for all TileObjects", 
     size_t numberOfOkTilesets = 0;
     if (map->getStatus() == tson::ParseStatus::OK)
     {
-        for(const auto &layer : map->getLayers())
+        for(auto &layer : map->getLayers())
         {
             if(layer.getType() == tson::LayerType::TileLayer)
             {
-                for (const auto& [pos, tileObject] : layer.getTileObjects())
+                for (auto& [pos, tileObject] : layer.getTileObjects())
                 {
                     tson::Tileset *tileset = tileObject.getTile()->getTileset();
                     tson::Rect drawingRect = tileObject.getDrawingRect();

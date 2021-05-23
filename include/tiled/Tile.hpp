@@ -9,6 +9,7 @@
 #include "../objects/Vector2.hpp"
 #include "../objects/Color.hpp"
 #include "Frame.hpp"
+#include "Animation.hpp"
 #include "../objects/PropertyCollection.hpp"
 #include "Layer.hpp"
 #include "../objects/Rect.hpp"
@@ -35,7 +36,8 @@ namespace tson
             [[nodiscard]] inline const Vector2i &getImageSize() const;
             [[nodiscard]] inline const std::string &getType() const;
 
-            [[nodiscard]] inline const std::vector<tson::Frame> &getAnimation() const;
+            //[[nodiscard]] inline const std::vector<tson::Frame> &getAnimation() const;
+            [[nodiscard]] inline tson::Animation &getAnimation();
             [[nodiscard]] inline const Layer &getObjectgroup() const;
             [[nodiscard]] inline PropertyCollection &getProperties();
             [[nodiscard]] inline const std::vector<int> &getTerrain() const;
@@ -62,16 +64,16 @@ namespace tson
 
 
         private:
-            std::vector<tson::Frame>    m_animation; 	    /*! 'animation': Array of Frames */
-            uint32_t                    m_id {};            /*! 'id': Local ID of the tile */
+            tson::Animation                  m_animation{};      /*! 'animation': Array of Frames */
+            uint32_t                         m_id {};            /*! 'id': Local ID of the tile */
 
-            fs::path                    m_image;            /*! 'image': Image representing this tile (optional)*/
+            fs::path                         m_image;            /*! 'image': Image representing this tile (optional)*/
 
-            tson::Vector2i              m_imageSize;        /*! x = 'imagewidth' and y = 'imageheight': in pixels */
-            tson::Layer                 m_objectgroup; 	 	/*! 'objectgroup': Layer with type objectgroup (optional) */
-            tson::PropertyCollection    m_properties; 	    /*! 'properties': A list of properties (name, value, type). */
-            std::vector<int>            m_terrain;          /*! 'terrain': Index of terrain for each corner of tile */
-            std::string                 m_type;             /*! 'type': The type of the tile (optional) */
+            tson::Vector2i                   m_imageSize;        /*! x = 'imagewidth' and y = 'imageheight': in pixels */
+            tson::Layer                      m_objectgroup; 	 	/*! 'objectgroup': Layer with type objectgroup (optional) */
+            tson::PropertyCollection         m_properties; 	    /*! 'properties': A list of properties (name, value, type). */
+            std::vector<int>                 m_terrain;          /*! 'terrain': Index of terrain for each corner of tile */
+            std::string                      m_type;             /*! 'type': The type of the tile (optional) */
 
             //v1.2.0-stuff
             uint32_t                    m_gid {};                                    /*! id without flip flags */
@@ -158,7 +160,12 @@ bool tson::Tile::parse(IJson &json, tson::Tileset *tileset, tson::Map *map)
     if(json.count("animation") > 0 && json["animation"].isArray())
     {
         auto &animation = json.array("animation");
-        std::for_each(animation.begin(), animation.end(), [&](std::unique_ptr<IJson> &item) { m_animation.emplace_back(*item); });
+        std::vector<tson::Frame> frames;
+        std::for_each(animation.begin(), animation.end(), [&](std::unique_ptr<IJson> &item) { frames.emplace_back(*item); });
+        if(frames.size() > 0)
+        {
+            m_animation.setFrames(frames);
+        }
     }
     if(json.count("terrain") > 0 && json["terrain"].isArray())
     {
@@ -215,7 +222,7 @@ const std::string &tson::Tile::getType() const
  * 'animation': Array of Frames
  * @return
  */
-const std::vector<tson::Frame> &tson::Tile::getAnimation() const
+tson::Animation &tson::Tile::getAnimation()
 {
     return m_animation;
 }

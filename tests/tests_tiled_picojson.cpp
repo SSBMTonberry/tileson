@@ -595,7 +595,7 @@ TEST_CASE( "PicoJson - Parse a Frame", "[tiled][frame]" )
     bool parseOk = frame.parse(*json);
     bool hasCorrectValues = (
             frame.getDuration() == 100 &&
-            frame.getTileId() == 6
+            frame.getTileId() == 7
     );
 
     REQUIRE((parseOk && hasCorrectValues));

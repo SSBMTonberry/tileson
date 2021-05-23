@@ -48,7 +48,7 @@ class SfmlDemoManager
         static constexpr int CURRENT_VERSION = 120; //v1.2.0
 
         void drawLayer(tson::Layer& layer);
-        void drawTileLayer(const tson::Layer& layer);//, tson::Tileset* tileset);
+        void drawTileLayer(tson::Layer& layer);//, tson::Tileset* tileset);
         void drawImageLayer(tson::Layer& layer);
         void drawObjectLayer(tson::Layer& layer);
 
@@ -56,6 +56,7 @@ class SfmlDemoManager
 
         sf::Sprite * storeAndLoadImage(const std::string &image, const sf::Vector2f &position);
         fs::path getTilesetImagePath(const tson::Tileset &tileset);
+        void updateAnimations();
 
         fs::path m_basePath {};
         sf::RenderWindow m_window;
@@ -78,13 +79,16 @@ class SfmlDemoManager
 
         sf::Font m_font;
         sf::Text m_demoText;
+        sf::Time m_timeDelta;
 
         int m_mapIndex {0};
         const int m_maxMapIndex {5};
+        
         tson::Vector2i m_positionOffset {0,0}; //Used for world related stuff
 
         std::map<std::string, std::unique_ptr<sf::Texture>> m_textures;
         std::map<std::string, std::unique_ptr<sf::Sprite>> m_sprites;
+        std::map<uint32_t, tson::Animation*> m_animationUpdateQueue;
 };
 
 

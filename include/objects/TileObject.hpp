@@ -18,7 +18,7 @@ namespace tson
 
             inline void initialize(const std::tuple<int, int> &posInTileUnits, tson::Tile *tile); //Defined in tileson_forward.hpp
 
-            inline Tile *getTile() const;
+            inline Tile *getTile();
             inline const Vector2i &getPositionInTileUnits() const;
             inline const Vector2f &getPosition() const;
             inline const tson::Rect &getDrawingRect() const; //Defined in tileson_forward.hpp
@@ -39,7 +39,7 @@ namespace tson
      * Get a pointer to the related tile
      * @return
      */
-    Tile *TileObject::getTile() const
+    Tile *TileObject::getTile()
     {
         return m_tile;
     }
