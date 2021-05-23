@@ -8,6 +8,8 @@ bool SfmlDemoManager::initialize(const sf::Vector2i &windowSize, const sf::Vecto
 {
     m_window.create(sf::VideoMode(windowSize.x, windowSize.y), title, sf::Style::Titlebar | sf::Style::Close);
     m_window.setView(sf::View(sf::FloatRect(0.f, 0.f, (float) resolution.x, (float)resolution.y)));
+    m_window.setFramerateLimit(60);
+
     m_basePath = basePath;
     #if __clang__
     fs::path appRoot = getMacApplicationFolder(true);
@@ -189,6 +191,10 @@ void SfmlDemoManager::drawImgui()
         m_isImguiSizeSet = true;
     }
     ImGui::Begin("Maps");
+    float timeDeltaMs = (float)((double)m_timeDelta.asMicroseconds() / 1000);
+    float fps = 1000.f / timeDeltaMs;
+    ImGui::TextWrapped("FPS: %.1f (Time delta: %.3f ms)", fps, timeDeltaMs);
+
     std::string mapsStr = std::to_string(m_mapIndex) + " of " + std::to_string(m_maxMapIndex);
     ImGui::PushItemWidth(45);
     ImGui::LabelText(mapsStr.c_str(), "Map: ");
@@ -211,9 +217,6 @@ void SfmlDemoManager::drawImgui()
     }
     if(ImGui::IsItemHovered())
         ImGui::SetTooltip("Next");
-    //ImGui::PopItemWidth();
-    //ImGui::SameLine();
-    //ImGui::LabelText("###second", );
 
     //World related data
     if(m_mapIndex > 4 && m_currentMap != nullptr)
@@ -233,6 +236,17 @@ void SfmlDemoManager::drawImgui()
         ImGui::TextWrapped("%s", m_currentInfo.c_str());
     }
 
+
+    if(m_mapIndex == 0)
+    {
+        ImGui::Text("Animation data:");
+        for(auto &[id, animation] : m_animationUpdateQueue)
+        {
+            ImGui::TextWrapped("Frame %d (duration %d of %d) - tile: %d", animation->getCurrentFrameNumber(), (int)animation->getTimeDelta(),
+                        animation->getCurrentFrame()->getDuration(), animation->getCurrentTileId());
+        }
+    }
+
     ImGui::End();
 }
 
@@ -240,7 +254,8 @@ void SfmlDemoManager::updateAnimations()
 {
     for(auto &[id, animation] : m_animationUpdateQueue)
     {
-        int ms = m_timeDelta.asMilliseconds();
+        //Time needs to be received as microseconds to get the right precision.
+        float ms = (float)((double)m_timeDelta.asMicroseconds() / 1000);
         animation->update(ms);
     }
 }
