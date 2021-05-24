@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Tileson: /home/robin/Projects/cpp/git/tileson/include/tiled/Tileset.hpp Source File</title>
+<title>Tileson: /home/robin/git/c++/tileson/include/tiled/Tileset.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -122,7 +122,7 @@ $(function() {
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            [[nodiscard]] <span class="keyword">inline</span> <span class="keyword">const</span> <a class="code" href="classtson_1_1Vector2.html">Vector2i</a> &amp;<a class="code" href="classtson_1_1Tileset.html#a5151c7d3df08f24abf6a70e379224845">getTileOffset</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            [[nodiscard]] <span class="keyword">inline</span> <span class="keyword">const</span> <a class="code" href="classtson_1_1Grid.html">Grid</a> &amp;<a class="code" href="classtson_1_1Tileset.html#a4a22bdf3892baf5c6bbcb4ee2af61c5f">getGrid</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            <span class="keyword">inline</span> <a class="code" href="classtson_1_1Tile.html">tson::Tile</a> * <a class="code" href="classtson_1_1Tileset.html#a51703de921b7414030e97783bd9ddf52">getTile</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>);</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            <span class="keyword">inline</span> <a class="code" href="classtson_1_1Tile.html">tson::Tile</a> * <a class="code" href="classtson_1_1Tileset.html#aaabda77d218d9fbc0dd23769c380bbd0">getTile</a>(uint32_t <span class="keywordtype">id</span>);</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            <span class="keyword">inline</span> <a class="code" href="classtson_1_1Terrain.html">tson::Terrain</a> * <a class="code" href="classtson_1_1Tileset.html#aedae2e6b80172d117e83c67d5e9c3b50">getTerrain</a>(<span class="keyword">const</span> std::string &amp;name);</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
@@ -348,7 +348,7 @@ $(function() {
 <div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;    <span class="keywordflow">return</span> m_grid;</div>
 <div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;}</div>
 <div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160; </div>
-<div class="line"><a name="l00373"></a><span class="lineno"><a class="line" href="classtson_1_1Tileset.html#a51703de921b7414030e97783bd9ddf52">  373</a></span>&#160;<a class="code" href="classtson_1_1Tile.html">tson::Tile</a> *<a class="code" href="classtson_1_1Tileset.html#a51703de921b7414030e97783bd9ddf52">tson::Tileset::getTile</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>)</div>
+<div class="line"><a name="l00373"></a><span class="lineno"><a class="line" href="classtson_1_1Tileset.html#aaabda77d218d9fbc0dd23769c380bbd0">  373</a></span>&#160;<a class="code" href="classtson_1_1Tile.html">tson::Tile</a> *<a class="code" href="classtson_1_1Tileset.html#aaabda77d218d9fbc0dd23769c380bbd0">tson::Tileset::getTile</a>(uint32_t <span class="keywordtype">id</span>)</div>
 <div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;{</div>
 <div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;    <span class="keyword">auto</span> result = std::find_if(m_tiles.begin(), m_tiles.end(), [&amp;](<span class="keyword">const</span> <a class="code" href="classtson_1_1Tile.html">tson::Tile</a> &amp; item) { return item.getId() == id;});</div>
 <div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;    <span class="keywordflow">if</span>(result == m_tiles.end())</div>
@@ -380,7 +380,7 @@ $(function() {
 <div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;    <span class="keywordflow">for</span>(<span class="keyword">auto</span> &amp;tile : m_tiles)</div>
 <div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;        tileIds.push_back(tile.getId());</div>
 <div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160; </div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;    <span class="keywordflow">for</span>(uint32_t i = m_firstgid; i &lt; m_firstgid + m_tileCount; ++i)</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;    <span class="keywordflow">for</span>(uint32_t i = m_firstgid; i &lt; m_firstgid + (uint32_t) m_tileCount; ++i)</div>
 <div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;    {</div>
 <div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;        <span class="keywordflow">if</span>(std::count(tileIds.begin(), tileIds.end(), i) == 0)</div>
 <div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;        {</div>
@@ -429,7 +429,7 @@ $(function() {
 <div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160;    <span class="keyword">auto</span> wangset = std::find_if(m_wangsets.begin(), m_wangsets.end(), [&amp;](<span class="keyword">const</span> <span class="keyword">auto</span> &amp;w) { return w.getName() == name; });</div>
 <div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160; </div>
 <div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;    <span class="keywordflow">if</span>(wangset != m_wangsets.end())</div>
-<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;        <span class="keywordflow">return</span> wangset.base();</div>
+<div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;        <span class="keywordflow">return</span> &amp;wangset.operator*();</div>
 <div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160; </div>
 <div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
 <div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;}</div>
@@ -459,7 +459,7 @@ $(function() {
 <div class="ttc" id="aclasstson_1_1PropertyCollection_html"><div class="ttname"><a href="classtson_1_1PropertyCollection.html">tson::PropertyCollection</a></div><div class="ttdef"><b>Definition:</b> PropertyCollection.hpp:15</div></div>
 <div class="ttc" id="aclasstson_1_1Property_html"><div class="ttname"><a href="classtson_1_1Property.html">tson::Property</a></div><div class="ttdef"><b>Definition:</b> Property.hpp:21</div></div>
 <div class="ttc" id="aclasstson_1_1Terrain_html"><div class="ttname"><a href="classtson_1_1Terrain.html">tson::Terrain</a></div><div class="ttdef"><b>Definition:</b> Terrain.hpp:14</div></div>
-<div class="ttc" id="aclasstson_1_1Tile_html"><div class="ttname"><a href="classtson_1_1Tile.html">tson::Tile</a></div><div class="ttdef"><b>Definition:</b> Tile.hpp:21</div></div>
+<div class="ttc" id="aclasstson_1_1Tile_html"><div class="ttname"><a href="classtson_1_1Tile.html">tson::Tile</a></div><div class="ttdef"><b>Definition:</b> Tile.hpp:22</div></div>
 <div class="ttc" id="aclasstson_1_1Tileset_html"><div class="ttname"><a href="classtson_1_1Tileset.html">tson::Tileset</a></div><div class="ttdef"><b>Definition:</b> Tileset.hpp:24</div></div>
 <div class="ttc" id="aclasstson_1_1Tileset_html_a075988a9b8787e925d42b255019dd6ae"><div class="ttname"><a href="classtson_1_1Tileset.html#a075988a9b8787e925d42b255019dd6ae">tson::Tileset::getType</a></div><div class="ttdeci">const std::string &amp; getType() const</div><div class="ttdef"><b>Definition:</b> Tileset.hpp:300</div></div>
 <div class="ttc" id="aclasstson_1_1Tileset_html_a07b0c7e494c272cf45eb09b5bf5f1118"><div class="ttname"><a href="classtson_1_1Tileset.html#a07b0c7e494c272cf45eb09b5bf5f1118">tson::Tileset::getTerrains</a></div><div class="ttdeci">const std::vector&lt; tson::Terrain &gt; &amp; getTerrains() const</div><div class="ttdef"><b>Definition:</b> Tileset.hpp:343</div></div>
@@ -470,7 +470,6 @@ $(function() {
 <div class="ttc" id="aclasstson_1_1Tileset_html_a48b3d5b9ba608668890f9ca617386f79"><div class="ttname"><a href="classtson_1_1Tileset.html#a48b3d5b9ba608668890f9ca617386f79">tson::Tileset::getSpacing</a></div><div class="ttdeci">int getSpacing() const</div><div class="ttdef"><b>Definition:</b> Tileset.hpp:264</div></div>
 <div class="ttc" id="aclasstson_1_1Tileset_html_a4a22bdf3892baf5c6bbcb4ee2af61c5f"><div class="ttname"><a href="classtson_1_1Tileset.html#a4a22bdf3892baf5c6bbcb4ee2af61c5f">tson::Tileset::getGrid</a></div><div class="ttdeci">const Grid &amp; getGrid() const</div><div class="ttdef"><b>Definition:</b> Tileset.hpp:362</div></div>
 <div class="ttc" id="aclasstson_1_1Tileset_html_a5151c7d3df08f24abf6a70e379224845"><div class="ttname"><a href="classtson_1_1Tileset.html#a5151c7d3df08f24abf6a70e379224845">tson::Tileset::getTileOffset</a></div><div class="ttdeci">const Vector2i &amp; getTileOffset() const</div><div class="ttdef"><b>Definition:</b> Tileset.hpp:352</div></div>
-<div class="ttc" id="aclasstson_1_1Tileset_html_a51703de921b7414030e97783bd9ddf52"><div class="ttname"><a href="classtson_1_1Tileset.html#a51703de921b7414030e97783bd9ddf52">tson::Tileset::getTile</a></div><div class="ttdeci">tson::Tile * getTile(int id)</div><div class="ttdef"><b>Definition:</b> Tileset.hpp:373</div></div>
 <div class="ttc" id="aclasstson_1_1Tileset_html_a61e4fbc904b65159f38bcab4ab02a332"><div class="ttname"><a href="classtson_1_1Tileset.html#a61e4fbc904b65159f38bcab4ab02a332">tson::Tileset::getMargin</a></div><div class="ttdeci">int getMargin() const</div><div class="ttdef"><b>Definition:</b> Tileset.hpp:246</div></div>
 <div class="ttc" id="aclasstson_1_1Tileset_html_a69cd66f3c6d9337f85607beddfadeb80"><div class="ttname"><a href="classtson_1_1Tileset.html#a69cd66f3c6d9337f85607beddfadeb80">tson::Tileset::getImagePath</a></div><div class="ttdeci">const fs::path &amp; getImagePath() const</div><div class="ttdef"><b>Definition:</b> Tileset.hpp:231</div></div>
 <div class="ttc" id="aclasstson_1_1Tileset_html_a6b23b3518bb160d1b3b23e7fe13b6694"><div class="ttname"><a href="classtson_1_1Tileset.html#a6b23b3518bb160d1b3b23e7fe13b6694">tson::Tileset::get</a></div><div class="ttdeci">T get(const std::string &amp;name)</div><div class="ttdef"><b>Definition:</b> Tileset.hpp:117</div></div>
@@ -481,6 +480,7 @@ $(function() {
 <div class="ttc" id="aclasstson_1_1Tileset_html_a8db6f715eb8cd17a6699305162873706"><div class="ttname"><a href="classtson_1_1Tileset.html#a8db6f715eb8cd17a6699305162873706">tson::Tileset::getTransformations</a></div><div class="ttdeci">const Transformations &amp; getTransformations() const</div><div class="ttdef"><b>Definition:</b> Tileset.hpp:499</div></div>
 <div class="ttc" id="aclasstson_1_1Tileset_html_a90f6ba8eb6b9d58c9ba5d47f943082a3"><div class="ttname"><a href="classtson_1_1Tileset.html#a90f6ba8eb6b9d58c9ba5d47f943082a3">tson::Tileset::getFirstgid</a></div><div class="ttdeci">int getFirstgid() const</div><div class="ttdef"><b>Definition:</b> Tileset.hpp:221</div></div>
 <div class="ttc" id="aclasstson_1_1Tileset_html_aa2e4e0b79014829b9cf9738179255f37"><div class="ttname"><a href="classtson_1_1Tileset.html#aa2e4e0b79014829b9cf9738179255f37">tson::Tileset::getTileCount</a></div><div class="ttdeci">int getTileCount() const</div><div class="ttdef"><b>Definition:</b> Tileset.hpp:273</div></div>
+<div class="ttc" id="aclasstson_1_1Tileset_html_aaabda77d218d9fbc0dd23769c380bbd0"><div class="ttname"><a href="classtson_1_1Tileset.html#aaabda77d218d9fbc0dd23769c380bbd0">tson::Tileset::getTile</a></div><div class="ttdeci">tson::Tile * getTile(uint32_t id)</div><div class="ttdef"><b>Definition:</b> Tileset.hpp:373</div></div>
 <div class="ttc" id="aclasstson_1_1Tileset_html_abfc08d09ed4a82a546e2231c0214d43a"><div class="ttname"><a href="classtson_1_1Tileset.html#abfc08d09ed4a82a546e2231c0214d43a">tson::Tileset::getProperties</a></div><div class="ttdeci">PropertyCollection &amp; getProperties()</div><div class="ttdef"><b>Definition:</b> Tileset.hpp:334</div></div>
 <div class="ttc" id="aclasstson_1_1Tileset_html_ac12fc24cd970e151e949c19ad0f62f81"><div class="ttname"><a href="classtson_1_1Tileset.html#ac12fc24cd970e151e949c19ad0f62f81">tson::Tileset::getWangsets</a></div><div class="ttdeci">const std::vector&lt; tson::WangSet &gt; &amp; getWangsets() const</div><div class="ttdef"><b>Definition:</b> Tileset.hpp:325</div></div>
 <div class="ttc" id="aclasstson_1_1Tileset_html_acad0f7d788025b59052b230799ffc6bb"><div class="ttname"><a href="classtson_1_1Tileset.html#acad0f7d788025b59052b230799ffc6bb">tson::Tileset::getColumns</a></div><div class="ttdeci">int getColumns() const</div><div class="ttdef"><b>Definition:</b> Tileset.hpp:212</div></div>

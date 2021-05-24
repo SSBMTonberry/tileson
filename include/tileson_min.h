@@ -3,7 +3,7 @@
 /// ------------------------------------------------------------------
 /// BSD 2-Clause License
 ///
-/// Copyright (c) 2020, Robin Berg Pettersen
+/// Copyright (c) 2021, Robin Berg Pettersen
 /// All rights reserved.
 ///
 /// Redistribution and use in source and binary forms, with or without

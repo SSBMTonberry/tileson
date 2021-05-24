@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Tileson: /home/robin/Projects/cpp/git/tileson/include/tiled/Frame.hpp Source File</title>
+<title>Tileson: /home/robin/git/c++/tileson/include/tiled/Frame.hpp Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -86,21 +86,21 @@ $(function() {
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    {</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classtson_1_1Frame.html#ad9ca20e025d3370501a64a2f7ef0b5e0">   15</a></span>&#160;            <span class="keyword">inline</span> <a class="code" href="classtson_1_1Frame.html#ad9ca20e025d3370501a64a2f7ef0b5e0">Frame</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;            <span class="keyword">inline</span> <a class="code" href="classtson_1_1Frame.html#ad9ca20e025d3370501a64a2f7ef0b5e0">Frame</a>(<span class="keywordtype">int</span> duration, <span class="keywordtype">int</span> tileId);</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;            <span class="keyword">inline</span> <a class="code" href="classtson_1_1Frame.html#ad9ca20e025d3370501a64a2f7ef0b5e0">Frame</a>(<span class="keywordtype">int</span> duration, uint32_t tileId);</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;            <span class="keyword">inline</span> <span class="keyword">explicit</span> <a class="code" href="classtson_1_1Frame.html#ad9ca20e025d3370501a64a2f7ef0b5e0">Frame</a>(<a class="code" href="classtson_1_1IJson.html">IJson</a> &amp;json);</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;            <span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code" href="classtson_1_1Frame.html#af6a61eaee779eefb9aea32356a6e56a3">parse</a>(<a class="code" href="classtson_1_1IJson.html">IJson</a> &amp;json);</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;            [[nodiscard]] <span class="keyword">inline</span> <span class="keywordtype">int</span> <a class="code" href="classtson_1_1Frame.html#a64d0428ca6c866bc3cd6d21b76400653">getDuration</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;            [[nodiscard]] <span class="keyword">inline</span> <span class="keywordtype">int</span> <a class="code" href="classtson_1_1Frame.html#ad6b12577aafb1daeea6e991703a3ea2e">getTileId</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;            [[nodiscard]] <span class="keyword">inline</span> uint32_t <a class="code" href="classtson_1_1Frame.html#aed6247c47a0228cdf7dec839c3ee8fee">getTileId</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;            <span class="keywordtype">int</span> m_duration {};  </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;            <span class="keywordtype">int</span> m_tileId {};    </div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;            uint32_t m_tileId {};    </div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    };</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;}</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="classtson_1_1Frame.html#afa26f72c1cda0575d143f1c6381d4c10">   35</a></span>&#160;<a class="code" href="classtson_1_1Frame.html#ad9ca20e025d3370501a64a2f7ef0b5e0">tson::Frame::Frame</a>(<span class="keywordtype">int</span> duration, <span class="keywordtype">int</span> tileId) : m_duration {duration}, m_tileId {tileId}</div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="classtson_1_1Frame.html#aa8e93bfe317bbbdd7e96765c1e8be270">   35</a></span>&#160;<a class="code" href="classtson_1_1Frame.html#ad9ca20e025d3370501a64a2f7ef0b5e0">tson::Frame::Frame</a>(<span class="keywordtype">int</span> duration, uint32_t tileId) : m_duration {duration}, m_tileId {tileId}</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
@@ -115,7 +115,7 @@ $(function() {
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">bool</span> allFound = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;duration&quot;</span>) &gt; 0) m_duration = json[<span class="stringliteral">&quot;duration&quot;</span>].<a class="code" href="classtson_1_1IJson.html#a33e0e84aa8ce0636b2045a8c0e8ece66">get</a>&lt;<span class="keywordtype">int</span>&gt;(); <span class="keywordflow">else</span> allFound = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;tileid&quot;</span>) &gt; 0) m_tileId = json[<span class="stringliteral">&quot;tileid&quot;</span>].get&lt;int&gt;(); <span class="keywordflow">else</span> allFound = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordflow">if</span>(json.<a class="code" href="classtson_1_1IJson.html#ad742cdf1ffd8577e147c42836a1bb9bb">count</a>(<span class="stringliteral">&quot;tileid&quot;</span>) &gt; 0) m_tileId = json[<span class="stringliteral">&quot;tileid&quot;</span>].get&lt;uint32_t&gt;() + 1; <span class="keywordflow">else</span> allFound = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">return</span> allFound;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}</div>
@@ -125,7 +125,7 @@ $(function() {
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordflow">return</span> m_duration;</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;}</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="classtson_1_1Frame.html#ad6b12577aafb1daeea6e991703a3ea2e">   77</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classtson_1_1Frame.html#ad6b12577aafb1daeea6e991703a3ea2e">tson::Frame::getTileId</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="classtson_1_1Frame.html#aed6247c47a0228cdf7dec839c3ee8fee">   77</a></span>&#160;uint32_t <a class="code" href="classtson_1_1Frame.html#aed6247c47a0228cdf7dec839c3ee8fee">tson::Frame::getTileId</a>()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordflow">return</span> m_tileId;</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
@@ -133,8 +133,8 @@ $(function() {
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor">#endif </span><span class="comment">//TILESON_FRAME_HPP</span></div>
 <div class="ttc" id="aclasstson_1_1Frame_html"><div class="ttname"><a href="classtson_1_1Frame.html">tson::Frame</a></div><div class="ttdef"><b>Definition:</b> Frame.hpp:13</div></div>
 <div class="ttc" id="aclasstson_1_1Frame_html_a64d0428ca6c866bc3cd6d21b76400653"><div class="ttname"><a href="classtson_1_1Frame.html#a64d0428ca6c866bc3cd6d21b76400653">tson::Frame::getDuration</a></div><div class="ttdeci">int getDuration() const</div><div class="ttdef"><b>Definition:</b> Frame.hpp:68</div></div>
-<div class="ttc" id="aclasstson_1_1Frame_html_ad6b12577aafb1daeea6e991703a3ea2e"><div class="ttname"><a href="classtson_1_1Frame.html#ad6b12577aafb1daeea6e991703a3ea2e">tson::Frame::getTileId</a></div><div class="ttdeci">int getTileId() const</div><div class="ttdef"><b>Definition:</b> Frame.hpp:77</div></div>
 <div class="ttc" id="aclasstson_1_1Frame_html_ad9ca20e025d3370501a64a2f7ef0b5e0"><div class="ttname"><a href="classtson_1_1Frame.html#ad9ca20e025d3370501a64a2f7ef0b5e0">tson::Frame::Frame</a></div><div class="ttdeci">Frame()=default</div></div>
+<div class="ttc" id="aclasstson_1_1Frame_html_aed6247c47a0228cdf7dec839c3ee8fee"><div class="ttname"><a href="classtson_1_1Frame.html#aed6247c47a0228cdf7dec839c3ee8fee">tson::Frame::getTileId</a></div><div class="ttdeci">uint32_t getTileId() const</div><div class="ttdef"><b>Definition:</b> Frame.hpp:77</div></div>
 <div class="ttc" id="aclasstson_1_1Frame_html_af6a61eaee779eefb9aea32356a6e56a3"><div class="ttname"><a href="classtson_1_1Frame.html#af6a61eaee779eefb9aea32356a6e56a3">tson::Frame::parse</a></div><div class="ttdeci">bool parse(IJson &amp;json)</div><div class="ttdef"><b>Definition:</b> Frame.hpp:54</div></div>
 <div class="ttc" id="aclasstson_1_1IJson_html"><div class="ttname"><a href="classtson_1_1IJson.html">tson::IJson</a></div><div class="ttdef"><b>Definition:</b> IJson.hpp:11</div></div>
 <div class="ttc" id="aclasstson_1_1IJson_html_a33e0e84aa8ce0636b2045a8c0e8ece66"><div class="ttname"><a href="classtson_1_1IJson.html#a33e0e84aa8ce0636b2045a8c0e8ece66">tson::IJson::get</a></div><div class="ttdeci">T get(std::string_view key)</div><div class="ttdef"><b>Definition:</b> IJson.hpp:72</div></div>
