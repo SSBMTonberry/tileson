@@ -11,12 +11,16 @@ maps made with newer versions of Tiled just as well.
 
 Be sure to take a look at the release notes to see what's new!
 
-## Documentation
+# Documentation
 
 There is a `Doxygen` generated documentation of Tileson that can be found [HERE](https://ssbmtonberry.github.io/tileson/html)
 
 ### IMPORTANT: Tileson requires that everything it needs in a map is embedded into it, to be able to resolve their related objects. Maps having external references to tilesets etc. will not work.
 
+# How to contribute
+You are free to post any issue requesting new features, reporting bugs or asking questions at any time.
+If you want to contribute in the development of `Tileson`, make sure you read the [CONTRIBUTION GUIDELINES](https://github.com/SSBMTonberry/tileson/blob/master/CONTRIBUTION.md)
+before you start doing anything.
 
 # Tileson is header-only!
 This means that all you need is one file, `single_include/tileson.hpp` to have Tileson going
