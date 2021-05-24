@@ -84,7 +84,7 @@ $(function() {
 , <a class="el" href="classtson_1_1World.html#a101acc9c8cd09c5ba0bde73f8a16368d">tson::World</a>
 </li>
 <li>getAnimation()
-: <a class="el" href="classtson_1_1Tile.html#a0fbebe0f57cb5bfe2d237744fdd0c4fd">tson::Tile</a>
+: <a class="el" href="classtson_1_1Tile.html#acdd3d4a756c869b1c0fb4e84b6ad1261">tson::Tile</a>
 </li>
 <li>getBackgroundColor()
 : <a class="el" href="classtson_1_1Map.html#ace22e4fc62cc254dd59e49d99290e42d">tson::Map</a>
@@ -95,7 +95,7 @@ $(function() {
 </li>
 <li>getBool()
 : <a class="el" href="classtson_1_1Gason.html#a7ef76b9026e95d970e8a920c9aa410f7">tson::Gason</a>
-, <a class="el" href="classtson_1_1IJson.html#a1f36d17f8ec86be7b119aee0f6269a1b">tson::IJson</a>
+, <a class="el" href="classtson_1_1IJson.html#a8f225994284dc8193d9d21aa7124f5b8">tson::IJson</a>
 , <a class="el" href="classtson_1_1Json11.html#a0e121b21704a5f41586e5cb81c6b62ea">tson::Json11</a>
 </li>
 <li>getChunks()
@@ -119,6 +119,15 @@ $(function() {
 </li>
 <li>getCornerColors()
 : <a class="el" href="classtson_1_1WangSet.html#addc926be72148d1f5a3727b492e0cf9b">tson::WangSet</a>
+</li>
+<li>getCurrentFrame()
+: <a class="el" href="classtson_1_1Animation.html#a9be3b871ddd4ce200d0c8519e3d66d55">tson::Animation</a>
+</li>
+<li>getCurrentFrameNumber()
+: <a class="el" href="classtson_1_1Animation.html#aa5d9d35f68ad3c35d23ef405a6f31b87">tson::Animation</a>
+</li>
+<li>getCurrentTileId()
+: <a class="el" href="classtson_1_1Animation.html#a6335723250751fd89b0da6232800c9ec">tson::Animation</a>
 </li>
 <li>getData()
 : <a class="el" href="classtson_1_1Chunk.html#a53e840537bffc39c6e9b8dfd5df8591e">tson::Chunk</a>
@@ -162,13 +171,16 @@ $(function() {
 <li>getFloat()
 : <a class="el" href="classtson_1_1Gason.html#a45812a8542ebe414d72392525490c699">tson::Gason</a>
 , <a class="el" href="classtson_1_1IJson.html#a16da5e6fe1497776edb634992ddb4bdb">tson::IJson</a>
-, <a class="el" href="classtson_1_1Json11.html#a327ccbab3df4f453bafd8a078b13fc0f">tson::Json11</a>
+, <a class="el" href="classtson_1_1Json11.html#a3f9c551e635db7128c99351b796f22d7">tson::Json11</a>
 </li>
 <li>getFolder()
 : <a class="el" href="classtson_1_1World.html#aae6b409693f51f76fb9bd57145a29180">tson::World</a>
 </li>
 <li>getFolders()
 : <a class="el" href="classtson_1_1Project.html#aafd67aa3cb5fe1a3bc6db205f8b17f73">tson::Project</a>
+</li>
+<li>getFrames()
+: <a class="el" href="classtson_1_1Animation.html#aeaa67cbb7cf08ae3aa3fb32657da7114">tson::Animation</a>
 </li>
 <li>getGid()
 : <a class="el" href="classtson_1_1Object.html#ab95d441052cc1231748e3efeee06126a">tson::Object</a>
@@ -200,7 +212,7 @@ $(function() {
 </li>
 <li>getInt32()
 : <a class="el" href="classtson_1_1Gason.html#abc92ce1157997fc3ddf3a71926e3ff0b">tson::Gason</a>
-, <a class="el" href="classtson_1_1IJson.html#ad85a0bad1574721e1612a2e9c19c7f73">tson::IJson</a>
+, <a class="el" href="classtson_1_1IJson.html#af6a4d5ea0dfe4aff998747f9ca5e3a0d">tson::IJson</a>
 , <a class="el" href="classtson_1_1Json11.html#ae71cb3adcf32935155d9130af60af0a1">tson::Json11</a>
 </li>
 <li>getInt64()
@@ -360,7 +372,7 @@ $(function() {
 </li>
 <li>getString()
 : <a class="el" href="classtson_1_1Gason.html#ad726dc43e8157c177a729d8f5d06765e">tson::Gason</a>
-, <a class="el" href="classtson_1_1IJson.html#a0c311d1dadeaf1c86f7623aa90fa685e">tson::IJson</a>
+, <a class="el" href="classtson_1_1IJson.html#a816433d2fefa34aa17d8c551c38c458a">tson::IJson</a>
 , <a class="el" href="classtson_1_1Json11.html#a9dc46e39449960f4c4da243ffe7a1c45">tson::Json11</a>
 </li>
 <li>getSubFolders()
@@ -381,8 +393,8 @@ $(function() {
 </li>
 <li>getTile()
 : <a class="el" href="classtson_1_1Terrain.html#ae27b8eaa565c18b492cada9720192d6a">tson::Terrain</a>
-, <a class="el" href="classtson_1_1TileObject.html#acfd6034122d71570a4e3fcf9c51da6a3">tson::TileObject</a>
-, <a class="el" href="classtson_1_1Tileset.html#a51703de921b7414030e97783bd9ddf52">tson::Tileset</a>
+, <a class="el" href="classtson_1_1TileObject.html#ab14836c5f611d21a67503a17ec163d17">tson::TileObject</a>
+, <a class="el" href="classtson_1_1Tileset.html#aaabda77d218d9fbc0dd23769c380bbd0">tson::Tileset</a>
 , <a class="el" href="classtson_1_1WangColor.html#addfd9874733ef694af43cdfb33b95d47">tson::WangColor</a>
 , <a class="el" href="classtson_1_1WangSet.html#a2d3b0eb85584744f4c1b806af3d999b2">tson::WangSet</a>
 </li>
@@ -396,7 +408,7 @@ $(function() {
 : <a class="el" href="classtson_1_1Map.html#acab042e9e2c7aad6470068f5c687aae0">tson::Map</a>
 </li>
 <li>getTileId()
-: <a class="el" href="classtson_1_1Frame.html#ad6b12577aafb1daeea6e991703a3ea2e">tson::Frame</a>
+: <a class="el" href="classtson_1_1Frame.html#aed6247c47a0228cdf7dec839c3ee8fee">tson::Frame</a>
 </li>
 <li>getTileid()
 : <a class="el" href="classtson_1_1WangTile.html#ac233392d977810cc1f5347fde4d8dac5">tson::WangTile</a>
@@ -408,7 +420,7 @@ $(function() {
 : <a class="el" href="classtson_1_1Layer.html#ab353a333b82037ab89c065d9709d2570">tson::Layer</a>
 </li>
 <li>getTileObjects()
-: <a class="el" href="classtson_1_1Layer.html#a466ba088eaaef7a0a5c1a6fb39443bbb">tson::Layer</a>
+: <a class="el" href="classtson_1_1Layer.html#a345713f20c9e9f6df0d0069be445e908">tson::Layer</a>
 </li>
 <li>getTileOffset()
 : <a class="el" href="classtson_1_1Tileset.html#a5151c7d3df08f24abf6a70e379224845">tson::Tileset</a>
@@ -431,6 +443,9 @@ $(function() {
 , <a class="el" href="classtson_1_1Tile.html#a7638d6ebe9f35209c7d9208491b244e7">tson::Tile</a>
 , <a class="el" href="classtson_1_1Tileset.html#a7f5a43cc664fb619e3c607c31b4f3da0">tson::Tileset</a>
 </li>
+<li>getTimeDelta()
+: <a class="el" href="classtson_1_1Animation.html#aad23ee97f8fd17c9c42e12beaa0ddba0">tson::Animation</a>
+</li>
 <li>getTintColor()
 : <a class="el" href="classtson_1_1Layer.html#abd7f24d6450724a93844dd464caa92ae">tson::Layer</a>
 </li>
@@ -438,10 +453,8 @@ $(function() {
 : <a class="el" href="classtson_1_1Tileset.html#a8db6f715eb8cd17a6699305162873706">tson::Tileset</a>
 </li>
 <li>getTransparentColor()
-: <a class="el" href="classtson_1_1Layer.html#ade88255f77ff5756a7ae3899693c7ffd">tson::Layer</a>
-</li>
-<li>getTransparentColor()
-: <a class="el" href="classtson_1_1Tileset.html#ad8ccd22b9417bdbca393cac57993ef2d">tson::Tileset</a>
+: <a class="el" href="classtson_1_1Layer.html#ab0fe1d3e92b6d3b240fd8301c668512a">tson::Layer</a>
+, <a class="el" href="classtson_1_1Tileset.html#ad8ccd22b9417bdbca393cac57993ef2d">tson::Tileset</a>
 </li>
 <li>getType()
 : <a class="el" href="classtson_1_1Layer.html#a3987553cdfc9e9718e270a7b8e11560e">tson::Layer</a>
@@ -457,7 +470,7 @@ $(function() {
 </li>
 <li>getUInt32()
 : <a class="el" href="classtson_1_1Gason.html#a47c88d7e193e5a524d889646f0713330">tson::Gason</a>
-, <a class="el" href="classtson_1_1IJson.html#a6a993b2b69ef37541eb8d87b5d78db69">tson::IJson</a>
+, <a class="el" href="classtson_1_1IJson.html#a7ff10b8b57cc0edaef60050377406aa4">tson::IJson</a>
 , <a class="el" href="classtson_1_1Json11.html#a9a8b548202fe11a9bc605c53850a7d07">tson::Json11</a>
 </li>
 <li>getUInt64()
@@ -469,7 +482,7 @@ $(function() {
 : <a class="el" href="classtson_1_1Layer.html#a83b0999989afa4997809a2e1b3fbfa03">tson::Layer</a>
 </li>
 <li>getValue()
-: <a class="el" href="classtson_1_1Property.html#af5edbee1fe8e95b6428474890476f8a0">tson::Property</a>
+: <a class="el" href="classtson_1_1Property.html#a91e1d6d644f1089026a02a5bbe2eeaf2">tson::Property</a>
 , <a class="el" href="classtson_1_1PropertyCollection.html#a472bfac4acd23991bc4ee85f5905a200">tson::PropertyCollection</a>
 </li>
 <li>getValueType()
@@ -477,9 +490,6 @@ $(function() {
 </li>
 <li>getValueTypeInfo()
 : <a class="el" href="classtson_1_1Property.html#a919f4be1d231c7388e99edffd0d10cca">tson::Property</a>
-</li>
-<li>getVersion()
-: <a class="el" href="classtson_1_1Map.html#ae5bad246ffcf2b652850b83a77b07386">tson::Map</a>
 </li>
 <li>getWangIds()
 : <a class="el" href="classtson_1_1WangTile.html#ae6c7e18459b6255b8ea7530abc32a5c2">tson::WangTile</a>

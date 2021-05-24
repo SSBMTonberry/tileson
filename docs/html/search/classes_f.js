@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['wangcolor_384',['WangColor',['../classtson_1_1WangColor.html',1,'tson']]],
-  ['wangset_385',['WangSet',['../classtson_1_1WangSet.html',1,'tson']]],
-  ['wangtile_386',['WangTile',['../classtson_1_1WangTile.html',1,'tson']]],
-  ['world_387',['World',['../classtson_1_1World.html',1,'tson']]],
-  ['worldmapdata_388',['WorldMapData',['../classtson_1_1WorldMapData.html',1,'tson']]]
+  ['vector2_392',['Vector2',['../classtson_1_1Vector2.html',1,'tson']]],
+  ['vector2_3c_20float_20_3e_393',['Vector2&lt; float &gt;',['../classtson_1_1Vector2.html',1,'tson']]],
+  ['vector2_3c_20int_20_3e_394',['Vector2&lt; int &gt;',['../classtson_1_1Vector2.html',1,'tson']]]
 ];

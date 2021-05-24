@@ -6,7 +6,7 @@ Tileson is a modern and helpful cross-platform json-parser for C++, used for par
 
 Tileson utilizes modern C++ (C++17) to create a stable, safe and helpful, but fast, parser for Tiled maps.
 Including classes and functions to make it easier to use the Tiled data in your game. 
-Tileson supports Tiled maps up to version `1.4.1`, but will probably be able to parse
+Tileson supports Tiled maps up to version `1.6.0`, but will probably be able to parse
 maps made with newer versions of Tiled just as well.
 
 Be sure to take a look at the release notes to see what's new!
@@ -15,7 +15,7 @@ Be sure to take a look at the release notes to see what's new!
 
 There is a `Doxygen` generated documentation of Tileson that can be found [HERE](https://ssbmtonberry.github.io/tileson/html)
 
-### IMPORTANT: Tileson requires that everything it needs in a map is embedded into it, to be able to resolve their related objects. Maps having external references to tilesets etc. will not work.
+### IMPORTANT: Tileson requires that everything it needs in a map is embedded into it, to be able to resolve their related objects (with the exception of external Tilesets, which is supported in json format since v1.3.0). Maps having dependencies to external objects etc. will not work properly.
 
 # How to contribute
 You are free to post any issue requesting new features, reporting bugs or asking questions at any time.
@@ -29,13 +29,7 @@ in your project! The single-file is generated using only ~7000 lines of code wit
 You may alternatively copy the `include` directory and all its contents if you
 want to have every component in their own file. This will probably be less heavy on your IDE, but you will still only need to include the `tileson.h` file in the top level. 
 
-# What's new in v1.3.0 alpha?
-- Tileson now uses a `tson::IJson` abstraction layer, which means the user is no longer restricted to use one Json parser. In fact, there are now three parsers with default implementations: `Json11`, `Nlohmann` and `Picojson`. You may even create your own!
-- The code base of Tileson is reduced from ~26000 to ~7000 lines of code. In addition Tileson is slightly faster due to switching default/main backend from `Nlohmann` to `Json11`.
-- Tileson now has support for reading `LZMA` compressed maps using [PocketLzma](https://github.com/SSBMTonberry/pocketlzma).  Example: The `ultimate_test.json` map gets reduced from `68,6 KiB` to `2,4 KiB` when LZMA compressed.
-- See release notes for more details!
-
-# Unreleased features available in the master-branch
+# What's new in v1.3.0?
 - Animations are now handled by an own `tson::Animation` object, which is also now showcased with a working animation in the example program ([#40](https://github.com/SSBMTonberry/tileson/issues/40), [#32](https://github.com/SSBMTonberry/tileson/issues/32))
 - Fixed a bug in `tson::Frame` where you would get the wrong tile ID stored. ([#41](https://github.com/SSBMTonberry/tileson/issues/41))
 - `tson::Layer`: Function `getTransparentcolor()`renamed to `getTransparentColor()` ([#38](https://github.com/SSBMTonberry/tileson/issues/38)) - Thanks to [RobLoach](https://github.com/RobLoach)
@@ -43,6 +37,12 @@ want to have every component in their own file. This will probably be less heavy
 - Tiled v1.5 support. ([#34](https://github.com/SSBMTonberry/tileson/issues/34))
 - Support for external tilesets ([#33](https://github.com/SSBMTonberry/tileson/issues/33))
 - `tileson.hpp` and `tileson_min.hpp` is now located in root folder. ([#36](https://github.com/SSBMTonberry/tileson/issues/36))
+- See release notes for more details!
+  ### From the v1.3.0 alpha release:
+- Tileson now uses a `tson::IJson` abstraction layer, which means the user is no longer restricted to use one Json parser. In fact, there are now three parsers with default implementations: `Json11`, `Nlohmann` and `Picojson`. You may even create your own!
+- The code base of Tileson is reduced from ~26000 to ~7000 lines of code. In addition Tileson is slightly faster due to switching default/main backend from `Nlohmann` to `Json11`.
+- Tileson now has support for reading `LZMA` compressed maps using [PocketLzma](https://github.com/SSBMTonberry/pocketlzma).  Example: The `ultimate_test.json` map gets reduced from `68,6 KiB` to `2,4 KiB` when LZMA compressed.
+
 
 # What is Tiled?
 Tiled is a general purpose map editor developed by `Thorbjørn Lindeijer`.
