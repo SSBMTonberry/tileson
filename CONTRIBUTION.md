@@ -1,4 +1,4 @@
-## Contribution guidelines
+# Contribution guidelines
 
 It's great that people want to contribute to Tileson!
 Here are some guidelines to make sure we keep this a stable library.
@@ -7,6 +7,11 @@ Here are some guidelines to make sure we keep this a stable library.
 In short this means that I must be aware of an issue and accept it before it can be worked on. 
 Reason being mainly to make sure the issue actually is a problem and that I retain full control of project and its direction. 
 If the issue is about a potential new feature, it's important that you describe in detail why this feature is needed.
+
+Also: If you are interested in fixing or developing on an existing issue you did not
+create yourself, please notify me in the issue before you start working on it, so I 
+can assign you the task. This is mainly to prevent that two people work on the 
+same feature.
 
 ### 2. Every issue must have a unit test proving that it works
 If you have either fixed a bug or created a new feature, you must prove that everything works
