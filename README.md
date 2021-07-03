@@ -43,6 +43,8 @@ want to have every component in their own file. This will probably be less heavy
 - The code base of Tileson is reduced from ~26000 to ~7000 lines of code. In addition Tileson is slightly faster due to switching default/main backend from `Nlohmann` to `Json11`.
 - Tileson now has support for reading `LZMA` compressed maps using [PocketLzma](https://github.com/SSBMTonberry/pocketlzma).  Example: The `ultimate_test.json` map gets reduced from `68,6 KiB` to `2,4 KiB` when LZMA compressed.
 
+# Tiled features not yet supported
+- Support for collection of images ([#30](https://github.com/SSBMTonberry/tileson/issues/30))
 
 # What is Tiled?
 Tiled is a general purpose map editor developed by `Thorbjørn Lindeijer`.
