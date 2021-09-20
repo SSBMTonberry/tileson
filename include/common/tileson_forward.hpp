@@ -59,14 +59,15 @@ void tson::Tile::performDataCalculations()
     int rows = m_tileset->getTileCount() / columns;
     int lastId = (m_tileset->getFirstgid() + m_tileset->getTileCount()) - 1;
 
-    if (getGid() >= firstId && getGid() <= lastId)
+    int const gid = static_cast<int>(getGid());
+    if (gid >= firstId && gid <= lastId)
     {
-        int baseTilePosition = ((int)getGid() - firstId);
+        int const baseTilePosition = (gid - firstId);
 
-        int tileModX = (baseTilePosition % columns);
-        int currentRow = (baseTilePosition / columns);
-        int offsetX = (tileModX != 0) ? ((tileModX) * m_map->getTileSize().x) : (0 * m_map->getTileSize().x);
-        int offsetY =  (currentRow < rows-1) ? (currentRow * m_map->getTileSize().y) : ((rows-1) * m_map->getTileSize().y);
+        int const tileModX = (baseTilePosition % columns);
+        int const currentRow = (baseTilePosition / columns);
+        int const offsetX = (tileModX != 0) ? ((tileModX) * m_map->getTileSize().x) : (0 * m_map->getTileSize().x);
+        int const offsetY =  (currentRow < rows-1) ? (currentRow * m_map->getTileSize().y) : ((rows-1) * m_map->getTileSize().y);
 
         tson::Vector2i spacing = m_tileset->getMarginSpacingOffset({tileModX, currentRow});
         m_drawingRect = { offsetX + spacing.x, offsetY + spacing.y, m_map->getTileSize().x, m_map->getTileSize().y };
@@ -150,7 +151,7 @@ void tson::Layer::decompressData()
  * @return How many maps who were parsed. Remember to call getStatus() for the actual map to find out if everything went okay.
  */
 
-int tson::World::loadMaps(tson::Tileson *parser)
+std::size_t tson::World::loadMaps(tson::Tileson *parser)
 {
     m_maps.clear();
     std::for_each(m_mapData.begin(), m_mapData.end(), [&](const tson::WorldMapData &data)

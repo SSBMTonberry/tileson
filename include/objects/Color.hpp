@@ -114,7 +114,10 @@ namespace tson
     tson::Colori Color<T>::asInt()
     {
         if constexpr (std::is_same<T, float>::value)
-            return tson::Colori((float) r * 255, (float) g * 255, (float) b * 255, (float) a * 255);
+            return tson::Colori(static_cast<std::uint8_t>((float) r * 255),
+                              static_cast<std::uint8_t>((float) g * 255),
+                              static_cast<std::uint8_t>((float) b * 255),
+                              static_cast<std::uint8_t>((float) a * 255));
         else
             *this;
     }

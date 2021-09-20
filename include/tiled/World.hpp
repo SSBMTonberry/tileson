@@ -27,7 +27,7 @@ namespace tson
             inline explicit World(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser);
             #endif
             inline bool parse(const fs::path &path);
-            inline int loadMaps(tson::Tileson *parser); //tileson_forward.hpp
+            inline std::size_t loadMaps(tson::Tileson *parser); //tileson_forward.hpp
             inline bool contains(std::string_view filename);
             inline const WorldMapData *get(std::string_view filename) const;
 

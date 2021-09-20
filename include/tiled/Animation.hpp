@@ -76,7 +76,7 @@ namespace tson
             m_timeDelta += timeDeltaMs;
             if(m_timeDelta >= frame->getDuration())
             {
-                m_timeDelta = (int32_t)m_timeDelta % frame->getDuration();
+                m_timeDelta = static_cast<float>((int32_t)m_timeDelta % frame->getDuration());
                 m_currentFrame = nextFrame();
             }
         }
