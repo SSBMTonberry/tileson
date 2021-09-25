@@ -586,8 +586,8 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
 
             if (tileId > 0 && m_tileMap->count(tileId) > 0)
             {
-                m_tileData[{x, y}] = m_tileMap->at(tileId);
-                m_tileObjects[{x, y}] = {{x, y}, m_tileData[{x, y}]};
+                m_tileData[{static_cast<int>(x), static_cast<int>(y)}] = m_tileMap->at(tileId);
+                m_tileObjects[{static_cast<int>(x), static_cast<int>(y)}] = {{static_cast<int>(x), static_cast<int>(y)}, m_tileData[{static_cast<int>(x), static_cast<int>(y)}]};
             }
             else if(tileId > 0 && m_tileMap->count(tileId) == 0) //Tile with flip flags!
             {
@@ -620,8 +620,8 @@ void tson::Layer::resolveFlaggedTiles()
     {
         if (tile.id > 0 && m_tileMap->count(tile.id) > 0)
         {
-            m_tileData[{tile.x, tile.y}] = m_tileMap->at(tile.id);
-            m_tileObjects[{tile.x, tile.y}] = {{tile.x, tile.y}, m_tileData[{tile.x, tile.y}]};
+            m_tileData[{static_cast<int>(tile.x), static_cast<int>(tile.y)}] = m_tileMap->at(tile.id);
+            m_tileObjects[{static_cast<int>(tile.x), static_cast<int>(tile.y)}] = {{static_cast<int>(tile.x), static_cast<int>(tile.y)}, m_tileData[{static_cast<int>(tile.x), static_cast<int>(tile.y)}]};
         }
     });
 }

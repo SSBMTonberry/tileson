@@ -439,8 +439,8 @@ tson::Tileset *tson::Map::getTilesetByGid(uint32_t gid)
 {
     auto result = std::find_if(m_tilesets.begin(), m_tilesets.end(), [&](const tson::Tileset &tileset)
     {
-        int firstId = tileset.getFirstgid(); //First tile id of the tileset
-        int lastId = (firstId + tileset.getTileCount()) - 1;
+        auto const firstId = static_cast<uint32_t>(tileset.getFirstgid()); //First tile id of the tileset
+        auto const lastId =  static_cast<uint32_t>((firstId + tileset.getTileCount()) - 1);
 
         return (gid >= firstId && gid <= lastId);
     });

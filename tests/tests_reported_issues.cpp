@@ -29,7 +29,7 @@ TEST_CASE( "Nullptr error on getposition when parsing json (Issue #17)", "[help]
                 for (auto &[id, obj] : layer.getTileObjects())
                 {
                     tson::Vector2f groundPos = tson::Vector2f(obj.getPosition().x, obj.getPosition().y);
-                    tson::Vector2f groundSize = tson::Vector2f(obj.getTile()->getTileSize().x, obj.getTile()->getTileSize().y);
+                    tson::Vector2f groundSize = tson::Vector2f(static_cast<float>(obj.getTile()->getTileSize().x), static_cast<float>(obj.getTile()->getTileSize().y));
 
                     //platforms.push_back(Platform(&groundtexture, groundSize, groundPos));
                 }
