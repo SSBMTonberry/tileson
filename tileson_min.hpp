@@ -716,7 +716,10 @@ namespace tson
 	tson::Colori Color<T>::asInt()
 	{
 		if constexpr (std::is_same<T, float>::value)
-			return tson::Colori((float) r * 255, (float) g * 255, (float) b * 255, (float) a * 255);
+			return tson::Colori(static_cast<std::uint8_t>((float) r * 255),
+							  static_cast<std::uint8_t>((float) g * 255),
+							  static_cast<std::uint8_t>((float) b * 255),
+							  static_cast<std::uint8_t>((float) a * 255));
 		else
 			*this;
 	}
@@ -3775,8 +3778,8 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
 
 			if (tileId > 0 && m_tileMap->count(tileId) > 0)
 			{
-				m_tileData[{x, y}] = m_tileMap->at(tileId);
-				m_tileObjects[{x, y}] = {{x, y}, m_tileData[{x, y}]};
+				m_tileData[{static_cast<int>(x), static_cast<int>(y)}] = m_tileMap->at(tileId);
+				m_tileObjects[{static_cast<int>(x), static_cast<int>(y)}] = {{static_cast<int>(x), static_cast<int>(y)}, m_tileData[{static_cast<int>(x), static_cast<int>(y)}]};
 			}
 			else if(tileId > 0 && m_tileMap->count(tileId) == 0) //Tile with flip flags!
 			{
@@ -3809,8 +3812,8 @@ void tson::Layer::resolveFlaggedTiles()
 	{
 		if (tile.id > 0 && m_tileMap->count(tile.id) > 0)
 		{
-			m_tileData[{tile.x, tile.y}] = m_tileMap->at(tile.id);
-			m_tileObjects[{tile.x, tile.y}] = {{tile.x, tile.y}, m_tileData[{tile.x, tile.y}]};
+			m_tileData[{static_cast<int>(tile.x), static_cast<int>(tile.y)}] = m_tileMap->at(tile.id);
+			m_tileObjects[{static_cast<int>(tile.x), static_cast<int>(tile.y)}] = {{static_cast<int>(tile.x), static_cast<int>(tile.y)}, m_tileData[{static_cast<int>(tile.x), static_cast<int>(tile.y)}]};
 		}
 	});
 }
@@ -4589,7 +4592,7 @@ namespace tson
 			m_timeDelta += timeDeltaMs;
 			if(m_timeDelta >= frame->getDuration())
 			{
-				m_timeDelta = (int32_t)m_timeDelta % frame->getDuration();
+				m_timeDelta = static_cast<float>((int32_t)m_timeDelta % frame->getDuration());
 				m_currentFrame = nextFrame();
 			}
 		}
@@ -6081,8 +6084,8 @@ tson::Tileset *tson::Map::getTilesetByGid(uint32_t gid)
 {
 	auto result = std::find_if(m_tilesets.begin(), m_tilesets.end(), [&](const tson::Tileset &tileset)
 	{
-		int firstId = tileset.getFirstgid(); //First tile id of the tileset
-		int lastId = (firstId + tileset.getTileCount()) - 1;
+		auto const firstId = static_cast<uint32_t>(tileset.getFirstgid()); //First tile id of the tileset
+		auto const lastId =  static_cast<uint32_t>((firstId + tileset.getTileCount()) - 1);
 
 		return (gid >= firstId && gid <= lastId);
 	});
@@ -6231,7 +6234,7 @@ namespace tson
 			inline explicit World(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser);
 			#endif
 			inline bool parse(const fs::path &path);
-			inline int loadMaps(tson::Tileson *parser); //tileson_forward.hpp
+			inline std::size_t loadMaps(tson::Tileson *parser); //tileson_forward.hpp
 			inline bool contains(std::string_view filename);
 			inline const WorldMapData *get(std::string_view filename) const;
 
@@ -6345,6 +6348,7 @@ namespace tson
 }
 
 #endif //TILESON_WORLD_HPP
+
 /*** End of inlined file: World.hpp ***/
 
 
@@ -6779,14 +6783,15 @@ void tson::Tile::performDataCalculations()
 	int rows = m_tileset->getTileCount() / columns;
 	int lastId = (m_tileset->getFirstgid() + m_tileset->getTileCount()) - 1;
 
-	if (getGid() >= firstId && getGid() <= lastId)
+	int const gid = static_cast<int>(getGid());
+	if (gid >= firstId && gid <= lastId)
 	{
-		int baseTilePosition = ((int)getGid() - firstId);
+		int const baseTilePosition = (gid - firstId);
 
-		int tileModX = (baseTilePosition % columns);
-		int currentRow = (baseTilePosition / columns);
-		int offsetX = (tileModX != 0) ? ((tileModX) * m_map->getTileSize().x) : (0 * m_map->getTileSize().x);
-		int offsetY =  (currentRow < rows-1) ? (currentRow * m_map->getTileSize().y) : ((rows-1) * m_map->getTileSize().y);
+		int const tileModX = (baseTilePosition % columns);
+		int const currentRow = (baseTilePosition / columns);
+		int const offsetX = (tileModX != 0) ? ((tileModX) * m_map->getTileSize().x) : (0 * m_map->getTileSize().x);
+		int const offsetY =  (currentRow < rows-1) ? (currentRow * m_map->getTileSize().y) : ((rows-1) * m_map->getTileSize().y);
 
 		tson::Vector2i spacing = m_tileset->getMarginSpacingOffset({tileModX, currentRow});
 		m_drawingRect = { offsetX + spacing.x, offsetY + spacing.y, m_map->getTileSize().x, m_map->getTileSize().y };
@@ -6870,7 +6875,7 @@ void tson::Layer::decompressData()
  * @return How many maps who were parsed. Remember to call getStatus() for the actual map to find out if everything went okay.
  */
 
-int tson::World::loadMaps(tson::Tileson *parser)
+std::size_t tson::World::loadMaps(tson::Tileson *parser)
 {
 	m_maps.clear();
 	std::for_each(m_mapData.begin(), m_mapData.end(), [&](const tson::WorldMapData &data)
