@@ -47,6 +47,11 @@ namespace tson
             [[nodiscard]] virtual fs::path directory() const = 0;
             virtual void directory(const fs::path &directory) = 0;
 
+            /*!
+			 * Pure virtual class needs virtual destructor so derrived classes can call their own destructors
+			*/
+			virtual ~IJson() = default;
+
 
         protected:
             [[nodiscard]] virtual int32_t getInt32(std::string_view key) = 0;
