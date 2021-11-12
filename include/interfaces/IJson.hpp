@@ -48,7 +48,7 @@ namespace tson
             virtual void directory(const fs::path &directory) = 0;
 
             /*!
-			 * Pure virtual class needs virtual destructor so derrived classes can call their own destructors
+			 * Pure virtual class needs virtual destructor so derived classes can call their own destructors
 			*/
 			virtual ~IJson() = default;
 
