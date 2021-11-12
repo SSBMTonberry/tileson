@@ -42,6 +42,24 @@ TEST_CASE( "Nullptr error on getposition when parsing json (Issue #17)", "[help]
     }
 }
 
+TEST_CASE( "Tile ObjectGroup's not set properly if one or more tiles have no properties or objects (Issue #46)", "[help][issue]")
+{
+    tson::Tileson t;
+
+    fs::path path {"../../content/test-maps/issues/issue_46.json"};
+
+    std::unique_ptr<tson::Map> map = t.parse(path); // <== this is where I get the nullptr error
+    if (map->getStatus() == tson::ParseStatus::OK)
+    {
+        REQUIRE(true);
+    }
+    else
+    {
+        std::cout << map->getStatusMessage() << std::endl;
+        REQUIRE(false);
+    }
+}
+
 TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[help][issue]")
 {
     std::unique_ptr<tson::Map> jsCarte;

@@ -48,7 +48,7 @@ namespace tson
             virtual TOut decompress(const void *data, size_t size) = 0;
 
             /*!
-			 * Pure virtual class needs virtual destructor so derrived classes can call their own destructors
+			 * Pure virtual class needs virtual destructor so derived classes can call their own destructors
 			*/
 			virtual ~IDecompressor() = default;
     };

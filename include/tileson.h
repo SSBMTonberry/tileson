@@ -1,5 +1,5 @@
 ///
-/// T I L E S O N   V E R S I O N   1 . 3 . 0
+/// T I L E S O N   V E R S I O N   1 . 3 . 1
 /// ------------------------------------------------
 /// BSD 2-Clause License
 /// 
