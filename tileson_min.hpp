@@ -243,7 +243,7 @@ namespace tson
 			virtual TOut decompress(const void *data, size_t size) = 0;
 
 			/*!
-			 * Pure virtual class needs virtual destructor so derrived classes can call their own destructors
+			 * Pure virtual class needs virtual destructor so derived classes can call their own destructors
 			*/
 			virtual ~IDecompressor() = default;
 	};
@@ -886,7 +886,7 @@ namespace tson
 			virtual void directory(const fs::path &directory) = 0;
 
 			/*!
-			 * Pure virtual class needs virtual destructor so derrived classes can call their own destructors
+			 * Pure virtual class needs virtual destructor so derived classes can call their own destructors
 			*/
 			virtual ~IJson() = default;
 
@@ -4680,7 +4680,7 @@ namespace tson
 
 			//[[nodiscard]] inline const std::vector<tson::Frame> &getAnimation() const;
 			[[nodiscard]] inline tson::Animation &getAnimation();
-			[[nodiscard]] inline const Layer &getObjectgroup() const;
+			[[nodiscard]] inline Layer &getObjectgroup();
 			[[nodiscard]] inline PropertyCollection &getProperties();
 			[[nodiscard]] inline const std::vector<int> &getTerrain() const;
 
@@ -4872,7 +4872,7 @@ tson::Animation &tson::Tile::getAnimation()
  * 'objectgroup': Layer with type objectgroup (optional)
  * @return
  */
-const tson::Layer &tson::Tile::getObjectgroup() const
+tson::Layer &tson::Tile::getObjectgroup()
 {
 	return m_objectgroup;
 }

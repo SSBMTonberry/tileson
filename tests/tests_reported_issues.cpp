@@ -46,12 +46,44 @@ TEST_CASE( "Tile ObjectGroup's not set properly if one or more tiles have no pro
 {
     tson::Tileson t;
 
-    fs::path path {"../../content/test-maps/issues/issue_46_map.json"};
+    fs::path pathLocal {"../../content/test-maps/issues/issue_46_map.json"};
+    fs::path pathTravis {"../content/test-maps/issues/issue_46_map.json"};
+    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
 
-    std::unique_ptr<tson::Map> map = t.parse(path); // <== this is where I get the nullptr error
+    std::unique_ptr<tson::Map> map = t.parse(pathToUse); // <== this is where I get the nullptr error
     if (map->getStatus() == tson::ParseStatus::OK)
     {
-        REQUIRE(true);
+        auto &tileset = map->getTilesets()[0];
+
+        REQUIRE(tileset.getTile(1)->getObjectgroup().getObjects().size() == 1);
+        REQUIRE(tileset.getTile(2)->getObjectgroup().getObjects().size() == 1);
+        REQUIRE(tileset.getTile(3)->getObjectgroup().getObjects().size() == 3);
+        REQUIRE(tileset.getTile(4)->getObjectgroup().getObjects().size() == 3);
+        REQUIRE(tileset.getTile(5)->getObjectgroup().getObjects().size() == 1);
+        REQUIRE(tileset.getTile(6)->getObjectgroup().getObjects().size() == 3);
+
+        REQUIRE(tileset.getTile(7)->getObjectgroup().getObjects().empty());
+        REQUIRE(tileset.getTile(8)->getObjectgroup().getObjects().empty());
+
+        REQUIRE(tileset.getTile(9)->getObjectgroup().getObjects().size() == 1);
+
+        REQUIRE(tileset.getTile(10)->getObjectgroup().getObjects().empty());
+        REQUIRE(tileset.getTile(11)->getObjectgroup().getObjects().empty());
+        REQUIRE(tileset.getTile(12)->getObjectgroup().getObjects().empty());
+
+        REQUIRE(tileset.getTile(13)->getObjectgroup().getObjects().size() == 1);
+
+        REQUIRE(tileset.getTile(14)->getObjectgroup().getObjects().empty());
+        REQUIRE(tileset.getTile(15)->getObjectgroup().getObjects().empty());
+
+        REQUIRE(tileset.getTile(16)->getObjectgroup().getObjects().size() == 1);
+
+        REQUIRE(tileset.getTile(17)->getObjectgroup().getObjects().empty());
+        REQUIRE(tileset.getTile(18)->getObjectgroup().getObjects().empty());
+
+        REQUIRE(tileset.getTile(19)->getObjectgroup().getObjects().size() == 1);
+        REQUIRE(tileset.getTile(20)->getObjectgroup().getObjects().size() == 1);
+        REQUIRE(tileset.getTile(21)->getObjectgroup().getObjects().size() == 1);
     }
     else
     {
