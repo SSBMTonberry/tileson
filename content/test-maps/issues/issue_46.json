@@ -1,4 +1,5 @@
-{ "columns":4,
+{ 
+       "columns":4,
  "editorsettings":
     {
      "export":
@@ -7,7 +8,7 @@
          "target":"."
         }
     },
- "image":"..\/Art\/openAdventure.png",
+ "image":"issue_46_tileset.png",
  "imageheight":224,
  "imagewidth":128,
  "margin":0,

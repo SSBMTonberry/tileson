@@ -46,7 +46,7 @@ TEST_CASE( "Tile ObjectGroup's not set properly if one or more tiles have no pro
 {
     tson::Tileson t;
 
-    fs::path path {"../../content/test-maps/issues/issue_46.json"};
+    fs::path path {"../../content/test-maps/issues/issue_46_map.json"};
 
     std::unique_ptr<tson::Map> map = t.parse(path); // <== this is where I get the nullptr error
     if (map->getStatus() == tson::ParseStatus::OK)
