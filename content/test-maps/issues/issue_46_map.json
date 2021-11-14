@@ -1,0 +1,33 @@
+{ "backgroundcolor":"#005d8c",
+ "compressionlevel":-1,
+ "height":8,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3, 2, 1, 1, 3, 4, 5, 5, 4, 3, 1, 1, 3, 5, 6, 7, 5, 3, 1, 1, 3, 5, 7, 6, 5, 3, 1, 1, 3, 4, 5, 5, 4, 3, 1, 1, 2, 3, 3, 3, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+         "height":8,
+         "id":1,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":8,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"left-down",
+ "tiledversion":"1.7.2",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"issue_46.json"
+        }],
+ "tilewidth":32,
+ "type":"map",
+ "version":"1.6",
+ "width":8
+}
