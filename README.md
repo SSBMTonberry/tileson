@@ -29,6 +29,9 @@ in your project! The single-file is generated using only ~7000 lines of code wit
 You may alternatively copy the `include` directory and all its contents if you
 want to have every component in their own file. This will probably be less heavy on your IDE, but you will still only need to include the `tileson.h` file in the top level. 
 
+# Unreleased features available in the master-branch
+- Fix: IJson and IDecompressor have no virtual destructor. ([#47](https://github.com/SSBMTonberry/tileson/issues/47)) - Thanks to [matthew-nagy](https://github.com/matthew-nagy)
+
 # What's new in v1.3.0?
 - Animations are now handled by an own `tson::Animation` object, which is also now showcased with a working animation in the example program ([#40](https://github.com/SSBMTonberry/tileson/issues/40), [#32](https://github.com/SSBMTonberry/tileson/issues/32))
 - Fixed a bug in `tson::Frame` where you would get the wrong tile ID stored. ([#41](https://github.com/SSBMTonberry/tileson/issues/41))
