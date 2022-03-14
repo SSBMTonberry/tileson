@@ -256,6 +256,39 @@ TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" )
     }
 }
 
+TEST_CASE("Parse tileset properties", "[parse]")
+{
+    tson::Tileson t;
+    fs::path path {};
+    fs::path pathLocal {"../../content/test-maps/tileset_properties.json"};
+    fs::path pathTravis {"../content/test-maps/tileset_properties.json"};
+    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+
+    std::unique_ptr<tson::Map> map = t.parse({pathToUse});
+    if(map->getStatus() == tson::ParseStatus::OK)
+    {
+        REQUIRE(map->getTilesets().size() == 2);
+
+        REQUIRE(map->getTileMap().size() == 2);
+
+        auto props1 = map->getTileMap().at(1)->getProperties();
+        REQUIRE(props1.getSize() == 2);
+        REQUIRE(props1.getValue<std::string>("property1") == "A1");
+        REQUIRE(props1.getValue<std::string>("property2") == "A2");
+
+        auto props2 = map->getTileMap().at(2)->getProperties();
+        REQUIRE(props2.getSize() == 2);
+        REQUIRE(props2.getValue<std::string>("property1") == "B1");
+        REQUIRE(props2.getValue<std::string>("property2") == "B2");
+
+    }
+    else
+    {
+      std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
+      REQUIRE(true);
+    }
+}
+
 TEST_CASE( "Parse a Tiled v1.5 map with external tileset by file - Expect no errors and correct data", "[complete][parse][file]" )
 {
     tson::Tileson t;
