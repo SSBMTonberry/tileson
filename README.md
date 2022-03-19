@@ -37,7 +37,7 @@ want to have every component in their own file. This will probably be less heavy
 - [Generating the single-header](#generating-the-single-header)
 - [Libraries used by Tileson](#libraries-used-by-tileson)
 - [Optional Json parsers supported by Tileson](#optional-json-parsers-supported-by-tileson)
-- [Libraries used for examples/demo](#libraries-used-for-examples/demo)
+- [Libraries used in examples](#libraries-used-in-examples)
 
 # Documentation
 
@@ -472,7 +472,7 @@ Simply call it like this: `sh amalgamate_script.sh`. There is also a .bat-versio
 
 The json libraries supported can all be found in a single-header format inside the `extras` folder.
 
-# Libraries used for examples/demo
+# Libraries used in examples
 
 - [SFML](https://github.com/SFML/SFML) - For drawing maps.
 - [Dear ImGui](https://github.com/ocornut/imgui) - For displaying information and managing maps.
