@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/SSBMTonberry/tileson.svg?branch=master)](https://travis-ci.org/SSBMTonberry/tileson)
-
+[![Tests](https://github.com/SSBMTonberry/tileson/actions/workflows/test_verification.yml/badge.svg)](https://github.com/SSBMTonberry/tileson/actions/workflows/test_verification.yml) [![pages-build-deployment](https://github.com/SSBMTonberry/tileson/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/SSBMTonberry/tileson/actions/workflows/pages/pages-build-deployment)
 
 # Tileson
 Tileson is a modern and helpful cross-platform json-parser for C++, used for parsing Tiled maps.
@@ -10,6 +9,35 @@ Tileson supports Tiled maps up to version `1.6.0`, but will probably be able to 
 maps made with newer versions of Tiled just as well.
 
 Be sure to take a look at the release notes to see what's new!
+
+### Tileson is header-only
+This means that all you need is one file, `tileson.hpp` to have Tileson going
+in your project! The single-file is generated using only ~7000 lines of code with everything included. There is also a `tileson_min.hpp` where no Json parser is bundled. See the `extras` folder for supported Json backends.
+
+You may alternatively copy the `include` directory and all its contents if you
+want to have every component in their own file. This will probably be less heavy on your IDE, but you will still only need to include the `tileson.h` file in the top level.
+
+**Content:**
+- [Documentation](#documentation)
+- [How to contribute](#how-to-contribute)
+- [Unreleased features available in the master-branch](#unreleased-features-available-in-the-master-branch)
+- [What is new in v1.3.0](#what-is-new-in-v1.3.0)
+- [Tiled features not yet supported](#tiled-features-not-yet-supported)
+- **Parsing:**
+  - [How to parse Tiled maps](#how-to-parse-tiled-maps)
+  - [Parsing worlds](#parsing-worlds)
+  - [Parsing Tiled-projects](#parsing-tiled-projects)
+  - [Parsing LZMA compressed maps](#parsing-lzma-compressed-maps)
+  - [Using an alternative Json parser](#using-an-alternative-json-parser)
+- [Compiling](#compiling)
+  - [Windows](#windows)
+  - [Linux](#linux)
+  - [OSX](#osx)
+- [Examples](#examples)
+- [Generating the single-header](#generating-the-single-header)
+- [Libraries used by Tileson](#libraries-used-by-tileson)
+- [Optional Json parsers supported by Tileson](#optional-json-parsers-supported-by-tileson)
+- [Libraries used in examples](#libraries-used-in-examples)
 
 # Documentation
 
@@ -22,17 +50,13 @@ You are free to post any issue requesting new features, reporting bugs or asking
 If you want to contribute in the development of `Tileson`, make sure you read the [CONTRIBUTION GUIDELINES](https://github.com/SSBMTonberry/tileson/blob/master/CONTRIBUTION.md)
 before you start doing anything.
 
-# Tileson is header-only!
-This means that all you need is one file, `single_include/tileson.hpp` to have Tileson going
-in your project! The single-file is generated using only ~7000 lines of code with everything included. There is also a `tileson_min.hpp` where no Json parser is bundled. See the `extras` folder for supported Json backends.
-
-You may alternatively copy the `include` directory and all its contents if you
-want to have every component in their own file. This will probably be less heavy on your IDE, but you will still only need to include the `tileson.h` file in the top level. 
-
 # Unreleased features available in the master-branch
-- Fix: IJson and IDecompressor have no virtual destructor. ([#47](https://github.com/SSBMTonberry/tileson/issues/47)) - Thanks to [matthew-nagy](https://github.com/matthew-nagy)
+- Updated Catch2 to support `GCC 11.2` ([#59](https://github.com/SSBMTonberry/tileson/issues/59))
+- Tile properties should now be properly loaded when using multiple tilesets. ([#54](https://github.com/SSBMTonberry/tileson/issues/54)) - Thanks to [Laguna1989](https://github.com/Laguna1989)
+- Now using `Github Actions` instead of `Travis` for CI ([#50](https://github.com/SSBMTonberry/tileson/issues/50)) - Thanks to [Laguna1989](https://github.com/Laguna1989)
+- Added missing virtual destructor to IJson and IDecompressor. ([#47](https://github.com/SSBMTonberry/tileson/issues/47)) - Thanks to [matthew-nagy](https://github.com/matthew-nagy)
 
-# What's new in v1.3.0?
+# What is new in v1.3.0
 - Animations are now handled by an own `tson::Animation` object, which is also now showcased with a working animation in the example program ([#40](https://github.com/SSBMTonberry/tileson/issues/40), [#32](https://github.com/SSBMTonberry/tileson/issues/32))
 - Fixed a bug in `tson::Frame` where you would get the wrong tile ID stored. ([#41](https://github.com/SSBMTonberry/tileson/issues/41))
 - `tson::Layer`: Function `getTransparentcolor()`renamed to `getTransparentColor()` ([#38](https://github.com/SSBMTonberry/tileson/issues/38)) - Thanks to [RobLoach](https://github.com/RobLoach)
@@ -62,7 +86,7 @@ Tiled can be found here:
 - [Homepage](https://www.mapeditor.org/)
 - [GitHub](https://github.com/bjorn/tiled)
 
-# How to parse
+# How to parse Tiled maps
 Parsing a Tiled json 
 ```c++
 #include "tileson.hpp"
@@ -333,6 +357,58 @@ for(const auto &folder : m_project.getFolders())
 }
 ```
 
+### Parsing LZMA compressed maps
+Tileson supports reading fully LZMA compressed Tiled-maps. 
+LZMA compression can greatly reduce your file size, and does not take much longer to load 
+compared to regular maps. This requires another single-header library [PocketLzma](https://github.com/SSBMTonberry/pocketlzma) to be included, but it does not require much work. As an example, the `ultimate_test.json` map gets reduced from `68,6 KiB` to `2,4 KiB` when LZMA compressed. Here is a small code example how to read lzma-compressed maps:
+
+```c++
+#define POCKETLZMA_LZMA_C_DEFINE //Must be defined once in a source (.cpp)-file before 
+#include "pocketlzma.hpp" //Must be declared BEFORE tileson.hpp
+
+#include "tileson.hpp"
+int main(int argc, char **argv)
+{
+    fs::path file {"ultimate_test.lzma"};
+    tson::Tileson t;
+    std::unique_ptr<tson::Map> map = t.parse(file, std::make_unique<tson::Lzma>());
+
+    return (map->getStatus() == tson::ParseStatus::OK) ? 0 : 1;
+}
+```
+
+While there are no plans to support other types of compression, you can easily implement your own override of `IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>` and create support for your own compression. See `include/common/Lzma.hpp` for an example how this is implemented using `PocketLzma`.
+
+### Using an alternative Json parser
+Tileson now uses a `tson::IJson` abstraction to make it possible to use several possible Json backends. It even makes it possible for the user to define his/her own IJson implementation using whatever Json library they like. Implementations for `Json11` (default), `Nlohmann` and `Picojson` (there are single-header versions of these libraries in the `extras` folder).
+
+Example:
+```c++
+#include "nlohmann.hpp" //Must be included before tileson.hpp
+#include "picojson.hpp" //Must be included before tileson.hpp
+
+#include "tileson.hpp"
+
+int main(int argc, char **argv)
+{
+    tson::Tileson j11; //This will use the Json11-backend (default)
+    tson::Tileson nlohmann {std::make_unique<tson::NlohmannJson>()}; //Uses the Nlohmann backend
+    tson::Tileson picojson {std::make_unique<tson::PicoJson>()}; //Uses the Picojson backend
+
+    tson::Project projectJ11; //This will use the Json11-backend (default)
+    tson::Project projectNlohmann {std::make_unique<tson::NlohmannJson>()};
+    tson::Project projectPicojson {std::make_unique<tson::PicoJson>()};
+
+    tson::World worldJ11; //This will use the Json11-backend (default)
+    tson::World worldNlohmann {std::make_unique<tson::NlohmannJson>()};
+    tson::World worldPicojson {std::make_unique<tson::PicoJson>()};
+    
+    return 0;
+}
+```
+
+You may notice that there is a `gason.hpp` file inside `include/external` and a `Gason.hpp` inside `include/json`. I tried to make this library work, and it passed the simple tests, but when reading a regular map I experienced memory corruption problems after a few layers was read, which would be hard to figure out. [Gason](https://github.com/vivkin/gason) is thus not supported, but is left there in case someone wants to experiment with it. [Gason](https://github.com/vivkin/gason) is blazingly fast, but also does a lot of memory trickery which I suspect is the reason why I had issues making it work.
+
 # Compiling
 The program is cross-platform. It utilizes the features of modern C++ (C++17), which requires the user to have a pretty up to date compiler. Tileson specifically supports the compilers `MSVC` (Windows), `GCC` (Linux) and `Clang` (Mac/OSX), but other compilers supporting all C++17 features should be fine.
 
@@ -366,7 +442,7 @@ For compiling the demo on Windows, it's recommended to use either Visual Studio 
 If you have `GCC7`, `GCC8`, `GCC9`, `GCC10` or newer as a compiler on your system, you should be good to go!
 If you are okay with the default settings: Just calling the `cmake CMakeLists.txt` inside the project folder will create a `Makefile` for you. Then you can compile the library by simply calling `make`.
 
-## Apple (OSX)
+## OSX
 
 `std::filesystem` should be supported by the `Apple Clang`-compiler shipped with the latest version of `Mac OSX`, but may not work with older versions of this OS. If you are using an old version of OSX you can, however, install the newest version of `llvm` via `Homebrew`, which has supported `std::filesystem` for a while.
 To generate a solution to be able to build this library, you will need to open the `CMakeLists.txt` file in `CMake`. If `CMake` is not installed on your system, it can easily be found on the internet.
@@ -396,7 +472,7 @@ Simply call it like this: `sh amalgamate_script.sh`. There is also a .bat-versio
 
 The json libraries supported can all be found in a single-header format inside the `extras` folder.
 
-# Libraries used for examples/demo
+# Libraries used in examples
 
 - [SFML](https://github.com/SFML/SFML) - For drawing maps.
 - [Dear ImGui](https://github.com/ocornut/imgui) - For displaying information and managing maps.

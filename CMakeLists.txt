@@ -3,8 +3,8 @@ project(tileson)
 
 set(CMAKE_CXX_STANDARD 17)
 set(TILESON_PROJECT_VERSION_MAJOR 1)
-set(TILESON_PROJECT_VERSION_MINOR 3)
-set(TILESON_PROJECT_VERSION_PATCH 1)
+set(TILESON_PROJECT_VERSION_MINOR 4)
+set(TILESON_PROJECT_VERSION_PATCH 0)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DTILESON_DEBUG")
 
@@ -61,20 +61,6 @@ option(BUILD_EXAMPLES "Build examples." OFF)
 option(CLEAR_TSON_CMAKE_CACHE "Clear CMake cache for variables. Activate if you are working on the code. Otherwise: keep it off" OFF)
 
 option(USE_LEGACY_CLANG_FOR_TESTS "Only use when you have an old version of Homebrew's Clang on OSX" OFF)
-
-#if(APPLE)
-#    option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" ON)
-#else()
-#    option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" OFF)
-#endif()
-
-# option(DISABLE_CPP17_FILESYSTEM "Disables cpp17 std::filesystem for anything file related" OFF)
-
-#if(DISABLE_CPP17_FILESYSTEM)
-#    set(DISABLE_CPP17_FILESYSTEM 1)
-#else()
-#    set(DISABLE_CPP17_FILESYSTEM 0)
-#endif()
 
 configure_file (
         "${PROJECT_SOURCE_DIR}/TilesonConfig.h.in"
