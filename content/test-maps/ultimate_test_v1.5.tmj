@@ -23,6 +23,8 @@
                  "type":"float",
                  "value":1
                 }],
+         "repeatx":true,
+         "repeaty":true,
          "type":"imagelayer",
          "visible":true,
          "x":0,
@@ -298,37 +300,6 @@
                  "height":16,
                  "id":16,
                  "name":"mario_all_flipped",
-                 "properties":[
-                        {
-                         "name":"color",
-                         "type":"color",
-                         "value":"#ff268176"
-                        }, 
-                        {
-                         "name":"file_ref",
-                         "type":"file",
-                         "value":"..\/demo-tileset.png"
-                        }, 
-                        {
-                         "name":"hp",
-                         "type":"int",
-                         "value":4
-                        }, 
-                        {
-                         "name":"is_player",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"jump_force",
-                         "type":"float",
-                         "value":10
-                        }, 
-                        {
-                         "name":"name",
-                         "type":"string",
-                         "value":"Mario"
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -341,37 +312,6 @@
                  "height":16,
                  "id":17,
                  "name":"mario_hor_flip",
-                 "properties":[
-                        {
-                         "name":"color",
-                         "type":"color",
-                         "value":"#ff268176"
-                        }, 
-                        {
-                         "name":"file_ref",
-                         "type":"file",
-                         "value":"..\/demo-tileset.png"
-                        }, 
-                        {
-                         "name":"hp",
-                         "type":"int",
-                         "value":4
-                        }, 
-                        {
-                         "name":"is_player",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"jump_force",
-                         "type":"float",
-                         "value":10
-                        }, 
-                        {
-                         "name":"name",
-                         "type":"string",
-                         "value":"Mario"
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -384,37 +324,6 @@
                  "height":16,
                  "id":18,
                  "name":"mario_ver_flip",
-                 "properties":[
-                        {
-                         "name":"color",
-                         "type":"color",
-                         "value":"#ff268176"
-                        }, 
-                        {
-                         "name":"file_ref",
-                         "type":"file",
-                         "value":"..\/demo-tileset.png"
-                        }, 
-                        {
-                         "name":"hp",
-                         "type":"int",
-                         "value":4
-                        }, 
-                        {
-                         "name":"is_player",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"jump_force",
-                         "type":"float",
-                         "value":10
-                        }, 
-                        {
-                         "name":"name",
-                         "type":"string",
-                         "value":"Mario"
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -427,37 +336,6 @@
                  "height":16,
                  "id":19,
                  "name":"mario_no_flip",
-                 "properties":[
-                        {
-                         "name":"color",
-                         "type":"color",
-                         "value":"#ff268176"
-                        }, 
-                        {
-                         "name":"file_ref",
-                         "type":"file",
-                         "value":"..\/demo-tileset.png"
-                        }, 
-                        {
-                         "name":"hp",
-                         "type":"int",
-                         "value":4
-                        }, 
-                        {
-                         "name":"is_player",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"jump_force",
-                         "type":"float",
-                         "value":10
-                        }, 
-                        {
-                         "name":"name",
-                         "type":"string",
-                         "value":"Mario"
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
