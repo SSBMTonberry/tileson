@@ -1,12 +1,5 @@
 { "backgroundcolor":"#007bb8",
  "compressionlevel":-1,
- "editorsettings":
-    {
-     "export":
-        {
-         "target":"."
-        }
-    },
  "height":16,
  "infinite":false,
  "layers":[
@@ -26,7 +19,7 @@
  "nextobjectid":1,
  "orientation":"orthogonal",
  "renderorder":"left-down",
- "tiledversion":"1.4.1",
+ "tiledversion":"1.8.2",
  "tileheight":16,
  "tilesets":[
         {
@@ -44,6 +37,6 @@
         }],
  "tilewidth":16,
  "type":"map",
- "version":1.4,
+ "version":"1.8",
  "width":32
 }
