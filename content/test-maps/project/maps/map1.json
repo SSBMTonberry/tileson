@@ -18,6 +18,41 @@
  "nextlayerid":2,
  "nextobjectid":1,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"classdata",
+         "propertytype":"TestClass",
+         "type":"class",
+         "value":
+            {
+             "ExtraFile":"..\/..\/ultimate_test_v1.5.json",
+             "MyObject":0
+            }
+        }, 
+        {
+         "name":"enumnumber",
+         "propertytype":"TestEnumNumber",
+         "type":"int",
+         "value":3
+        }, 
+        {
+         "name":"enumnumberflags",
+         "propertytype":"TestEnumNumberFlags",
+         "type":"int",
+         "value":7
+        }, 
+        {
+         "name":"enumstr",
+         "propertytype":"TestEnumString",
+         "type":"string",
+         "value":"CreatePlayer"
+        }, 
+        {
+         "name":"enumstrflags",
+         "propertytype":"TestEnumStringFlags",
+         "type":"string",
+         "value":"HasCarFlag,HasJobFlag,HasHouseFlag"
+        }],
  "renderorder":"left-down",
  "tiledversion":"1.8.2",
  "tileheight":16,

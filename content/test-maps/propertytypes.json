@@ -1,6 +1,6 @@
 [
     {
-        "id": 5,
+        "id": 1,
         "members": [
             {
                 "name": "Age",
@@ -42,7 +42,7 @@
         "type": "class"
     },
     {
-        "id": 1,
+        "id": 2,
         "name": "TestEnumString",
         "storageType": "string",
         "type": "enum",
@@ -55,7 +55,7 @@
         "valuesAsFlags": false
     },
     {
-        "id": 2,
+        "id": 3,
         "name": "TestEnumNumber",
         "storageType": "int",
         "type": "enum",
@@ -70,7 +70,7 @@
     {
         "id": 4,
         "name": "TestEnumNumberFlags",
-        "storageType": "string",
+        "storageType": "int",
         "type": "enum",
         "values": [
             "HasCalculatorFlag",
@@ -81,7 +81,7 @@
         "valuesAsFlags": true
     },
     {
-        "id": 3,
+        "id": 5,
         "name": "TestEnumStringFlags",
         "storageType": "string",
         "type": "enum",
