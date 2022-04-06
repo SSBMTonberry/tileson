@@ -110,7 +110,7 @@ namespace tson
                 m_data = nullptr;
                 if (fs::exists(path) && fs::is_regular_file(path))
                 {
-                    std::ifstream file(path.u8string());
+                    std::ifstream file(path.generic_string());
                     std::string str;
                     m_path = path.parent_path();
 

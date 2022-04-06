@@ -88,7 +88,7 @@ namespace tson
                 {
                     m_path = path.parent_path();
                     m_data = std::make_unique<nlohmann::json>();
-                    std::ifstream i(path.u8string());
+                    std::ifstream i(path.generic_string());
                     try
                     {
                         i >> *m_data;

@@ -61,7 +61,7 @@ namespace tson
                 m_subFolders.emplace_back(entry.path());//.loadData(); - loadData() is called in the constructor, so don't call again.
             else if (fs::is_regular_file(entry.path()))
             {
-                if(m_hasWorldFile && m_world.contains(entry.path().filename().u8string()))
+                if(m_hasWorldFile && m_world.contains(entry.path().filename().generic_string()))
                     m_files.emplace_back(entry.path());
                 else if(!m_hasWorldFile)
                     m_files.emplace_back(entry.path());
