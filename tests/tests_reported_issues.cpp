@@ -144,7 +144,7 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
             if (tile->getId() >= firstId && tile->getId() <= lastId)
             {
                 imagePath = tileset->getImagePath();
-                pathStr = imagePath.u8string();
+                pathStr = imagePath.generic_string();
             }
 
             //Get position in pixel units --> Position de la Tile
