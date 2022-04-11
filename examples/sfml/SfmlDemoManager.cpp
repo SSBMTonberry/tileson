@@ -313,7 +313,7 @@ void SfmlDemoManager::drawTileLayer(tson::Layer& layer)//, tson::Tileset* tilese
         position = {position.x + (float)m_positionOffset.x, position.y + (float)m_positionOffset.y};
         //sf::Vector2f position = {(float)obj.getPosition().x + (float)m_positionOffset.x, (float)obj.getPosition().y + (float)m_positionOffset.y};
         fs::path tilesetPath = getTilesetImagePath(*tileset);
-        sf::Sprite *sprite = storeAndLoadImage(tilesetPath.u8string(), {0, 0});
+        sf::Sprite *sprite = storeAndLoadImage(tilesetPath.generic_string(), {0, 0});
         if (sprite != nullptr)
         {
             sf::Vector2f scale = sprite->getScale();
@@ -461,7 +461,7 @@ sf::Sprite *SfmlDemoManager::storeAndLoadImage(const std::string &image, const s
         if(fs::exists(path) && fs::is_regular_file(path))
         {
             std::unique_ptr<sf::Texture> tex = std::make_unique<sf::Texture>();
-            bool imageFound = tex->loadFromFile(path.u8string());
+            bool imageFound = tex->loadFromFile(path.generic_string());
             if(imageFound)
             {
                 std::unique_ptr<sf::Sprite> spr = std::make_unique<sf::Sprite>();
@@ -472,7 +472,7 @@ sf::Sprite *SfmlDemoManager::storeAndLoadImage(const std::string &image, const s
             }
         }
         else
-            std::cout << "Could not find: " << path.u8string() << std::endl;
+            std::cout << "Could not find: " << path.generic_string() << std::endl;
     }
 
     if(m_sprites.count(image) > 0)

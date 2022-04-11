@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.11)
 project(tileson-sfml-example)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS -DSFML_STATIC) #required to build SFML statically with Windows
 
 set(IMGUI_PATH ${PROJECT_SOURCE_DIR}/../../external_libs/source/imgui/)
