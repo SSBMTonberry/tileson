@@ -42,6 +42,8 @@ namespace tson
             [[nodiscard]] inline const Vector2i &getSize() const;
             [[nodiscard]] inline const Colori &getTransparentColor() const;
             [[nodiscard]] inline const Vector2f &getParallax() const;
+            [[nodiscard]] inline bool hasRepeatX() const;
+            [[nodiscard]] inline bool hasRepeatY() const;
 
             [[nodiscard]] inline LayerType getType() const;
 
@@ -101,7 +103,7 @@ namespace tson
             tson::PropertyCollection                       m_properties; 	                  /*! 'properties': A list of properties (name, value, type). */
             tson::Vector2i                                 m_size;                            /*! x = 'width': (Column count. Same as map width for fixed-size maps.)
                                                                                                   y = 'height': Row count. Same as map height for fixed-size maps. */
-            tson::Colori                                   m_transparentcolor;                /*! 'transparentcolor': Hex-formatted color (#RRGGBB) (optional, imagelayer only */
+            tson::Colori                                   m_transparentColor;                /*! 'transparentcolor': Hex-formatted color (#RRGGBB) (optional, imagelayer only */
             std::string                                    m_typeStr;                         /*! 'type': tilelayer, objectgroup, imagelayer or group */
             LayerType                                      m_type {LayerType::Undefined};     /*! Layer type as enum*/
             bool                                           m_visible{};                       /*! 'visible': Whether layer is shown or hidden in editor */
@@ -109,12 +111,14 @@ namespace tson
             int                                            m_y{};                             /*! 'y': Vertical layer offset in tiles. Always 0. */
             tson::Vector2f                                 m_parallax{1.f, 1.f};    /*! Tiled v1.5: parallax factor for this layer. Defaults to 1.
                                                                                                   x = 'parallaxx', y = 'parallaxy'*/
+            bool                                           m_repeatX;                         /*! 'repeatx': Whether the image drawn by this layer is repeated along the X axis. (since Tiled 1.8)*/
+            bool                                           m_repeatY;                         /*! 'repeaty': Whether the image drawn by this layer is repeated along the Y axis. (since Tiled 1.8)*/
 
             std::map<uint32_t, tson::Tile*>                *m_tileMap;
             std::map<std::tuple<int, int>, tson::Tile*>    m_tileData;                        /*! Key: Tuple of x and y pos in tile units. */
 
             //v1.2.0-stuff
-            tson::Colori                                        m_tintcolor;                  /*! 'tintcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) that is multiplied with
+            tson::Colori                                        m_tintColor;                  /*! 'tintcolor': Hex-formatted color (#RRGGBB or #AARRGGBB) that is multiplied with
                                                                                                *        any graphics drawn by this layer or any child layers (optional). */
             inline void decompressData();                                                     /*! Defined in tileson_forward.hpp */
             inline void queueFlaggedTile(size_t x, size_t y, uint32_t id);                    /*! Queue a flagged tile */
@@ -166,7 +170,7 @@ bool tson::Layer::parse(IJson &json, tson::Map *map)
     m_map = map;
 
     bool allFound = true;
-    if(json.count("tintcolor") > 0) m_tintcolor = tson::Colori(json["tintcolor"].get<std::string>()); //Optional
+    if(json.count("tintcolor") > 0) m_tintColor = tson::Colori(json["tintcolor"].get<std::string>()); //Optional
     if(json.count("compression") > 0) m_compression = json["compression"].get<std::string>(); //Optional
     if(json.count("draworder") > 0) m_drawOrder = json["draworder"].get<std::string>(); //Optional
     if(json.count("encoding") > 0) m_encoding = json["encoding"].get<std::string>(); //Optional
@@ -178,11 +182,13 @@ bool tson::Layer::parse(IJson &json, tson::Map *map)
     if(json.count("opacity") > 0) m_opacity = json["opacity"].get<float>(); else allFound = false;
     if(json.count("width") > 0 && json.count("height") > 0)
         m_size = {json["width"].get<int>(), json["height"].get<int>()}; //else allFound = false; - Not mandatory for all layers!
-    if(json.count("transparentcolor") > 0) m_transparentcolor = tson::Colori(json["transparentcolor"].get<std::string>()); //Optional
+    if(json.count("transparentcolor") > 0) m_transparentColor = tson::Colori(json["transparentcolor"].get<std::string>()); //Optional
     if(json.count("type") > 0) m_typeStr = json["type"].get<std::string>(); else allFound = false;
     if(json.count("visible") > 0) m_visible = json["visible"].get<bool>(); else allFound = false;
     if(json.count("x") > 0) m_x = json["x"].get<int>(); else allFound = false;
     if(json.count("y") > 0) m_y = json["y"].get<int>(); else allFound = false;
+    if(json.count("repeatx") > 0) m_repeatX = json["repeatx"].get<bool>(); //Optional
+    if(json.count("repeaty") > 0) m_repeatY = json["repeaty"].get<bool>(); //Optional
 
     tson::Vector2f parallax {1.f, 1.f};
     if(json.count("parallaxx") > 0)
@@ -417,7 +423,7 @@ const tson::Vector2i &tson::Layer::getSize() const
  */
 const tson::Colori &tson::Layer::getTransparentColor() const
 {
-    return m_transparentcolor;
+    return m_transparentColor;
 }
 
 /*!
@@ -633,7 +639,7 @@ void tson::Layer::resolveFlaggedTiles()
  */
 const tson::Colori &tson::Layer::getTintColor() const
 {
-    return m_tintcolor;
+    return m_tintColor;
 }
 
 /*!
@@ -644,6 +650,26 @@ const tson::Colori &tson::Layer::getTintColor() const
 const tson::Vector2f &tson::Layer::getParallax() const
 {
     return m_parallax;
+}
+
+/*!
+ * New in Tiled v1.8
+ * 'repeatx': Whether the image drawn by this layer is repeated along the X axis.
+ * @return true if image layer is repeated along the X axis, false otherwise.
+ */
+bool tson::Layer::hasRepeatX() const
+{
+    return m_repeatX;
+}
+
+/*!
+ * New in Tiled v1.8
+ * 'repeatx': Whether the image drawn by this layer is repeated along the Y axis.
+ * @return true if image layer is repeated along the Y axis, false otherwise.
+ */
+bool tson::Layer::hasRepeatY() const
+{
+    return m_repeatY;
 }
 
 

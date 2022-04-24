@@ -42,6 +42,7 @@ namespace tson
             [[nodiscard]] inline const std::string &getTiledVersion() const;
             [[nodiscard]] inline const Vector2i &getTileSize() const;
             [[nodiscard]] inline const std::string &getType() const;
+            [[nodiscard]] inline const Vector2f &getParallaxOrigin() const;
             //[[nodiscard]] inline int getVersion() const; //Removed - Tileson v1.3.0
 
             [[nodiscard]] inline std::vector<tson::Layer> &getLayers();
@@ -85,6 +86,7 @@ namespace tson
             Vector2i                               m_tileSize;          /*! 'tilewidth': and 'tileheight' of a map */
             std::vector<tson::Tileset>             m_tilesets;          /*! 'tilesets': Array of Tilesets */
             std::string                            m_type;              /*! 'type': map (since 1.0) */
+            tson::Vector2f                         m_parallaxOrigin;    /*! Tiled v1.8: parallax origin in pixels. Defaults to 0.
             //int                                    m_version{};       /*! 'version': The JSON format version - Removed in Tileson v1.3.0*/
 
             ParseStatus                            m_status {ParseStatus::OK};
@@ -184,6 +186,15 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
             m_properties.add(*item);
         });
     }
+
+    tson::Vector2f parallaxOrigin {0.f, 0.f};
+    if(json.count("parallaxoriginx") > 0)
+        parallaxOrigin.x = json["parallaxoriginx"].get<float>();
+    if(json.count("parallaxoriginy") > 0)
+        parallaxOrigin.y = json["parallaxoriginy"].get<float>();
+
+    m_parallaxOrigin = parallaxOrigin;
+
     if(!createTilesetData(json))
         allFound = false;
 
@@ -505,7 +516,15 @@ int tson::Map::getCompressionLevel() const
     return m_compressionLevel;
 }
 
-
+/*!
+ * New in Tiled v1.8
+ * Gets the parallax origin in pixels. Defaults to 0.
+ * @return A vector with the x and y values of the parallax origin.
+ */
+const tson::Vector2f &tson::Map::getParallaxOrigin() const
+{
+    return m_parallaxOrigin;
+}
 
 
 #endif //TILESON_MAP_HPP
