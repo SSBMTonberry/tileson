@@ -109,6 +109,22 @@ void performMainAsserts(tson::Map *map, bool isOldMap = true)
         REQUIRE(map->getTileset("demo-tileset")->getTransformations().allowPreferuntransformed());
         REQUIRE(map->getTileset("demo-tileset")->getTransformations().allowRotation());
     }
+
+    bool hasRepeatX = map->getLayer("Background Image")->hasRepeatX();
+    bool hasRepeatY = map->getLayer("Background Image")->hasRepeatY();
+    //v1.4.0
+    if(isOldMap)
+    {
+        REQUIRE(map->getParallaxOrigin() == tson::Vector2f (0.f, 0.f));
+        REQUIRE(!hasRepeatX);
+        REQUIRE(!hasRepeatY);
+    }
+    else
+    {
+        REQUIRE(map->getParallaxOrigin() == tson::Vector2f (1.03f, 1.06f));
+        REQUIRE(hasRepeatX);
+        REQUIRE(hasRepeatY);
+    }
 }
 
 /*!

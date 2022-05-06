@@ -1,0 +1,96 @@
+[
+    {
+        "id": 1,
+        "members": [
+            {
+                "name": "Age",
+                "type": "int",
+                "value": 49
+            },
+            {
+                "name": "CanDestroy",
+                "type": "bool",
+                "value": true
+            },
+            {
+                "name": "ExtraFile",
+                "type": "file",
+                "value": "/home/robin/git/c++/tileson/content/test-maps/ultimate_test.json"
+            },
+            {
+                "name": "MoneyInBag",
+                "type": "float",
+                "value": 16.9344
+            },
+            {
+                "name": "MyObject",
+                "type": "object",
+                "value": 0
+            },
+            {
+                "name": "Name",
+                "type": "string",
+                "value": "James Testolini"
+            },
+            {
+                "name": "ShoeColor",
+                "type": "color",
+                "value": "#ff069504"
+            }
+        ],
+        "name": "TestClass",
+        "type": "class"
+    },
+    {
+        "id": 2,
+        "name": "TestEnumString",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "CreatePlayer",
+            "UpdatePlayer",
+            "DeletePlayer",
+            "GetPlayer"
+        ],
+        "valuesAsFlags": false
+    },
+    {
+        "id": 3,
+        "name": "TestEnumNumber",
+        "storageType": "int",
+        "type": "enum",
+        "values": [
+            "CreateNumber",
+            "DeleteNumber",
+            "UpdateNumber",
+            "GetNumber"
+        ],
+        "valuesAsFlags": false
+    },
+    {
+        "id": 4,
+        "name": "TestEnumNumberFlags",
+        "storageType": "int",
+        "type": "enum",
+        "values": [
+            "HasCalculatorFlag",
+            "HasBombFlag",
+            "HasHumorFlag",
+            "HasInvisibilityFlag"
+        ],
+        "valuesAsFlags": true
+    },
+    {
+        "id": 5,
+        "name": "TestEnumStringFlags",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "HasCarFlag",
+            "HasJobFlag",
+            "HasHouseFlag",
+            "HasMoneyFlag"
+        ],
+        "valuesAsFlags": true
+    }
+]

@@ -1,0 +1,40 @@
+[
+    {
+        "color": "#ffffeb06",
+        "name": "Coin",
+        "properties": [
+            {
+                "name": "value",
+                "type": "float",
+                "value": 2.99
+            }
+        ]
+    },
+    {
+        "color": "#ffa0a0a4",
+        "name": "Enemy",
+        "properties": [
+            {
+                "name": "hp",
+                "type": "int",
+                "value": 1
+            },
+            {
+                "name": "name",
+                "type": "string",
+                "value": ""
+            }
+        ]
+    },
+    {
+        "color": "#ff55ffff",
+        "name": "Spike",
+        "properties": [
+            {
+                "name": "damage",
+                "type": "float",
+                "value": 4
+            }
+        ]
+    }
+]
