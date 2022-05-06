@@ -4299,8 +4299,8 @@ namespace tson
 			int                                            m_y{};                             /*! 'y': Vertical layer offset in tiles. Always 0. */
 			tson::Vector2f                                 m_parallax{1.f, 1.f};    /*! Tiled v1.5: parallax factor for this layer. Defaults to 1.
 																								  x = 'parallaxx', y = 'parallaxy'*/
-			bool                                           m_repeatX;                         /*! 'repeatx': Whether the image drawn by this layer is repeated along the X axis. (since Tiled 1.8)*/
-			bool                                           m_repeatY;                         /*! 'repeaty': Whether the image drawn by this layer is repeated along the Y axis. (since Tiled 1.8)*/
+			bool                                           m_repeatX {};                         /*! 'repeatx': Whether the image drawn by this layer is repeated along the X axis. (since Tiled 1.8)*/
+			bool                                           m_repeatY {};                         /*! 'repeaty': Whether the image drawn by this layer is repeated along the Y axis. (since Tiled 1.8)*/
 
 			std::map<uint32_t, tson::Tile*>                *m_tileMap;
 			std::map<std::tuple<int, int>, tson::Tile*>    m_tileData;                        /*! Key: Tuple of x and y pos in tile units. */
