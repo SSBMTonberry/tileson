@@ -36,7 +36,7 @@ namespace tson
                 std::vector<uint8_t> out;
 
                 plz::PocketLzma p;
-                plz::FileStatus fileStatus = plz::File::FromFile(path.u8string(), in);
+                plz::FileStatus fileStatus = plz::File::FromFile(path.generic_string(), in);
                 if(fileStatus.status() != plz::FileStatus::Code::Ok)
                     return std::vector<uint8_t>();
 

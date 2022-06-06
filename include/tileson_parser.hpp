@@ -107,7 +107,7 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path, std::uniqu
     }
 
     std::string msg = "File not found: ";
-    msg += std::string(path.u8string());
+    msg += std::string(path.generic_string());
     return std::make_unique<tson::Map>(tson::ParseStatus::FileNotFound, msg);
 }
 

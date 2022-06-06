@@ -52,7 +52,7 @@ namespace tson
     bool Project::parse(const fs::path &path)
     {
         m_path = path;
-        std::ifstream i(m_path.u8string());
+        std::ifstream i(m_path.generic_string());
 
         try
         {

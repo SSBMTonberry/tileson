@@ -120,7 +120,7 @@ namespace tson
                 {
                     m_path = path.parent_path();
                     m_data = std::make_unique<picojson::value>();
-                    std::ifstream i(path.u8string());
+                    std::ifstream i(path.generic_string());
                     try
                     {
                         std::string error = picojson::parse(*m_data, i);
