@@ -47,13 +47,15 @@ namespace tson
             inline T getValue() const;
             [[nodiscard]] inline const std::string &getName() const;
             [[nodiscard]] inline Type getType() const;
+            [[nodiscard]] inline const std::string &getPropertyType() const;
 
         protected:
             inline void setTypeByString(const std::string &str);
             inline void setValueByType(IJson &json);
 
             Type m_type = Type::Undefined;
-            std::string m_name;
+            std::string m_name {};
+            std::string m_propertyType {};
             std::any m_value; //Using std::any to assign any type
     };
 
@@ -83,8 +85,12 @@ tson::Property::Property() : m_name {"unnamed"}
 tson::Property::Property(IJson &json)
 {
     setTypeByString(json["type"].get<std::string>());
+    if(json.count("propertytype") > 0)
+        m_propertyType = json["propertytype"].get<std::string>();
     setValueByType(json["value"]);
     m_name = json["name"].get<std::string>();
+
+
 }
 
 tson::Property::Property(std::string name, std::any value, Type type) : m_name { move(name) }, m_value { move(value) }, m_type {type}
@@ -167,6 +173,10 @@ void tson::Property::setTypeByString(const std::string &str)
         m_type = tson::Type::Float;
     else if(str == "string")
         m_type = tson::Type::String;
+    else if(str == "class")
+        m_type = tson::Type::Class;
+    else if(str == "object")
+        m_type = tson::Type::Object;
     else
         m_type = tson::Type::Undefined;
 }
@@ -184,7 +194,14 @@ void tson::Property::setValueByType(IJson &json)
             break;
 
         case Type::Int:
-            m_value = json.get<int>();
+            if(!m_propertyType.empty())
+            {
+                m_type = Type::Enum;
+                //RBP: Assign int enum value!
+            }
+            else
+                m_value = json.get<int>();
+
             break;
 
         case Type::Boolean:
@@ -196,14 +213,32 @@ void tson::Property::setValueByType(IJson &json)
             break;
 
         case Type::String:
-            setStrValue(json.get<std::string>());
+            if(!m_propertyType.empty())
+            {
+                m_type = Type::Enum;
+                //RBP: Assign string enum value!
+            }
+            else
+                setStrValue(json.get<std::string>());
+
             break;
 
+        case Type::Class:
+
+            break;
+
+        case Type::Object:
+            m_value = json.get<uint32_t>();
+            break;
         default:
             setStrValue(json.get<std::string>());
             break;
-
     }
+}
+
+const std::string &tson::Property::getPropertyType() const
+{
+    return m_propertyType;
 }
 
 #endif //TILESON_PROPERTY_HPP

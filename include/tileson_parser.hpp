@@ -45,6 +45,8 @@
 #include "common/DecompressorContainer.hpp"
 #include "misc/MemoryStream.hpp"
 #include "tiled/Map.hpp"
+#include "tiled/TiledEnum.hpp"
+#include "tiled/TiledClass.hpp"
 #include "tiled/Project.hpp"
 
 

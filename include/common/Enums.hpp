@@ -20,7 +20,10 @@ namespace tson
             Int = 3, /*! int */
             Boolean = 4, /*! bool */
             Float = 5, /*! float */
-            String = 6 /*! string */
+            String = 6, /*! string */
+            Class = 7, /*! class */
+            Enum = 8,  /*! 'string' or 'int' with a value in 'propertyType' */
+            Object = 9 /*! object */
     };
 
     /*!
@@ -93,6 +96,13 @@ namespace tson
             BottomLeft = 7,     //bottomleft
             Bottom = 8,         //bottom
             BottomRight = 9     //bottomright
+    };
+
+    enum class EnumStorageType : uint8_t
+    {
+        Unspecified = 0,
+        Int = 1,
+        String = 2
     };
 
     ENABLE_BITMASK_OPERATORS(TileFlipFlags)
