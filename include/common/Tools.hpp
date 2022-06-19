@@ -18,7 +18,21 @@ namespace tson
             ~Tools() = delete;
             inline static std::vector<uint8_t> Base64DecodedStringToBytes(std::string_view str);
             inline static std::vector<uint32_t> BytesToUnsignedInts(const std::vector<uint8_t> &bytes);
-            //inline static std::vector<int> BytesToInts(const std::vector<uint8_t> &bytes);
+            inline static std::vector<std::string> SplitString(const std::string &s, char delim);
+
+        private:
+            template<typename Out>
+            static void split(const std::string &s, char delim, Out result)
+            {
+                std::stringstream ss;
+                ss.str(s);
+                std::string item;
+
+                while (std::getline(ss, item, delim))
+                {
+                    *(result++) = item;
+                }
+            }
     };
 
     /*!
@@ -60,6 +74,13 @@ namespace tson
         }
 
         return uints;
+    }
+
+    std::vector<std::string> Tools::SplitString(const std::string &s, char delim)
+    {
+        std::vector<std::string> elems;
+        split(s, delim, std::back_inserter(elems));
+        return elems;
     }
 
     /*!
