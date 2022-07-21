@@ -13,6 +13,13 @@ namespace tson
             inline explicit EnumDefinition(IJson &json);
             inline uint32_t getValue(const std::string &str);
             inline std::string getValue(uint32_t num);
+            inline bool exists(const std::string &str);
+            inline bool exists(uint32_t num);
+
+            [[nodiscard]] inline uint32_t getId() const;
+            [[nodiscard]] inline const std::string &getName() const;
+            [[nodiscard]] inline EnumStorageType getStorageType() const;
+
             [[nodiscard]] inline bool hasValuesAsFlags() const;
 
         private:
@@ -76,11 +83,44 @@ namespace tson
         return m_valuesAsFlags;
     }
 
+    bool EnumDefinition::exists(const std::string &str)
+    {
+        auto result = std::find_if(m_values.begin(), m_values.end(), [&](const std::pair<uint32_t, std::string> &pair)
+        {
+            return pair.second == str;
+        });
+
+        if(result != m_values.end())
+            return true;
+
+        return false;
+    }
+
+    bool EnumDefinition::exists(uint32_t num) { return (m_values.count(num) > 0); }
+
+    uint32_t EnumDefinition::getId() const
+    {
+        return m_id;
+    }
+
+    const std::string &EnumDefinition::getName() const
+    {
+        return m_name;
+    }
+
+    EnumStorageType EnumDefinition::getStorageType() const
+    {
+        return m_storageType;
+    }
+
     class EnumValue
     {
         public:
             inline EnumValue(uint32_t value, EnumDefinition *definition);
             inline EnumValue(const std::string &value, EnumDefinition *definition);
+
+            inline uint32_t getValue();
+            inline std::string getName();
 
             inline bool hasFlag(uint32_t flag);
             inline bool hasAnyFlag(uint32_t flags);
@@ -134,6 +174,16 @@ namespace tson
             return ((m_value & flags) != 0);
 
         return m_value == flags;
+    }
+
+    uint32_t EnumValue::getValue()
+    {
+        return m_value;
+    }
+
+    std::string EnumValue::getName()
+    {
+        return m_definition->getValue(m_value);
     }
 }
 

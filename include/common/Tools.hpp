@@ -82,39 +82,6 @@ namespace tson
         split(s, delim, std::back_inserter(elems));
         return elems;
     }
-
-    /*!
-     * While the Tiled specification uses unsigned ints for their tiles, Tileson uses regular ints.
-     * This may be changed in the future, but should in reality never really become an issue.
-     *
-     * Update 2020-11-09: This will cause problems when tiles has flip flags!
-     *
-     * int differences:
-     * int max:  2147483647
-     * uint max: 4294967295
-     *
-     * @param bytes A vector of bytes.
-     * @return Bytes converted to ints
-     */
-    /*std::vector<int> Tools::BytesToInts(const std::vector<uint8_t> &bytes)
-    {
-        std::vector<int> ints;
-        std::vector<uint8_t> toConvert;
-        //uint32_t size8 = (compressed[55] << 24) | (compressed[56] << 16) | (compressed[57] << 8) | compressed[58]; //Should be 66000
-
-        for(size_t i = 0; i < bytes.size(); ++i)
-        {
-            toConvert.push_back(bytes[i]);
-            if(toConvert.size() == 4)
-            {
-                uint32_t u32 = (toConvert[3] << 24) | (toConvert[2] << 16) | (toConvert[1] << 8) | toConvert[0];
-                ints.push_back(u32);
-                toConvert.clear();
-            }
-        }
-
-        return ints;
-    }*/
 }
 
 #endif //TILESON_TOOLS_HPP
