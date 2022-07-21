@@ -22,9 +22,20 @@ namespace tson
         HasInvisibilityFlag = 1 << 3,
         All = HasCalculatorFlag | HasBombFlag | HasHumorFlag | HasInvisibilityFlag
     };
+
+    enum class TestEnumStringFlags : uint32_t
+    {
+        None = 0,
+        HasCarFlag = 1 << 0,
+        HasJobFlag = 1 << 1,
+        HasHouseFlag = 1 << 2,
+        HasMoneyFlag = 1 << 3,
+        All = HasCarFlag | HasJobFlag | HasHouseFlag | HasMoneyFlag
+    };
 }
 
 TILESON_ENABLE_BITMASK_OPERATORS(TestEnumNumberFlags)
+TILESON_ENABLE_BITMASK_OPERATORS(TestEnumStringFlags)
 
 TEST_CASE( "Parse an int enum definition without flags - expect correct enum value checks", "[enum][int]" )
 {
@@ -204,5 +215,184 @@ TEST_CASE( "Parse an int enum definition with flags - expect correct enum value 
     REQUIRE(numFlagV2.hasFlag(tson::TestEnumNumberFlags::HasBombFlag));
     REQUIRE(numFlagV2.hasFlag(tson::TestEnumNumberFlags::HasHumorFlag));
     REQUIRE(!numFlagV2.hasFlag(tson::TestEnumNumberFlags::HasCalculatorFlag));
+}
 
+TEST_CASE( "Parse a string enum definition without flags - expect correct enum value checks", "[enum][string]" )
+{
+    std::string jstr = "{\n"
+                       "    \"id\": 2,\n"
+                       "    \"name\": \"TestEnumString\",\n"
+                       "    \"storageType\": \"string\",\n"
+                       "    \"type\": \"enum\",\n"
+                       "    \"values\": [\n"
+                       "        \"None\",\n"
+                       "        \"CreatePlayer\",\n"
+                       "        \"UpdatePlayer\",\n"
+                       "        \"DeletePlayer\",\n"
+                       "        \"GetPlayer\"\n"
+                       "    ],\n"
+                       "    \"valuesAsFlags\": false\n"
+                       "}";
+
+    std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
+
+    std::unique_ptr<tson::IJson> js = std::make_unique<tson::Json11>(j);
+    tson::EnumDefinition def {*js};
+
+    REQUIRE(def.getId() == 2);
+    REQUIRE(def.getName() == "TestEnumString");
+    REQUIRE(def.getStorageType() == tson::EnumStorageType::String);
+    REQUIRE(!def.hasValuesAsFlags());
+
+    REQUIRE(def.getValue(1) == "CreatePlayer");
+    REQUIRE(def.exists(1));
+    REQUIRE(def.getValue(2) == "UpdatePlayer");
+    REQUIRE(def.exists(2));
+    REQUIRE(def.getValue(3) == "DeletePlayer");
+    REQUIRE(def.exists(3));
+    REQUIRE(def.getValue(4) == "GetPlayer");
+    REQUIRE(def.exists(4));
+    REQUIRE(def.getValue(97).empty());
+    REQUIRE(!def.exists(97));
+
+    REQUIRE(def.getValue("CreatePlayer") == 1);
+    REQUIRE(def.exists("CreatePlayer"));
+    REQUIRE(def.getValue("UpdatePlayer") == 2);
+    REQUIRE(def.exists("UpdatePlayer"));
+    REQUIRE(def.getValue("DeletePlayer") == 3);
+    REQUIRE(def.exists("DeletePlayer"));
+    REQUIRE(def.getValue("GetPlayer") == 4);
+    REQUIRE(def.exists("GetPlayer"));
+    REQUIRE(def.getValue("None") == 0);
+    REQUIRE(def.getValue("SomethingInvalid") == 0);
+    REQUIRE(!def.exists("SomethingInvalid"));
+
+    tson::EnumValue strV1 {"CreatePlayer", &def};
+    tson::EnumValue strV2 {"DeletePlayer", &def};
+    tson::EnumValue strV3 {"UpdatePlayer", &def};
+    tson::EnumValue strV4 {"GetPlayer", &def};
+    tson::EnumValue numV1 {1, &def};
+    tson::EnumValue numV2 {2, &def};
+    tson::EnumValue numV3 {3, &def};
+    tson::EnumValue numV4 {4, &def};
+
+    REQUIRE(strV1.getValue() == 1);
+    REQUIRE(strV2.getValue() == 3);
+    REQUIRE(strV3.getValue() == 2);
+    REQUIRE(strV4.getValue() == 4);
+    REQUIRE(strV1.hasFlagValue(1));
+    REQUIRE(strV3.hasFlagValue(2));
+    REQUIRE(strV2.hasFlagValue(3));
+    REQUIRE(strV4.hasFlagValue(4));
+    REQUIRE(!strV4.hasFlagValue(97));
+    REQUIRE(numV1.getName() == "CreatePlayer");
+    REQUIRE(numV2.getName() == "UpdatePlayer");
+    REQUIRE(numV3.getName() == "DeletePlayer");
+    REQUIRE(numV4.getName() == "GetPlayer");
+    REQUIRE(numV1.hasFlagValue(1));
+    REQUIRE(numV2.hasFlagValue(2));
+    REQUIRE(numV3.hasFlagValue(3));
+    REQUIRE(numV4.hasFlagValue(4));
+    REQUIRE(!numV4.hasFlagValue(97));
+}
+
+TEST_CASE( "Parse a string enum definition with flags - expect correct enum value checks", "[enum][string][flags]" )
+{
+    std::string jstr = "{\n"
+                       "    \"id\": 5,\n"
+                       "    \"name\": \"TestEnumStringFlags\",\n"
+                       "    \"storageType\": \"string\",\n"
+                       "    \"type\": \"enum\",\n"
+                       "    \"values\": [\n"
+                       "        \"None\",\n"
+                       "        \"HasCarFlag\",\n"
+                       "        \"HasJobFlag\",\n"
+                       "        \"HasHouseFlag\",\n"
+                       "        \"HasMoneyFlag\"\n"
+                       "    ],\n"
+                       "    \"valuesAsFlags\": true\n"
+                       "}";
+
+    std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
+
+    std::unique_ptr<tson::IJson> js = std::make_unique<tson::Json11>(j);
+    tson::EnumDefinition def {*js};
+
+    REQUIRE(def.getId() == 5);
+    REQUIRE(def.getName() == "TestEnumStringFlags");
+    REQUIRE(def.getStorageType() == tson::EnumStorageType::String);
+    REQUIRE(def.hasValuesAsFlags());
+
+    REQUIRE(def.getValue(1) == "HasCarFlag");
+    REQUIRE(def.exists(1));
+    REQUIRE(def.getValue(2) == "HasJobFlag");
+    REQUIRE(def.exists(2));
+    REQUIRE(def.getValue(4) == "HasHouseFlag");
+    REQUIRE(def.exists(4));
+    REQUIRE(def.getValue(8) == "HasMoneyFlag");
+    REQUIRE(def.exists(8));
+    REQUIRE(def.getValue(97).empty());
+    REQUIRE(!def.exists(97));
+
+    REQUIRE(def.getValue("HasCarFlag") == 1);
+    REQUIRE(def.exists("HasCarFlag"));
+    REQUIRE(def.getValue("HasJobFlag") == 2);
+    REQUIRE(def.exists("HasJobFlag"));
+    REQUIRE(def.getValue("HasHouseFlag") == 4);
+    REQUIRE(def.exists("HasHouseFlag"));
+    REQUIRE(def.getValue("HasMoneyFlag") == 8);
+    REQUIRE(def.exists("HasMoneyFlag"));
+    REQUIRE(def.getValue("None") == 0);
+    REQUIRE(def.getValue("SomethingInvalid") == 0);
+    REQUIRE(!def.exists("SomethingInvalid"));
+
+    tson::EnumValue strV1 {"HasCarFlag", &def};
+    tson::EnumValue strV2 {"HasJobFlag", &def};
+    tson::EnumValue strV3 {"HasHouseFlag", &def};
+    tson::EnumValue strV4 {"HasMoneyFlag", &def};
+    tson::EnumValue numV1 {1, &def};
+    tson::EnumValue numV2 {2, &def};
+    tson::EnumValue numV3 {4, &def};
+    tson::EnumValue numV4 {8, &def};
+
+    REQUIRE(strV1.getValue() == 1);
+    REQUIRE(strV2.getValue() == 2);
+    REQUIRE(strV3.getValue() == 4);
+    REQUIRE(strV4.getValue() == 8);
+    REQUIRE(numV1.getName() == "HasCarFlag");
+    REQUIRE(numV2.getName() == "HasJobFlag");
+    REQUIRE(numV3.getName() == "HasHouseFlag");
+    REQUIRE(numV4.getName() == "HasMoneyFlag");
+
+    tson::EnumValue strFlagV1 {"HasCarFlag,HasHouseFlag,HasMoneyFlag", &def};
+    tson::EnumValue strFlagV2 {"HasJobFlag,HasHouseFlag", &def};
+    tson::EnumValue numFlagV1 {15, &def}; //All of them
+    tson::EnumValue numFlagV2 {(uint32_t)(tson::TestEnumStringFlags::HasJobFlag | tson::TestEnumStringFlags::HasHouseFlag), &def};
+
+    REQUIRE(strFlagV1.hasFlag(tson::TestEnumStringFlags::HasCarFlag | tson::TestEnumStringFlags::HasHouseFlag |
+                              tson::TestEnumStringFlags::HasMoneyFlag));
+    REQUIRE(strFlagV1.hasFlag(tson::TestEnumStringFlags::HasCarFlag | tson::TestEnumStringFlags::HasHouseFlag));
+    REQUIRE(strFlagV1.hasFlag(tson::TestEnumStringFlags::HasHouseFlag));
+    REQUIRE(strFlagV1.hasFlagValue(13));
+    REQUIRE(strFlagV1.hasFlagValue(8));
+    REQUIRE(!strFlagV1.hasFlag(tson::TestEnumStringFlags::HasHouseFlag | tson::TestEnumStringFlags::HasJobFlag));
+    REQUIRE(!strFlagV1.hasFlagValue((uint32_t) (tson::TestEnumStringFlags::HasJobFlag)));
+    REQUIRE(strFlagV1.hasAnyFlag(tson::TestEnumStringFlags::HasHouseFlag | tson::TestEnumStringFlags::HasJobFlag));
+    REQUIRE(strFlagV1.hasAnyFlagValue(4));
+
+    REQUIRE(strFlagV2.hasFlag(tson::TestEnumStringFlags::HasJobFlag | tson::TestEnumStringFlags::HasHouseFlag));
+    REQUIRE(strFlagV2.hasFlag(tson::TestEnumStringFlags::HasJobFlag));
+    REQUIRE(strFlagV2.hasFlag(tson::TestEnumStringFlags::HasHouseFlag));
+    REQUIRE(!strFlagV2.hasFlag(tson::TestEnumStringFlags::HasCarFlag));
+
+    REQUIRE(numFlagV1.hasFlag(tson::TestEnumStringFlags::All));
+
+    REQUIRE(numFlagV2.hasFlag(tson::TestEnumStringFlags::HasJobFlag | tson::TestEnumStringFlags::HasHouseFlag));
+    REQUIRE(numFlagV2.hasFlag(tson::TestEnumStringFlags::HasJobFlag));
+    REQUIRE(numFlagV2.hasFlag(tson::TestEnumStringFlags::HasHouseFlag));
+    REQUIRE(!numFlagV2.hasFlag(tson::TestEnumStringFlags::HasCarFlag));
 }
