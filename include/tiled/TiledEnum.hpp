@@ -122,8 +122,13 @@ namespace tson
             inline uint32_t getValue();
             inline std::string getName();
 
-            inline bool hasFlag(uint32_t flag);
-            inline bool hasAnyFlag(uint32_t flags);
+            inline bool hasFlagValue(uint32_t flag) const;
+            template <typename T>
+            inline bool hasFlag(T flags) const;
+            inline bool hasAnyFlagValue(uint32_t flags) const;
+            template <typename T>
+            inline bool hasAnyFlag(T flags) const;
+
 
         private:
             uint32_t m_value {0};
@@ -149,26 +154,26 @@ namespace tson
     }
 
     /*!
-     * Checks if enum value contains a single flag. If 'valuesAsFlags' is not a part of the EnumDefinition, a simple equality comparison will be done
+     * Checks if uint32 value contains a single flag. If 'valuesAsFlags' is not a part of the EnumDefinition, a simple equality comparison will be done
      * instead.
-     * @param flag The uint32 value of the flag you want to check
+     * @param flags The uint32 value of the flag you want to check
      * @return 'true' if EnumValue has the requested bit activated. 'false' otherwise.
      */
-    bool EnumValue::hasFlag(uint32_t flag)
+    bool EnumValue::hasFlagValue(uint32_t flags) const
     {
         if(m_definition->hasValuesAsFlags())
-            return ((m_value & flag) == flag) ? true : false;
+            return ((m_value & flags) == flags) ? true : false;
 
-        return m_value == flag;
+        return m_value == flags;
     }
 
     /*!
-     * Checks if enum value contains one of several possible flags. If 'valuesAsFlags' is not a part of the EnumDefinition, a simple equality comparison will be done
+     * Checks if uint32 value contains one of several possible flags. If 'valuesAsFlags' is not a part of the EnumDefinition, a simple equality comparison will be done
      * instead.
-     * @param flag The uint32 values of the flags you want to check
+     * @param flags The uint32 values of the flags you want to check
      * @return 'true' if EnumValue has the requested bits activated. 'false' otherwise.
      */
-    bool EnumValue::hasAnyFlag(uint32_t flags)
+    bool EnumValue::hasAnyFlagValue(uint32_t flags) const
     {
         if(m_definition->hasValuesAsFlags())
             return ((m_value & flags) != 0);
@@ -184,6 +189,32 @@ namespace tson
     std::string EnumValue::getName()
     {
         return m_definition->getValue(m_value);
+    }
+
+    /*!
+     * Checks if T value contains a single flag. If 'valuesAsFlags' is not a part of the EnumDefinition, a simple equality comparison will be done
+     * instead.
+     * @tparam T A uint32_t compatible type
+     * @param flags One or more flags you want to verify is included.
+     * @return true is all flags presented are set. false otherwise.
+     */
+    template<typename T>
+    bool EnumValue::hasFlag(T flags) const
+    {
+        return hasFlagValue(static_cast<uint32_t>(flags));
+    }
+
+    /*!
+     * Checks if T value contains one of several possible flags. If 'valuesAsFlags' is not a part of the EnumDefinition, a simple equality comparison will be done
+     * instead.
+     * @tparam T A uint32_t compatible type
+     * @param flags One or more flags you want to verify is included.
+     * @return true is all flags presented are set. false otherwise.
+     */
+    template<typename T>
+    bool EnumValue::hasAnyFlag(T flags) const
+    {
+        return hasAnyFlagValue(static_cast<uint32_t>(flags));
     }
 }
 
