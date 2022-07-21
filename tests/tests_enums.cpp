@@ -10,14 +10,21 @@
     #include "../include/tileson.h"
 #endif
 
-enum class TestEnumNumberFlags
+
+namespace tson
 {
-    None = 0,
-    HasCalculatorFlag = 1 << 0,
-    HasBombFlag = 1 << 1,
-    HasHumorFlag = 1 << 2,
-    HasInvisibilityFlag = 1 << 3
-};
+    enum class TestEnumNumberFlags : uint32_t
+    {
+        None = 0,
+        HasCalculatorFlag = 1 << 0,
+        HasBombFlag = 1 << 1,
+        HasHumorFlag = 1 << 2,
+        HasInvisibilityFlag = 1 << 3,
+        All = HasCalculatorFlag | HasBombFlag | HasHumorFlag | HasInvisibilityFlag
+    };
+}
+
+TILESON_ENABLE_BITMASK_OPERATORS(TestEnumNumberFlags)
 
 TEST_CASE( "Parse an int enum definition without flags - expect correct enum value checks", "[enum][int]" )
 {
@@ -84,20 +91,20 @@ TEST_CASE( "Parse an int enum definition without flags - expect correct enum val
     REQUIRE(strV2.getValue() == 2);
     REQUIRE(strV3.getValue() == 3);
     REQUIRE(strV4.getValue() == 4);
-    REQUIRE(strV1.hasFlag(1));
-    REQUIRE(strV2.hasFlag(2));
-    REQUIRE(strV3.hasFlag(3));
-    REQUIRE(strV4.hasFlag(4));
-    REQUIRE(!strV4.hasFlag(97));
+    REQUIRE(strV1.hasFlagValue(1));
+    REQUIRE(strV2.hasFlagValue(2));
+    REQUIRE(strV3.hasFlagValue(3));
+    REQUIRE(strV4.hasFlagValue(4));
+    REQUIRE(!strV4.hasFlagValue(97));
     REQUIRE(numV1.getName() == "CreateNumber");
     REQUIRE(numV2.getName() == "DeleteNumber");
     REQUIRE(numV3.getName() == "UpdateNumber");
     REQUIRE(numV4.getName() == "GetNumber");
-    REQUIRE(numV1.hasFlag(1));
-    REQUIRE(numV2.hasFlag(2));
-    REQUIRE(numV3.hasFlag(3));
-    REQUIRE(numV4.hasFlag(4));
-    REQUIRE(!numV4.hasFlag(97));
+    REQUIRE(numV1.hasFlagValue(1));
+    REQUIRE(numV2.hasFlagValue(2));
+    REQUIRE(numV3.hasFlagValue(3));
+    REQUIRE(numV4.hasFlagValue(4));
+    REQUIRE(!numV4.hasFlagValue(97));
 }
 
 TEST_CASE( "Parse an int enum definition with flags - expect correct enum value checks", "[enum][int][flags]" )
@@ -172,8 +179,30 @@ TEST_CASE( "Parse an int enum definition with flags - expect correct enum value 
 
     tson::EnumValue strFlagV1 {"HasCalculatorFlag,HasHumorFlag,HasInvisibilityFlag", &def};
     tson::EnumValue strFlagV2 {"HasBombFlag,HasHumorFlag", &def};
-    tson::EnumValue numFlagV1 {15, &def};
-    tson::EnumValue numFlagV2 {6, &def};
+    tson::EnumValue numFlagV1 {15, &def}; //All of them
+    tson::EnumValue numFlagV2 {(uint32_t)(tson::TestEnumNumberFlags::HasBombFlag | tson::TestEnumNumberFlags::HasHumorFlag), &def};
 
-    #error FINISH THIS^
+    REQUIRE(strFlagV1.hasFlag(tson::TestEnumNumberFlags::HasCalculatorFlag | tson::TestEnumNumberFlags::HasHumorFlag |
+                                               tson::TestEnumNumberFlags::HasInvisibilityFlag));
+    REQUIRE(strFlagV1.hasFlag(tson::TestEnumNumberFlags::HasCalculatorFlag | tson::TestEnumNumberFlags::HasHumorFlag));
+    REQUIRE(strFlagV1.hasFlag(tson::TestEnumNumberFlags::HasHumorFlag));
+    REQUIRE(strFlagV1.hasFlagValue(13));
+    REQUIRE(strFlagV1.hasFlagValue(8));
+    REQUIRE(!strFlagV1.hasFlag(tson::TestEnumNumberFlags::HasHumorFlag | tson::TestEnumNumberFlags::HasBombFlag));
+    REQUIRE(!strFlagV1.hasFlagValue((uint32_t) (tson::TestEnumNumberFlags::HasBombFlag)));
+    REQUIRE(strFlagV1.hasAnyFlag(tson::TestEnumNumberFlags::HasHumorFlag | tson::TestEnumNumberFlags::HasBombFlag));
+    REQUIRE(strFlagV1.hasAnyFlagValue(4));
+
+    REQUIRE(strFlagV2.hasFlag(tson::TestEnumNumberFlags::HasBombFlag | tson::TestEnumNumberFlags::HasHumorFlag));
+    REQUIRE(strFlagV2.hasFlag(tson::TestEnumNumberFlags::HasBombFlag));
+    REQUIRE(strFlagV2.hasFlag(tson::TestEnumNumberFlags::HasHumorFlag));
+    REQUIRE(!strFlagV2.hasFlag(tson::TestEnumNumberFlags::HasCalculatorFlag));
+
+    REQUIRE(numFlagV1.hasFlag(tson::TestEnumNumberFlags::All));
+
+    REQUIRE(numFlagV2.hasFlag(tson::TestEnumNumberFlags::HasBombFlag | tson::TestEnumNumberFlags::HasHumorFlag));
+    REQUIRE(numFlagV2.hasFlag(tson::TestEnumNumberFlags::HasBombFlag));
+    REQUIRE(numFlagV2.hasFlag(tson::TestEnumNumberFlags::HasHumorFlag));
+    REQUIRE(!numFlagV2.hasFlag(tson::TestEnumNumberFlags::HasCalculatorFlag));
+
 }

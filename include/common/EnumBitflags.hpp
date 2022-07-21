@@ -8,6 +8,11 @@
 #include <type_traits>
 #include <iostream>
 
+#define TILESON_ENABLE_BITMASK_OPERATORS(x)  \
+namespace tson {                         \
+    ENABLE_BITMASK_OPERATORS(x) \
+}
+
 namespace tson
 {
     #define ENABLE_BITMASK_OPERATORS(x)  \

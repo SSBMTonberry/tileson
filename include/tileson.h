@@ -1,9 +1,9 @@
 ///
-/// T I L E S O N   V E R S I O N   1 . 3 . 1
+/// T I L E S O N   V E R S I O N   1 . 4 . 0 (Work In Progress)
 /// ------------------------------------------------
 /// BSD 2-Clause License
 /// 
-/// Copyright (c) 2021, Robin Berg Pettersen
+/// Copyright (c) 2022, Robin Berg Pettersen
 /// All rights reserved.
 /// 
 /// Redistribution and use in source and binary forms, with or without
