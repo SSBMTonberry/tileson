@@ -45,7 +45,6 @@ TEST_CASE( "Parse an int enum definition without flags - expect correct enum val
                        "    \"storageType\": \"int\",\n"
                        "    \"type\": \"enum\",\n"
                        "    \"values\": [\n"
-                       "        \"None\",\n"
                        "        \"CreateNumber\",\n"
                        "        \"DeleteNumber\",\n"
                        "        \"UpdateNumber\",\n"
@@ -85,7 +84,6 @@ TEST_CASE( "Parse an int enum definition without flags - expect correct enum val
     REQUIRE(def.exists("UpdateNumber"));
     REQUIRE(def.getValue("GetNumber") == 4);
     REQUIRE(def.exists("GetNumber"));
-    REQUIRE(def.getValue("None") == 0);
     REQUIRE(def.getValue("SomethingInvalid") == 0);
     REQUIRE(!def.exists("SomethingInvalid"));
 
@@ -126,7 +124,6 @@ TEST_CASE( "Parse an int enum definition with flags - expect correct enum value 
                        "    \"storageType\": \"int\",\n"
                        "    \"type\": \"enum\",\n"
                        "    \"values\": [\n"
-                       "        \"None\",\n"
                        "        \"HasCalculatorFlag\",\n"
                        "        \"HasBombFlag\",\n"
                        "        \"HasHumorFlag\",\n"
@@ -166,7 +163,6 @@ TEST_CASE( "Parse an int enum definition with flags - expect correct enum value 
     REQUIRE(def.exists("HasHumorFlag"));
     REQUIRE(def.getValue("HasInvisibilityFlag") == 8);
     REQUIRE(def.exists("HasInvisibilityFlag"));
-    REQUIRE(def.getValue("None") == 0);
     REQUIRE(def.getValue("SomethingInvalid") == 0);
     REQUIRE(!def.exists("SomethingInvalid"));
 
@@ -225,7 +221,6 @@ TEST_CASE( "Parse a string enum definition without flags - expect correct enum v
                        "    \"storageType\": \"string\",\n"
                        "    \"type\": \"enum\",\n"
                        "    \"values\": [\n"
-                       "        \"None\",\n"
                        "        \"CreatePlayer\",\n"
                        "        \"UpdatePlayer\",\n"
                        "        \"DeletePlayer\",\n"
@@ -306,7 +301,6 @@ TEST_CASE( "Parse a string enum definition with flags - expect correct enum valu
                        "    \"storageType\": \"string\",\n"
                        "    \"type\": \"enum\",\n"
                        "    \"values\": [\n"
-                       "        \"None\",\n"
                        "        \"HasCarFlag\",\n"
                        "        \"HasJobFlag\",\n"
                        "        \"HasHouseFlag\",\n"
@@ -346,7 +340,6 @@ TEST_CASE( "Parse a string enum definition with flags - expect correct enum valu
     REQUIRE(def.exists("HasHouseFlag"));
     REQUIRE(def.getValue("HasMoneyFlag") == 8);
     REQUIRE(def.exists("HasMoneyFlag"));
-    REQUIRE(def.getValue("None") == 0);
     REQUIRE(def.getValue("SomethingInvalid") == 0);
     REQUIRE(!def.exists("SomethingInvalid"));
 

@@ -40,8 +40,9 @@ namespace tson
 
         if(json.count("values") > 0 && json["values"].isArray())
         {
-            uint32_t valueCounter = 0;
-            uint8_t flagBit = 0;
+            m_values[0] = "None";
+            uint32_t valueCounter = 1;
+            uint8_t flagBit = 1;
             auto &array = json.array("values");
             std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
             {
