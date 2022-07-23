@@ -19,6 +19,7 @@ namespace tson
             inline static std::vector<uint8_t> Base64DecodedStringToBytes(std::string_view str);
             inline static std::vector<uint32_t> BytesToUnsignedInts(const std::vector<uint8_t> &bytes);
             inline static std::vector<std::string> SplitString(const std::string &s, char delim);
+            inline static bool Equal(float a, float b, float precision = 8192.f);
 
         private:
             template<typename Out>
@@ -81,6 +82,19 @@ namespace tson
         std::vector<std::string> elems;
         split(s, delim, std::back_inserter(elems));
         return elems;
+    }
+
+    /*!
+     * Uses a threshold for comparing floats, as they are not precise in many cases.
+     * @param a
+     * @param b
+     * @return true if equal based on the currently defined precision
+     */
+    bool Tools::Equal(float a, float b, float precision)
+    {
+        float threshold = 1.f / precision;
+        float diff = fabsf(a - b);
+        return diff <= threshold;
     }
 }
 

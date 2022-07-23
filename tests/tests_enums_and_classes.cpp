@@ -389,3 +389,98 @@ TEST_CASE( "Parse a string enum definition with flags - expect correct enum valu
     REQUIRE(numFlagV2.hasFlag(tson::TestEnumStringFlags::HasHouseFlag));
     REQUIRE(!numFlagV2.hasFlag(tson::TestEnumStringFlags::HasCarFlag));
 }
+
+TEST_CASE( "Parse a class definition with missing project file - expect all okay except enum values", "[class]" )
+{
+    std::string jstr = "{\n"
+                       "    \"id\": 1,\n"
+                       "    \"members\": [\n"
+                       "        {\n"
+                       "            \"name\": \"Age\",\n"
+                       "            \"type\": \"int\",\n"
+                       "            \"value\": 49\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"CanDestroy\",\n"
+                       "            \"type\": \"bool\",\n"
+                       "            \"value\": true\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"ExtraFile\",\n"
+                       "            \"type\": \"file\",\n"
+                       "            \"value\": \"../ultimate_test.json\"\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"MoneyInBag\",\n"
+                       "            \"type\": \"float\",\n"
+                       "            \"value\": 16.9344\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"MyObject\",\n"
+                       "            \"type\": \"object\",\n"
+                       "            \"value\": 39\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"Name\",\n"
+                       "            \"type\": \"string\",\n"
+                       "            \"value\": \"James Testolini\"\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"NumFlag\",\n"
+                       "            \"propertyType\": \"TestEnumNumberFlags\",\n"
+                       "            \"type\": \"int\",\n"
+                       "            \"value\": 10\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"ShoeColor\",\n"
+                       "            \"type\": \"color\",\n"
+                       "            \"value\": \"#ff069504\"\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"StrFlag\",\n"
+                       "            \"propertyType\": \"TestEnumStringFlags\",\n"
+                       "            \"type\": \"string\",\n"
+                       "            \"value\": \"HasJobFlag,HasHouseFlag\"\n"
+                       "        }\n"
+                       "    ],\n"
+                       "    \"name\": \"TestClass\",\n"
+                       "    \"type\": \"class\"\n"
+                       "}";
+
+    std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
+
+    std::unique_ptr<tson::IJson> js = std::make_unique<tson::Json11>(j);
+    tson::TiledClass c {*js};
+
+    REQUIRE(c.getId() == 1);
+    REQUIRE(c.getName() == "TestClass");
+    REQUIRE(c.getType() == "class");
+    REQUIRE(c.getMembers().getSize() == 9);
+
+    REQUIRE(c.getMember("Age")->getType() == tson::Type::Int);
+    REQUIRE(c.getMember("Age")->getValue<int>() == 49);
+    REQUIRE(c.get<int>("Age") == 49);
+    REQUIRE(c.getMember("CanDestroy")->getType() == tson::Type::Boolean);
+    REQUIRE(c.get<bool>("CanDestroy"));
+    REQUIRE(c.getMember("ExtraFile")->getType() == tson::Type::File);
+    REQUIRE(c.get<fs::path>("ExtraFile") == fs::path("../ultimate_test.json"));
+    REQUIRE(c.getMember("MoneyInBag")->getType() == tson::Type::Float);
+    REQUIRE(tson::Tools::Equal(c.get<float>("MoneyInBag"), 16.9344f));
+    REQUIRE(c.getMember("MyObject")->getType() == tson::Type::Object);
+    REQUIRE(c.get<uint32_t>("MyObject") == 39);
+    REQUIRE(c.getMember("Name")->getType() == tson::Type::String);
+    REQUIRE(c.get<std::string>("Name") == "James Testolini");
+    REQUIRE(c.getMember("ShoeColor")->getType() == tson::Type::Color);
+    tson::Colori color = c.get<tson::Colori>("ShoeColor");
+    REQUIRE(color == "#ff069504");
+    REQUIRE(color.a == 0xff);
+    REQUIRE(color.r == 0x06);
+    REQUIRE(color.g == 0x95);
+    REQUIRE(color.b == 0x04);
+
+
+    REQUIRE(c.getMember("StrFlag")->getType() == tson::Type::Enum);
+    REQUIRE(c.getMember("NumFlag")->getType() == tson::Type::Enum);
+}

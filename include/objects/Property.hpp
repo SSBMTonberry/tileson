@@ -84,13 +84,14 @@ tson::Property::Property() : m_name {"unnamed"}
 
 tson::Property::Property(IJson &json)
 {
-    setTypeByString(json["type"].get<std::string>());
+    m_name = json["name"].get<std::string>();
     if(json.count("propertytype") > 0)
         m_propertyType = json["propertytype"].get<std::string>();
+    else if(json.count("propertyType") > 0) //Somehow Tiled's class objects uses propertyType with 'T'.
+        m_propertyType = json["propertyType"].get<std::string>();
+
+    setTypeByString(json["type"].get<std::string>());
     setValueByType(json["value"]);
-    m_name = json["name"].get<std::string>();
-
-
 }
 
 tson::Property::Property(std::string name, std::any value, Type type) : m_name { move(name) }, m_value { move(value) }, m_type {type}
