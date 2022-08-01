@@ -7,10 +7,11 @@
 
 namespace tson
 {
+    //class Project;
     class TiledClass
     {
         public:
-            inline explicit TiledClass(IJson &json);
+            inline explicit TiledClass(IJson &json, tson::Project *project = nullptr);
 
             [[nodiscard]] inline uint32_t getId() const;
             [[nodiscard]] inline const std::string &getName() const;
@@ -29,7 +30,7 @@ namespace tson
 
     };
 
-    TiledClass::TiledClass(IJson &json)
+    TiledClass::TiledClass(IJson &json, tson::Project *project)
     {
         if(json.count("id") > 0)
             m_id = json["id"].get<uint32_t>();
@@ -44,7 +45,7 @@ namespace tson
             auto &array = json.array("members");
             std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
             {
-                m_members.add(*item);
+                m_members.add(*item, project);
             });
         }
     }

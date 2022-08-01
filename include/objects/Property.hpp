@@ -17,6 +17,8 @@
 
 namespace tson
 {
+    class Project;
+
     class Property
     {
         public:
@@ -33,7 +35,7 @@ namespace tson
             //};
 
             inline Property();
-            inline Property(IJson &json);
+            inline explicit Property(IJson &json, tson::Project *project = nullptr);
             inline Property(std::string name, std::any value, Type type);
 
             inline void setValue(const std::any &value);
@@ -53,6 +55,7 @@ namespace tson
             inline void setTypeByString(const std::string &str);
             inline void setValueByType(IJson &json);
 
+            tson::Project *m_project = nullptr; //Used for resolving 'enum' and 'class' objects
             Type m_type = Type::Undefined;
             std::string m_name {};
             std::string m_propertyType {};
@@ -82,7 +85,7 @@ tson::Property::Property() : m_name {"unnamed"}
 
 }
 
-tson::Property::Property(IJson &json)
+tson::Property::Property(IJson &json, tson::Project *project) : m_project {project}
 {
     m_name = json["name"].get<std::string>();
     if(json.count("propertytype") > 0)

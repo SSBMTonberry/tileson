@@ -9,8 +9,10 @@
 #include <sstream>
 #include <memory>
 #include "World.hpp"
+#include "../objects/ProjectPropertyTypes.hpp"
 #include "../objects/ProjectFolder.hpp"
 #include "../objects/ProjectData.hpp"
+
 
 namespace tson
 {
@@ -35,6 +37,9 @@ namespace tson
             [[nodiscard]] inline const ProjectData &getData() const;
             [[nodiscard]] inline const fs::path &getPath() const;
             [[nodiscard]] inline const std::vector<ProjectFolder> &getFolders() const;
+            [[nodiscard]] inline const tson::EnumDefinition* getEnumDefinition(std::string_view name) const;
+            [[nodiscard]] inline const tson::TiledClass* getClass(std::string_view name) const;
+
 
         private:
             inline void parseJson(IJson &json);
@@ -79,6 +84,12 @@ namespace tson
     {
         m_data.basePath = m_path.parent_path(); //The directory of the project file
 
+        //Make sure these property types are read before any map is, so they can be resolved.
+        if(json.count("propertyTypes") > 0)
+        {
+            m_data.projectPropertyTypes.parse(json, this);
+        }
+
         if(json.count("automappingRulesFile") > 0) m_data.automappingRulesFile = json["automappingRulesFile"].get<std::string>();
         if(json.count("commands") > 0)
         {
@@ -104,7 +115,6 @@ namespace tson
             });
         }
         if(json.count("objectTypesFile") > 0) m_data.objectTypesFile = json["objectTypesFile"].get<std::string>();
-
     }
 
     const fs::path &Project::getPath() const
@@ -115,6 +125,16 @@ namespace tson
     const std::vector<ProjectFolder> &Project::getFolders() const
     {
         return m_folders;
+    }
+
+    const tson::EnumDefinition *Project::getEnumDefinition(std::string_view name) const
+    {
+        return m_data.projectPropertyTypes.getEnumDefinition(name);
+    }
+
+    const tson::TiledClass *Project::getClass(std::string_view name) const
+    {
+        return m_data.projectPropertyTypes.getClass(name);
     }
 
 
