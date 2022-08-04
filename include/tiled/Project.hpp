@@ -33,12 +33,13 @@ namespace tson
             inline explicit Project(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser);
             #endif
             inline bool parse(const fs::path &path);
+            inline void parse();
 
             [[nodiscard]] inline const ProjectData &getData() const;
             [[nodiscard]] inline const fs::path &getPath() const;
             [[nodiscard]] inline const std::vector<ProjectFolder> &getFolders() const;
-            [[nodiscard]] inline const tson::EnumDefinition* getEnumDefinition(std::string_view name) const;
-            [[nodiscard]] inline const tson::TiledClass* getClass(std::string_view name) const;
+            [[nodiscard]] inline tson::EnumDefinition* getEnumDefinition(std::string_view name);
+            [[nodiscard]] inline tson::TiledClass* getClass(std::string_view name);
 
 
         private:
@@ -82,7 +83,7 @@ namespace tson
 
     void Project::parseJson(IJson &json)
     {
-        m_data.basePath = m_path.parent_path(); //The directory of the project file
+        m_data.basePath = (m_path.empty()) ? fs::path() : m_path.parent_path(); //The directory of the project file
 
         //Make sure these property types are read before any map is, so they can be resolved.
         if(json.count("propertyTypes") > 0)
@@ -127,16 +128,24 @@ namespace tson
         return m_folders;
     }
 
-    const tson::EnumDefinition *Project::getEnumDefinition(std::string_view name) const
+    tson::EnumDefinition *Project::getEnumDefinition(std::string_view name)
     {
         return m_data.projectPropertyTypes.getEnumDefinition(name);
     }
 
-    const tson::TiledClass *Project::getClass(std::string_view name) const
+    tson::TiledClass *Project::getClass(std::string_view name)
     {
         return m_data.projectPropertyTypes.getClass(name);
     }
 
+    /*!
+     * Parses preloaded json data. Only used during tests involving project jsons not actually read from files
+     * @return
+     */
+    void Project::parse()
+    {
+        parseJson(*m_json);
+    }
 
 }
 

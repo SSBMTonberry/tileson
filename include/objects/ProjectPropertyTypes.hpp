@@ -15,8 +15,8 @@ namespace tson
 
             inline const std::vector<tson::EnumDefinition> &getEnums() const;
             inline const std::vector<tson::TiledClass> &getClasses() const;
-            [[nodiscard]] inline const tson::EnumDefinition* getEnumDefinition(std::string_view name) const;
-            [[nodiscard]] inline const tson::TiledClass* getClass(std::string_view name) const;
+            [[nodiscard]] inline tson::EnumDefinition* getEnumDefinition(std::string_view name);
+            [[nodiscard]] inline tson::TiledClass* getClass(std::string_view name);
             inline bool isUnhandledContentFound() const;
 
         private:
@@ -39,12 +39,13 @@ namespace tson
             std::vector<tson::IJson*> other; //Unhandled stuff - just to keep track if something is missing...
             std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
             {
-                if(json.count("type") > 0)
+                IJson &j = *item;
+                if(j.count("type") > 0)
                 {
-                    std::string t = json.get<std::string>("type");
+                    std::string t = j["type"].get<std::string>();
                     if(t == "enum")
                     {
-                        m_enums.emplace_back(*item); //Can be resolved directly
+                        m_enums.emplace_back(j); //Can be resolved directly
                     }
                     else if(t == "class")
                     {
@@ -82,7 +83,7 @@ namespace tson
         return m_unhandledContentFound;
     }
 
-    const tson::EnumDefinition *ProjectPropertyTypes::getEnumDefinition(std::string_view name) const
+    tson::EnumDefinition *ProjectPropertyTypes::getEnumDefinition(std::string_view name)
     {
         auto it = std::find_if(m_enums.begin(), m_enums.end(), [&](const EnumDefinition &def)
         {
@@ -95,7 +96,7 @@ namespace tson
         return nullptr;
     }
 
-    const tson::TiledClass *ProjectPropertyTypes::getClass(std::string_view name) const
+    tson::TiledClass *ProjectPropertyTypes::getClass(std::string_view name)
     {
         auto it = std::find_if(m_classes.begin(), m_classes.end(), [&](const TiledClass &def)
         {

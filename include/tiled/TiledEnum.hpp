@@ -13,17 +13,20 @@ namespace tson
             inline explicit EnumDefinition(IJson &json);
             inline uint32_t getValue(const std::string &str);
             inline std::string getValue(uint32_t num);
+            inline std::vector<std::string> getValues(uint32_t num);
             inline bool exists(const std::string &str);
             inline bool exists(uint32_t num);
 
             [[nodiscard]] inline uint32_t getId() const;
+            [[nodiscard]] inline uint32_t getMaxValue() const;
             [[nodiscard]] inline const std::string &getName() const;
             [[nodiscard]] inline EnumStorageType getStorageType() const;
-
             [[nodiscard]] inline bool hasValuesAsFlags() const;
 
         private:
+            inline bool hasFlag(uint32_t value, uint32_t flag) const;
             uint32_t m_id {};
+            uint32_t m_maxValue {};
             std::string m_name {};
             std::map<uint32_t, std::string> m_values {};
             bool m_valuesAsFlags {false};
@@ -58,6 +61,8 @@ namespace tson
                     ++valueCounter;
                 }
             });
+
+            m_maxValue = valueCounter;
         }
     }
 
@@ -114,14 +119,54 @@ namespace tson
         return m_storageType;
     }
 
+    uint32_t EnumDefinition::getMaxValue() const
+    {
+        return m_maxValue;
+    }
+
+    std::vector<std::string> EnumDefinition::getValues(uint32_t num)
+    {
+        std::vector<std::string> values;
+        if(m_valuesAsFlags)
+        {
+            uint32_t flag = 0;
+            uint32_t i = 0;
+            while(flag < m_maxValue)
+            {
+                flag = 1 << i;
+                ++i;
+                if(m_values.count(flag) > 0 && hasFlag(num, flag))
+                {
+                    values.emplace_back(m_values[flag]);
+                }
+            }
+        }
+        else
+        {
+            std::string v = getValue(num);
+            if(!v.empty())
+                values.emplace_back();
+        }
+
+        return values;
+    }
+
+    bool EnumDefinition::hasFlag(uint32_t value, uint32_t flag) const
+    {
+        return ((value & flag) == flag);
+    }
+
     class EnumValue
     {
         public:
+            inline EnumValue() = default;
             inline EnumValue(uint32_t value, EnumDefinition *definition);
             inline EnumValue(const std::string &value, EnumDefinition *definition);
 
-            inline uint32_t getValue();
-            inline std::string getName();
+            [[nodiscard]] inline uint32_t getValue() const;
+            inline std::string getValueName() const;
+            [[nodiscard]] inline std::vector<std::string> getValueNames() const;
+            [[nodiscard]] inline EnumDefinition *getDefinition() const;
 
             inline bool hasFlagValue(uint32_t flag) const;
             template <typename T>
@@ -182,14 +227,20 @@ namespace tson
         return m_value == flags;
     }
 
-    uint32_t EnumValue::getValue()
+    uint32_t EnumValue::getValue() const
     {
         return m_value;
     }
 
-    std::string EnumValue::getName()
+    /*!
+     * Gets the single name of a value.
+     * This function is intended for enums that can only have one value (non-flag).
+     * If you want to get several value names (flags), use getValueNames() instead.
+     * @return A single name for a value
+     */
+    std::string EnumValue::getValueName() const
     {
-        return m_definition->getValue(m_value);
+        return (m_definition == nullptr) ? "" : m_definition->getValue(m_value);
     }
 
     /*!
@@ -216,6 +267,16 @@ namespace tson
     bool EnumValue::hasAnyFlag(T flags) const
     {
         return hasAnyFlagValue(static_cast<uint32_t>(flags));
+    }
+
+    EnumDefinition *EnumValue::getDefinition() const
+    {
+        return m_definition;
+    }
+
+    std::vector<std::string> EnumValue::getValueNames() const
+    {
+        return (m_definition == nullptr) ? std::vector<std::string>() : m_definition->getValues(m_value);
     }
 }
 

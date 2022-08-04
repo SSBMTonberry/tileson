@@ -53,7 +53,7 @@ namespace tson
 
         protected:
             inline void setTypeByString(const std::string &str);
-            inline void setValueByType(IJson &json);
+            inline void setValueByType(IJson &json); //Definition in tileson_forward.hpp
 
             tson::Project *m_project = nullptr; //Used for resolving 'enum' and 'class' objects
             Type m_type = Type::Undefined;
@@ -183,61 +183,6 @@ void tson::Property::setTypeByString(const std::string &str)
         m_type = tson::Type::Object;
     else
         m_type = tson::Type::Undefined;
-}
-
-void tson::Property::setValueByType(IJson &json)
-{
-    switch(m_type)
-    {
-        case Type::Color:
-            m_value = Colori(json.get<std::string>());
-            break;
-
-        case Type::File:
-            m_value = fs::path(json.get<std::string>());
-            break;
-
-        case Type::Int:
-            if(!m_propertyType.empty())
-            {
-                m_type = Type::Enum;
-                //RBP: Assign int enum value!
-            }
-            else
-                m_value = json.get<int>();
-
-            break;
-
-        case Type::Boolean:
-            m_value = json.get<bool>();
-            break;
-
-        case Type::Float:
-            m_value = json.get<float>();
-            break;
-
-        case Type::String:
-            if(!m_propertyType.empty())
-            {
-                m_type = Type::Enum;
-                //RBP: Assign string enum value!
-            }
-            else
-                setStrValue(json.get<std::string>());
-
-            break;
-
-        case Type::Class:
-
-            break;
-
-        case Type::Object:
-            m_value = json.get<uint32_t>();
-            break;
-        default:
-            setStrValue(json.get<std::string>());
-            break;
-    }
 }
 
 const std::string &tson::Property::getPropertyType() const
