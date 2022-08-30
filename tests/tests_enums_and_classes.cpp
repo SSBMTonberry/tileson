@@ -722,3 +722,282 @@ TEST_CASE( "Parse a class definition with project file included - expect all oka
     REQUIRE(strEnum.hasFlag(tson::TestEnumStringFlags::HasHouseFlag));
     REQUIRE(!strEnum.hasFlag(tson::TestEnumStringFlags::HasMoneyFlag));
 }
+
+TEST_CASE( "Parse a class definition and copy it - expect same properties", "[class]" )
+{
+    std::string error;
+
+    std::string projectJson = "{\n"
+                              "    \"automappingRulesFile\": \"\",\n"
+                              "    \"commands\": [\n"
+                              "    ],\n"
+                              "    \"extensionsPath\": \"extensions\",\n"
+                              "    \"folders\": [],\n"
+                              "    \"objectTypesFile\": \"../objecttypes.json\",\n"
+                              "    \"propertyTypes\": [\n"
+                              "        {\n"
+                              "            \"id\": 1,\n"
+                              "            \"members\": [\n"
+                              "                {\n"
+                              "                    \"name\": \"Age\",\n"
+                              "                    \"type\": \"int\",\n"
+                              "                    \"value\": 49\n"
+                              "                },\n"
+                              "                {\n"
+                              "                    \"name\": \"CanDestroy\",\n"
+                              "                    \"type\": \"bool\",\n"
+                              "                    \"value\": true\n"
+                              "                },\n"
+                              "                {\n"
+                              "                    \"name\": \"ExtraFile\",\n"
+                              "                    \"type\": \"file\",\n"
+                              "                    \"value\": \"../ultimate_test.json\"\n"
+                              "                },\n"
+                              "                {\n"
+                              "                    \"name\": \"MoneyInBag\",\n"
+                              "                    \"type\": \"float\",\n"
+                              "                    \"value\": 16.9344\n"
+                              "                },\n"
+                              "                {\n"
+                              "                    \"name\": \"MyObject\",\n"
+                              "                    \"type\": \"object\",\n"
+                              "                    \"value\": 0\n"
+                              "                },\n"
+                              "                {\n"
+                              "                    \"name\": \"Name\",\n"
+                              "                    \"type\": \"string\",\n"
+                              "                    \"value\": \"James Testolini\"\n"
+                              "                },\n"
+                              "                {\n"
+                              "                    \"name\": \"NumFlag\",\n"
+                              "                    \"propertyType\": \"TestEnumNumberFlags\",\n"
+                              "                    \"type\": \"int\",\n"
+                              "                    \"value\": 10\n"
+                              "                },\n"
+                              "                {\n"
+                              "                    \"name\": \"ShoeColor\",\n"
+                              "                    \"type\": \"color\",\n"
+                              "                    \"value\": \"#ff069504\"\n"
+                              "                },\n"
+                              "                {\n"
+                              "                    \"name\": \"StrFlag\",\n"
+                              "                    \"propertyType\": \"TestEnumStringFlags\",\n"
+                              "                    \"type\": \"string\",\n"
+                              "                    \"value\": \"HasJobFlag,HasHouseFlag\"\n"
+                              "                }\n"
+                              "            ],\n"
+                              "            \"name\": \"TestClass\",\n"
+                              "            \"type\": \"class\"\n"
+                              "        },\n"
+                              "        {\n"
+                              "            \"id\": 3,\n"
+                              "            \"name\": \"TestEnumNumber\",\n"
+                              "            \"storageType\": \"int\",\n"
+                              "            \"type\": \"enum\",\n"
+                              "            \"values\": [\n"
+                              "                \"CreateNumber\",\n"
+                              "                \"DeleteNumber\",\n"
+                              "                \"UpdateNumber\",\n"
+                              "                \"GetNumber\"\n"
+                              "            ],\n"
+                              "            \"valuesAsFlags\": false\n"
+                              "        },\n"
+                              "        {\n"
+                              "            \"id\": 4,\n"
+                              "            \"name\": \"TestEnumNumberFlags\",\n"
+                              "            \"storageType\": \"int\",\n"
+                              "            \"type\": \"enum\",\n"
+                              "            \"values\": [\n"
+                              "                \"HasCalculatorFlag\",\n"
+                              "                \"HasBombFlag\",\n"
+                              "                \"HasHumorFlag\",\n"
+                              "                \"HasInvisibilityFlag\"\n"
+                              "            ],\n"
+                              "            \"valuesAsFlags\": true\n"
+                              "        },\n"
+                              "        {\n"
+                              "            \"id\": 2,\n"
+                              "            \"name\": \"TestEnumString\",\n"
+                              "            \"storageType\": \"string\",\n"
+                              "            \"type\": \"enum\",\n"
+                              "            \"values\": [\n"
+                              "                \"CreatePlayer\",\n"
+                              "                \"UpdatePlayer\",\n"
+                              "                \"DeletePlayer\",\n"
+                              "                \"GetPlayer\"\n"
+                              "            ],\n"
+                              "            \"valuesAsFlags\": false\n"
+                              "        },\n"
+                              "        {\n"
+                              "            \"id\": 5,\n"
+                              "            \"name\": \"TestEnumStringFlags\",\n"
+                              "            \"storageType\": \"string\",\n"
+                              "            \"type\": \"enum\",\n"
+                              "            \"values\": [\n"
+                              "                \"HasCarFlag\",\n"
+                              "                \"HasJobFlag\",\n"
+                              "                \"HasHouseFlag\",\n"
+                              "                \"HasMoneyFlag\"\n"
+                              "            ],\n"
+                              "            \"valuesAsFlags\": true\n"
+                              "        }\n"
+                              "    ]\n"
+                              "}";
+
+    json11::Json jproj = json11::Json::parse(projectJson, error);
+    REQUIRE(error.empty());
+
+    tson::Project p { std::make_unique<tson::Json11>(jproj) };
+    p.parse();
+
+    std::string jstr = "{\n"
+                       "    \"id\": 1,\n"
+                       "    \"members\": [\n"
+                       "        {\n"
+                       "            \"name\": \"Age\",\n"
+                       "            \"type\": \"int\",\n"
+                       "            \"value\": 49\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"CanDestroy\",\n"
+                       "            \"type\": \"bool\",\n"
+                       "            \"value\": true\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"ExtraFile\",\n"
+                       "            \"type\": \"file\",\n"
+                       "            \"value\": \"../ultimate_test.json\"\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"MoneyInBag\",\n"
+                       "            \"type\": \"float\",\n"
+                       "            \"value\": 16.9344\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"MyObject\",\n"
+                       "            \"type\": \"object\",\n"
+                       "            \"value\": 39\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"Name\",\n"
+                       "            \"type\": \"string\",\n"
+                       "            \"value\": \"James Testolini\"\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"NumFlag\",\n"
+                       "            \"propertyType\": \"TestEnumNumberFlags\",\n"
+                       "            \"type\": \"int\",\n"
+                       "            \"value\": 10\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"ShoeColor\",\n"
+                       "            \"type\": \"color\",\n"
+                       "            \"value\": \"#ff069504\"\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"StrFlag\",\n"
+                       "            \"propertyType\": \"TestEnumStringFlags\",\n"
+                       "            \"type\": \"string\",\n"
+                       "            \"value\": \"HasJobFlag,HasHouseFlag\"\n"
+                       "        }\n"
+                       "    ],\n"
+                       "    \"name\": \"TestClass\",\n"
+                       "    \"type\": \"class\"\n"
+                       "}";
+
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
+
+    std::unique_ptr<tson::IJson> js = std::make_unique<tson::Json11>(j);
+    tson::TiledClass c {*js, &p};
+    tson::TiledClass c2 = c;
+
+    REQUIRE(c.getId() == 1);
+    REQUIRE(c.getName() == "TestClass");
+    REQUIRE(c.getType() == "class");
+    REQUIRE(c.getMembers().getSize() == 9);
+
+    REQUIRE(c.getMember("Age")->getType() == tson::Type::Int);
+    REQUIRE(c.getMember("Age")->getValue<int>() == 49);
+    REQUIRE(c.get<int>("Age") == 49);
+    REQUIRE(c.getMember("CanDestroy")->getType() == tson::Type::Boolean);
+    REQUIRE(c.get<bool>("CanDestroy"));
+    REQUIRE(c.getMember("ExtraFile")->getType() == tson::Type::File);
+    REQUIRE(c.get<fs::path>("ExtraFile") == fs::path("../ultimate_test.json"));
+    REQUIRE(c.getMember("MoneyInBag")->getType() == tson::Type::Float);
+    REQUIRE(tson::Tools::Equal(c.get<float>("MoneyInBag"), 16.9344f));
+    REQUIRE(c.getMember("MyObject")->getType() == tson::Type::Object);
+    REQUIRE(c.get<uint32_t>("MyObject") == 39);
+    REQUIRE(c.getMember("Name")->getType() == tson::Type::String);
+    REQUIRE(c.get<std::string>("Name") == "James Testolini");
+    REQUIRE(c.getMember("ShoeColor")->getType() == tson::Type::Color);
+    tson::Colori color = c.get<tson::Colori>("ShoeColor");
+    REQUIRE(color == "#ff069504");
+    REQUIRE(color.a == 0xff);
+    REQUIRE(color.r == 0x06);
+    REQUIRE(color.g == 0x95);
+    REQUIRE(color.b == 0x04);
+
+    tson::EnumValue numEnum = c.getMember("NumFlag")->getValue<tson::EnumValue>();
+    tson::EnumValue strEnum = c.getMember("StrFlag")->getValue<tson::EnumValue>();
+
+    REQUIRE(c.getMember("NumFlag")->getType() == tson::Type::Enum);
+    REQUIRE(numEnum.getValue() == 10);
+    REQUIRE(numEnum.hasFlag(tson::TestEnumNumberFlags::HasBombFlag | tson::TestEnumNumberFlags::HasInvisibilityFlag));
+    REQUIRE(numEnum.hasFlag(tson::TestEnumNumberFlags::HasBombFlag));
+    REQUIRE(numEnum.hasFlag(tson::TestEnumNumberFlags::HasInvisibilityFlag));
+    REQUIRE(!numEnum.hasFlag(tson::TestEnumNumberFlags::HasHumorFlag));
+
+    REQUIRE(c.getMember("StrFlag")->getType() == tson::Type::Enum);
+    REQUIRE(strEnum.getValue() == 6);
+    REQUIRE(strEnum.hasFlag(tson::TestEnumStringFlags::HasJobFlag | tson::TestEnumStringFlags::HasHouseFlag));
+    REQUIRE(strEnum.hasFlag(tson::TestEnumStringFlags::HasJobFlag));
+    REQUIRE(strEnum.hasFlag(tson::TestEnumStringFlags::HasHouseFlag));
+    REQUIRE(!strEnum.hasFlag(tson::TestEnumStringFlags::HasMoneyFlag));
+
+    // Check the same with the copy of class
+    // -------------------------------------
+
+    REQUIRE(c2.getId() == 1);
+    REQUIRE(c2.getName() == "TestClass");
+    REQUIRE(c2.getType() == "class");
+    REQUIRE(c2.getMembers().getSize() == 9);
+
+    REQUIRE(c2.getMember("Age")->getType() == tson::Type::Int);
+    REQUIRE(c2.getMember("Age")->getValue<int>() == 49);
+    REQUIRE(c2.get<int>("Age") == 49);
+    REQUIRE(c2.getMember("CanDestroy")->getType() == tson::Type::Boolean);
+    REQUIRE(c2.get<bool>("CanDestroy"));
+    REQUIRE(c2.getMember("ExtraFile")->getType() == tson::Type::File);
+    REQUIRE(c2.get<fs::path>("ExtraFile") == fs::path("../ultimate_test.json"));
+    REQUIRE(c2.getMember("MoneyInBag")->getType() == tson::Type::Float);
+    REQUIRE(tson::Tools::Equal(c2.get<float>("MoneyInBag"), 16.9344f));
+    REQUIRE(c2.getMember("MyObject")->getType() == tson::Type::Object);
+    REQUIRE(c2.get<uint32_t>("MyObject") == 39);
+    REQUIRE(c2.getMember("Name")->getType() == tson::Type::String);
+    REQUIRE(c2.get<std::string>("Name") == "James Testolini");
+    REQUIRE(c2.getMember("ShoeColor")->getType() == tson::Type::Color);
+    tson::Colori colorC2 = c2.get<tson::Colori>("ShoeColor");
+    REQUIRE(colorC2 == "#ff069504");
+    REQUIRE(colorC2.a == 0xff);
+    REQUIRE(colorC2.r == 0x06);
+    REQUIRE(colorC2.g == 0x95);
+    REQUIRE(colorC2.b == 0x04);
+
+    tson::EnumValue numEnumC2 = c2.getMember("NumFlag")->getValue<tson::EnumValue>();
+    tson::EnumValue strEnumC2 = c2.getMember("StrFlag")->getValue<tson::EnumValue>();
+
+    REQUIRE(c2.getMember("NumFlag")->getType() == tson::Type::Enum);
+    REQUIRE(numEnumC2.getValue() == 10);
+    REQUIRE(numEnumC2.hasFlag(tson::TestEnumNumberFlags::HasBombFlag | tson::TestEnumNumberFlags::HasInvisibilityFlag));
+    REQUIRE(numEnumC2.hasFlag(tson::TestEnumNumberFlags::HasBombFlag));
+    REQUIRE(numEnumC2.hasFlag(tson::TestEnumNumberFlags::HasInvisibilityFlag));
+    REQUIRE(!numEnumC2.hasFlag(tson::TestEnumNumberFlags::HasHumorFlag));
+
+    REQUIRE(c2.getMember("StrFlag")->getType() == tson::Type::Enum);
+    REQUIRE(strEnumC2.getValue() == 6);
+    REQUIRE(strEnumC2.hasFlag(tson::TestEnumStringFlags::HasJobFlag | tson::TestEnumStringFlags::HasHouseFlag));
+    REQUIRE(strEnumC2.hasFlag(tson::TestEnumStringFlags::HasJobFlag));
+    REQUIRE(strEnumC2.hasFlag(tson::TestEnumStringFlags::HasHouseFlag));
+    REQUIRE(!strEnumC2.hasFlag(tson::TestEnumStringFlags::HasMoneyFlag));
+}
