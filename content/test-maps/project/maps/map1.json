@@ -64,7 +64,8 @@
             {
              "Age":51,
              "ExtraFile":"..\/..\/ultimate_test_v1.5.json",
-             "MyObject":1
+             "MyObject":1,
+             "Name":"Karen Modifini"
             }
         }, 
         {
@@ -102,7 +103,7 @@
          "value":42
         }],
  "renderorder":"left-down",
- "tiledversion":"1.8.5",
+ "tiledversion":"1.8.6",
  "tileheight":16,
  "tilesets":[
         {

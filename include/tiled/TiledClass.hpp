@@ -17,6 +17,7 @@ namespace tson
             [[nodiscard]] inline const std::string &getName() const;
             [[nodiscard]] inline const std::string &getType() const;
             [[nodiscard]] inline const PropertyCollection &getMembers() const;
+            inline void update(IJson &json);
 
             template <typename T>
             inline T get(const std::string &name);
@@ -81,6 +82,15 @@ namespace tson
         if(m_members.hasProperty(name))
             return m_members.getProperty(name);
         return nullptr;
+    }
+
+    /*!
+     * Takes a json object from a particular map top update values if they differ from the original values of the class
+     * @param json
+     */
+    void TiledClass::update(IJson &json)
+    {
+        //RBP: Finish logic!
     }
 }
 
