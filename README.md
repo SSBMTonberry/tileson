@@ -47,7 +47,7 @@ There is a `Doxygen` generated documentation of Tileson that can be found [HERE]
 
 # How to contribute
 You are free to post any issue requesting new features, reporting bugs or asking questions at any time.
-If you want to contribute in the development of `Tileson`, make sure you read the [CONTRIBUTION GUIDELINES](https://github.com/SSBMTonberry/tileson/blob/master/CONTRIBUTION.md)
+If you want to contribute in the development of `Tileson`, make sure you read the [CONTRIBUTION GUIDELINES](CONTRIBUTION.md)
 before you start doing anything.
 
 # Unreleased features available in the master-branch
@@ -81,7 +81,7 @@ Many commercial games have used it as their goto map editor.
 A few popular games that have used Tiled: `Shovel Knight`, `Axiom Verge` and `ScubaDiver`.
 
 
-![alt text](https://github.com/SSBMTonberry/tileson/blob/master/content/tiled_tileson_image.png "Tiled Screenshot") 
+![alt text](content/tiled_tileson_image.png "Tiled Screenshot") 
 
 Tiled can be found here:
 - [Homepage](https://www.mapeditor.org/)
@@ -415,28 +415,28 @@ The program is cross-platform. It utilizes the features of modern C++ (C++17), w
 
 As a default, compiling examples are disabled due to CI, but it can easily be enabled through the CMakeLists.txt file on the root level of the project. Also keep in mind that the examples are using content from the `tileson/content` folder and are using relative paths. This is where the executable usually is located when compiling, and must have the same relative path to find the files:
 
-![alt text](https://github.com/SSBMTonberry/tileson/blob/master/content/demo-example-destination.png "Demo path") 
+![alt text](content/demo-example-destination.png "Demo path") 
 
 ## Windows
 For compiling the demo on Windows, it's recommended to use either Visual Studio or Visual Studio Code and open the CMakeLists.txt on the root level of the project. Examples for Windows required a `x86`-build in the past, but `x64` should now work just as well! Some screenshots to showcase how CMake should be configured to build the demo using Visual Studio 2019:
 
 #### Locate the CMakeLists.txt in the root of this project
 
-![alt text](https://github.com/SSBMTonberry/tileson/blob/master/content/demo-vs-compile_2.png "VS 1") 
+![alt text](content/demo-vs-compile_2.png "VS 1") 
 
 #### Configure build to be x86 or x64
 
-![alt text](https://github.com/SSBMTonberry/tileson/blob/master/content/demo-vs-compile.png "VS 2") 
+![alt text](content/demo-vs-compile.png "VS 2") 
 
 #### And then
 
-![alt text](https://github.com/SSBMTonberry/tileson/blob/master/content/demo-vs-compile_3.png "VS 3")
-![alt text](https://github.com/SSBMTonberry/tileson/blob/master/content/demo-vs-compile_4.png "VS 4")
-![alt text](https://github.com/SSBMTonberry/tileson/blob/master/content/demo-vs-compile_5.png "VS 5")
+![alt text](content/demo-vs-compile_3.png "VS 3")
+![alt text](content/demo-vs-compile_4.png "VS 4")
+![alt text](content/demo-vs-compile_5.png "VS 5")
 
 #### Output after full build
 
-![alt text](https://github.com/SSBMTonberry/tileson/blob/master/content/demo-vs-compile_6.png "VS 6")
+![alt text](content/demo-vs-compile_6.png "VS 6")
 
 ## Linux
 
