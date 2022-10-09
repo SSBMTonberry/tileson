@@ -114,6 +114,12 @@ TEST_CASE( "Parse project with class and enum info in maps - expect right values
             REQUIRE(enumNumber.getValueName() == "GetNumber");
             REQUIRE(enumNumberFlags.getValue() == 7);
             REQUIRE(enumNumberFlags.getValueNames().size() == 3);
+            std::vector<std::string> expectedNumberFlagNames {"HasCalculatorFlag", "HasBombFlag", "HasHumorFlag"};
+            for(const std::string &s : expectedNumberFlagNames)
+            {
+                REQUIRE(enumNumberFlags.containsValueName(s));
+            }
+            
             REQUIRE(enumStr.getValue() == 1);
             REQUIRE(enumStr.getValueName() == "CreatePlayer");
             REQUIRE(enumStrFlags.getValue() == 7);

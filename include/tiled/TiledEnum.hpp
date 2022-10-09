@@ -174,7 +174,7 @@ namespace tson
             inline bool hasAnyFlagValue(uint32_t flags) const;
             template <typename T>
             inline bool hasAnyFlag(T flags) const;
-
+            [[nodiscard]] inline bool containsValueName(const std::string &value) const;
 
         private:
             uint32_t m_value {0};
@@ -277,6 +277,26 @@ namespace tson
     std::vector<std::string> EnumValue::getValueNames() const
     {
         return (m_definition == nullptr) ? std::vector<std::string>() : m_definition->getValues(m_value);
+    }
+
+    /*!
+     *
+     * @param value
+     * @return
+     */
+    bool EnumValue::containsValueName(const std::string &value) const
+    {
+        if(m_definition != nullptr)
+        {
+            if(m_definition->hasValuesAsFlags())
+            {
+                std::vector<std::string> values = m_definition->getValues(m_value);
+                auto it = std::find(values.begin(), values.end(), value);
+                return it != values.end();
+            }
+            return m_definition->getValue(value) == m_value;
+        }
+        return false;
     }
 }
 

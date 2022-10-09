@@ -310,12 +310,7 @@ void tson::Property::setValueByType(IJson &json)
             if (baseClass != nullptr)
             {
                 tson::TiledClass c = *baseClass;
-                //if(json.count("value") > 0)
-                {
-                    //tson::IJson &v = json["value"]; //Contains an actual json with only values that differs from the original class.
-                    //RBP: Create logic to correctly parse the values from the json and overwrite them in the class.
-                    c.update(json);
-                }
+                c.update(json);
                 m_value = c;
             }
         }
