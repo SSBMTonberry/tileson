@@ -89,9 +89,9 @@ TEST_CASE( "Parse project with class info in maps - expect right values", "[proj
             std::string name = c.get<std::string>("Name");
             bool canDestroy = c.get<bool>("CanDestroy");
             float money = c.get<float>("MoneyInBag");
-            tson::EnumValue enumNumber = c.get<tson::EnumValue>("TestEnumNumberFlags");
-            tson::EnumValue enumString = c.get<tson::EnumValue>("TestEnumStringFlags");
             tson::Colori color = c.get<tson::Colori>("ShoeColor");
+            tson::EnumValue enumNumber = c.get<tson::EnumValue>("NumFlag");
+            tson::EnumValue enumString = c.get<tson::EnumValue>("StrFlag");
 
             REQUIRE(age == 51);
             REQUIRE(extraFile.filename() == "ultimate_test_v1.5.json");
@@ -99,9 +99,9 @@ TEST_CASE( "Parse project with class info in maps - expect right values", "[proj
             REQUIRE(name == "Karen Modifini");
             REQUIRE(canDestroy);
             REQUIRE(tson::Tools::Equal(money, 16.9344f));
+            REQUIRE(color == "#ff069504");
             REQUIRE(enumNumber.getValue() == 10);
             REQUIRE(enumString.getValue() == 6);
-            REQUIRE(color == "#ff069504");
         }
     }
 }
