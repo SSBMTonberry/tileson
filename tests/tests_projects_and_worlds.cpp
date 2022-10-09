@@ -46,7 +46,7 @@ TEST_CASE( "Parse project - expect right number of files and folders", "[project
     REQUIRE(project.getFolders().at(1).getSubFolders().empty());
 }
 
-TEST_CASE( "Parse project with class info in maps - expect right values", "[project][map]" )
+TEST_CASE( "Parse project with class and enum info in maps - expect right values", "[project][map]" )
 {
     fs::path pathLocal {"../../content/test-maps/project/test.tiled-project"};
     fs::path pathTravis {"../content/test-maps/project/test.tiled-project"};
@@ -90,9 +90,10 @@ TEST_CASE( "Parse project with class info in maps - expect right values", "[proj
             bool canDestroy = c.get<bool>("CanDestroy");
             float money = c.get<float>("MoneyInBag");
             tson::Colori color = c.get<tson::Colori>("ShoeColor");
-            tson::EnumValue enumNumber = c.get<tson::EnumValue>("NumFlag");
-            tson::EnumValue enumString = c.get<tson::EnumValue>("StrFlag");
+            tson::EnumValue classEnumNumber = c.get<tson::EnumValue>("NumFlag");
+            tson::EnumValue classEnumString = c.get<tson::EnumValue>("StrFlag");
 
+            //Check class stuff
             REQUIRE(age == 51);
             REQUIRE(extraFile.filename() == "ultimate_test_v1.5.json");
             REQUIRE(myObject == 1);
@@ -100,8 +101,23 @@ TEST_CASE( "Parse project with class info in maps - expect right values", "[proj
             REQUIRE(canDestroy);
             REQUIRE(tson::Tools::Equal(money, 16.9344f));
             REQUIRE(color == "#ff069504");
-            REQUIRE(enumNumber.getValue() == 10);
-            REQUIRE(enumString.getValue() == 6);
+            REQUIRE(classEnumNumber.getValue() == 10);
+            REQUIRE(classEnumString.getValue() == 6);
+
+            //Check standalone enum stuff
+            tson::EnumValue enumNumber = m->get<tson::EnumValue>("enumnumber");
+            tson::EnumValue enumNumberFlags = m->get<tson::EnumValue>("enumnumberflags");
+            tson::EnumValue enumStr = m->get<tson::EnumValue>("enumstr");
+            tson::EnumValue enumStrFlags = m->get<tson::EnumValue>("enumstrflags");
+
+            REQUIRE(enumNumber.getValue() == 3);
+            REQUIRE(enumNumber.getValueName() == "GetNumber");
+            REQUIRE(enumNumberFlags.getValue() == 7);
+            REQUIRE(enumNumberFlags.getValueNames().size() == 3);
+            REQUIRE(enumStr.getValue() == 1);
+            REQUIRE(enumStr.getValueName() == "CreatePlayer");
+            REQUIRE(enumStrFlags.getValue() == 7);
+            REQUIRE(enumStrFlags.getValueNames().size() == 3);
         }
     }
 }
