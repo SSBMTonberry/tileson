@@ -55,7 +55,7 @@ TEST_CASE( "Json11 - Parse a Map from Tiled's documentation", "[tiled][map]" )
     tson::Map map;
     std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
 
-    bool parseOk = map.parse(*json, nullptr);
+    bool parseOk = map.parse(*json, nullptr, nullptr);
     //bool hasCorrectValues = (
     REQUIRE(parseOk);
     REQUIRE(map.getBackgroundColor() == "#656667");

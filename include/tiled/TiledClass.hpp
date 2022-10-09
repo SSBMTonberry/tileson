@@ -11,6 +11,7 @@ namespace tson
     class TiledClass
     {
         public:
+            inline explicit TiledClass() = default;
             inline explicit TiledClass(IJson &json, tson::Project *project = nullptr);
 
             [[nodiscard]] inline uint32_t getId() const;
@@ -90,7 +91,13 @@ namespace tson
      */
     void TiledClass::update(IJson &json)
     {
-        //RBP: Finish logic!
+        for(auto property : m_members.get())
+        {
+            if(json.any(property->getName()))
+            {
+                property->setValueByType(json[property->getName()]);
+            }
+        }
     }
 }
 

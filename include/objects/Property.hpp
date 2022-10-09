@@ -51,9 +51,11 @@ namespace tson
             [[nodiscard]] inline Type getType() const;
             [[nodiscard]] inline const std::string &getPropertyType() const;
 
+            //Became public in v1.4.0
+            inline void setValueByType(IJson &json); //Definition in tileson_forward.hpp
+
         protected:
             inline void setTypeByString(const std::string &str);
-            inline void setValueByType(IJson &json); //Definition in tileson_forward.hpp
 
             tson::Project *m_project = nullptr; //Used for resolving 'enum' and 'class' objects
             Type m_type = Type::Undefined;

@@ -57,7 +57,7 @@ TEST_CASE( "Gason - Parse a Map from Tiled's documentation", "[tiled][map]" )
     tson::Map map;
     std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
 
-    bool parseOk = map.parse(*json, nullptr);
+    bool parseOk = map.parse(*json, nullptr, nullptr);
     //bool hasCorrectValues = (
     REQUIRE(parseOk);
     REQUIRE(map.getBackgroundColor() == "#656667");
