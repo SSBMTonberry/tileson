@@ -81,8 +81,27 @@ TEST_CASE( "Parse project with class info in maps - expect right values", "[proj
             std::unique_ptr<tson::Map> m = t.parse(path);
             REQUIRE(m->getStatus() == tson::ParseStatus::OK);
             auto c = m->get<tson::TiledClass>("classdata");
+
+            //Asserts
             int age = c.get<int>("Age");
+            fs::path extraFile = c.get<fs::path>("ExtraFile");
+            uint32_t myObject = c.get<uint32_t>("MyObject");
+            std::string name = c.get<std::string>("Name");
+            bool canDestroy = c.get<bool>("CanDestroy");
+            float money = c.get<float>("MoneyInBag");
+            tson::EnumValue enumNumber = c.get<tson::EnumValue>("TestEnumNumberFlags");
+            tson::EnumValue enumString = c.get<tson::EnumValue>("TestEnumStringFlags");
+            tson::Colori color = c.get<tson::Colori>("ShoeColor");
+
             REQUIRE(age == 51);
+            REQUIRE(extraFile.filename() == "ultimate_test_v1.5.json");
+            REQUIRE(myObject == 1);
+            REQUIRE(name == "Karen Modifini");
+            REQUIRE(canDestroy);
+            REQUIRE(tson::Tools::Equal(money, 16.9344f));
+            REQUIRE(enumNumber.getValue() == 10);
+            REQUIRE(enumString.getValue() == 6);
+            REQUIRE(color == "#ff069504");
         }
     }
 }
