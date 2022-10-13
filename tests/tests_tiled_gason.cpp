@@ -6,7 +6,7 @@
 #include "../TilesonConfig.h"
 
 #ifdef TILESON_UNIT_TEST_USE_SINGLE_HEADER
-    #include "../single_include/tileson.hpp"
+    #include "../tileson.hpp"
 #else
     #include "../include/tileson.h"
 #endif

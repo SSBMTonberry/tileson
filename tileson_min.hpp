@@ -1,5 +1,5 @@
 ///
-/// T I L E S O N   V E R S I O N   1 . 3 . 0   ( M I N I M A L )
+/// T I L E S O N   V E R S I O N   1 . 4 . 0 (Work In Progress)   ( M I N I M A L )
 /// ------------------------------------------------------------------
 /// BSD 2-Clause License
 ///
@@ -99,7 +99,22 @@ namespace tson
 			~Tools() = delete;
 			inline static std::vector<uint8_t> Base64DecodedStringToBytes(std::string_view str);
 			inline static std::vector<uint32_t> BytesToUnsignedInts(const std::vector<uint8_t> &bytes);
-			//inline static std::vector<int> BytesToInts(const std::vector<uint8_t> &bytes);
+			inline static std::vector<std::string> SplitString(const std::string &s, char delim);
+			inline static bool Equal(float a, float b, float precision = 8192.f);
+
+		private:
+			template<typename Out>
+			static void split(const std::string &s, char delim, Out result)
+			{
+				std::stringstream ss;
+				ss.str(s);
+				std::string item;
+
+				while (std::getline(ss, item, delim))
+				{
+					*(result++) = item;
+				}
+			}
 	};
 
 	/*!
@@ -143,38 +158,25 @@ namespace tson
 		return uints;
 	}
 
-	/*!
-	 * While the Tiled specification uses unsigned ints for their tiles, Tileson uses regular ints.
-	 * This may be changed in the future, but should in reality never really become an issue.
-	 *
-	 * Update 2020-11-09: This will cause problems when tiles has flip flags!
-	 *
-	 * int differences:
-	 * int max:  2147483647
-	 * uint max: 4294967295
-	 *
-	 * @param bytes A vector of bytes.
-	 * @return Bytes converted to ints
-	 */
-	/*std::vector<int> Tools::BytesToInts(const std::vector<uint8_t> &bytes)
+	std::vector<std::string> Tools::SplitString(const std::string &s, char delim)
 	{
-		std::vector<int> ints;
-		std::vector<uint8_t> toConvert;
-		//uint32_t size8 = (compressed[55] << 24) | (compressed[56] << 16) | (compressed[57] << 8) | compressed[58]; //Should be 66000
+		std::vector<std::string> elems;
+		split(s, delim, std::back_inserter(elems));
+		return elems;
+	}
 
-		for(size_t i = 0; i < bytes.size(); ++i)
-		{
-			toConvert.push_back(bytes[i]);
-			if(toConvert.size() == 4)
-			{
-				uint32_t u32 = (toConvert[3] << 24) | (toConvert[2] << 16) | (toConvert[1] << 8) | toConvert[0];
-				ints.push_back(u32);
-				toConvert.clear();
-			}
-		}
-
-		return ints;
-	}*/
+	/*!
+	 * Uses a threshold for comparing floats, as they are not precise in many cases.
+	 * @param a
+	 * @param b
+	 * @return true if equal based on the currently defined precision
+	 */
+	bool Tools::Equal(float a, float b, float precision)
+	{
+		float threshold = 1.f / precision;
+		float diff = fabsf(a - b);
+		return diff <= threshold;
+	}
 }
 
 #endif //TILESON_TOOLS_HPP
@@ -2081,6 +2083,11 @@ const tson::Vector2i &tson::Chunk::getPosition() const
 #include <type_traits>
 #include <iostream>
 
+#define TILESON_ENABLE_BITMASK_OPERATORS(x)  \
+namespace tson {                         \
+	ENABLE_BITMASK_OPERATORS(x) \
+}
+
 namespace tson
 {
 	#define ENABLE_BITMASK_OPERATORS(x)  \
@@ -2231,7 +2238,10 @@ namespace tson
 			Int = 3, /*! int */
 			Boolean = 4, /*! bool */
 			Float = 5, /*! float */
-			String = 6 /*! string */
+			String = 6, /*! string */
+			Class = 7, /*! class */
+			Enum = 8,  /*! 'string' or 'int' with a value in 'propertyType' */
+			Object = 9 /*! object */
 	};
 
 	/*!
@@ -2306,6 +2316,13 @@ namespace tson
 			BottomRight = 9     //bottomright
 	};
 
+	enum class EnumStorageType : uint8_t
+	{
+		Unspecified = 0,
+		Int = 1,
+		String = 2
+	};
+
 	ENABLE_BITMASK_OPERATORS(TileFlipFlags)
 }
 
@@ -2318,6 +2335,8 @@ namespace tson
 
 namespace tson
 {
+	class Project;
+
 	class Property
 	{
 		public:
@@ -2334,7 +2353,7 @@ namespace tson
 			//};
 
 			inline Property();
-			inline Property(IJson &json);
+			inline explicit Property(IJson &json, tson::Project *project = nullptr);
 			inline Property(std::string name, std::any value, Type type);
 
 			inline void setValue(const std::any &value);
@@ -2348,13 +2367,18 @@ namespace tson
 			inline T getValue() const;
 			[[nodiscard]] inline const std::string &getName() const;
 			[[nodiscard]] inline Type getType() const;
+			[[nodiscard]] inline const std::string &getPropertyType() const;
+
+			//Became public in v1.4.0
+			inline void setValueByType(IJson &json); //Definition in tileson_forward.hpp
 
 		protected:
 			inline void setTypeByString(const std::string &str);
-			inline void setValueByType(IJson &json);
 
+			tson::Project *m_project = nullptr; //Used for resolving 'enum' and 'class' objects
 			Type m_type = Type::Undefined;
-			std::string m_name;
+			std::string m_name {};
+			std::string m_propertyType {};
 			std::any m_value; //Using std::any to assign any type
 	};
 
@@ -2381,11 +2405,16 @@ tson::Property::Property() : m_name {"unnamed"}
 
 }
 
-tson::Property::Property(IJson &json)
+tson::Property::Property(IJson &json, tson::Project *project) : m_project {project}
 {
+	m_name = json["name"].get<std::string>();
+	if(json.count("propertytype") > 0)
+		m_propertyType = json["propertytype"].get<std::string>();
+	else if(json.count("propertyType") > 0) //Somehow Tiled's class objects uses propertyType with 'T'.
+		m_propertyType = json["propertyType"].get<std::string>();
+
 	setTypeByString(json["type"].get<std::string>());
 	setValueByType(json["value"]);
-	m_name = json["name"].get<std::string>();
 }
 
 tson::Property::Property(std::string name, std::any value, Type type) : m_name { move(name) }, m_value { move(value) }, m_type {type}
@@ -2468,43 +2497,17 @@ void tson::Property::setTypeByString(const std::string &str)
 		m_type = tson::Type::Float;
 	else if(str == "string")
 		m_type = tson::Type::String;
+	else if(str == "class")
+		m_type = tson::Type::Class;
+	else if(str == "object")
+		m_type = tson::Type::Object;
 	else
 		m_type = tson::Type::Undefined;
 }
 
-void tson::Property::setValueByType(IJson &json)
+const std::string &tson::Property::getPropertyType() const
 {
-	switch(m_type)
-	{
-		case Type::Color:
-			m_value = Colori(json.get<std::string>());
-			break;
-
-		case Type::File:
-			m_value = fs::path(json.get<std::string>());
-			break;
-
-		case Type::Int:
-			m_value = json.get<int>();
-			break;
-
-		case Type::Boolean:
-			m_value = json.get<bool>();
-			break;
-
-		case Type::Float:
-			m_value = json.get<float>();
-			break;
-
-		case Type::String:
-			setStrValue(json.get<std::string>());
-			break;
-
-		default:
-			setStrValue(json.get<std::string>());
-			break;
-
-	}
+	return m_propertyType;
 }
 
 #endif //TILESON_PROPERTY_HPP
@@ -2524,7 +2527,7 @@ namespace tson
 			inline explicit PropertyCollection(std::string id);
 
 			inline tson::Property * add(const tson::Property &property);
-			inline tson::Property * add(IJson &json);
+			inline tson::Property * add(IJson &json, tson::Project *project = nullptr);
 			inline tson::Property * add(const std::string &name, const std::any &value, tson::Type type);
 
 			inline void remove(const std::string &name);
@@ -2565,9 +2568,9 @@ tson::Property *tson::PropertyCollection::add(const tson::Property &property)
 	return &m_properties[property.getName()];
 }
 
-tson::Property *tson::PropertyCollection::add(IJson &json)
+tson::Property *tson::PropertyCollection::add(IJson &json, tson::Project *project)
 {
-	tson::Property property = tson::Property(json);
+	tson::Property property = tson::Property(json, project);
 	std::string name = property.getName();
 	m_properties[name] = std::move(property);
 	return &m_properties[name];
@@ -3231,7 +3234,7 @@ namespace tson
 		public:
 			inline Layer() = default;
 			inline Layer(IJson &json, tson::Map *map);
-			inline bool parse(IJson &json, tson::Map *map);
+			inline bool parse(IJson &json, tson::Map *map); //Defined in tileson_forward
 
 			[[nodiscard]] inline const std::string &getCompression() const;
 			[[nodiscard]] inline const std::vector<uint32_t> &getData() const;
@@ -3362,86 +3365,6 @@ void tson::Layer::queueFlaggedTile(size_t x, size_t y, uint32_t id)
 	tileId &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
 	m_uniqueFlaggedTiles.insert(id);
 	m_flaggedTiles.emplace_back(x, y, id, tileId);
-}
-
-/*!
- * Parses a Tiled layer from json
- * @param json
- * @return true if all mandatory fields was found. false otherwise.
- */
-bool tson::Layer::parse(IJson &json, tson::Map *map)
-{
-	m_map = map;
-
-	bool allFound = true;
-	if(json.count("tintcolor") > 0) m_tintColor = tson::Colori(json["tintcolor"].get<std::string>()); //Optional
-	if(json.count("compression") > 0) m_compression = json["compression"].get<std::string>(); //Optional
-	if(json.count("draworder") > 0) m_drawOrder = json["draworder"].get<std::string>(); //Optional
-	if(json.count("encoding") > 0) m_encoding = json["encoding"].get<std::string>(); //Optional
-	if(json.count("id") > 0) m_id = json["id"].get<int>(); //Optional
-	if(json.count("image") > 0) m_image = json["image"].get<std::string>(); //Optional
-	if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
-	if(json.count("offsetx") > 0 && json.count("offsety") > 0)
-		m_offset = {json["offsetx"].get<float>(), json["offsety"].get<float>()}; //Optional
-	if(json.count("opacity") > 0) m_opacity = json["opacity"].get<float>(); else allFound = false;
-	if(json.count("width") > 0 && json.count("height") > 0)
-		m_size = {json["width"].get<int>(), json["height"].get<int>()}; //else allFound = false; - Not mandatory for all layers!
-	if(json.count("transparentcolor") > 0) m_transparentColor = tson::Colori(json["transparentcolor"].get<std::string>()); //Optional
-	if(json.count("type") > 0) m_typeStr = json["type"].get<std::string>(); else allFound = false;
-	if(json.count("visible") > 0) m_visible = json["visible"].get<bool>(); else allFound = false;
-	if(json.count("x") > 0) m_x = json["x"].get<int>(); else allFound = false;
-	if(json.count("y") > 0) m_y = json["y"].get<int>(); else allFound = false;
-	if(json.count("repeatx") > 0) m_repeatX = json["repeatx"].get<bool>(); //Optional
-	if(json.count("repeaty") > 0) m_repeatY = json["repeaty"].get<bool>(); //Optional
-
-	tson::Vector2f parallax {1.f, 1.f};
-	if(json.count("parallaxx") > 0)
-		parallax.x = json["parallaxx"].get<float>();
-	if(json.count("parallaxy") > 0)
-		parallax.y = json["parallaxy"].get<float>();
-
-	m_parallax = parallax;
-
-	//Handle DATA (Optional)
-	if(json.count("data") > 0)
-	{
-		if(json["data"].isArray())
-		{
-			auto &array = json.array("data");
-			std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item) { m_data.push_back(item->get<uint32_t>()); });
-		}
-		else
-		{
-			m_base64Data = json["data"].get<std::string>();
-			decompressData();
-		}
-	}
-
-	//More advanced data
-	if(json.count("chunks") > 0 && json["chunks"].isArray())
-	{
-		auto &chunks = json.array("chunks");
-		std::for_each(chunks.begin(), chunks.end(), [&](std::unique_ptr<IJson> &item) { m_chunks.emplace_back(*item); });
-	}
-	if(json.count("layers") > 0 && json["layers"].isArray())
-	{
-		auto &layers = json.array("layers");
-		std::for_each(layers.begin(), layers.end(), [&](std::unique_ptr<IJson> &item) { m_layers.emplace_back(*item, m_map); });
-	}
-	if(json.count("objects") > 0 && json["objects"].isArray())
-	{
-		auto &objects = json.array("objects");
-		std::for_each(objects.begin(), objects.end(), [&](std::unique_ptr<IJson> &item) { m_objects.emplace_back(*item); });
-	}
-	if(json.count("properties") > 0 && json["properties"].isArray())
-	{
-		auto &properties = json.array("properties");
-		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
-	}
-
-	setTypeByString();
-
-	return allFound;
 }
 
 /*!
@@ -5708,8 +5631,8 @@ namespace tson
 		public:
 			inline Map() = default;
 			inline Map(ParseStatus status, std::string description);
-			inline explicit Map(IJson &json, tson::DecompressorContainer *decompressors);
-			inline bool parse(IJson &json, tson::DecompressorContainer *decompressors);
+			inline explicit Map(IJson &json, tson::DecompressorContainer *decompressors, tson::Project *project);
+			inline bool parse(IJson &json, tson::DecompressorContainer *decompressors, tson::Project *project);
 
 			[[nodiscard]] inline const Colori &getBackgroundColor() const;
 			[[nodiscard]] inline const Vector2i &getSize() const;
@@ -5745,6 +5668,7 @@ namespace tson
 			//v1.2.0
 			[[nodiscard]] inline int getCompressionLevel() const;
 			inline DecompressorContainer *getDecompressors();
+			inline Project * getProject();
 			inline Tileset * getTilesetByGid(uint32_t gid);
 
 		private:
@@ -5779,7 +5703,8 @@ namespace tson
 			int                                    m_compressionLevel {-1};  /*! 'compressionlevel': The compression level to use for tile layer
 																			  *     data (defaults to -1, which means to use the algorithm default)
 																			  *     Introduced in Tiled 1.3*/
-			tson::DecompressorContainer *          m_decompressors;
+			tson::DecompressorContainer *          m_decompressors {nullptr};
+			tson::Project *                        m_project {nullptr};
 			std::map<uint32_t, tson::Tile>         m_flaggedTileMap;    /*! key: Tile ID. Value: Tile*/
 	};
 
@@ -5811,9 +5736,9 @@ tson::Map::Map(tson::ParseStatus status, std::string description) : m_status {st
  * @param json A json object with the format of Map
  * @return true if all mandatory fields was found. false otherwise.
  */
-tson::Map::Map(IJson &json, tson::DecompressorContainer *decompressors)
+tson::Map::Map(IJson &json, tson::DecompressorContainer *decompressors, tson::Project *project)
 {
-	parse(json, decompressors);
+	parse(json, decompressors, project);
 }
 
 /*!
@@ -5821,9 +5746,10 @@ tson::Map::Map(IJson &json, tson::DecompressorContainer *decompressors)
  * @param json A json object with the format of Map
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
+bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors, tson::Project *project)
 {
 	m_decompressors = decompressors;
+	m_project = project;
 
 	bool allFound = true;
 	if(json.count("compressionlevel") > 0)
@@ -5864,7 +5790,7 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
 		auto &array = json.array("properties");
 		std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
 		{
-			m_properties.add(*item);
+			m_properties.add(*item, m_project);
 		});
 	}
 
@@ -6207,9 +6133,431 @@ const tson::Vector2f &tson::Map::getParallaxOrigin() const
 	return m_parallaxOrigin;
 }
 
+tson::Project *tson::Map::getProject()
+{
+	return m_project;
+}
+
 #endif //TILESON_MAP_HPP
 
 /*** End of inlined file: Map.hpp ***/
+
+
+/*** Start of inlined file: TiledEnum.hpp ***/
+//
+// Created by robin on 06.06.22.
+//
+
+#ifndef TILESON_TILEDENUM_HPP
+#define TILESON_TILEDENUM_HPP
+
+namespace tson
+{
+	class EnumDefinition
+	{
+		public:
+			inline explicit EnumDefinition(IJson &json);
+			inline uint32_t getValue(const std::string &str);
+			inline std::string getValue(uint32_t num);
+			inline std::vector<std::string> getValues(uint32_t num);
+			inline bool exists(const std::string &str);
+			inline bool exists(uint32_t num);
+
+			[[nodiscard]] inline uint32_t getId() const;
+			[[nodiscard]] inline uint32_t getMaxValue() const;
+			[[nodiscard]] inline const std::string &getName() const;
+			[[nodiscard]] inline EnumStorageType getStorageType() const;
+			[[nodiscard]] inline bool hasValuesAsFlags() const;
+
+		private:
+			inline bool hasFlag(uint32_t value, uint32_t flag) const;
+			uint32_t m_id {};
+			uint32_t m_maxValue {};
+			std::string m_name {};
+			std::map<uint32_t, std::string> m_values {};
+			bool m_valuesAsFlags {false};
+			EnumStorageType m_storageType { EnumStorageType::Unspecified };
+	};
+
+	EnumDefinition::EnumDefinition(IJson &json)
+	{
+		m_id = json.get<uint32_t>("id");
+		m_name = json.get<std::string>("name");
+		std::string type = json.get<std::string>("storageType");
+		m_storageType = (type == "int") ? EnumStorageType::Int : (type == "string") ? EnumStorageType::String : EnumStorageType::Unspecified;
+		m_valuesAsFlags = json.get<bool>("valuesAsFlags");
+
+		if(json.count("values") > 0 && json["values"].isArray())
+		{
+			m_values[0] = "None";
+			uint32_t valueCounter = (m_valuesAsFlags) ? 1 : 0;
+			uint8_t flagBit = 1;
+			auto &array = json.array("values");
+			std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
+			{
+				std::string v = item->get<std::string>();
+				m_values[valueCounter] = v;
+				if(m_valuesAsFlags)
+				{
+					valueCounter = 1 << flagBit;
+					++flagBit;
+				}
+				else
+				{
+					++valueCounter;
+				}
+			});
+
+			m_maxValue = valueCounter;
+		}
+	}
+
+	uint32_t EnumDefinition::getValue(const std::string &str)
+	{
+		auto result = std::find_if(m_values.begin(), m_values.end(), [&](const std::pair<uint32_t, std::string> &pair)
+		{
+			return pair.second == str;
+		});
+
+		if(result != m_values.end())
+			return result->first;
+
+		return 0;
+	}
+
+	std::string EnumDefinition::getValue(uint32_t num)
+	{
+		return (m_values.count(num) > 0) ? m_values[num] : "";
+	}
+
+	bool EnumDefinition::hasValuesAsFlags() const
+	{
+		return m_valuesAsFlags;
+	}
+
+	bool EnumDefinition::exists(const std::string &str)
+	{
+		auto result = std::find_if(m_values.begin(), m_values.end(), [&](const std::pair<uint32_t, std::string> &pair)
+		{
+			return pair.second == str;
+		});
+
+		if(result != m_values.end())
+			return true;
+
+		return false;
+	}
+
+	bool EnumDefinition::exists(uint32_t num) { return (m_values.count(num) > 0); }
+
+	uint32_t EnumDefinition::getId() const
+	{
+		return m_id;
+	}
+
+	const std::string &EnumDefinition::getName() const
+	{
+		return m_name;
+	}
+
+	EnumStorageType EnumDefinition::getStorageType() const
+	{
+		return m_storageType;
+	}
+
+	uint32_t EnumDefinition::getMaxValue() const
+	{
+		return m_maxValue;
+	}
+
+	std::vector<std::string> EnumDefinition::getValues(uint32_t num)
+	{
+		std::vector<std::string> values;
+		if(m_valuesAsFlags)
+		{
+			uint32_t flag = 0;
+			uint32_t i = 0;
+			while(flag < m_maxValue)
+			{
+				flag = 1 << i;
+				++i;
+				if(m_values.count(flag) > 0 && hasFlag(num, flag))
+				{
+					values.emplace_back(m_values[flag]);
+				}
+			}
+		}
+		else
+		{
+			std::string v = getValue(num);
+			if(!v.empty())
+				values.emplace_back();
+		}
+
+		return values;
+	}
+
+	bool EnumDefinition::hasFlag(uint32_t value, uint32_t flag) const
+	{
+		return ((value & flag) == flag);
+	}
+
+	class EnumValue
+	{
+		public:
+			inline EnumValue() = default;
+			inline EnumValue(uint32_t value, EnumDefinition *definition);
+			inline EnumValue(const std::string &value, EnumDefinition *definition);
+
+			[[nodiscard]] inline uint32_t getValue() const;
+			inline std::string getValueName() const;
+			[[nodiscard]] inline std::vector<std::string> getValueNames() const;
+			[[nodiscard]] inline EnumDefinition *getDefinition() const;
+
+			inline bool hasFlagValue(uint32_t flag) const;
+			template <typename T>
+			inline bool hasFlag(T flags) const;
+			inline bool hasAnyFlagValue(uint32_t flags) const;
+			template <typename T>
+			inline bool hasAnyFlag(T flags) const;
+			[[nodiscard]] inline bool containsValueName(const std::string &value) const;
+
+		private:
+			uint32_t m_value {0};
+			EnumDefinition *m_definition = nullptr;
+	};
+
+	EnumValue::EnumValue(uint32_t value, EnumDefinition *definition) : m_value {value}, m_definition {definition}
+	{
+
+	}
+
+	EnumValue::EnumValue(const std::string &value, EnumDefinition *definition) : m_definition {definition}
+	{
+		if(!value.empty() && definition != nullptr)
+		{
+			std::vector<std::string> values = Tools::SplitString(value, ',');
+			for(auto &item : values)
+			{
+				uint32_t v = definition->getValue(item);
+				m_value |= v;
+			}
+		}
+	}
+
+	/*!
+	 * Checks if uint32 value contains a single flag. If 'valuesAsFlags' is not a part of the EnumDefinition, a simple equality comparison will be done
+	 * instead.
+	 * @param flags The uint32 value of the flag you want to check
+	 * @return 'true' if EnumValue has the requested bit activated. 'false' otherwise.
+	 */
+	bool EnumValue::hasFlagValue(uint32_t flags) const
+	{
+		if(m_definition->hasValuesAsFlags())
+			return ((m_value & flags) == flags) ? true : false;
+
+		return m_value == flags;
+	}
+
+	/*!
+	 * Checks if uint32 value contains one of several possible flags. If 'valuesAsFlags' is not a part of the EnumDefinition, a simple equality comparison will be done
+	 * instead.
+	 * @param flags The uint32 values of the flags you want to check
+	 * @return 'true' if EnumValue has the requested bits activated. 'false' otherwise.
+	 */
+	bool EnumValue::hasAnyFlagValue(uint32_t flags) const
+	{
+		if(m_definition->hasValuesAsFlags())
+			return ((m_value & flags) != 0);
+
+		return m_value == flags;
+	}
+
+	uint32_t EnumValue::getValue() const
+	{
+		return m_value;
+	}
+
+	/*!
+	 * Gets the single name of a value.
+	 * This function is intended for enums that can only have one value (non-flag).
+	 * If you want to get several value names (flags), use getValueNames() instead.
+	 * @return A single name for a value
+	 */
+	std::string EnumValue::getValueName() const
+	{
+		return (m_definition == nullptr) ? "" : m_definition->getValue(m_value);
+	}
+
+	/*!
+	 * Checks if T value contains a single flag. If 'valuesAsFlags' is not a part of the EnumDefinition, a simple equality comparison will be done
+	 * instead.
+	 * @tparam T A uint32_t compatible type
+	 * @param flags One or more flags you want to verify is included.
+	 * @return true is all flags presented are set. false otherwise.
+	 */
+	template<typename T>
+	bool EnumValue::hasFlag(T flags) const
+	{
+		return hasFlagValue(static_cast<uint32_t>(flags));
+	}
+
+	/*!
+	 * Checks if T value contains one of several possible flags. If 'valuesAsFlags' is not a part of the EnumDefinition, a simple equality comparison will be done
+	 * instead.
+	 * @tparam T A uint32_t compatible type
+	 * @param flags One or more flags you want to verify is included.
+	 * @return true is all flags presented are set. false otherwise.
+	 */
+	template<typename T>
+	bool EnumValue::hasAnyFlag(T flags) const
+	{
+		return hasAnyFlagValue(static_cast<uint32_t>(flags));
+	}
+
+	EnumDefinition *EnumValue::getDefinition() const
+	{
+		return m_definition;
+	}
+
+	std::vector<std::string> EnumValue::getValueNames() const
+	{
+		return (m_definition == nullptr) ? std::vector<std::string>() : m_definition->getValues(m_value);
+	}
+
+	/*!
+	 *
+	 * @param value
+	 * @return
+	 */
+	bool EnumValue::containsValueName(const std::string &value) const
+	{
+		if(m_definition != nullptr)
+		{
+			if(m_definition->hasValuesAsFlags())
+			{
+				std::vector<std::string> values = m_definition->getValues(m_value);
+				auto it = std::find(values.begin(), values.end(), value);
+				return it != values.end();
+			}
+			return m_definition->getValue(value) == m_value;
+		}
+		return false;
+	}
+}
+
+#endif //TILESON_TILEDENUM_HPP
+
+/*** End of inlined file: TiledEnum.hpp ***/
+
+
+/*** Start of inlined file: TiledClass.hpp ***/
+//
+// Created by robin on 06.06.22.
+//
+
+#ifndef TILESON_TILEDCLASS_HPP
+#define TILESON_TILEDCLASS_HPP
+
+namespace tson
+{
+	//class Project;
+	class TiledClass
+	{
+		public:
+			inline explicit TiledClass() = default;
+			inline explicit TiledClass(IJson &json, tson::Project *project = nullptr);
+
+			[[nodiscard]] inline uint32_t getId() const;
+			[[nodiscard]] inline const std::string &getName() const;
+			[[nodiscard]] inline const std::string &getType() const;
+			[[nodiscard]] inline const PropertyCollection &getMembers() const;
+			inline void update(IJson &json);
+
+			template <typename T>
+			inline T get(const std::string &name);
+			inline tson::Property *getMember(const std::string &name);
+
+		private:
+			uint32_t m_id {};
+			std::string m_name {};
+			std::string m_type {};
+			PropertyCollection m_members {};
+
+	};
+
+	TiledClass::TiledClass(IJson &json, tson::Project *project)
+	{
+		if(json.count("id") > 0)
+			m_id = json["id"].get<uint32_t>();
+
+		if(json.count("name") > 0)
+			m_name = json["name"].get<std::string>();
+		if(json.count("type") > 0)
+			m_type = json["type"].get<std::string>();
+
+		if(json.count("members") > 0 && json["members"].isArray())
+		{
+			auto &array = json.array("members");
+			std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
+			{
+				m_members.add(*item, project);
+			});
+		}
+	}
+
+	uint32_t TiledClass::getId() const
+	{
+		return m_id;
+	}
+
+	const std::string &TiledClass::getName() const
+	{
+		return m_name;
+	}
+
+	const std::string &TiledClass::getType() const
+	{
+		return m_type;
+	}
+
+	const PropertyCollection &TiledClass::getMembers() const
+	{
+		return m_members;
+	}
+
+	template<typename T>
+	T TiledClass::get(const std::string &name)
+	{
+		return m_members.getValue<T>(name);
+	}
+
+	tson::Property *TiledClass::getMember(const std::string &name)
+	{
+		if(m_members.hasProperty(name))
+			return m_members.getProperty(name);
+		return nullptr;
+	}
+
+	/*!
+	 * Takes a json object from a particular map top update values if they differ from the original values of the class
+	 * @param json
+	 */
+	void TiledClass::update(IJson &json)
+	{
+		for(auto property : m_members.get())
+		{
+			if(json.any(property->getName()))
+			{
+				property->setValueByType(json[property->getName()]);
+			}
+		}
+	}
+}
+
+#endif //TILESON_TILEDCLASS_HPP
+
+/*** End of inlined file: TiledClass.hpp ***/
 
 
 /*** Start of inlined file: Project.hpp ***/
@@ -6419,6 +6767,124 @@ namespace tson
 
 
 
+/*** Start of inlined file: ProjectPropertyTypes.hpp ***/
+//
+// Created by robin on 01.08.22.
+//
+
+#ifndef TILESON_PROJECTPROPERTYTYPES_HPP
+#define TILESON_PROJECTPROPERTYTYPES_HPP
+
+namespace tson
+{
+	class ProjectPropertyTypes
+	{
+		public:
+			inline ProjectPropertyTypes() = default;
+			inline bool parse(IJson &json, tson::Project *project);
+
+			inline const std::vector<tson::EnumDefinition> &getEnums() const;
+			inline const std::vector<tson::TiledClass> &getClasses() const;
+			[[nodiscard]] inline tson::EnumDefinition* getEnumDefinition(std::string_view name);
+			[[nodiscard]] inline tson::TiledClass* getClass(std::string_view name);
+			inline bool isUnhandledContentFound() const;
+
+		private:
+			std::vector<tson::EnumDefinition> m_enums;
+			std::vector<tson::TiledClass> m_classes;
+			bool m_unhandledContentFound {false};
+
+	};
+
+	bool ProjectPropertyTypes::parse(IJson &json, tson::Project *project)
+	{
+		m_enums.clear();
+		m_classes.clear();
+		m_unhandledContentFound = false;
+
+		if(json.count("propertyTypes") > 0 && json["propertyTypes"].isArray())
+		{
+			auto &array = json.array("propertyTypes");
+			std::vector<tson::IJson*> classes; //Classes must be handled after enums
+			std::vector<tson::IJson*> other; //Unhandled stuff - just to keep track if something is missing...
+			std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
+			{
+				IJson &j = *item;
+				if(j.count("type") > 0)
+				{
+					std::string t = j["type"].get<std::string>();
+					if(t == "enum")
+					{
+						m_enums.emplace_back(j); //Can be resolved directly
+					}
+					else if(t == "class")
+					{
+						classes.push_back(item.get()); //Must be resolved later
+					}
+					else
+						other.push_back(item.get()); //Only used to set flag for whether unhandled content was found.
+				}
+			});
+
+			std::for_each(classes.begin(), classes.end(), [&](IJson *item)
+			{
+				m_classes.emplace_back(*item, project);
+			});
+
+			if(!other.empty())
+				m_unhandledContentFound = true;
+
+		}
+		return false;
+	}
+
+	const std::vector<tson::EnumDefinition> &ProjectPropertyTypes::getEnums() const
+	{
+		return m_enums;
+	}
+
+	const std::vector<tson::TiledClass> &ProjectPropertyTypes::getClasses() const
+	{
+		return m_classes;
+	}
+
+	bool ProjectPropertyTypes::isUnhandledContentFound() const
+	{
+		return m_unhandledContentFound;
+	}
+
+	tson::EnumDefinition *ProjectPropertyTypes::getEnumDefinition(std::string_view name)
+	{
+		auto it = std::find_if(m_enums.begin(), m_enums.end(), [&](const EnumDefinition &def)
+		{
+			return def.getName() == name;
+		});
+
+		if(it != m_enums.end())
+			return &it.operator*();
+
+		return nullptr;
+	}
+
+	tson::TiledClass *ProjectPropertyTypes::getClass(std::string_view name)
+	{
+		auto it = std::find_if(m_classes.begin(), m_classes.end(), [&](const TiledClass &def)
+		{
+			return def.getName() == name;
+		});
+
+		if(it != m_classes.end())
+			return &it.operator*();
+
+		return nullptr;
+	}
+}
+
+#endif //TILESON_PROJECTPROPERTYTYPES_HPP
+
+/*** End of inlined file: ProjectPropertyTypes.hpp ***/
+
+
 /*** Start of inlined file: ProjectFolder.hpp ***/
 //
 // Created by robin on 01.08.2020.
@@ -6545,6 +7011,7 @@ namespace tson
 			std::string extensionsPath;
 			std::vector<std::string> folders;
 			std::string objectTypesFile;
+			ProjectPropertyTypes projectPropertyTypes;
 
 			//Tileson specific
 			fs::path basePath;
@@ -6574,10 +7041,13 @@ namespace tson
 			inline explicit Project(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser);
 			#endif
 			inline bool parse(const fs::path &path);
+			inline void parse();
 
 			[[nodiscard]] inline const ProjectData &getData() const;
 			[[nodiscard]] inline const fs::path &getPath() const;
 			[[nodiscard]] inline const std::vector<ProjectFolder> &getFolders() const;
+			[[nodiscard]] inline tson::EnumDefinition* getEnumDefinition(std::string_view name);
+			[[nodiscard]] inline tson::TiledClass* getClass(std::string_view name);
 
 		private:
 			inline void parseJson(IJson &json);
@@ -6620,7 +7090,13 @@ namespace tson
 
 	void Project::parseJson(IJson &json)
 	{
-		m_data.basePath = m_path.parent_path(); //The directory of the project file
+		m_data.basePath = (m_path.empty()) ? fs::path() : m_path.parent_path(); //The directory of the project file
+
+		//Make sure these property types are read before any map is, so they can be resolved.
+		if(json.count("propertyTypes") > 0)
+		{
+			m_data.projectPropertyTypes.parse(json, this);
+		}
 
 		if(json.count("automappingRulesFile") > 0) m_data.automappingRulesFile = json["automappingRulesFile"].get<std::string>();
 		if(json.count("commands") > 0)
@@ -6647,7 +7123,6 @@ namespace tson
 			});
 		}
 		if(json.count("objectTypesFile") > 0) m_data.objectTypesFile = json["objectTypesFile"].get<std::string>();
-
 	}
 
 	const fs::path &Project::getPath() const
@@ -6658,6 +7133,25 @@ namespace tson
 	const std::vector<ProjectFolder> &Project::getFolders() const
 	{
 		return m_folders;
+	}
+
+	tson::EnumDefinition *Project::getEnumDefinition(std::string_view name)
+	{
+		return m_data.projectPropertyTypes.getEnumDefinition(name);
+	}
+
+	tson::TiledClass *Project::getClass(std::string_view name)
+	{
+		return m_data.projectPropertyTypes.getClass(name);
+	}
+
+	/*!
+	 * Parses preloaded json data. Only used during tests involving project jsons not actually read from files
+	 * @return
+	 */
+	void Project::parse()
+	{
+		parseJson(*m_json);
 	}
 
 }
@@ -6673,8 +7167,10 @@ namespace tson
 		public:
 			#ifdef JSON11_IS_DEFINED
 			inline explicit Tileson(std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>(), bool includeBase64Decoder = true);
+			inline explicit Tileson(tson::Project *project, std::unique_ptr<tson::IJson> jsonParser = std::make_unique<tson::Json11>(), bool includeBase64Decoder = true);
 			#else
 			inline explicit Tileson(std::unique_ptr<tson::IJson> jsonParser, bool includeBase64Decoder = true);
+			inline explicit Tileson(tson::Project *project, std::unique_ptr<tson::IJson> jsonParser, bool includeBase64Decoder = true);
 			#endif
 
 			inline std::unique_ptr<tson::Map> parse(const fs::path &path, std::unique_ptr<IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>> decompressor = nullptr);
@@ -6685,6 +7181,7 @@ namespace tson
 			inline std::unique_ptr<tson::Map> parseJson();
 			std::unique_ptr<tson::IJson> m_json;
 			tson::DecompressorContainer m_decompressors;
+			tson::Project *m_project {nullptr};
 	};
 }
 
@@ -6695,6 +7192,13 @@ namespace tson
  */
 tson::Tileson::Tileson(std::unique_ptr<tson::IJson> jsonParser, bool includeBase64Decoder) : m_json {std::move(jsonParser)}
 {
+	if(includeBase64Decoder)
+		m_decompressors.add<Base64Decompressor>();
+}
+
+tson::Tileson::Tileson(tson::Project *project, std::unique_ptr<tson::IJson> jsonParser, bool includeBase64Decoder) : m_json {std::move(jsonParser)}
+{
+	m_project = project;
 	if(includeBase64Decoder)
 		m_decompressors.add<Base64Decompressor>();
 }
@@ -6715,7 +7219,9 @@ std::unique_ptr<tson::Map> tson::Tileson::parse(const fs::path &path, std::uniqu
 		result = (decompressed.empty()) ? false : true;
 		if(!result)
 			return std::make_unique<tson::Map>(tson::ParseStatus::DecompressionError, "Error during decompression");
+
 		result = m_json->parse(&decompressed[0], decompressed.size());
+
 		if(result)
 			return std::move(parseJson());
 	}
@@ -6765,7 +7271,7 @@ std::unique_ptr<tson::Map> tson::Tileson::parseJson()
 {
 	std::unique_ptr<tson::Map> map = std::make_unique<tson::Map>();
 
-	if(map->parse(*m_json, &m_decompressors))
+	if(map->parse(*m_json, &m_decompressors, m_project))
 		return std::move(map);
 
 	return std::make_unique<tson::Map> (tson::ParseStatus::MissingData, "Missing map data...");
@@ -6932,6 +7438,86 @@ void tson::Layer::decompressData()
 	}
 }
 
+/*!
+ * Parses a Tiled layer from json
+ * @param json
+ * @return true if all mandatory fields was found. false otherwise.
+ */
+bool tson::Layer::parse(IJson &json, tson::Map *map)
+{
+	m_map = map;
+
+	bool allFound = true;
+	if(json.count("tintcolor") > 0) m_tintColor = tson::Colori(json["tintcolor"].get<std::string>()); //Optional
+	if(json.count("compression") > 0) m_compression = json["compression"].get<std::string>(); //Optional
+	if(json.count("draworder") > 0) m_drawOrder = json["draworder"].get<std::string>(); //Optional
+	if(json.count("encoding") > 0) m_encoding = json["encoding"].get<std::string>(); //Optional
+	if(json.count("id") > 0) m_id = json["id"].get<int>(); //Optional
+	if(json.count("image") > 0) m_image = json["image"].get<std::string>(); //Optional
+	if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
+	if(json.count("offsetx") > 0 && json.count("offsety") > 0)
+		m_offset = {json["offsetx"].get<float>(), json["offsety"].get<float>()}; //Optional
+	if(json.count("opacity") > 0) m_opacity = json["opacity"].get<float>(); else allFound = false;
+	if(json.count("width") > 0 && json.count("height") > 0)
+		m_size = {json["width"].get<int>(), json["height"].get<int>()}; //else allFound = false; - Not mandatory for all layers!
+	if(json.count("transparentcolor") > 0) m_transparentColor = tson::Colori(json["transparentcolor"].get<std::string>()); //Optional
+	if(json.count("type") > 0) m_typeStr = json["type"].get<std::string>(); else allFound = false;
+	if(json.count("visible") > 0) m_visible = json["visible"].get<bool>(); else allFound = false;
+	if(json.count("x") > 0) m_x = json["x"].get<int>(); else allFound = false;
+	if(json.count("y") > 0) m_y = json["y"].get<int>(); else allFound = false;
+	if(json.count("repeatx") > 0) m_repeatX = json["repeatx"].get<bool>(); //Optional
+	if(json.count("repeaty") > 0) m_repeatY = json["repeaty"].get<bool>(); //Optional
+
+	tson::Vector2f parallax {1.f, 1.f};
+	if(json.count("parallaxx") > 0)
+		parallax.x = json["parallaxx"].get<float>();
+	if(json.count("parallaxy") > 0)
+		parallax.y = json["parallaxy"].get<float>();
+
+	m_parallax = parallax;
+
+	//Handle DATA (Optional)
+	if(json.count("data") > 0)
+	{
+		if(json["data"].isArray())
+		{
+			auto &array = json.array("data");
+			std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item) { m_data.push_back(item->get<uint32_t>()); });
+		}
+		else
+		{
+			m_base64Data = json["data"].get<std::string>();
+			decompressData();
+		}
+	}
+
+	//More advanced data
+	if(json.count("chunks") > 0 && json["chunks"].isArray())
+	{
+		auto &chunks = json.array("chunks");
+		std::for_each(chunks.begin(), chunks.end(), [&](std::unique_ptr<IJson> &item) { m_chunks.emplace_back(*item); });
+	}
+	if(json.count("layers") > 0 && json["layers"].isArray())
+	{
+		auto &layers = json.array("layers");
+		std::for_each(layers.begin(), layers.end(), [&](std::unique_ptr<IJson> &item) { m_layers.emplace_back(*item, m_map); });
+	}
+	if(json.count("objects") > 0 && json["objects"].isArray())
+	{
+		auto &objects = json.array("objects");
+		std::for_each(objects.begin(), objects.end(), [&](std::unique_ptr<IJson> &item) { m_objects.emplace_back(*item); });
+	}
+	if(json.count("properties") > 0 && json["properties"].isArray())
+	{
+		auto &properties = json.array("properties");
+		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item, m_map->getProject()); });
+	}
+
+	setTypeByString();
+
+	return allFound;
+}
+
 // W o r l d . h p p
 // ------------------
 
@@ -6954,6 +7540,85 @@ std::size_t tson::World::loadMaps(tson::Tileson *parser)
 	});
 
 	return m_maps.size();
+}
+
+// P r o p e r t y . h p p
+// ------------------
+void tson::Property::setValueByType(IJson &json)
+{
+	switch(m_type)
+	{
+		case Type::Color:
+			m_value = Colori(json.get<std::string>());
+			break;
+
+		case Type::File:
+			m_value = fs::path(json.get<std::string>());
+			break;
+
+		case Type::Int:
+			if(!m_propertyType.empty())
+			{
+				m_type = Type::Enum;
+				tson::EnumDefinition *def = (m_project != nullptr) ? m_project->getEnumDefinition(m_propertyType) : nullptr;
+				if(def != nullptr)
+				{
+					uint32_t v = json.get<uint32_t>();
+					m_value = tson::EnumValue(v, def);
+				}
+				else
+					m_value = tson::EnumValue();
+			}
+			else
+				m_value = json.get<int>();
+
+			break;
+
+		case Type::Boolean:
+			m_value = json.get<bool>();
+			break;
+
+		case Type::Float:
+			m_value = json.get<float>();
+			break;
+
+		case Type::String:
+			if(!m_propertyType.empty())
+			{
+				m_type = Type::Enum;
+				tson::EnumDefinition *def = (m_project != nullptr) ? m_project->getEnumDefinition(m_propertyType) : nullptr;
+				if(def != nullptr)
+				{
+					std::string v = json.get<std::string>();
+					m_value = tson::EnumValue(v, def);
+				}
+				else
+					m_value = tson::EnumValue();
+			}
+			else
+				setStrValue(json.get<std::string>());
+
+			break;
+
+		case Type::Class:
+		{
+			tson::TiledClass *baseClass = (m_project != nullptr) ? m_project->getClass(m_propertyType) : nullptr;
+			if (baseClass != nullptr)
+			{
+				tson::TiledClass c = *baseClass;
+				c.update(json);
+				m_value = c;
+			}
+		}
+		break;
+
+		case Type::Object:
+			m_value = json.get<uint32_t>();
+			break;
+		default:
+			setStrValue(json.get<std::string>());
+			break;
+	}
 }
 
 #endif //TILESON_TILESON_FORWARD_HPP

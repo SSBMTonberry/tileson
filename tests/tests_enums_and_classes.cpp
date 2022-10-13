@@ -5,7 +5,7 @@
 #include "../external_libs/catch.hpp"
 
 #ifdef TILESON_UNIT_TEST_USE_SINGLE_HEADER
-    #include "../single_include/tileson.hpp"
+    #include "../tileson.hpp"
 #else
     #include "../include/tileson.h"
 #endif
@@ -65,24 +65,24 @@ TEST_CASE( "Parse an int enum definition without flags - expect correct enum val
     REQUIRE(def.getStorageType() == tson::EnumStorageType::Int);
     REQUIRE(!def.hasValuesAsFlags());
 
-    REQUIRE(def.getValue(1) == "CreateNumber");
+    REQUIRE(def.getValue(0) == "CreateNumber");
+    REQUIRE(def.exists(0));
+    REQUIRE(def.getValue(1) == "DeleteNumber");
     REQUIRE(def.exists(1));
-    REQUIRE(def.getValue(2) == "DeleteNumber");
+    REQUIRE(def.getValue(2) == "UpdateNumber");
     REQUIRE(def.exists(2));
-    REQUIRE(def.getValue(3) == "UpdateNumber");
+    REQUIRE(def.getValue(3) == "GetNumber");
     REQUIRE(def.exists(3));
-    REQUIRE(def.getValue(4) == "GetNumber");
-    REQUIRE(def.exists(4));
     REQUIRE(def.getValue(97).empty());
     REQUIRE(!def.exists(97));
 
-    REQUIRE(def.getValue("CreateNumber") == 1);
+    REQUIRE(def.getValue("CreateNumber") == 0);
     REQUIRE(def.exists("CreateNumber"));
-    REQUIRE(def.getValue("DeleteNumber") == 2);
+    REQUIRE(def.getValue("DeleteNumber") == 1);
     REQUIRE(def.exists("DeleteNumber"));
-    REQUIRE(def.getValue("UpdateNumber") == 3);
+    REQUIRE(def.getValue("UpdateNumber") == 2);
     REQUIRE(def.exists("UpdateNumber"));
-    REQUIRE(def.getValue("GetNumber") == 4);
+    REQUIRE(def.getValue("GetNumber") == 3);
     REQUIRE(def.exists("GetNumber"));
     REQUIRE(def.getValue("SomethingInvalid") == 0);
     REQUIRE(!def.exists("SomethingInvalid"));
@@ -91,28 +91,28 @@ TEST_CASE( "Parse an int enum definition without flags - expect correct enum val
     tson::EnumValue strV2 {"DeleteNumber", &def};
     tson::EnumValue strV3 {"UpdateNumber", &def};
     tson::EnumValue strV4 {"GetNumber", &def};
-    tson::EnumValue numV1 {1, &def};
-    tson::EnumValue numV2 {2, &def};
-    tson::EnumValue numV3 {3, &def};
-    tson::EnumValue numV4 {4, &def};
+    tson::EnumValue numV1 {0, &def};
+    tson::EnumValue numV2 {1, &def};
+    tson::EnumValue numV3 {2, &def};
+    tson::EnumValue numV4 {3, &def};
 
-    REQUIRE(strV1.getValue() == 1);
-    REQUIRE(strV2.getValue() == 2);
-    REQUIRE(strV3.getValue() == 3);
-    REQUIRE(strV4.getValue() == 4);
-    REQUIRE(strV1.hasFlagValue(1));
-    REQUIRE(strV2.hasFlagValue(2));
-    REQUIRE(strV3.hasFlagValue(3));
-    REQUIRE(strV4.hasFlagValue(4));
+    REQUIRE(strV1.getValue() == 0);
+    REQUIRE(strV2.getValue() == 1);
+    REQUIRE(strV3.getValue() == 2);
+    REQUIRE(strV4.getValue() == 3);
+    REQUIRE(strV1.hasFlagValue(0));
+    REQUIRE(strV2.hasFlagValue(1));
+    REQUIRE(strV3.hasFlagValue(2));
+    REQUIRE(strV4.hasFlagValue(3));
     REQUIRE(!strV4.hasFlagValue(97));
     REQUIRE(numV1.getValueName() == "CreateNumber");
     REQUIRE(numV2.getValueName() == "DeleteNumber");
     REQUIRE(numV3.getValueName() == "UpdateNumber");
     REQUIRE(numV4.getValueName() == "GetNumber");
-    REQUIRE(numV1.hasFlagValue(1));
-    REQUIRE(numV2.hasFlagValue(2));
-    REQUIRE(numV3.hasFlagValue(3));
-    REQUIRE(numV4.hasFlagValue(4));
+    REQUIRE(numV1.hasFlagValue(0));
+    REQUIRE(numV2.hasFlagValue(1));
+    REQUIRE(numV3.hasFlagValue(2));
+    REQUIRE(numV4.hasFlagValue(3));
     REQUIRE(!numV4.hasFlagValue(97));
 }
 
@@ -241,24 +241,24 @@ TEST_CASE( "Parse a string enum definition without flags - expect correct enum v
     REQUIRE(def.getStorageType() == tson::EnumStorageType::String);
     REQUIRE(!def.hasValuesAsFlags());
 
-    REQUIRE(def.getValue(1) == "CreatePlayer");
+    REQUIRE(def.getValue(0) == "CreatePlayer");
+    REQUIRE(def.exists(0));
+    REQUIRE(def.getValue(1) == "UpdatePlayer");
     REQUIRE(def.exists(1));
-    REQUIRE(def.getValue(2) == "UpdatePlayer");
+    REQUIRE(def.getValue(2) == "DeletePlayer");
     REQUIRE(def.exists(2));
-    REQUIRE(def.getValue(3) == "DeletePlayer");
+    REQUIRE(def.getValue(3) == "GetPlayer");
     REQUIRE(def.exists(3));
-    REQUIRE(def.getValue(4) == "GetPlayer");
-    REQUIRE(def.exists(4));
     REQUIRE(def.getValue(97).empty());
     REQUIRE(!def.exists(97));
 
-    REQUIRE(def.getValue("CreatePlayer") == 1);
+    REQUIRE(def.getValue("CreatePlayer") == 0);
     REQUIRE(def.exists("CreatePlayer"));
-    REQUIRE(def.getValue("UpdatePlayer") == 2);
+    REQUIRE(def.getValue("UpdatePlayer") == 1);
     REQUIRE(def.exists("UpdatePlayer"));
-    REQUIRE(def.getValue("DeletePlayer") == 3);
+    REQUIRE(def.getValue("DeletePlayer") == 2);
     REQUIRE(def.exists("DeletePlayer"));
-    REQUIRE(def.getValue("GetPlayer") == 4);
+    REQUIRE(def.getValue("GetPlayer") == 3);
     REQUIRE(def.exists("GetPlayer"));
     REQUIRE(def.getValue("None") == 0);
     REQUIRE(def.getValue("SomethingInvalid") == 0);
@@ -268,28 +268,28 @@ TEST_CASE( "Parse a string enum definition without flags - expect correct enum v
     tson::EnumValue strV2 {"DeletePlayer", &def};
     tson::EnumValue strV3 {"UpdatePlayer", &def};
     tson::EnumValue strV4 {"GetPlayer", &def};
-    tson::EnumValue numV1 {1, &def};
-    tson::EnumValue numV2 {2, &def};
-    tson::EnumValue numV3 {3, &def};
-    tson::EnumValue numV4 {4, &def};
+    tson::EnumValue numV1 {0, &def};
+    tson::EnumValue numV2 {1, &def};
+    tson::EnumValue numV3 {2, &def};
+    tson::EnumValue numV4 {3, &def};
 
-    REQUIRE(strV1.getValue() == 1);
-    REQUIRE(strV2.getValue() == 3);
-    REQUIRE(strV3.getValue() == 2);
-    REQUIRE(strV4.getValue() == 4);
-    REQUIRE(strV1.hasFlagValue(1));
-    REQUIRE(strV3.hasFlagValue(2));
-    REQUIRE(strV2.hasFlagValue(3));
-    REQUIRE(strV4.hasFlagValue(4));
+    REQUIRE(strV1.getValue() == 0);
+    REQUIRE(strV2.getValue() == 2);
+    REQUIRE(strV3.getValue() == 1);
+    REQUIRE(strV4.getValue() == 3);
+    REQUIRE(strV1.hasFlagValue(0));
+    REQUIRE(strV3.hasFlagValue(1));
+    REQUIRE(strV2.hasFlagValue(2));
+    REQUIRE(strV4.hasFlagValue(3));
     REQUIRE(!strV4.hasFlagValue(97));
     REQUIRE(numV1.getValueName() == "CreatePlayer");
     REQUIRE(numV2.getValueName() == "UpdatePlayer");
     REQUIRE(numV3.getValueName() == "DeletePlayer");
     REQUIRE(numV4.getValueName() == "GetPlayer");
-    REQUIRE(numV1.hasFlagValue(1));
-    REQUIRE(numV2.hasFlagValue(2));
-    REQUIRE(numV3.hasFlagValue(3));
-    REQUIRE(numV4.hasFlagValue(4));
+    REQUIRE(numV1.hasFlagValue(0));
+    REQUIRE(numV2.hasFlagValue(1));
+    REQUIRE(numV3.hasFlagValue(2));
+    REQUIRE(numV4.hasFlagValue(3));
     REQUIRE(!numV4.hasFlagValue(97));
 }
 

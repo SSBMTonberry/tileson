@@ -2,9 +2,14 @@
 // Created by robin on 03.08.2020.
 //
 
-
 #include "../external_libs/catch.hpp"
-#include "tileson.h"
+#include "../TilesonConfig.h"
+
+#ifdef TILESON_UNIT_TEST_USE_SINGLE_HEADER
+    #include "../tileson.hpp"
+#else
+    #include "../include/tileson.h"
+#endif
 
 TEST_CASE( "Parse world - Expect 4 maps and parsed data", "[project][world]" )
 {
@@ -111,7 +116,10 @@ TEST_CASE( "Parse project with class and enum info in maps - expect right values
             tson::EnumValue enumStrFlags = m->get<tson::EnumValue>("enumstrflags");
 
             REQUIRE(enumNumber.getValue() == 3);
+            REQUIRE(enumStr.getValue() == 0);
+            REQUIRE(enumStr.getValueName() == "CreatePlayer");
             REQUIRE(enumNumber.getValueName() == "GetNumber");
+            REQUIRE(enumNumber.containsValueName("GetNumber"));
             REQUIRE(enumNumberFlags.getValue() == 7);
             REQUIRE(enumNumberFlags.getValueNames().size() == 3);
             std::vector<std::string> expectedNumberFlagNames {"HasCalculatorFlag", "HasBombFlag", "HasHumorFlag"};
@@ -119,9 +127,6 @@ TEST_CASE( "Parse project with class and enum info in maps - expect right values
             {
                 REQUIRE(enumNumberFlags.containsValueName(s));
             }
-            
-            REQUIRE(enumStr.getValue() == 1);
-            REQUIRE(enumStr.getValueName() == "CreatePlayer");
             REQUIRE(enumStrFlags.getValue() == 7);
             REQUIRE(enumStrFlags.getValueNames().size() == 3);
         }

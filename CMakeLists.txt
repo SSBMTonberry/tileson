@@ -54,7 +54,6 @@ else()
     set(MINGW 0)
 endif()
 
-
 #option(BUILD_SHARED_LIBS "Build shared libraries." OFF)
 option(BUILD_TESTS "Build unit tests." ON)
 option(BUILD_EXAMPLES "Build examples." OFF)

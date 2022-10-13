@@ -3,6 +3,9 @@ project(tileson_tests)
 
 set(CMAKE_CXX_STANDARD 17)
 
+# Uses the single header file when defined
+add_compile_definitions(TILESON_UNIT_TEST_USE_SINGLE_HEADER)
+
 include_directories(${PROJECT_SOURCE_DIR}/../external_libs/ ${PROJECT_SOURCE_DIR}/../include)
 
 add_executable(tileson_tests tests_main.cpp tests_objects.cpp tests_tiled_nlohmann.cpp tests_reported_issues.cpp
