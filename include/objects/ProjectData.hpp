@@ -16,6 +16,7 @@ namespace tson
             std::string extensionsPath;
             std::vector<std::string> folders;
             std::string objectTypesFile;
+            ProjectPropertyTypes projectPropertyTypes;
 
             //Tileson specific
             fs::path basePath;

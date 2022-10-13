@@ -18,7 +18,22 @@ namespace tson
             ~Tools() = delete;
             inline static std::vector<uint8_t> Base64DecodedStringToBytes(std::string_view str);
             inline static std::vector<uint32_t> BytesToUnsignedInts(const std::vector<uint8_t> &bytes);
-            //inline static std::vector<int> BytesToInts(const std::vector<uint8_t> &bytes);
+            inline static std::vector<std::string> SplitString(const std::string &s, char delim);
+            inline static bool Equal(float a, float b, float precision = 8192.f);
+
+        private:
+            template<typename Out>
+            static void split(const std::string &s, char delim, Out result)
+            {
+                std::stringstream ss;
+                ss.str(s);
+                std::string item;
+
+                while (std::getline(ss, item, delim))
+                {
+                    *(result++) = item;
+                }
+            }
     };
 
     /*!
@@ -62,38 +77,25 @@ namespace tson
         return uints;
     }
 
-    /*!
-     * While the Tiled specification uses unsigned ints for their tiles, Tileson uses regular ints.
-     * This may be changed in the future, but should in reality never really become an issue.
-     *
-     * Update 2020-11-09: This will cause problems when tiles has flip flags!
-     *
-     * int differences:
-     * int max:  2147483647
-     * uint max: 4294967295
-     *
-     * @param bytes A vector of bytes.
-     * @return Bytes converted to ints
-     */
-    /*std::vector<int> Tools::BytesToInts(const std::vector<uint8_t> &bytes)
+    std::vector<std::string> Tools::SplitString(const std::string &s, char delim)
     {
-        std::vector<int> ints;
-        std::vector<uint8_t> toConvert;
-        //uint32_t size8 = (compressed[55] << 24) | (compressed[56] << 16) | (compressed[57] << 8) | compressed[58]; //Should be 66000
+        std::vector<std::string> elems;
+        split(s, delim, std::back_inserter(elems));
+        return elems;
+    }
 
-        for(size_t i = 0; i < bytes.size(); ++i)
-        {
-            toConvert.push_back(bytes[i]);
-            if(toConvert.size() == 4)
-            {
-                uint32_t u32 = (toConvert[3] << 24) | (toConvert[2] << 16) | (toConvert[1] << 8) | toConvert[0];
-                ints.push_back(u32);
-                toConvert.clear();
-            }
-        }
-
-        return ints;
-    }*/
+    /*!
+     * Uses a threshold for comparing floats, as they are not precise in many cases.
+     * @param a
+     * @param b
+     * @return true if equal based on the currently defined precision
+     */
+    bool Tools::Equal(float a, float b, float precision)
+    {
+        float threshold = 1.f / precision;
+        float diff = fabsf(a - b);
+        return diff <= threshold;
+    }
 }
 
 #endif //TILESON_TOOLS_HPP

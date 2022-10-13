@@ -9,8 +9,10 @@
 #include <sstream>
 #include <memory>
 #include "World.hpp"
+#include "../objects/ProjectPropertyTypes.hpp"
 #include "../objects/ProjectFolder.hpp"
 #include "../objects/ProjectData.hpp"
+
 
 namespace tson
 {
@@ -31,10 +33,14 @@ namespace tson
             inline explicit Project(const fs::path &path, std::unique_ptr<tson::IJson> jsonParser);
             #endif
             inline bool parse(const fs::path &path);
+            inline void parse();
 
             [[nodiscard]] inline const ProjectData &getData() const;
             [[nodiscard]] inline const fs::path &getPath() const;
             [[nodiscard]] inline const std::vector<ProjectFolder> &getFolders() const;
+            [[nodiscard]] inline tson::EnumDefinition* getEnumDefinition(std::string_view name);
+            [[nodiscard]] inline tson::TiledClass* getClass(std::string_view name);
+
 
         private:
             inline void parseJson(IJson &json);
@@ -77,7 +83,13 @@ namespace tson
 
     void Project::parseJson(IJson &json)
     {
-        m_data.basePath = m_path.parent_path(); //The directory of the project file
+        m_data.basePath = (m_path.empty()) ? fs::path() : m_path.parent_path(); //The directory of the project file
+
+        //Make sure these property types are read before any map is, so they can be resolved.
+        if(json.count("propertyTypes") > 0)
+        {
+            m_data.projectPropertyTypes.parse(json, this);
+        }
 
         if(json.count("automappingRulesFile") > 0) m_data.automappingRulesFile = json["automappingRulesFile"].get<std::string>();
         if(json.count("commands") > 0)
@@ -104,7 +116,6 @@ namespace tson
             });
         }
         if(json.count("objectTypesFile") > 0) m_data.objectTypesFile = json["objectTypesFile"].get<std::string>();
-
     }
 
     const fs::path &Project::getPath() const
@@ -117,6 +128,24 @@ namespace tson
         return m_folders;
     }
 
+    tson::EnumDefinition *Project::getEnumDefinition(std::string_view name)
+    {
+        return m_data.projectPropertyTypes.getEnumDefinition(name);
+    }
+
+    tson::TiledClass *Project::getClass(std::string_view name)
+    {
+        return m_data.projectPropertyTypes.getClass(name);
+    }
+
+    /*!
+     * Parses preloaded json data. Only used during tests involving project jsons not actually read from files
+     * @return
+     */
+    void Project::parse()
+    {
+        parseJson(*m_json);
+    }
 
 }
 

@@ -26,8 +26,8 @@ namespace tson
         public:
             inline Map() = default;
             inline Map(ParseStatus status, std::string description);
-            inline explicit Map(IJson &json, tson::DecompressorContainer *decompressors);
-            inline bool parse(IJson &json, tson::DecompressorContainer *decompressors);
+            inline explicit Map(IJson &json, tson::DecompressorContainer *decompressors, tson::Project *project);
+            inline bool parse(IJson &json, tson::DecompressorContainer *decompressors, tson::Project *project);
 
             [[nodiscard]] inline const Colori &getBackgroundColor() const;
             [[nodiscard]] inline const Vector2i &getSize() const;
@@ -63,6 +63,7 @@ namespace tson
             //v1.2.0
             [[nodiscard]] inline int getCompressionLevel() const;
             inline DecompressorContainer *getDecompressors();
+            inline Project * getProject();
             inline Tileset * getTilesetByGid(uint32_t gid);
 
 
@@ -98,7 +99,8 @@ namespace tson
             int                                    m_compressionLevel {-1};  /*! 'compressionlevel': The compression level to use for tile layer
                                                                               *     data (defaults to -1, which means to use the algorithm default)
                                                                               *     Introduced in Tiled 1.3*/
-            tson::DecompressorContainer *          m_decompressors;
+            tson::DecompressorContainer *          m_decompressors {nullptr};
+            tson::Project *                        m_project {nullptr};
             std::map<uint32_t, tson::Tile>         m_flaggedTileMap;    /*! key: Tile ID. Value: Tile*/
     };
 
@@ -130,9 +132,9 @@ tson::Map::Map(tson::ParseStatus status, std::string description) : m_status {st
  * @param json A json object with the format of Map
  * @return true if all mandatory fields was found. false otherwise.
  */
-tson::Map::Map(IJson &json, tson::DecompressorContainer *decompressors)
+tson::Map::Map(IJson &json, tson::DecompressorContainer *decompressors, tson::Project *project)
 {
-    parse(json, decompressors);
+    parse(json, decompressors, project);
 }
 
 /*!
@@ -140,9 +142,10 @@ tson::Map::Map(IJson &json, tson::DecompressorContainer *decompressors)
  * @param json A json object with the format of Map
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
+bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors, tson::Project *project)
 {
     m_decompressors = decompressors;
+    m_project = project;
 
     bool allFound = true;
     if(json.count("compressionlevel") > 0)
@@ -183,7 +186,7 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors)
         auto &array = json.array("properties");
         std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item)
         {
-            m_properties.add(*item);
+            m_properties.add(*item, m_project);
         });
     }
 
@@ -524,6 +527,11 @@ int tson::Map::getCompressionLevel() const
 const tson::Vector2f &tson::Map::getParallaxOrigin() const
 {
     return m_parallaxOrigin;
+}
+
+tson::Project *tson::Map::getProject()
+{
+    return m_project;
 }
 
 

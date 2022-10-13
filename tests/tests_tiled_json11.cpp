@@ -8,7 +8,7 @@
 #define TSON_TEST_ENABLED
 
 #ifdef TILESON_UNIT_TEST_USE_SINGLE_HEADER
-    #include "../single_include/tileson.hpp"
+    #include "../tileson.hpp"
 #else
     #include "../include/tileson.h"
 #endif
@@ -55,7 +55,7 @@ TEST_CASE( "Json11 - Parse a Map from Tiled's documentation", "[tiled][map]" )
     tson::Map map;
     std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
 
-    bool parseOk = map.parse(*json, nullptr);
+    bool parseOk = map.parse(*json, nullptr, nullptr);
     //bool hasCorrectValues = (
     REQUIRE(parseOk);
     REQUIRE(map.getBackgroundColor() == "#656667");
@@ -1339,4 +1339,61 @@ TEST_CASE( "Json11 - Tileset - Calculate offset based on margin and spacing in p
     REQUIRE(tileset.getMarginSpacingOffset({0,0}) == tson::Vector2i (3,3));
     REQUIRE(tileset.getMarginSpacingOffset({0,2}) == tson::Vector2i (3,7));
     REQUIRE(tileset.getMarginSpacingOffset({1,4}) == tson::Vector2i (5,11));
+}
+
+TEST_CASE( "Json11 - Try to resolve properties by object - Expect at least property found", "[tiled][tileset][spacing]" )
+{
+    std::string jstr = "{\n"
+                       "    \"properties\": [\n"
+                       "        {\n"
+                       "            \"name\": \"classdata\",\n"
+                       "            \"propertytype\": \"TestClass\",\n"
+                       "            \"type\": \"class\",\n"
+                       "            \"value\": {\n"
+                       "                \"Age\": 51,\n"
+                       "                \"ExtraFile\": \"..\\/..\\/ultimate_test_v1.5.json\",\n"
+                       "                \"MyObject\": 1,\n"
+                       "                \"Name\": \"Karen Modifini\"\n"
+                       "            }\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"floating\",\n"
+                       "            \"type\": \"float\",\n"
+                       "            \"value\": 45.699\n"
+                       "        },\n"
+                       "        {\n"
+                       "            \"name\": \"number\",\n"
+                       "            \"type\": \"int\",\n"
+                       "            \"value\": 42\n"
+                       "        }\n"
+                       "    ]\n"
+                       "}";
+
+    std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
+
+
+    std::vector<tson::Layer> layers;
+    std::unique_ptr<tson::IJson> js = std::make_unique<tson::Json11>(j);
+    tson::IJson &json = *js;
+    bool classFound = false;
+    if(json.count("properties") > 0 && json["properties"].isArray())
+    {
+        auto &array = json.array("properties");
+        std::for_each(array.begin(), array.end(), [&](std::unique_ptr<tson::IJson> &item)
+        {
+            tson::IJson &j = *item;
+            std::string t = item->get<std::string>("type");
+            if(t == "class")
+            {
+                tson::IJson &v = j["value"];
+                REQUIRE(v.isObject());
+                REQUIRE(v.count("Age") > 0);
+                classFound = true;
+            }
+        });
+    }
+
+    REQUIRE(classFound);
 }

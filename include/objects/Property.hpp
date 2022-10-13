@@ -17,6 +17,8 @@
 
 namespace tson
 {
+    class Project;
+
     class Property
     {
         public:
@@ -33,7 +35,7 @@ namespace tson
             //};
 
             inline Property();
-            inline Property(IJson &json);
+            inline explicit Property(IJson &json, tson::Project *project = nullptr);
             inline Property(std::string name, std::any value, Type type);
 
             inline void setValue(const std::any &value);
@@ -47,13 +49,18 @@ namespace tson
             inline T getValue() const;
             [[nodiscard]] inline const std::string &getName() const;
             [[nodiscard]] inline Type getType() const;
+            [[nodiscard]] inline const std::string &getPropertyType() const;
+
+            //Became public in v1.4.0
+            inline void setValueByType(IJson &json); //Definition in tileson_forward.hpp
 
         protected:
             inline void setTypeByString(const std::string &str);
-            inline void setValueByType(IJson &json);
 
+            tson::Project *m_project = nullptr; //Used for resolving 'enum' and 'class' objects
             Type m_type = Type::Undefined;
-            std::string m_name;
+            std::string m_name {};
+            std::string m_propertyType {};
             std::any m_value; //Using std::any to assign any type
     };
 
@@ -80,11 +87,16 @@ tson::Property::Property() : m_name {"unnamed"}
 
 }
 
-tson::Property::Property(IJson &json)
+tson::Property::Property(IJson &json, tson::Project *project) : m_project {project}
 {
+    m_name = json["name"].get<std::string>();
+    if(json.count("propertytype") > 0)
+        m_propertyType = json["propertytype"].get<std::string>();
+    else if(json.count("propertyType") > 0) //Somehow Tiled's class objects uses propertyType with 'T'.
+        m_propertyType = json["propertyType"].get<std::string>();
+
     setTypeByString(json["type"].get<std::string>());
     setValueByType(json["value"]);
-    m_name = json["name"].get<std::string>();
 }
 
 tson::Property::Property(std::string name, std::any value, Type type) : m_name { move(name) }, m_value { move(value) }, m_type {type}
@@ -167,43 +179,17 @@ void tson::Property::setTypeByString(const std::string &str)
         m_type = tson::Type::Float;
     else if(str == "string")
         m_type = tson::Type::String;
+    else if(str == "class")
+        m_type = tson::Type::Class;
+    else if(str == "object")
+        m_type = tson::Type::Object;
     else
         m_type = tson::Type::Undefined;
 }
 
-void tson::Property::setValueByType(IJson &json)
+const std::string &tson::Property::getPropertyType() const
 {
-    switch(m_type)
-    {
-        case Type::Color:
-            m_value = Colori(json.get<std::string>());
-            break;
-
-        case Type::File:
-            m_value = fs::path(json.get<std::string>());
-            break;
-
-        case Type::Int:
-            m_value = json.get<int>();
-            break;
-
-        case Type::Boolean:
-            m_value = json.get<bool>();
-            break;
-
-        case Type::Float:
-            m_value = json.get<float>();
-            break;
-
-        case Type::String:
-            setStrValue(json.get<std::string>());
-            break;
-
-        default:
-            setStrValue(json.get<std::string>());
-            break;
-
-    }
+    return m_propertyType;
 }
 
 #endif //TILESON_PROPERTY_HPP

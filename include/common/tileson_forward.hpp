@@ -142,6 +142,87 @@ void tson::Layer::decompressData()
     }
 }
 
+/*!
+ * Parses a Tiled layer from json
+ * @param json
+ * @return true if all mandatory fields was found. false otherwise.
+ */
+bool tson::Layer::parse(IJson &json, tson::Map *map)
+{
+    m_map = map;
+
+    bool allFound = true;
+    if(json.count("tintcolor") > 0) m_tintColor = tson::Colori(json["tintcolor"].get<std::string>()); //Optional
+    if(json.count("compression") > 0) m_compression = json["compression"].get<std::string>(); //Optional
+    if(json.count("draworder") > 0) m_drawOrder = json["draworder"].get<std::string>(); //Optional
+    if(json.count("encoding") > 0) m_encoding = json["encoding"].get<std::string>(); //Optional
+    if(json.count("id") > 0) m_id = json["id"].get<int>(); //Optional
+    if(json.count("image") > 0) m_image = json["image"].get<std::string>(); //Optional
+    if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
+    if(json.count("offsetx") > 0 && json.count("offsety") > 0)
+        m_offset = {json["offsetx"].get<float>(), json["offsety"].get<float>()}; //Optional
+    if(json.count("opacity") > 0) m_opacity = json["opacity"].get<float>(); else allFound = false;
+    if(json.count("width") > 0 && json.count("height") > 0)
+        m_size = {json["width"].get<int>(), json["height"].get<int>()}; //else allFound = false; - Not mandatory for all layers!
+    if(json.count("transparentcolor") > 0) m_transparentColor = tson::Colori(json["transparentcolor"].get<std::string>()); //Optional
+    if(json.count("type") > 0) m_typeStr = json["type"].get<std::string>(); else allFound = false;
+    if(json.count("visible") > 0) m_visible = json["visible"].get<bool>(); else allFound = false;
+    if(json.count("x") > 0) m_x = json["x"].get<int>(); else allFound = false;
+    if(json.count("y") > 0) m_y = json["y"].get<int>(); else allFound = false;
+    if(json.count("repeatx") > 0) m_repeatX = json["repeatx"].get<bool>(); //Optional
+    if(json.count("repeaty") > 0) m_repeatY = json["repeaty"].get<bool>(); //Optional
+
+    tson::Vector2f parallax {1.f, 1.f};
+    if(json.count("parallaxx") > 0)
+        parallax.x = json["parallaxx"].get<float>();
+    if(json.count("parallaxy") > 0)
+        parallax.y = json["parallaxy"].get<float>();
+
+    m_parallax = parallax;
+
+    //Handle DATA (Optional)
+    if(json.count("data") > 0)
+    {
+        if(json["data"].isArray())
+        {
+            auto &array = json.array("data");
+            std::for_each(array.begin(), array.end(), [&](std::unique_ptr<IJson> &item) { m_data.push_back(item->get<uint32_t>()); });
+        }
+        else
+        {
+            m_base64Data = json["data"].get<std::string>();
+            decompressData();
+        }
+    }
+
+    //More advanced data
+    if(json.count("chunks") > 0 && json["chunks"].isArray())
+    {
+        auto &chunks = json.array("chunks");
+        std::for_each(chunks.begin(), chunks.end(), [&](std::unique_ptr<IJson> &item) { m_chunks.emplace_back(*item); });
+    }
+    if(json.count("layers") > 0 && json["layers"].isArray())
+    {
+        auto &layers = json.array("layers");
+        std::for_each(layers.begin(), layers.end(), [&](std::unique_ptr<IJson> &item) { m_layers.emplace_back(*item, m_map); });
+    }
+    if(json.count("objects") > 0 && json["objects"].isArray())
+    {
+        auto &objects = json.array("objects");
+        std::for_each(objects.begin(), objects.end(), [&](std::unique_ptr<IJson> &item) { m_objects.emplace_back(*item); });
+    }
+    if(json.count("properties") > 0 && json["properties"].isArray())
+    {
+        auto &properties = json.array("properties");
+        tson::Project *project = (m_map != nullptr) ? m_map->getProject() : nullptr;
+        std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item, project); });
+    }
+
+    setTypeByString();
+
+    return allFound;
+}
+
 // W o r l d . h p p
 // ------------------
 
@@ -164,6 +245,85 @@ std::size_t tson::World::loadMaps(tson::Tileson *parser)
     });
 
     return m_maps.size();
+}
+
+// P r o p e r t y . h p p
+// ------------------
+void tson::Property::setValueByType(IJson &json)
+{
+    switch(m_type)
+    {
+        case Type::Color:
+            m_value = Colori(json.get<std::string>());
+            break;
+
+        case Type::File:
+            m_value = fs::path(json.get<std::string>());
+            break;
+
+        case Type::Int:
+            if(!m_propertyType.empty())
+            {
+                m_type = Type::Enum;
+                tson::EnumDefinition *def = (m_project != nullptr) ? m_project->getEnumDefinition(m_propertyType) : nullptr;
+                if(def != nullptr)
+                {
+                    uint32_t v = json.get<uint32_t>();
+                    m_value = tson::EnumValue(v, def);
+                }
+                else
+                    m_value = tson::EnumValue();
+            }
+            else
+                m_value = json.get<int>();
+
+            break;
+
+        case Type::Boolean:
+            m_value = json.get<bool>();
+            break;
+
+        case Type::Float:
+            m_value = json.get<float>();
+            break;
+
+        case Type::String:
+            if(!m_propertyType.empty())
+            {
+                m_type = Type::Enum;
+                tson::EnumDefinition *def = (m_project != nullptr) ? m_project->getEnumDefinition(m_propertyType) : nullptr;
+                if(def != nullptr)
+                {
+                    std::string v = json.get<std::string>();
+                    m_value = tson::EnumValue(v, def);
+                }
+                else
+                    m_value = tson::EnumValue();
+            }
+            else
+                setStrValue(json.get<std::string>());
+
+            break;
+
+        case Type::Class:
+        {
+            tson::TiledClass *baseClass = (m_project != nullptr) ? m_project->getClass(m_propertyType) : nullptr;
+            if (baseClass != nullptr)
+            {
+                tson::TiledClass c = *baseClass;
+                c.update(json);
+                m_value = c;
+            }
+        }
+        break;
+
+        case Type::Object:
+            m_value = json.get<uint32_t>();
+            break;
+        default:
+            setStrValue(json.get<std::string>());
+            break;
+    }
 }
 
 

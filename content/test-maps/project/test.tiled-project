@@ -43,26 +43,25 @@
                     "value": "James Testolini"
                 },
                 {
+                    "name": "NumFlag",
+                    "propertyType": "TestEnumNumberFlags",
+                    "type": "int",
+                    "value": 10
+                },
+                {
                     "name": "ShoeColor",
                     "type": "color",
                     "value": "#ff069504"
+                },
+                {
+                    "name": "StrFlag",
+                    "propertyType": "TestEnumStringFlags",
+                    "type": "string",
+                    "value": "HasJobFlag,HasHouseFlag"
                 }
             ],
             "name": "TestClass",
             "type": "class"
-        },
-        {
-            "id": 2,
-            "name": "TestEnumString",
-            "storageType": "string",
-            "type": "enum",
-            "values": [
-                "CreatePlayer",
-                "UpdatePlayer",
-                "DeletePlayer",
-                "GetPlayer"
-            ],
-            "valuesAsFlags": false
         },
         {
             "id": 3,
@@ -89,6 +88,19 @@
                 "HasInvisibilityFlag"
             ],
             "valuesAsFlags": true
+        },
+        {
+            "id": 2,
+            "name": "TestEnumString",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "CreatePlayer",
+                "UpdatePlayer",
+                "DeletePlayer",
+                "GetPlayer"
+            ],
+            "valuesAsFlags": false
         },
         {
             "id": 5,

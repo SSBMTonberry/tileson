@@ -8,7 +8,7 @@
 #include "../include/external/nlohmann.hpp"
 
 #ifdef TILESON_UNIT_TEST_USE_SINGLE_HEADER
-    #include "../single_include/tileson.hpp"
+    #include "../tileson.hpp"
 #else
     #include "../include/tileson.h"
 #endif
@@ -49,7 +49,7 @@ TEST_CASE( "PicoJson - Parse a Map from Tiled's documentation", "[tiled][map]" )
     picojson::parse(j, jstr);
     tson::Map map;
     std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
-    bool parseOk = map.parse(*json, nullptr);
+    bool parseOk = map.parse(*json, nullptr, nullptr);
     //bool hasCorrectValues = (
     REQUIRE(parseOk);
     REQUIRE(map.getBackgroundColor() == "#656667");
