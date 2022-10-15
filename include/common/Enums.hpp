@@ -98,6 +98,26 @@ namespace tson
             BottomRight = 9     //bottomright
     };
 
+    /*!
+     * Tileset.hpp - TileRenderSize - From Tiled v1.9
+     */
+    enum class TileRenderSize : uint8_t
+    {
+        Undefined = 0,
+        Tile = 1,  //tile (default)
+        Grid = 2   //grid
+    };
+
+    /*!
+     * Tileset.hpp - FillMode - From Tiled v1.9
+     */
+    enum class FillMode : uint8_t
+    {
+        Undefined = 0,
+        Stretch = 1,            //stretch (default)
+        PreserveAspectFit = 2   //preserve-aspect-fit
+    };
+
     enum class EnumStorageType : uint8_t
     {
         Unspecified = 0,
