@@ -1,0 +1,201 @@
+{
+    "automappingRulesFile": "",
+    "commands": [
+    ],
+    "extensionsPath": "extensions",
+    "folders": [
+        "maps",
+        "world"
+    ],
+    "propertyTypes": [
+        {
+            "color": "#ffffeb06",
+            "id": 6,
+            "members": [
+                {
+                    "name": "value",
+                    "type": "float",
+                    "value": 2.99
+                }
+            ],
+            "name": "Coin",
+            "type": "class",
+            "useAs": [
+                "object",
+                "tile"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 9,
+            "members": [
+                {
+                    "name": "isDummy",
+                    "type": "bool",
+                    "value": true
+                }
+            ],
+            "name": "DummyClass",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 7,
+            "members": [
+                {
+                    "name": "hp",
+                    "type": "int",
+                    "value": 1
+                },
+                {
+                    "name": "name",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "Enemy",
+            "type": "class",
+            "useAs": [
+                "object",
+                "tile"
+            ]
+        },
+        {
+            "color": "#ff55ffff",
+            "id": 8,
+            "members": [
+                {
+                    "name": "damage",
+                    "type": "float",
+                    "value": 4
+                }
+            ],
+            "name": "Spike",
+            "type": "class",
+            "useAs": [
+                "object",
+                "tile"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 1,
+            "members": [
+                {
+                    "name": "Age",
+                    "type": "int",
+                    "value": 49
+                },
+                {
+                    "name": "CanDestroy",
+                    "type": "bool",
+                    "value": true
+                },
+                {
+                    "name": "ExtraFile",
+                    "type": "file",
+                    "value": "../ultimate_test.json"
+                },
+                {
+                    "name": "MoneyInBag",
+                    "type": "float",
+                    "value": 16.9344
+                },
+                {
+                    "name": "MyObject",
+                    "type": "object",
+                    "value": 0
+                },
+                {
+                    "name": "Name",
+                    "type": "string",
+                    "value": "James Testolini"
+                },
+                {
+                    "name": "NumFlag",
+                    "propertyType": "TestEnumNumberFlags",
+                    "type": "int",
+                    "value": 10
+                },
+                {
+                    "name": "ShoeColor",
+                    "type": "color",
+                    "value": "#ff069504"
+                },
+                {
+                    "name": "StrFlag",
+                    "propertyType": "TestEnumStringFlags",
+                    "type": "string",
+                    "value": "HasJobFlag,HasHouseFlag"
+                }
+            ],
+            "name": "TestClass",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        },
+        {
+            "id": 3,
+            "name": "TestEnumNumber",
+            "storageType": "int",
+            "type": "enum",
+            "values": [
+                "CreateNumber",
+                "DeleteNumber",
+                "UpdateNumber",
+                "GetNumber"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "id": 4,
+            "name": "TestEnumNumberFlags",
+            "storageType": "int",
+            "type": "enum",
+            "values": [
+                "HasCalculatorFlag",
+                "HasBombFlag",
+                "HasHumorFlag",
+                "HasInvisibilityFlag"
+            ],
+            "valuesAsFlags": true
+        },
+        {
+            "id": 2,
+            "name": "TestEnumString",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "CreatePlayer",
+                "UpdatePlayer",
+                "DeletePlayer",
+                "GetPlayer"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "id": 5,
+            "name": "TestEnumStringFlags",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "HasCarFlag",
+                "HasJobFlag",
+                "HasHouseFlag",
+                "HasMoneyFlag"
+            ],
+            "valuesAsFlags": true
+        }
+    ]
+}

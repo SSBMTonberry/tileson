@@ -52,6 +52,8 @@ void performMainAsserts(tson::Map *map, bool isOldMap = true)
     REQUIRE(map->getLayers()[2].getName() == "Object Layer");
     REQUIRE(map->getLayers()[2].getObjects().size() > 1);
     REQUIRE(map->getLayers()[2].getObjects()[0].getName() == "coin");
+    REQUIRE(map->getLayers()[2].getObjects()[0].getType() == "Coin");
+    REQUIRE(map->getLayers()[2].getObjects()[0].getClass() == "Coin");
     REQUIRE(map->getLayers()[2].getObjects()[0].getProperties().getSize() > 0);
     REQUIRE(map->getLayer("Main Layer") != nullptr);
     REQUIRE(map->getLayer("Main Layer")->getType() == tson::LayerType::TileLayer);
@@ -125,6 +127,9 @@ void performMainAsserts(tson::Map *map, bool isOldMap = true)
         REQUIRE(hasRepeatX);
         REQUIRE(hasRepeatY);
     }
+
+
+
 }
 
 /*!
@@ -152,11 +157,20 @@ void performAssertsOnTiled15Changes(tson::Map *map)
     REQUIRE(color->getProperties().getSize() == 2);
     REQUIRE(color->getProp("i_like_this")->getType() == tson::Type::Boolean);
     REQUIRE(!color->get<std::string>("description").empty());
+}
 
-    //Data previously retrieved like this:
-    //REQUIRE(map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProperties().getSize() == 2);
-    //REQUIRE(map->getTileset("demo-tileset")->getTerrain("test_terrain")->getProp("i_like_this")->getType() == tson::Type::Boolean);
-    //REQUIRE(!map->getTileset("demo-tiles")->getTerrain("test_terrain")->get<std::string>("description").empty());
+/*!
+ * Asserts related to Tiled v1.9
+ * @param map
+ */
+void performAssertsOnTiled19Changes(tson::Map *map)
+{
+    tson::Tileset *tileset = map->getTileset("demo-tileset");
+    REQUIRE(tileset->getFillMode() == tson::FillMode::PreserveAspectFit);
+    REQUIRE(tileset->getTileRenderSize() == tson::TileRenderSize::Grid);
+    tson::Tile *tile = tileset->getTile(1); //First
+    REQUIRE(tile->getType() == "DummyClass");
+    REQUIRE(tile->getClass() == "DummyClass");
 }
 
 void checkChangesAfterTiledVersion124(tson::Map *map)
@@ -319,6 +333,38 @@ TEST_CASE( "Parse a Tiled v1.5 map with external tileset by file - Expect no err
         performMainAsserts(map.get(), false);
         checkChangesAfterTiledVersion124(map.get());
         performAssertsOnTiled15Changes(map.get());
+        //Just check the colors here
+        tson::Colori color = map->getLayer("Object Layer")->firstObj("text")->getText().color;
+        REQUIRE(color.r == 254);
+        REQUIRE(color.g == 254);
+        REQUIRE(color.b == 254);
+        REQUIRE(color.a == 255);
+
+        REQUIRE(map->getTileset("demo-tileset")->getFillMode() == tson::FillMode::Undefined);
+        REQUIRE(map->getTileset("demo-tileset")->getTileRenderSize() == tson::TileRenderSize::Undefined);
+    }
+    else
+    {
+        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
+        REQUIRE(true);
+    }
+}
+
+TEST_CASE( "Parse a Tiled v1.9 map with external tileset by file - Expect no errors and correct data", "[complete][parse][file]" )
+{
+    tson::Tileson t;
+
+    fs::path pathLocal {"../../content/test-maps/ultimate_test_v1.9.json"};
+    fs::path pathTravis {"../content/test-maps/ultimate_test_v1.9.json"};
+    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+
+    std::unique_ptr<tson::Map> map = t.parse({pathToUse});
+    if(map->getStatus() == tson::ParseStatus::OK)
+    {
+        performMainAsserts(map.get(), false);
+        checkChangesAfterTiledVersion124(map.get());
+        performAssertsOnTiled15Changes(map.get());
+        performAssertsOnTiled19Changes(map.get());
         //Just check the colors here
         tson::Colori color = map->getLayer("Object Layer")->firstObj("text")->getText().color;
         REQUIRE(color.r == 254);

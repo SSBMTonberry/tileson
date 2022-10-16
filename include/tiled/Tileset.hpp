@@ -32,7 +32,6 @@ namespace tson
 
             [[nodiscard]] inline const fs::path &getImagePath() const;
             [[nodiscard]] inline const fs::path &getImage() const;
-
             [[nodiscard]] inline const Vector2i &getImageSize() const;
             [[nodiscard]] inline int getMargin() const;
             [[nodiscard]] inline const std::string &getName() const;
@@ -40,7 +39,6 @@ namespace tson
             [[nodiscard]] inline int getTileCount() const;
             [[nodiscard]] inline const Vector2i &getTileSize() const;
             [[nodiscard]] inline const Colori &getTransparentColor() const;
-
             [[nodiscard]] inline const std::string &getType() const;
             [[nodiscard]] inline std::vector<tson::Tile> &getTiles();
             [[nodiscard]] inline const std::vector<tson::WangSet> &getWangsets() const;
@@ -48,6 +46,8 @@ namespace tson
             [[nodiscard]] inline const std::vector<tson::Terrain> &getTerrains() const;
             [[nodiscard]] inline const Vector2i &getTileOffset() const;
             [[nodiscard]] inline const Grid &getGrid() const;
+            [[nodiscard]] inline TileRenderSize getTileRenderSize() const;
+            [[nodiscard]] inline FillMode getFillMode() const;
 
             inline tson::Tile * getTile(uint32_t id);
             inline tson::Terrain * getTerrain(const std::string &name);
@@ -105,6 +105,12 @@ namespace tson
             fs::path                      m_path {};             /*! Has the full path to the tileset if 'source' has an existing value */
             Transformations               m_transformations {};  /*! New in Tiled v1.5 - This element is used to describe which transformations can be applied to
                                                                      the tiles (e.g. to extend a Wang set by transforming existing tiles).*/
+
+            //v1.4.0-stuff
+            TileRenderSize                m_tileRenderSize {};   /*! 'tilerendersize': The size to use when rendering tiles from this tileset on a tile layer. Valid values are 'tile' (the default) and 'grid'.
+ *                                                                    When set to 'grid', the tile is drawn at the tile grid size of the map. (since 1.9)*/
+            FillMode                      m_fillMode {};         /*! 'fillmode': The fill mode to use when rendering tiles from this tileset. Valid values are 'stretch' (the default) and 'preserve-aspect-fit'.
+ *                                                                    Only relevant when the tiles are not rendered at their native size, so this applies to resized tile objects or in combination with 'tilerendersize' set to 'grid'. (since 1.9)*/
     };
 
     /*!
@@ -165,6 +171,20 @@ bool tson::Tileset::parse(IJson &json, tson::Map *map)
         m_tileSize = {json["tilewidth"].get<int>(), json["tileheight"].get<int>()}; else allFound = false;
     if(json.count("tileoffset") > 0)
         m_tileOffset = {json["tileoffset"]["x"].get<int>(), json["tileoffset"]["y"].get<int>()};
+
+    if(json.count("tilerendersize") > 0)
+    {
+        std::string tileRenderStr = json["tilerendersize"].get<std::string>();
+        if(tileRenderStr == "tile") m_tileRenderSize = TileRenderSize::Tile;
+        else if(tileRenderStr == "grid") m_tileRenderSize = TileRenderSize::Grid;
+    }
+
+    if(json.count("fillmode") > 0)
+    {
+        std::string fillmode = json["fillmode"].get<std::string>();
+        if(fillmode == "stretch") m_fillMode = FillMode::Stretch;
+        else if(fillmode == "preserve-aspect-fit") m_fillMode = FillMode::PreserveAspectFit;
+    }
 
     //More advanced data
     if(json.count("wangsets") > 0 && json["wangsets"].isArray())
@@ -499,6 +519,16 @@ tson::WangSet *tson::Tileset::getWangset(const std::string &name)
 const tson::Transformations &tson::Tileset::getTransformations() const
 {
     return m_transformations;
+}
+
+tson::TileRenderSize tson::Tileset::getTileRenderSize() const
+{
+    return m_tileRenderSize;
+}
+
+tson::FillMode tson::Tileset::getFillMode() const
+{
+    return m_fillMode;
 }
 
 

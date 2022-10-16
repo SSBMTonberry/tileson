@@ -2316,6 +2316,26 @@ namespace tson
 			BottomRight = 9     //bottomright
 	};
 
+	/*!
+	 * Tileset.hpp - TileRenderSize - From Tiled v1.9
+	 */
+	enum class TileRenderSize : uint8_t
+	{
+		Undefined = 0,
+		Tile = 1,  //tile (default)
+		Grid = 2   //grid
+	};
+
+	/*!
+	 * Tileset.hpp - FillMode - From Tiled v1.9
+	 */
+	enum class FillMode : uint8_t
+	{
+		Undefined = 0,
+		Stretch = 1,            //stretch (default)
+		PreserveAspectFit = 2   //preserve-aspect-fit
+	};
+
 	enum class EnumStorageType : uint8_t
 	{
 		Unspecified = 0,
@@ -2712,6 +2732,7 @@ namespace tson
 			[[nodiscard]] inline float getRotation() const;
 			[[nodiscard]] inline const std::string &getTemplate() const;
 			[[nodiscard]] inline const std::string &getType() const;
+			[[nodiscard]] inline const std::string &getClass() const;
 			[[nodiscard]] inline bool isVisible() const;
 			[[nodiscard]] inline const Vector2i &getPosition() const;
 
@@ -2802,7 +2823,11 @@ bool tson::Object::parse(IJson &json)
 	if(json.count("point") > 0) m_point = json["point"].get<bool>(); //Optional
 	if(json.count("rotation") > 0) m_rotation = json["rotation"].get<float>(); else allFound = false;
 	if(json.count("template") > 0) m_template = json["template"].get<std::string>(); //Optional
-	if(json.count("type") > 0) m_type = json["type"].get<std::string>(); else allFound = false;
+
+	if(json.count("type") > 0) m_type = json["type"].get<std::string>();
+	else if(json.count("class") > 0) m_type = json["class"].get<std::string>(); //Tiled v1.9 renamed 'type' to 'class'
+	else allFound = false;
+
 	if(json.count("visible") > 0) m_visible = json["visible"].get<bool>(); else allFound = false;
 
 	if(json.count("width") > 0 && json.count("height") > 0)
@@ -2965,9 +2990,20 @@ const std::string &tson::Object::getTemplate() const
 
 /*!
  * 'type': String assigned to type field in editor
+ * This was renamed to 'class' in Tiled v1.9
  * @return
  */
 const std::string &tson::Object::getType() const
+{
+	return m_type;
+}
+
+/*!
+ * 'class': String assigned to class field in editor
+ * This was renamed from 'type' to 'class' in Tiled v1.9
+ * @return
+ */
+const std::string &tson::Object::getClass() const
 {
 	return m_type;
 }
@@ -4626,6 +4662,7 @@ namespace tson
 
 			[[nodiscard]] inline const Vector2i &getImageSize() const;
 			[[nodiscard]] inline const std::string &getType() const;
+			[[nodiscard]] inline const std::string &getClass() const;
 
 			//[[nodiscard]] inline const std::vector<tson::Frame> &getAnimation() const;
 			[[nodiscard]] inline tson::Animation &getAnimation();
@@ -4741,6 +4778,8 @@ bool tson::Tile::parse(IJson &json, tson::Tileset *tileset, tson::Map *map)
 	bool allFound = parseId(json);
 
 	if(json.count("type") > 0) m_type = json["type"].get<std::string>(); //Optional
+	else if(json.count("class") > 0) m_type = json["class"].get<std::string>(); //Tiled v1.9 renamed 'type' to 'class'
+
 	if(json.count("objectgroup") > 0) m_objectgroup = tson::Layer(json["objectgroup"], m_map); //Optional
 
 	if(json.count("imagewidth") > 0 && json.count("imageheight") > 0)
@@ -4801,9 +4840,20 @@ const tson::Vector2i &tson::Tile::getImageSize() const
 
 /*!
  * 'type': The type of the tile (optional)
+ * This was renamed to 'class' in Tiled v1.9
  * @return
  */
 const std::string &tson::Tile::getType() const
+{
+	return m_type;
+}
+
+/*!
+  * 'class': String assigned to class field in editor (optional)
+ * This was renamed from 'type' to 'class' in Tiled v1.9
+ * @return
+ */
+const std::string &tson::Tile::getClass() const
 {
 	return m_type;
 }
@@ -5154,7 +5204,6 @@ namespace tson
 
 			[[nodiscard]] inline const fs::path &getImagePath() const;
 			[[nodiscard]] inline const fs::path &getImage() const;
-
 			[[nodiscard]] inline const Vector2i &getImageSize() const;
 			[[nodiscard]] inline int getMargin() const;
 			[[nodiscard]] inline const std::string &getName() const;
@@ -5162,7 +5211,6 @@ namespace tson
 			[[nodiscard]] inline int getTileCount() const;
 			[[nodiscard]] inline const Vector2i &getTileSize() const;
 			[[nodiscard]] inline const Colori &getTransparentColor() const;
-
 			[[nodiscard]] inline const std::string &getType() const;
 			[[nodiscard]] inline std::vector<tson::Tile> &getTiles();
 			[[nodiscard]] inline const std::vector<tson::WangSet> &getWangsets() const;
@@ -5170,6 +5218,8 @@ namespace tson
 			[[nodiscard]] inline const std::vector<tson::Terrain> &getTerrains() const;
 			[[nodiscard]] inline const Vector2i &getTileOffset() const;
 			[[nodiscard]] inline const Grid &getGrid() const;
+			[[nodiscard]] inline TileRenderSize getTileRenderSize() const;
+			[[nodiscard]] inline FillMode getFillMode() const;
 
 			inline tson::Tile * getTile(uint32_t id);
 			inline tson::Terrain * getTerrain(const std::string &name);
@@ -5226,6 +5276,12 @@ namespace tson
 			fs::path                      m_path {};             /*! Has the full path to the tileset if 'source' has an existing value */
 			Transformations               m_transformations {};  /*! New in Tiled v1.5 - This element is used to describe which transformations can be applied to
 																	 the tiles (e.g. to extend a Wang set by transforming existing tiles).*/
+
+			//v1.4.0-stuff
+			TileRenderSize                m_tileRenderSize {};   /*! 'tilerendersize': The size to use when rendering tiles from this tileset on a tile layer. Valid values are 'tile' (the default) and 'grid'.
+ *                                                                    When set to 'grid', the tile is drawn at the tile grid size of the map. (since 1.9)*/
+			FillMode                      m_fillMode {};         /*! 'fillmode': The fill mode to use when rendering tiles from this tileset. Valid values are 'stretch' (the default) and 'preserve-aspect-fit'.
+ *                                                                    Only relevant when the tiles are not rendered at their native size, so this applies to resized tile objects or in combination with 'tilerendersize' set to 'grid'. (since 1.9)*/
 	};
 
 	/*!
@@ -5285,6 +5341,20 @@ bool tson::Tileset::parse(IJson &json, tson::Map *map)
 		m_tileSize = {json["tilewidth"].get<int>(), json["tileheight"].get<int>()}; else allFound = false;
 	if(json.count("tileoffset") > 0)
 		m_tileOffset = {json["tileoffset"]["x"].get<int>(), json["tileoffset"]["y"].get<int>()};
+
+	if(json.count("tilerendersize") > 0)
+	{
+		std::string tileRenderStr = json["tilerendersize"].get<std::string>();
+		if(tileRenderStr == "tile") m_tileRenderSize = TileRenderSize::Tile;
+		else if(tileRenderStr == "grid") m_tileRenderSize = TileRenderSize::Grid;
+	}
+
+	if(json.count("fillmode") > 0)
+	{
+		std::string fillmode = json["fillmode"].get<std::string>();
+		if(fillmode == "stretch") m_fillMode = FillMode::Stretch;
+		else if(fillmode == "preserve-aspect-fit") m_fillMode = FillMode::PreserveAspectFit;
+	}
 
 	//More advanced data
 	if(json.count("wangsets") > 0 && json["wangsets"].isArray())
@@ -5619,6 +5689,16 @@ tson::WangSet *tson::Tileset::getWangset(const std::string &name)
 const tson::Transformations &tson::Tileset::getTransformations() const
 {
 	return m_transformations;
+}
+
+tson::TileRenderSize tson::Tileset::getTileRenderSize() const
+{
+	return m_tileRenderSize;
+}
+
+tson::FillMode tson::Tileset::getFillMode() const
+{
+	return m_fillMode;
 }
 
 #endif //TILESON_TILESET_HPP
