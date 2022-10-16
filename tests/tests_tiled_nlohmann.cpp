@@ -220,7 +220,7 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
 
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
-        bool parseOk = obj.parse(*json);
+        bool parseOk = obj.parse(*json, nullptr);
         bool hasCorrectValues = (
                 obj.getGid() == 5 &&
                 obj.getId() == 1 &&
@@ -257,7 +257,7 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
 
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
-        bool parseOk = obj.parse(*json);
+        bool parseOk = obj.parse(*json, nullptr);
         bool hasCorrectValues = (
                 obj.isEllipse() &&
                 obj.getId() == 13 &&
@@ -289,7 +289,7 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
 
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
-        bool parseOk = obj.parse(*json);
+        bool parseOk = obj.parse(*json, nullptr);
         bool hasCorrectValues = (
                 obj.getId() == 14 &&
                 obj.getName().empty() &&
@@ -321,7 +321,7 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
 
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
-        bool parseOk = obj.parse(*json);
+        bool parseOk = obj.parse(*json, nullptr);
         bool hasCorrectValues = (
                 obj.isPoint() &&
                 obj.getId() == 20 &&
@@ -374,7 +374,7 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
 
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
-        bool parseOk = obj.parse(*json);
+        bool parseOk = obj.parse(*json, nullptr);
         bool hasCorrectValues = (
                 obj.getId() == 15 &&
                 obj.getName().empty() &&
@@ -429,7 +429,7 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
 
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
-        bool parseOk = obj.parse(*json);
+        bool parseOk = obj.parse(*json, nullptr);
         bool hasCorrectValues = (
                 obj.getId() == 16 &&
                 obj.getName().empty() &&
@@ -466,7 +466,7 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
 
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
-        bool parseOk = obj.parse(*json);
+        bool parseOk = obj.parse(*json, nullptr);
         bool hasCorrectValues = (
                 obj.getId() == 15 &&
                 obj.getName().empty() &&
@@ -494,7 +494,7 @@ TEST_CASE( "Parse an Object from Tiled's documentation - read simple values", "[
 
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::NlohmannJson>(&j);
-        bool parseOk = obj.parse(*json);
+        bool parseOk = obj.parse(*json, nullptr);
         bool hasCorrectValues = (
                 obj.getId() == 13 &&
                 obj.getTemplate() == "useless_template_object.tx" &&

@@ -53,7 +53,7 @@ void performMainAsserts(tson::Map *map, bool isOldMap = true)
     REQUIRE(map->getLayers()[2].getObjects().size() > 1);
     REQUIRE(map->getLayers()[2].getObjects()[0].getName() == "coin");
     REQUIRE(map->getLayers()[2].getObjects()[0].getType() == "Coin");
-    REQUIRE(map->getLayers()[2].getObjects()[0].getClass() == "Coin");
+    REQUIRE(map->getLayers()[2].getObjects()[0].getClassType() == "Coin");
     REQUIRE(map->getLayers()[2].getObjects()[0].getProperties().getSize() > 0);
     REQUIRE(map->getLayer("Main Layer") != nullptr);
     REQUIRE(map->getLayer("Main Layer")->getType() == tson::LayerType::TileLayer);
@@ -170,7 +170,7 @@ void performAssertsOnTiled19Changes(tson::Map *map)
     REQUIRE(tileset->getTileRenderSize() == tson::TileRenderSize::Grid);
     tson::Tile *tile = tileset->getTile(1); //First
     REQUIRE(tile->getType() == "DummyClass");
-    REQUIRE(tile->getClass() == "DummyClass");
+    REQUIRE(tile->getClassType() == "DummyClass");
 }
 
 void checkChangesAfterTiledVersion124(tson::Map *map)
@@ -365,12 +365,16 @@ TEST_CASE( "Parse a Tiled v1.9 map with external tileset by file - Expect no err
         checkChangesAfterTiledVersion124(map.get());
         performAssertsOnTiled15Changes(map.get());
         performAssertsOnTiled19Changes(map.get());
+
         //Just check the colors here
         tson::Colori color = map->getLayer("Object Layer")->firstObj("text")->getText().color;
         REQUIRE(color.r == 254);
         REQUIRE(color.g == 254);
         REQUIRE(color.b == 254);
         REQUIRE(color.a == 255);
+
+        //Should be null, as this is not initialized from a project, but should not crash
+        REQUIRE(map->getTileset("demo-tileset")->getTile(1)->getClass() == nullptr);
     }
     else
     {

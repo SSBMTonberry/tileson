@@ -85,6 +85,16 @@ const tson::Vector2f tson::Tile::getPosition(const std::tuple<int, int> &tileDat
     return {((float) std::get<0>(tileDataPos)) * m_drawingRect.width, ((float) std::get<1>(tileDataPos)) * m_drawingRect.height};
 }
 
+/*!
+ * Gets the class information for the 'type'/'class'
+ * This may only give a valid result if the map is loaded through a tson::Project
+ * @return a tson::TiledClass object if related map was loaded through tson::Project
+ */
+tson::TiledClass *tson::Tile::getClass()
+{
+    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_type) : nullptr;
+}
+
 // T i l e O b j e c t . h p p
 // ---------------------
 
@@ -209,7 +219,7 @@ bool tson::Layer::parse(IJson &json, tson::Map *map)
     if(json.count("objects") > 0 && json["objects"].isArray())
     {
         auto &objects = json.array("objects");
-        std::for_each(objects.begin(), objects.end(), [&](std::unique_ptr<IJson> &item) { m_objects.emplace_back(*item); });
+        std::for_each(objects.begin(), objects.end(), [&](std::unique_ptr<IJson> &item) { m_objects.emplace_back(*item, m_map); });
     }
     if(json.count("properties") > 0 && json["properties"].isArray())
     {
@@ -221,6 +231,19 @@ bool tson::Layer::parse(IJson &json, tson::Map *map)
     setTypeByString();
 
     return allFound;
+}
+
+// O b j e c t . h p p
+// --------------------
+
+/*!
+ * Gets the class information for the 'type'/'class'
+ * This may only give a valid result if the map is loaded through a tson::Project
+ * @return a tson::TiledClass object if related map was loaded through tson::Project
+ */
+tson::TiledClass *tson::Object::getClass()
+{
+    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_type) : nullptr;
 }
 
 // W o r l d . h p p

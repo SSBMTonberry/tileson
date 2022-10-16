@@ -40,6 +40,17 @@
                  "height":64,
                  "id":1,
                  "name":"TestObject",
+                 "properties":[
+                        {
+                         "name":"hp",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":64,
@@ -117,6 +128,11 @@
          "spacing":0,
          "tilecount":48,
          "tileheight":16,
+         "tiles":[
+                {
+                 "class":"DummyClass",
+                 "id":0
+                }],
          "tilewidth":16
         }],
  "tilewidth":16,

@@ -14,6 +14,8 @@
 
 namespace tson
 {
+    class TiledClass;
+    class Map;
     class Object
     {
         public:
@@ -32,8 +34,8 @@ namespace tson
 
 
             inline Object() = default;
-            inline explicit Object(IJson &json);
-            inline bool parse(IJson &json);
+            inline explicit Object(IJson &json, tson::Map *map);
+            inline bool parse(IJson &json, tson::Map *map);
 
             [[nodiscard]] inline ObjectType getObjectType() const;
             [[nodiscard]] inline bool isEllipse() const;
@@ -45,7 +47,8 @@ namespace tson
             [[nodiscard]] inline float getRotation() const;
             [[nodiscard]] inline const std::string &getTemplate() const;
             [[nodiscard]] inline const std::string &getType() const;
-            [[nodiscard]] inline const std::string &getClass() const;
+            [[nodiscard]] inline const std::string &getClassType() const;
+            [[nodiscard]] inline tson::TiledClass *getClass(); /*! Declared in tileson_forward.hpp */
             [[nodiscard]] inline bool isVisible() const;
             [[nodiscard]] inline const Vector2i &getPosition() const;
 
@@ -85,6 +88,8 @@ namespace tson
 
             //v1.2.0-stuff
             tson::TileFlipFlags               m_flipFlags = TileFlipFlags::None;       /*! Resolved using bit 32, 31 and 30 from gid */
+
+            tson::Map *m_map {nullptr};
     };
 
     /*!
@@ -104,9 +109,9 @@ namespace tson
  * Parses a json Tiled object
  * @param json
  */
-tson::Object::Object(IJson &json)
+tson::Object::Object(IJson &json, tson::Map *map)
 {
-    parse(json);
+    parse(json, map);
 }
 
 /*!
@@ -115,8 +120,9 @@ tson::Object::Object(IJson &json)
  * @param json
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Object::parse(IJson &json)
+bool tson::Object::parse(IJson &json, tson::Map *map)
 {
+    m_map = map;
     bool allFound = true;
 
     if(json.count("ellipse") > 0) m_ellipse = json["ellipse"].get<bool>(); //Optional
@@ -318,7 +324,7 @@ const std::string &tson::Object::getType() const
  * This was renamed from 'type' to 'class' in Tiled v1.9
  * @return
  */
-const std::string &tson::Object::getClass() const
+const std::string &tson::Object::getClassType() const
 {
     return m_type;
 }
