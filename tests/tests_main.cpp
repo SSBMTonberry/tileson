@@ -52,6 +52,8 @@ void performMainAsserts(tson::Map *map, bool isOldMap = true)
     REQUIRE(map->getLayers()[2].getName() == "Object Layer");
     REQUIRE(map->getLayers()[2].getObjects().size() > 1);
     REQUIRE(map->getLayers()[2].getObjects()[0].getName() == "coin");
+    REQUIRE(map->getLayers()[2].getObjects()[0].getType() == "Coin");
+    REQUIRE(map->getLayers()[2].getObjects()[0].getClass() == "Coin");
     REQUIRE(map->getLayers()[2].getObjects()[0].getProperties().getSize() > 0);
     REQUIRE(map->getLayer("Main Layer") != nullptr);
     REQUIRE(map->getLayer("Main Layer")->getType() == tson::LayerType::TileLayer);
@@ -125,6 +127,9 @@ void performMainAsserts(tson::Map *map, bool isOldMap = true)
         REQUIRE(hasRepeatX);
         REQUIRE(hasRepeatY);
     }
+
+
+
 }
 
 /*!
@@ -163,6 +168,9 @@ void performAssertsOnTiled19Changes(tson::Map *map)
     tson::Tileset *tileset = map->getTileset("demo-tileset");
     REQUIRE(tileset->getFillMode() == tson::FillMode::PreserveAspectFit);
     REQUIRE(tileset->getTileRenderSize() == tson::TileRenderSize::Grid);
+    tson::Tile *tile = tileset->getTile(1); //First
+    REQUIRE(tile->getType() == "DummyClass");
+    REQUIRE(tile->getClass() == "DummyClass");
 }
 
 void checkChangesAfterTiledVersion124(tson::Map *map)

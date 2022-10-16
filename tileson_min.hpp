@@ -2732,6 +2732,7 @@ namespace tson
 			[[nodiscard]] inline float getRotation() const;
 			[[nodiscard]] inline const std::string &getTemplate() const;
 			[[nodiscard]] inline const std::string &getType() const;
+			[[nodiscard]] inline const std::string &getClass() const;
 			[[nodiscard]] inline bool isVisible() const;
 			[[nodiscard]] inline const Vector2i &getPosition() const;
 
@@ -2822,7 +2823,11 @@ bool tson::Object::parse(IJson &json)
 	if(json.count("point") > 0) m_point = json["point"].get<bool>(); //Optional
 	if(json.count("rotation") > 0) m_rotation = json["rotation"].get<float>(); else allFound = false;
 	if(json.count("template") > 0) m_template = json["template"].get<std::string>(); //Optional
-	if(json.count("type") > 0) m_type = json["type"].get<std::string>(); else allFound = false;
+
+	if(json.count("type") > 0) m_type = json["type"].get<std::string>();
+	else if(json.count("class") > 0) m_type = json["class"].get<std::string>(); //Tiled v1.9 renamed 'type' to 'class'
+	else allFound = false;
+
 	if(json.count("visible") > 0) m_visible = json["visible"].get<bool>(); else allFound = false;
 
 	if(json.count("width") > 0 && json.count("height") > 0)
@@ -2985,9 +2990,20 @@ const std::string &tson::Object::getTemplate() const
 
 /*!
  * 'type': String assigned to type field in editor
+ * This was renamed to 'class' in Tiled v1.9
  * @return
  */
 const std::string &tson::Object::getType() const
+{
+	return m_type;
+}
+
+/*!
+ * 'class': String assigned to class field in editor
+ * This was renamed from 'type' to 'class' in Tiled v1.9
+ * @return
+ */
+const std::string &tson::Object::getClass() const
 {
 	return m_type;
 }
@@ -4646,6 +4662,7 @@ namespace tson
 
 			[[nodiscard]] inline const Vector2i &getImageSize() const;
 			[[nodiscard]] inline const std::string &getType() const;
+			[[nodiscard]] inline const std::string &getClass() const;
 
 			//[[nodiscard]] inline const std::vector<tson::Frame> &getAnimation() const;
 			[[nodiscard]] inline tson::Animation &getAnimation();
@@ -4761,6 +4778,8 @@ bool tson::Tile::parse(IJson &json, tson::Tileset *tileset, tson::Map *map)
 	bool allFound = parseId(json);
 
 	if(json.count("type") > 0) m_type = json["type"].get<std::string>(); //Optional
+	else if(json.count("class") > 0) m_type = json["class"].get<std::string>(); //Tiled v1.9 renamed 'type' to 'class'
+
 	if(json.count("objectgroup") > 0) m_objectgroup = tson::Layer(json["objectgroup"], m_map); //Optional
 
 	if(json.count("imagewidth") > 0 && json.count("imageheight") > 0)
@@ -4821,9 +4840,20 @@ const tson::Vector2i &tson::Tile::getImageSize() const
 
 /*!
  * 'type': The type of the tile (optional)
+ * This was renamed to 'class' in Tiled v1.9
  * @return
  */
 const std::string &tson::Tile::getType() const
+{
+	return m_type;
+}
+
+/*!
+  * 'class': String assigned to class field in editor (optional)
+ * This was renamed from 'type' to 'class' in Tiled v1.9
+ * @return
+ */
+const std::string &tson::Tile::getClass() const
 {
 	return m_type;
 }

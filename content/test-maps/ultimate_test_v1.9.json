@@ -594,6 +594,7 @@
          "tilerendersize":"grid",
          "tiles":[
                 {
+                 "class":"DummyClass",
                  "id":0,
                  "objectgroup":
                     {

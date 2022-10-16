@@ -7,9 +7,88 @@
         "maps",
         "world"
     ],
-    "objectTypesFile": "../objecttypes.json",
     "propertyTypes": [
         {
+            "color": "#ffffeb06",
+            "id": 6,
+            "members": [
+                {
+                    "name": "value",
+                    "type": "float",
+                    "value": 2.99
+                }
+            ],
+            "name": "Coin",
+            "type": "class",
+            "useAs": [
+                "object",
+                "tile"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 9,
+            "members": [
+                {
+                    "name": "isDummy",
+                    "type": "bool",
+                    "value": true
+                }
+            ],
+            "name": "DummyClass",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "id": 7,
+            "members": [
+                {
+                    "name": "hp",
+                    "type": "int",
+                    "value": 1
+                },
+                {
+                    "name": "name",
+                    "type": "string",
+                    "value": ""
+                }
+            ],
+            "name": "Enemy",
+            "type": "class",
+            "useAs": [
+                "object",
+                "tile"
+            ]
+        },
+        {
+            "color": "#ff55ffff",
+            "id": 8,
+            "members": [
+                {
+                    "name": "damage",
+                    "type": "float",
+                    "value": 4
+                }
+            ],
+            "name": "Spike",
+            "type": "class",
+            "useAs": [
+                "object",
+                "tile"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
             "id": 1,
             "members": [
                 {
@@ -61,7 +140,10 @@
                 }
             ],
             "name": "TestClass",
-            "type": "class"
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
         },
         {
             "id": 3,
