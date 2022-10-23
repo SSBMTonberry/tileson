@@ -181,11 +181,22 @@ TEST_CASE( "Parse Tiled v1.9 project with class and enum info in maps - expect r
             //Should be null, as this is not initialized from a project, but should not crash
 
             tson::Layer *objectLayer = m->getLayer("Da Object Layer");
+            tson::Layer *imageLayer = m->getLayer("Da Image Layer");
+            tson::Layer *mainLayer = m->getLayer("Main Layer");
             tson::TiledClass *c1 = m->getTileset("demo-tileset")->getTile(1)->getClass();
             tson::TiledClass *c2 = m->getClass();
+            tson::TiledClass *c3 = m->getTileset("demo-tileset")->getClass();
+            tson::TiledClass *c4 = objectLayer->getClass();
+            tson::TiledClass *c5 = imageLayer->getClass();
+            tson::TiledClass *c6 = mainLayer->getClass();
+
 
             assertDummy(c1);
             assertDummy(c2);
+            assertDummy(c3);
+            assertDummy(c4);
+            assertDummy(c5);
+            assertDummy(c6);
 
             tson::TiledClass *objectClass = objectLayer->getObj(1)->getClass();
 

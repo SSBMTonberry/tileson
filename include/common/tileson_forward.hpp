@@ -102,6 +102,14 @@ tson::TiledClass *tson::Tile::getClass()
     return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_type) : nullptr;
 }
 
+// T i l e s e t . h p p
+// ------------------------
+
+tson::TiledClass *tson::Tileset::getClass()
+{
+    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
+}
+
 // T i l e O b j e c t . h p p
 // ---------------------
 
@@ -183,6 +191,7 @@ bool tson::Layer::parse(IJson &json, tson::Map *map)
         m_size = {json["width"].get<int>(), json["height"].get<int>()}; //else allFound = false; - Not mandatory for all layers!
     if(json.count("transparentcolor") > 0) m_transparentColor = tson::Colori(json["transparentcolor"].get<std::string>()); //Optional
     if(json.count("type") > 0) m_typeStr = json["type"].get<std::string>(); else allFound = false;
+    if(json.count("class") > 0) m_classType = json["class"].get<std::string>();                     //Optional
     if(json.count("visible") > 0) m_visible = json["visible"].get<bool>(); else allFound = false;
     if(json.count("x") > 0) m_x = json["x"].get<int>(); else allFound = false;
     if(json.count("y") > 0) m_y = json["y"].get<int>(); else allFound = false;
@@ -238,6 +247,11 @@ bool tson::Layer::parse(IJson &json, tson::Map *map)
     setTypeByString();
 
     return allFound;
+}
+
+tson::TiledClass *tson::Layer::getClass()
+{
+    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
 }
 
 // O b j e c t . h p p

@@ -95,7 +95,7 @@ namespace tson
             ParseStatus                            m_status {ParseStatus::OK};
             std::string                            m_statusMessage {"OK"};
 
-            std::map<uint32_t, tson::Tile*>        m_tileMap;           /*! key: Tile ID. Value: Pointer to Tile*/
+            std::map<uint32_t, tson::Tile*>        m_tileMap{};           /*! key: Tile ID. Value: Pointer to Tile*/
 
             //v1.2.0
             int                                    m_compressionLevel {-1};  /*! 'compressionlevel': The compression level to use for tile layer
@@ -103,9 +103,9 @@ namespace tson
                                                                               *     Introduced in Tiled 1.3*/
             tson::DecompressorContainer *          m_decompressors {nullptr};
             tson::Project *                        m_project {nullptr};
-            std::map<uint32_t, tson::Tile>         m_flaggedTileMap;    /*! key: Tile ID. Value: Tile*/
+            std::map<uint32_t, tson::Tile>         m_flaggedTileMap{};    /*! key: Tile ID. Value: Tile*/
 
-            std::string                            m_classType;              /*! 'class': The class of this map (since 1.9, defaults to “”). */
+            std::string                            m_classType{};              /*! 'class': The class of this map (since 1.9, defaults to “”). */
     };
 
     /*!
