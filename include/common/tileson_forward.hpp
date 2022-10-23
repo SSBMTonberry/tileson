@@ -14,6 +14,13 @@
  * All those forward declarations can be found below.
  */
 
+// M a p . h p p
+// ----------------
+
+tson::TiledClass *tson::Map::getClass()
+{
+    return (m_project != nullptr) ? m_project->getClass(m_type) : nullptr;
+}
 
 // T i l e . h p p
 // ---------------------
