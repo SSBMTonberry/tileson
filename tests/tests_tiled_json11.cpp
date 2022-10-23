@@ -794,7 +794,7 @@ TEST_CASE( "Json11 - Wang-tests - everything Wang - simple", "[tiled][wang]" )
 
         tson::WangSet wangset;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
-        bool parseOk = wangset.parse(*json);
+        bool parseOk = wangset.parse(*json, nullptr);
         bool hasCorrectValues = (
                 wangset.getTile() == -1 &&
                 wangset.getName() == "FirstWang" &&
@@ -825,7 +825,7 @@ TEST_CASE( "Json11 - Wang-tests - everything Wang - simple", "[tiled][wang]" )
         tson::WangColor wangColor;
         tson::Color colorMatch = tson::Colori("#d31313");
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
-        bool parseOk = wangColor.parse(*json);
+        bool parseOk = wangColor.parse(*json, nullptr);
         bool hasCorrectValues = (
                 wangColor.getColor() == colorMatch &&
                 wangColor.getName() == "Rails" &&

@@ -196,7 +196,7 @@ bool tson::Tileset::parse(IJson &json, tson::Map *map)
     if(json.count("wangsets") > 0 && json["wangsets"].isArray())
     {
         auto &wangsets = json.array("wangsets");
-        std::for_each(wangsets.begin(), wangsets.end(), [&](std::unique_ptr<IJson> &item) { m_wangsets.emplace_back(*item); });
+        std::for_each(wangsets.begin(), wangsets.end(), [&](std::unique_ptr<IJson> &item) { m_wangsets.emplace_back(*item, m_map); });
     }
     if(json.count("tiles") > 0 && json["tiles"].isArray())
     {

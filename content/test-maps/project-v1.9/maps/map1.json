@@ -148,7 +148,23 @@
                  "class":"DummyClass",
                  "id":0
                 }],
-         "tilewidth":16
+         "tilewidth":16,
+         "wangsets":[
+                {
+                 "class":"DummyClass",
+                 "colors":[
+                        {
+                         "class":"DummyClass",
+                         "color":"#ff0000",
+                         "name":"Britt",
+                         "probability":1,
+                         "tile":-1
+                        }],
+                 "name":"wang-1",
+                 "tile":-1,
+                 "type":"corner",
+                 "wangtiles":[]
+                }]
         }],
  "tilewidth":16,
  "type":"map",

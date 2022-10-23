@@ -14,8 +14,8 @@ namespace tson
     {
         public:
             inline WangColor() = default;
-            inline explicit WangColor(IJson &json);
-            inline bool parse(IJson &json);
+            inline explicit WangColor(IJson &json, tson::Map *map);
+            inline bool parse(IJson &json, tson::Map *map);
 
             [[nodiscard]] inline const Colori &getColor() const;
             [[nodiscard]] inline const std::string &getName() const;
@@ -27,6 +27,9 @@ namespace tson
             inline T get(const std::string &name);
             inline tson::Property * getProp(const std::string &name);
 
+            [[nodiscard]] inline const std::string &getClassType() const;
+            [[nodiscard]] inline tson::TiledClass *getClass(); /*! Declared in tileson_forward.hpp */
+
 
         private:
             tson::Colori      m_color;              /*! 'color': Hex-formatted color (#RRGGBB or #AARRGGBB) */
@@ -36,22 +39,27 @@ namespace tson
 
             //New in Tiled v1.5
             tson::PropertyCollection     m_properties; 	  /*! 'properties': A list of properties (name, value, type). */
+            tson::Map *                  m_map;
+            std::string                  m_classType {};              /*! 'class': The class of this map (since 1.9, defaults to “”). */
+
     };
 }
 
-tson::WangColor::WangColor(IJson &json)
+tson::WangColor::WangColor(IJson &json, tson::Map *map)
 {
-    parse(json);
+    parse(json, map);
 }
 
-bool tson::WangColor::parse(IJson &json)
+bool tson::WangColor::parse(IJson &json, tson::Map *map)
 {
+    m_map = map;
     bool allFound = true;
 
     if(json.count("color") > 0) m_color = tson::Colori(json["color"].get<std::string>()); else allFound = false;
     if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
     if(json.count("probability") > 0) m_probability = json["probability"].get<float>(); else allFound = false;
     if(json.count("tile") > 0) m_tile = json["tile"].get<int>(); else allFound = false;
+    if(json.count("class") > 0) m_classType = json["class"].get<std::string>();                     //Optional
 
     if(json.count("properties") > 0 && json["properties"].isArray())
     {
@@ -132,6 +140,11 @@ tson::Property *tson::WangColor::getProp(const std::string &name)
         return m_properties.getProperty(name);
 
     return nullptr;
+}
+
+const std::string &tson::WangColor::getClassType() const
+{
+    return m_classType;
 }
 
 #endif //TILESON_WANGCOLOR_HPP

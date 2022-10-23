@@ -257,6 +257,20 @@ tson::TiledClass *tson::Layer::getClass()
 // O b j e c t . h p p
 // --------------------
 
+// W a n g s e t . h p p
+// ----------------------
+tson::TiledClass *tson::WangSet::getClass()
+{
+    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
+}
+
+// W a n g c o l o r . h p p
+// ----------------------
+tson::TiledClass *tson::WangColor::getClass()
+{
+    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
+}
+
 /*!
  * Gets the class information for the 'type'/'class'
  * This may only give a valid result if the map is loaded through a tson::Project

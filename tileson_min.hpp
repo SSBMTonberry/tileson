@@ -3976,8 +3976,8 @@ namespace tson
 	{
 		public:
 			inline WangColor() = default;
-			inline explicit WangColor(IJson &json);
-			inline bool parse(IJson &json);
+			inline explicit WangColor(IJson &json, tson::Map *map);
+			inline bool parse(IJson &json, tson::Map *map);
 
 			[[nodiscard]] inline const Colori &getColor() const;
 			[[nodiscard]] inline const std::string &getName() const;
@@ -3989,6 +3989,9 @@ namespace tson
 			inline T get(const std::string &name);
 			inline tson::Property * getProp(const std::string &name);
 
+			[[nodiscard]] inline const std::string &getClassType() const;
+			[[nodiscard]] inline tson::TiledClass *getClass(); /*! Declared in tileson_forward.hpp */
+
 		private:
 			tson::Colori      m_color;              /*! 'color': Hex-formatted color (#RRGGBB or #AARRGGBB) */
 			std::string       m_name;               /*! 'name': Name of the Wang color */
@@ -3997,22 +4000,27 @@ namespace tson
 
 			//New in Tiled v1.5
 			tson::PropertyCollection     m_properties; 	  /*! 'properties': A list of properties (name, value, type). */
+			tson::Map *                  m_map;
+			std::string                  m_classType {};              /*! 'class': The class of this map (since 1.9, defaults to “”). */
+
 	};
 }
 
-tson::WangColor::WangColor(IJson &json)
+tson::WangColor::WangColor(IJson &json, tson::Map *map)
 {
-	parse(json);
+	parse(json, map);
 }
 
-bool tson::WangColor::parse(IJson &json)
+bool tson::WangColor::parse(IJson &json, tson::Map *map)
 {
+	m_map = map;
 	bool allFound = true;
 
 	if(json.count("color") > 0) m_color = tson::Colori(json["color"].get<std::string>()); else allFound = false;
 	if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
 	if(json.count("probability") > 0) m_probability = json["probability"].get<float>(); else allFound = false;
 	if(json.count("tile") > 0) m_tile = json["tile"].get<int>(); else allFound = false;
+	if(json.count("class") > 0) m_classType = json["class"].get<std::string>();                     //Optional
 
 	if(json.count("properties") > 0 && json["properties"].isArray())
 	{
@@ -4092,6 +4100,11 @@ tson::Property *tson::WangColor::getProp(const std::string &name)
 		return m_properties.getProperty(name);
 
 	return nullptr;
+}
+
+const std::string &tson::WangColor::getClassType() const
+{
+	return m_classType;
 }
 
 #endif //TILESON_WANGCOLOR_HPP
@@ -4224,8 +4237,8 @@ namespace tson
 	{
 		public:
 			inline WangSet() = default;
-			inline explicit WangSet(IJson &json);
-			inline bool parse(IJson &json);
+			inline explicit WangSet(IJson &json, tson::Map *map);
+			inline bool parse(IJson &json, tson::Map *map);
 
 			[[nodiscard]] inline const std::string &getName() const;
 			[[nodiscard]] inline int getTile() const;
@@ -4242,6 +4255,9 @@ namespace tson
 			inline T get(const std::string &name);
 			inline tson::Property * getProp(const std::string &name);
 
+			[[nodiscard]] inline const std::string &getClassType() const;
+			[[nodiscard]] inline tson::TiledClass *getClass(); /*! Declared in tileson_forward.hpp */
+
 		private:
 
 			inline bool parseTiled15Props(IJson &json);
@@ -4255,6 +4271,9 @@ namespace tson
 
 			//Tiled v1.5
 			std::vector<tson::WangColor> m_colors;        /*! 'colors': */
+
+			tson::Map *                  m_map;
+			std::string                  m_classType {};              /*! 'class': The class of this map (since 1.9, defaults to “”). */
 
 	};
 
@@ -4271,13 +4290,14 @@ namespace tson
 	}
 }
 
-tson::WangSet::WangSet(IJson &json)
+tson::WangSet::WangSet(IJson &json, tson::Map *map)
 {
-	parse(json);
+	parse(json, map);
 }
 
-bool tson::WangSet::parse(IJson &json)
+bool tson::WangSet::parse(IJson &json, tson::Map *map)
 {
+	m_map = map;
 	bool allFound = true;
 
 	if(json.count("tile") > 0) m_tile = json["tile"].get<int>(); else allFound = false;
@@ -4292,18 +4312,20 @@ bool tson::WangSet::parse(IJson &json)
 	if(json.count("cornercolors") > 0 && json["cornercolors"].isArray())
 	{
 		auto &cornercolors = json.array("cornercolors");
-		std::for_each(cornercolors.begin(), cornercolors.end(), [&](std::unique_ptr<IJson> &item) { m_cornerColors.emplace_back(*item); });
+		std::for_each(cornercolors.begin(), cornercolors.end(), [&](std::unique_ptr<IJson> &item) { m_cornerColors.emplace_back(*item, m_map); });
 	}
 	if(json.count("edgecolors") > 0 && json["edgecolors"].isArray())
 	{
 		auto &edgecolors = json.array("edgecolors");
-		std::for_each(edgecolors.begin(), edgecolors.end(), [&](std::unique_ptr<IJson> &item) { m_edgeColors.emplace_back(*item); });
+		std::for_each(edgecolors.begin(), edgecolors.end(), [&](std::unique_ptr<IJson> &item) { m_edgeColors.emplace_back(*item, m_map); });
 	}
 	if(json.count("properties") > 0 && json["properties"].isArray())
 	{
 		auto &properties = json.array("properties");
 		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
 	}
+
+	if(json.count("class") > 0) m_classType = json["class"].get<std::string>();                     //Optional
 
 	if(!parseTiled15Props(json))
 		allFound = false;
@@ -4322,7 +4344,7 @@ bool tson::WangSet::parseTiled15Props(tson::IJson &json)
 	if(json.count("colors") > 0 && json["colors"].isArray())
 	{
 		auto &colors = json.array("colors");
-		std::for_each(colors.begin(), colors.end(), [&](std::unique_ptr<IJson> &item) { m_colors.emplace_back(*item); });
+		std::for_each(colors.begin(), colors.end(), [&](std::unique_ptr<IJson> &item) { m_colors.emplace_back(*item, m_map); });
 	}
 	return true;
 }
@@ -4418,6 +4440,11 @@ tson::WangColor *tson::WangSet::getColor(const std::string &name)
 		return &color.operator*();
 
 	return nullptr;
+}
+
+const std::string &tson::WangSet::getClassType() const
+{
+	return m_classType;
 }
 
 #endif //TILESON_WANGSET_HPP
@@ -5381,7 +5408,7 @@ bool tson::Tileset::parse(IJson &json, tson::Map *map)
 	if(json.count("wangsets") > 0 && json["wangsets"].isArray())
 	{
 		auto &wangsets = json.array("wangsets");
-		std::for_each(wangsets.begin(), wangsets.end(), [&](std::unique_ptr<IJson> &item) { m_wangsets.emplace_back(*item); });
+		std::for_each(wangsets.begin(), wangsets.end(), [&](std::unique_ptr<IJson> &item) { m_wangsets.emplace_back(*item, m_map); });
 	}
 	if(json.count("tiles") > 0 && json["tiles"].isArray())
 	{
@@ -7669,6 +7696,20 @@ tson::TiledClass *tson::Layer::getClass()
 
 // O b j e c t . h p p
 // --------------------
+
+// W a n g s e t . h p p
+// ----------------------
+tson::TiledClass *tson::WangSet::getClass()
+{
+	return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
+}
+
+// W a n g c o l o r . h p p
+// ----------------------
+tson::TiledClass *tson::WangColor::getClass()
+{
+	return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
+}
 
 /*!
  * Gets the class information for the 'type'/'class'

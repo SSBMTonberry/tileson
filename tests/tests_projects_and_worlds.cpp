@@ -183,13 +183,16 @@ TEST_CASE( "Parse Tiled v1.9 project with class and enum info in maps - expect r
             tson::Layer *objectLayer = m->getLayer("Da Object Layer");
             tson::Layer *imageLayer = m->getLayer("Da Image Layer");
             tson::Layer *mainLayer = m->getLayer("Main Layer");
+            tson::WangSet *wangset = m->getTileset("demo-tileset")->getWangset("wang-1");
+            tson::WangColor *wangcolor = wangset->getColor("Britt");
             tson::TiledClass *c1 = m->getTileset("demo-tileset")->getTile(1)->getClass();
             tson::TiledClass *c2 = m->getClass();
             tson::TiledClass *c3 = m->getTileset("demo-tileset")->getClass();
             tson::TiledClass *c4 = objectLayer->getClass();
             tson::TiledClass *c5 = imageLayer->getClass();
             tson::TiledClass *c6 = mainLayer->getClass();
-
+            tson::TiledClass *c7 = wangset->getClass();
+            tson::TiledClass *c8 = wangcolor->getClass();
 
             assertDummy(c1);
             assertDummy(c2);
@@ -197,6 +200,8 @@ TEST_CASE( "Parse Tiled v1.9 project with class and enum info in maps - expect r
             assertDummy(c4);
             assertDummy(c5);
             assertDummy(c6);
+            assertDummy(c7);
+            assertDummy(c8);
 
             tson::TiledClass *objectClass = objectLayer->getObj(1)->getClass();
 

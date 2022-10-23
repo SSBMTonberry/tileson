@@ -747,7 +747,7 @@ TEST_CASE( "PicoJson - Wang-tests - everything Wang - simple", "[tiled][wang]" )
         picojson::parse(j, jstr);
         tson::WangSet wangset;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
-        bool parseOk = wangset.parse(*json);
+        bool parseOk = wangset.parse(*json, nullptr);
         bool hasCorrectValues = (
                 wangset.getTile() == -1 &&
                 wangset.getName() == "FirstWang" &&
@@ -776,7 +776,7 @@ TEST_CASE( "PicoJson - Wang-tests - everything Wang - simple", "[tiled][wang]" )
         tson::WangColor wangColor;
         tson::Color colorMatch = tson::Colori("#d31313");
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::PicoJson>(&j);
-        bool parseOk = wangColor.parse(*json);
+        bool parseOk = wangColor.parse(*json, nullptr);
         bool hasCorrectValues = (
                 wangColor.getColor() == colorMatch &&
                 wangColor.getName() == "Rails" &&
