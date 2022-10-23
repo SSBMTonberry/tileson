@@ -51,6 +51,55 @@ TEST_CASE( "Parse project - expect right number of files and folders", "[project
     REQUIRE(project.getFolders().at(1).getSubFolders().empty());
 }
 
+void tiledProjectEnumAndClassBaseTest(tson::Map *m)
+{
+    REQUIRE(m->getStatus() == tson::ParseStatus::OK);
+    auto c = m->get<tson::TiledClass>("classdata");
+
+    //Asserts
+    int age = c.get<int>("Age");
+    fs::path extraFile = c.get<fs::path>("ExtraFile");
+    uint32_t myObject = c.get<uint32_t>("MyObject");
+    std::string name = c.get<std::string>("Name");
+    bool canDestroy = c.get<bool>("CanDestroy");
+    float money = c.get<float>("MoneyInBag");
+    tson::Colori color = c.get<tson::Colori>("ShoeColor");
+    tson::EnumValue classEnumNumber = c.get<tson::EnumValue>("NumFlag");
+    tson::EnumValue classEnumString = c.get<tson::EnumValue>("StrFlag");
+
+    //Check class stuff
+    REQUIRE(age == 51);
+    REQUIRE(extraFile.filename() == "ultimate_test_v1.5.json");
+    REQUIRE(myObject == 1);
+    REQUIRE(name == "Karen Modifini");
+    REQUIRE(canDestroy);
+    REQUIRE(tson::Tools::Equal(money, 16.9344f));
+    REQUIRE(color == "#ff069504");
+    REQUIRE(classEnumNumber.getValue() == 10);
+    REQUIRE(classEnumString.getValue() == 6);
+
+    //Check standalone enum stuff
+    tson::EnumValue enumNumber = m->get<tson::EnumValue>("enumnumber");
+    tson::EnumValue enumNumberFlags = m->get<tson::EnumValue>("enumnumberflags");
+    tson::EnumValue enumStr = m->get<tson::EnumValue>("enumstr");
+    tson::EnumValue enumStrFlags = m->get<tson::EnumValue>("enumstrflags");
+
+    REQUIRE(enumNumber.getValue() == 3);
+    REQUIRE(enumStr.getValue() == 0);
+    REQUIRE(enumStr.getValueName() == "CreatePlayer");
+    REQUIRE(enumNumber.getValueName() == "GetNumber");
+    REQUIRE(enumNumber.containsValueName("GetNumber"));
+    REQUIRE(enumNumberFlags.getValue() == 7);
+    REQUIRE(enumNumberFlags.getValueNames().size() == 3);
+    std::vector<std::string> expectedNumberFlagNames {"HasCalculatorFlag", "HasBombFlag", "HasHumorFlag"};
+    for(const std::string &s : expectedNumberFlagNames)
+    {
+        REQUIRE(enumNumberFlags.containsValueName(s));
+    }
+    REQUIRE(enumStrFlags.getValue() == 7);
+    REQUIRE(enumStrFlags.getValueNames().size() == 3);
+}
+
 TEST_CASE( "Parse project with class and enum info in maps - expect right values", "[project][map]" )
 {
     fs::path pathLocal {"../../content/test-maps/project/test.tiled-project"};
@@ -84,53 +133,15 @@ TEST_CASE( "Parse project with class and enum info in maps - expect right values
             tson::Tileson t {&project};
             REQUIRE(fs::exists(path));
             std::unique_ptr<tson::Map> m = t.parse(path);
-            REQUIRE(m->getStatus() == tson::ParseStatus::OK);
-            auto c = m->get<tson::TiledClass>("classdata");
-
-            //Asserts
-            int age = c.get<int>("Age");
-            fs::path extraFile = c.get<fs::path>("ExtraFile");
-            uint32_t myObject = c.get<uint32_t>("MyObject");
-            std::string name = c.get<std::string>("Name");
-            bool canDestroy = c.get<bool>("CanDestroy");
-            float money = c.get<float>("MoneyInBag");
-            tson::Colori color = c.get<tson::Colori>("ShoeColor");
-            tson::EnumValue classEnumNumber = c.get<tson::EnumValue>("NumFlag");
-            tson::EnumValue classEnumString = c.get<tson::EnumValue>("StrFlag");
-
-            //Check class stuff
-            REQUIRE(age == 51);
-            REQUIRE(extraFile.filename() == "ultimate_test_v1.5.json");
-            REQUIRE(myObject == 1);
-            REQUIRE(name == "Karen Modifini");
-            REQUIRE(canDestroy);
-            REQUIRE(tson::Tools::Equal(money, 16.9344f));
-            REQUIRE(color == "#ff069504");
-            REQUIRE(classEnumNumber.getValue() == 10);
-            REQUIRE(classEnumString.getValue() == 6);
-
-            //Check standalone enum stuff
-            tson::EnumValue enumNumber = m->get<tson::EnumValue>("enumnumber");
-            tson::EnumValue enumNumberFlags = m->get<tson::EnumValue>("enumnumberflags");
-            tson::EnumValue enumStr = m->get<tson::EnumValue>("enumstr");
-            tson::EnumValue enumStrFlags = m->get<tson::EnumValue>("enumstrflags");
-
-            REQUIRE(enumNumber.getValue() == 3);
-            REQUIRE(enumStr.getValue() == 0);
-            REQUIRE(enumStr.getValueName() == "CreatePlayer");
-            REQUIRE(enumNumber.getValueName() == "GetNumber");
-            REQUIRE(enumNumber.containsValueName("GetNumber"));
-            REQUIRE(enumNumberFlags.getValue() == 7);
-            REQUIRE(enumNumberFlags.getValueNames().size() == 3);
-            std::vector<std::string> expectedNumberFlagNames {"HasCalculatorFlag", "HasBombFlag", "HasHumorFlag"};
-            for(const std::string &s : expectedNumberFlagNames)
-            {
-                REQUIRE(enumNumberFlags.containsValueName(s));
-            }
-            REQUIRE(enumStrFlags.getValue() == 7);
-            REQUIRE(enumStrFlags.getValueNames().size() == 3);
+            tiledProjectEnumAndClassBaseTest(m.get());
         }
     }
+}
+static void assertDummy(tson::TiledClass *c)
+{
+    REQUIRE(c != nullptr);
+    REQUIRE(c->getName() == "DummyClass");
+    REQUIRE(c->get<bool>("isDummy"));
 }
 
 TEST_CASE( "Parse Tiled v1.9 project with class and enum info in maps - expect right values", "[project][map]" )
@@ -166,51 +177,37 @@ TEST_CASE( "Parse Tiled v1.9 project with class and enum info in maps - expect r
             tson::Tileson t {&project};
             REQUIRE(fs::exists(path));
             std::unique_ptr<tson::Map> m = t.parse(path);
-            REQUIRE(m->getStatus() == tson::ParseStatus::OK);
-            auto c = m->get<tson::TiledClass>("classdata");
+            tiledProjectEnumAndClassBaseTest(m.get());
+            //Should be null, as this is not initialized from a project, but should not crash
 
-            //Asserts
-            int age = c.get<int>("Age");
-            fs::path extraFile = c.get<fs::path>("ExtraFile");
-            uint32_t myObject = c.get<uint32_t>("MyObject");
-            std::string name = c.get<std::string>("Name");
-            bool canDestroy = c.get<bool>("CanDestroy");
-            float money = c.get<float>("MoneyInBag");
-            tson::Colori color = c.get<tson::Colori>("ShoeColor");
-            tson::EnumValue classEnumNumber = c.get<tson::EnumValue>("NumFlag");
-            tson::EnumValue classEnumString = c.get<tson::EnumValue>("StrFlag");
+            tson::Layer *objectLayer = m->getLayer("Da Object Layer");
+            tson::Layer *imageLayer = m->getLayer("Da Image Layer");
+            tson::Layer *mainLayer = m->getLayer("Main Layer");
+            tson::WangSet *wangset = m->getTileset("demo-tileset")->getWangset("wang-1");
+            tson::WangColor *wangcolor = wangset->getColor("Britt");
+            tson::TiledClass *c1 = m->getTileset("demo-tileset")->getTile(1)->getClass();
+            tson::TiledClass *c2 = m->getClass();
+            tson::TiledClass *c3 = m->getTileset("demo-tileset")->getClass();
+            tson::TiledClass *c4 = objectLayer->getClass();
+            tson::TiledClass *c5 = imageLayer->getClass();
+            tson::TiledClass *c6 = mainLayer->getClass();
+            tson::TiledClass *c7 = wangset->getClass();
+            tson::TiledClass *c8 = wangcolor->getClass();
 
-            //Check class stuff
-            REQUIRE(age == 51);
-            REQUIRE(extraFile.filename() == "ultimate_test_v1.5.json");
-            REQUIRE(myObject == 1);
-            REQUIRE(name == "Karen Modifini");
-            REQUIRE(canDestroy);
-            REQUIRE(tson::Tools::Equal(money, 16.9344f));
-            REQUIRE(color == "#ff069504");
-            REQUIRE(classEnumNumber.getValue() == 10);
-            REQUIRE(classEnumString.getValue() == 6);
+            assertDummy(c1);
+            assertDummy(c2);
+            assertDummy(c3);
+            assertDummy(c4);
+            assertDummy(c5);
+            assertDummy(c6);
+            assertDummy(c7);
+            assertDummy(c8);
 
-            //Check standalone enum stuff
-            tson::EnumValue enumNumber = m->get<tson::EnumValue>("enumnumber");
-            tson::EnumValue enumNumberFlags = m->get<tson::EnumValue>("enumnumberflags");
-            tson::EnumValue enumStr = m->get<tson::EnumValue>("enumstr");
-            tson::EnumValue enumStrFlags = m->get<tson::EnumValue>("enumstrflags");
+            tson::TiledClass *objectClass = objectLayer->getObj(1)->getClass();
 
-            REQUIRE(enumNumber.getValue() == 3);
-            REQUIRE(enumStr.getValue() == 0);
-            REQUIRE(enumStr.getValueName() == "CreatePlayer");
-            REQUIRE(enumNumber.getValueName() == "GetNumber");
-            REQUIRE(enumNumber.containsValueName("GetNumber"));
-            REQUIRE(enumNumberFlags.getValue() == 7);
-            REQUIRE(enumNumberFlags.getValueNames().size() == 3);
-            std::vector<std::string> expectedNumberFlagNames {"HasCalculatorFlag", "HasBombFlag", "HasHumorFlag"};
-            for(const std::string &s : expectedNumberFlagNames)
-            {
-                REQUIRE(enumNumberFlags.containsValueName(s));
-            }
-            REQUIRE(enumStrFlags.getValue() == 7);
-            REQUIRE(enumStrFlags.getValueNames().size() == 3);
+            REQUIRE(objectClass != nullptr);
+            REQUIRE(objectClass->getName() == "Enemy");
+            REQUIRE(objectClass->get<int>("hp") == 1);
         }
     }
 }

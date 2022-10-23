@@ -42,6 +42,8 @@ namespace tson
             [[nodiscard]] inline const std::string &getTiledVersion() const;
             [[nodiscard]] inline const Vector2i &getTileSize() const;
             [[nodiscard]] inline const std::string &getType() const;
+            [[nodiscard]] inline const std::string &getClassType() const;
+            [[nodiscard]] inline tson::TiledClass *getClass(); /*! Declared in tileson_forward.hpp */
             [[nodiscard]] inline const Vector2f &getParallaxOrigin() const;
             //[[nodiscard]] inline int getVersion() const; //Removed - Tileson v1.3.0
 
@@ -93,7 +95,7 @@ namespace tson
             ParseStatus                            m_status {ParseStatus::OK};
             std::string                            m_statusMessage {"OK"};
 
-            std::map<uint32_t, tson::Tile*>        m_tileMap;           /*! key: Tile ID. Value: Pointer to Tile*/
+            std::map<uint32_t, tson::Tile*>        m_tileMap{};           /*! key: Tile ID. Value: Pointer to Tile*/
 
             //v1.2.0
             int                                    m_compressionLevel {-1};  /*! 'compressionlevel': The compression level to use for tile layer
@@ -101,7 +103,9 @@ namespace tson
                                                                               *     Introduced in Tiled 1.3*/
             tson::DecompressorContainer *          m_decompressors {nullptr};
             tson::Project *                        m_project {nullptr};
-            std::map<uint32_t, tson::Tile>         m_flaggedTileMap;    /*! key: Tile ID. Value: Tile*/
+            std::map<uint32_t, tson::Tile>         m_flaggedTileMap{};    /*! key: Tile ID. Value: Tile*/
+
+            std::string                            m_classType{};              /*! 'class': The class of this map (since 1.9, defaults to “”). */
     };
 
     /*!
@@ -166,6 +170,7 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors, t
     if(json.count("tilewidth") > 0 && json.count("tileheight") > 0 )
         m_tileSize = {json["tilewidth"].get<int>(), json["tileheight"].get<int>()}; else allFound = false;
     if(json.count("type") > 0) m_type = json["type"].get<std::string>();                            //Optional
+    if(json.count("class") > 0) m_classType = json["class"].get<std::string>();                     //Optional
 
     //Removed - Changed from a float to string in Tiled v1.6, and old spec said int.
     //Reason for removal is that it seems to have no real use, as TiledVersion is stored in another variable.
@@ -532,6 +537,11 @@ const tson::Vector2f &tson::Map::getParallaxOrigin() const
 tson::Project *tson::Map::getProject()
 {
     return m_project;
+}
+
+const std::string &tson::Map::getClassType() const
+{
+    return m_classType;
 }
 
 

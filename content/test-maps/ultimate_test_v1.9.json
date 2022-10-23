@@ -1,9 +1,11 @@
 { "backgroundcolor":"#3288c1",
+ "class":"DummyClass",
  "compressionlevel":-1,
  "height":16,
  "infinite":false,
  "layers":[
         {
+         "class":"DummyClass",
          "id":4,
          "image":"..\/demo-background.png",
          "name":"Background Image",
@@ -13,6 +15,11 @@
          "parallaxx":1.4,
          "parallaxy":1.02,
          "properties":[
+                {
+                 "name":"isDummy",
+                 "type":"bool",
+                 "value":true
+                }, 
                 {
                  "name":"repeat_bg",
                  "type":"bool",
@@ -58,6 +65,7 @@
          "y":0
         }, 
         {
+         "class":"DummyClass",
          "draworder":"topdown",
          "id":3,
          "name":"Object Layer",
@@ -483,12 +491,19 @@
                  "y":176
                 }],
          "opacity":1,
+         "properties":[
+                {
+                 "name":"isDummy",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
         }, 
         {
+         "class":"DummyClass",
          "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 33, 34,
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 41, 42,
@@ -509,6 +524,12 @@
          "id":5,
          "name":"Main Layer",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"isDummy",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":32,
@@ -575,6 +596,12 @@
  "orientation":"orthogonal",
  "parallaxoriginx":1.03,
  "parallaxoriginy":1.06,
+ "properties":[
+        {
+         "name":"isDummy",
+         "type":"bool",
+         "value":true
+        }],
  "renderorder":"left-down",
  "tiledversion":"1.9.2",
  "tileheight":16,
@@ -630,7 +657,13 @@
                      "visible":true,
                      "x":0,
                      "y":0
-                    }
+                    },
+                 "properties":[
+                        {
+                         "name":"isDummy",
+                         "type":"bool",
+                         "value":true
+                        }]
                 }, 
                 {
                  "id":1,
@@ -1966,6 +1999,7 @@
             },
          "wangsets":[
                 {
+                 "class":"DummyClass",
                  "colors":[
                         {
                          "color":"#ff0000",
@@ -1991,6 +2025,12 @@
                          "tile":0
                         }],
                  "name":"Terrains",
+                 "properties":[
+                        {
+                         "name":"isDummy",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "tile":-1,
                  "type":"corner",
                  "wangtiles":[
@@ -2044,6 +2084,7 @@
                         }]
                 }, 
                 {
+                 "class":"DummyClass",
                  "colors":[
                         {
                          "color":"#ff0000",
@@ -2075,6 +2116,11 @@
                          "name":"floating_wang",
                          "type":"float",
                          "value":14.6
+                        }, 
+                        {
+                         "name":"isDummy",
+                         "type":"bool",
+                         "value":true
                         }, 
                         {
                          "name":"is_wang",

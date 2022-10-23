@@ -1,9 +1,11 @@
 { "backgroundcolor":"#007bb8",
+ "class":"DummyClass",
  "compressionlevel":-1,
  "height":16,
  "infinite":false,
  "layers":[
         {
+         "class":"DummyClass",
          "data":[0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -31,6 +33,7 @@
          "y":0
         }, 
         {
+         "class":"DummyClass",
          "draworder":"topdown",
          "id":2,
          "name":"Da Object Layer",
@@ -40,6 +43,17 @@
                  "height":64,
                  "id":1,
                  "name":"TestObject",
+                 "properties":[
+                        {
+                         "name":"hp",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":""
+                        }],
                  "rotation":0,
                  "visible":true,
                  "width":64,
@@ -51,8 +65,19 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "class":"DummyClass",
+         "id":3,
+         "image":"",
+         "name":"Da Image Layer",
+         "opacity":1,
+         "type":"imagelayer",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":3,
+ "nextlayerid":4,
  "nextobjectid":3,
  "orientation":"orthogonal",
  "properties":[
@@ -107,6 +132,7 @@
  "tileheight":16,
  "tilesets":[
         {
+         "class":"DummyClass",
          "columns":8,
          "firstgid":1,
          "image":"..\/..\/..\/demo-tileset.png",
@@ -117,7 +143,28 @@
          "spacing":0,
          "tilecount":48,
          "tileheight":16,
-         "tilewidth":16
+         "tiles":[
+                {
+                 "class":"DummyClass",
+                 "id":0
+                }],
+         "tilewidth":16,
+         "wangsets":[
+                {
+                 "class":"DummyClass",
+                 "colors":[
+                        {
+                         "class":"DummyClass",
+                         "color":"#ff0000",
+                         "name":"Britt",
+                         "probability":1,
+                         "tile":-1
+                        }],
+                 "name":"wang-1",
+                 "tile":-1,
+                 "type":"corner",
+                 "wangtiles":[]
+                }]
         }],
  "tilewidth":16,
  "type":"map",

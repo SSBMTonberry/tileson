@@ -241,7 +241,7 @@ TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple val
 
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
-        bool parseOk = obj.parse(*json);
+        bool parseOk = obj.parse(*json, nullptr);
         bool hasCorrectValues = (
                 obj.getGid() == 5 &&
                 obj.getId() == 1 &&
@@ -284,7 +284,7 @@ TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple val
 
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
-        bool parseOk = obj.parse(*json);
+        bool parseOk = obj.parse(*json, nullptr);
         bool hasCorrectValues = (
                 obj.isEllipse() &&
                 obj.getId() == 13 &&
@@ -321,7 +321,7 @@ TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple val
         REQUIRE(result == 0);
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
-        bool parseOk = obj.parse(*json);
+        bool parseOk = obj.parse(*json, nullptr);
         bool hasCorrectValues = (
                 obj.getId() == 14 &&
                 obj.getName().empty() &&
@@ -359,7 +359,7 @@ TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple val
 
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
-        bool parseOk = obj.parse(*json);
+        bool parseOk = obj.parse(*json, nullptr);
         bool hasCorrectValues = (
                 obj.isPoint() &&
                 obj.getId() == 20 &&
@@ -417,7 +417,7 @@ TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple val
         REQUIRE(result == 0);
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
-        bool parseOk = obj.parse(*json);
+        bool parseOk = obj.parse(*json, nullptr);
         bool hasCorrectValues = (
                 obj.getId() == 15 &&
                 obj.getName().empty() &&
@@ -478,7 +478,7 @@ TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple val
         tson::Object obj;
 
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
-        bool parseOk = obj.parse(*json);
+        bool parseOk = obj.parse(*json, nullptr);
         bool hasCorrectValues = (
                 obj.getId() == 16 &&
                 obj.getName().empty() &&
@@ -521,7 +521,7 @@ TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple val
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
 
-        bool parseOk = obj.parse(*json);
+        bool parseOk = obj.parse(*json, nullptr);
         bool hasCorrectValues = (
                 obj.getId() == 15 &&
                 obj.getName().empty() &&
@@ -554,7 +554,7 @@ TEST_CASE( "Gason - Parse an Object from Tiled's documentation - read simple val
         REQUIRE(result == 0);
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
-        bool parseOk = obj.parse(*json);
+        bool parseOk = obj.parse(*json, nullptr);
         bool hasCorrectValues = (
                 obj.getId() == 13 &&
                 obj.getTemplate() == "useless_template_object.tx" &&
@@ -825,7 +825,7 @@ TEST_CASE( "Gason - Wang-tests - everything Wang - simple", "[tiled][wang]" )
         REQUIRE(result == 0);
         tson::WangSet wangset;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
-        bool parseOk = wangset.parse(*json);
+        bool parseOk = wangset.parse(*json, nullptr);
         bool hasCorrectValues = (
                 wangset.getTile() == -1 &&
                 wangset.getName() == "FirstWang" &&
@@ -858,7 +858,7 @@ TEST_CASE( "Gason - Wang-tests - everything Wang - simple", "[tiled][wang]" )
         tson::WangColor wangColor;
         tson::Color colorMatch = tson::Colori("#d31313");
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::Gason>(j);
-        bool parseOk = wangColor.parse(*json);
+        bool parseOk = wangColor.parse(*json, nullptr);
         bool hasCorrectValues = (
                 wangColor.getColor() == colorMatch &&
                 wangColor.getName() == "Rails" &&

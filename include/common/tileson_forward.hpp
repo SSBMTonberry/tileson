@@ -14,6 +14,13 @@
  * All those forward declarations can be found below.
  */
 
+// M a p . h p p
+// ----------------
+
+tson::TiledClass *tson::Map::getClass()
+{
+    return (m_project != nullptr) ? m_project->getClass(m_classType) : nullptr;
+}
 
 // T i l e . h p p
 // ---------------------
@@ -83,6 +90,24 @@ void tson::Tile::performDataCalculations()
 const tson::Vector2f tson::Tile::getPosition(const std::tuple<int, int> &tileDataPos)
 {
     return {((float) std::get<0>(tileDataPos)) * m_drawingRect.width, ((float) std::get<1>(tileDataPos)) * m_drawingRect.height};
+}
+
+/*!
+ * Gets the class information for the 'type'/'class'
+ * This may only give a valid result if the map is loaded through a tson::Project
+ * @return a tson::TiledClass object if related map was loaded through tson::Project
+ */
+tson::TiledClass *tson::Tile::getClass()
+{
+    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_type) : nullptr;
+}
+
+// T i l e s e t . h p p
+// ------------------------
+
+tson::TiledClass *tson::Tileset::getClass()
+{
+    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
 }
 
 // T i l e O b j e c t . h p p
@@ -166,6 +191,7 @@ bool tson::Layer::parse(IJson &json, tson::Map *map)
         m_size = {json["width"].get<int>(), json["height"].get<int>()}; //else allFound = false; - Not mandatory for all layers!
     if(json.count("transparentcolor") > 0) m_transparentColor = tson::Colori(json["transparentcolor"].get<std::string>()); //Optional
     if(json.count("type") > 0) m_typeStr = json["type"].get<std::string>(); else allFound = false;
+    if(json.count("class") > 0) m_classType = json["class"].get<std::string>();                     //Optional
     if(json.count("visible") > 0) m_visible = json["visible"].get<bool>(); else allFound = false;
     if(json.count("x") > 0) m_x = json["x"].get<int>(); else allFound = false;
     if(json.count("y") > 0) m_y = json["y"].get<int>(); else allFound = false;
@@ -209,7 +235,7 @@ bool tson::Layer::parse(IJson &json, tson::Map *map)
     if(json.count("objects") > 0 && json["objects"].isArray())
     {
         auto &objects = json.array("objects");
-        std::for_each(objects.begin(), objects.end(), [&](std::unique_ptr<IJson> &item) { m_objects.emplace_back(*item); });
+        std::for_each(objects.begin(), objects.end(), [&](std::unique_ptr<IJson> &item) { m_objects.emplace_back(*item, m_map); });
     }
     if(json.count("properties") > 0 && json["properties"].isArray())
     {
@@ -221,6 +247,38 @@ bool tson::Layer::parse(IJson &json, tson::Map *map)
     setTypeByString();
 
     return allFound;
+}
+
+tson::TiledClass *tson::Layer::getClass()
+{
+    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
+}
+
+// O b j e c t . h p p
+// --------------------
+
+// W a n g s e t . h p p
+// ----------------------
+tson::TiledClass *tson::WangSet::getClass()
+{
+    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
+}
+
+// W a n g c o l o r . h p p
+// ----------------------
+tson::TiledClass *tson::WangColor::getClass()
+{
+    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
+}
+
+/*!
+ * Gets the class information for the 'type'/'class'
+ * This may only give a valid result if the map is loaded through a tson::Project
+ * @return a tson::TiledClass object if related map was loaded through tson::Project
+ */
+tson::TiledClass *tson::Object::getClass()
+{
+    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_type) : nullptr;
 }
 
 // W o r l d . h p p

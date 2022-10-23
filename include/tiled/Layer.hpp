@@ -46,6 +46,8 @@ namespace tson
             [[nodiscard]] inline bool hasRepeatY() const;
 
             [[nodiscard]] inline LayerType getType() const;
+            [[nodiscard]] inline const std::string &getClassType() const;
+            [[nodiscard]] inline tson::TiledClass *getClass(); /*! Declared in tileson_forward.hpp */
 
             [[nodiscard]] inline const std::string &getTypeStr() const;
             [[nodiscard]] inline bool isVisible() const;
@@ -127,6 +129,8 @@ namespace tson
             std::map<std::tuple<int, int>, tson::TileObject>    m_tileObjects;
             std::set<uint32_t>                                  m_uniqueFlaggedTiles;
             std::vector<tson::FlaggedTile>                      m_flaggedTiles;
+
+            std::string                                         m_classType{};              /*! 'class': The class of this map (since 1.9, defaults to “”). */
 
     };
 
@@ -590,6 +594,11 @@ bool tson::Layer::hasRepeatX() const
 bool tson::Layer::hasRepeatY() const
 {
     return m_repeatY;
+}
+
+const std::string &tson::Layer::getClassType() const
+{
+    return m_classType;
 }
 
 

@@ -40,6 +40,8 @@ namespace tson
             [[nodiscard]] inline const Vector2i &getTileSize() const;
             [[nodiscard]] inline const Colori &getTransparentColor() const;
             [[nodiscard]] inline const std::string &getType() const;
+            [[nodiscard]] inline const std::string &getClassType() const;
+            [[nodiscard]] inline tson::TiledClass *getClass(); /*! Declared in tileson_forward.hpp */
             [[nodiscard]] inline std::vector<tson::Tile> &getTiles();
             [[nodiscard]] inline const std::vector<tson::WangSet> &getWangsets() const;
             [[nodiscard]] inline PropertyCollection &getProperties();
@@ -111,6 +113,9 @@ namespace tson
  *                                                                    When set to 'grid', the tile is drawn at the tile grid size of the map. (since 1.9)*/
             FillMode                      m_fillMode {};         /*! 'fillmode': The fill mode to use when rendering tiles from this tileset. Valid values are 'stretch' (the default) and 'preserve-aspect-fit'.
  *                                                                    Only relevant when the tiles are not rendered at their native size, so this applies to resized tile objects or in combination with 'tilerendersize' set to 'grid'. (since 1.9)*/
+
+            std::string                   m_classType {};              /*! 'class': The class of this map (since 1.9, defaults to “”). */
+
     };
 
     /*!
@@ -164,6 +169,7 @@ bool tson::Tileset::parse(IJson &json, tson::Map *map)
     if(json.count("transparentcolor") > 0) m_transparentColor = tson::Colori(json["transparentcolor"].get<std::string>()); //Optional
     if(json.count("type") > 0) m_type = json["type"].get<std::string>();
     if(json.count("grid") > 0) m_grid = tson::Grid(json["grid"]);
+    if(json.count("class") > 0) m_classType = json["class"].get<std::string>();                     //Optional
 
     if(json.count("imagewidth") > 0 && json.count("imageheight") > 0)
         m_imageSize = {json["imagewidth"].get<int>(), json["imageheight"].get<int>()}; else allFound = false;
@@ -190,7 +196,7 @@ bool tson::Tileset::parse(IJson &json, tson::Map *map)
     if(json.count("wangsets") > 0 && json["wangsets"].isArray())
     {
         auto &wangsets = json.array("wangsets");
-        std::for_each(wangsets.begin(), wangsets.end(), [&](std::unique_ptr<IJson> &item) { m_wangsets.emplace_back(*item); });
+        std::for_each(wangsets.begin(), wangsets.end(), [&](std::unique_ptr<IJson> &item) { m_wangsets.emplace_back(*item, m_map); });
     }
     if(json.count("tiles") > 0 && json["tiles"].isArray())
     {
@@ -529,6 +535,11 @@ tson::TileRenderSize tson::Tileset::getTileRenderSize() const
 tson::FillMode tson::Tileset::getFillMode() const
 {
     return m_fillMode;
+}
+
+const std::string &tson::Tileset::getClassType() const
+{
+    return m_classType;
 }
 
 

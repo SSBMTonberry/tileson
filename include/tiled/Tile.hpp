@@ -17,6 +17,7 @@
 namespace tson
 {
     class Tileset;
+    class TiledClass;
 
     class Tile
     {
@@ -28,14 +29,12 @@ namespace tson
             inline bool parse(IJson &json, tson::Tileset *tileset, tson::Map *map);
             inline bool parseId(IJson &json);
 
-
             [[nodiscard]] inline uint32_t getId() const;
-
             [[nodiscard]] inline const fs::path &getImage() const;
-
             [[nodiscard]] inline const Vector2i &getImageSize() const;
             [[nodiscard]] inline const std::string &getType() const;
-            [[nodiscard]] inline const std::string &getClass() const;
+            [[nodiscard]] inline const std::string &getClassType() const;
+            [[nodiscard]] inline tson::TiledClass *getClass(); /*! Declared in tileson_forward.hpp */
 
             //[[nodiscard]] inline const std::vector<tson::Frame> &getAnimation() const;
             [[nodiscard]] inline tson::Animation &getAnimation();
@@ -227,7 +226,7 @@ const std::string &tson::Tile::getType() const
  * This was renamed from 'type' to 'class' in Tiled v1.9
  * @return
  */
-const std::string &tson::Tile::getClass() const
+const std::string &tson::Tile::getClassType() const
 {
     return m_type;
 }
