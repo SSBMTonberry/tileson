@@ -137,6 +137,12 @@ TEST_CASE( "Parse project with class and enum info in maps - expect right values
         }
     }
 }
+static void assertDummy(tson::TiledClass *c)
+{
+    REQUIRE(c != nullptr);
+    REQUIRE(c->getName() == "DummyClass");
+    REQUIRE(c->get<bool>("isDummy"));
+}
 
 TEST_CASE( "Parse Tiled v1.9 project with class and enum info in maps - expect right values", "[project][map]" )
 {
@@ -174,17 +180,18 @@ TEST_CASE( "Parse Tiled v1.9 project with class and enum info in maps - expect r
             tiledProjectEnumAndClassBaseTest(m.get());
             //Should be null, as this is not initialized from a project, but should not crash
 
-            tson::TiledClass *c1 = m->getTileset("demo-tileset")->getTile(1)->getClass();
-            REQUIRE(c1 != nullptr);
-            REQUIRE(c1->getName() == "DummyClass");
-            REQUIRE(c1->get<bool>("isDummy"));
-
             tson::Layer *objectLayer = m->getLayer("Da Object Layer");
-            tson::TiledClass *c2 = objectLayer->getObj(1)->getClass();
+            tson::TiledClass *c1 = m->getTileset("demo-tileset")->getTile(1)->getClass();
+            tson::TiledClass *c2 = m->getClass();
 
-            REQUIRE(c2 != nullptr);
-            REQUIRE(c2->getName() == "Enemy");
-            REQUIRE(c2->get<int>("hp") == 1);
+            assertDummy(c1);
+            assertDummy(c2);
+
+            tson::TiledClass *objectClass = objectLayer->getObj(1)->getClass();
+
+            REQUIRE(objectClass != nullptr);
+            REQUIRE(objectClass->getName() == "Enemy");
+            REQUIRE(objectClass->get<int>("hp") == 1);
         }
     }
 }

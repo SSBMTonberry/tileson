@@ -19,7 +19,7 @@
 
 tson::TiledClass *tson::Map::getClass()
 {
-    return (m_project != nullptr) ? m_project->getClass(m_type) : nullptr;
+    return (m_project != nullptr) ? m_project->getClass(m_classType) : nullptr;
 }
 
 // T i l e . h p p
