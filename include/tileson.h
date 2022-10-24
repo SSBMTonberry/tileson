@@ -1,5 +1,5 @@
 ///
-/// T I L E S O N   V E R S I O N   1 . 4 . 0 (Work In Progress)
+/// T I L E S O N   V E R S I O N   1 . 4 . 0
 /// ------------------------------------------------
 /// BSD 2-Clause License
 /// 

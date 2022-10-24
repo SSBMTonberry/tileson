@@ -1,5 +1,5 @@
 ///
-/// T I L E S O N   V E R S I O N   1 . 4 . 0 (Work In Progress)   ( M I N I M A L )
+/// T I L E S O N   V E R S I O N   1 . 4 . 0   ( M I N I M A L )
 /// ------------------------------------------------------------------
 /// BSD 2-Clause License
 ///
