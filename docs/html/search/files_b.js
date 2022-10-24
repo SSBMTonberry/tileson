@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['nlohmannjson_2ehpp_421',['NlohmannJson.hpp',['../NlohmannJson_8hpp.html',1,'']]]
+  ['nlohmannjson_2ehpp_0',['NlohmannJson.hpp',['../NlohmannJson_8hpp.html',1,'']]]
 ];

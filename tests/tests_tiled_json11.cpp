@@ -619,7 +619,46 @@ TEST_CASE( "Json11 - Parse a Tile from Tiled's documentation - read simple value
     REQUIRE(tile.get<std::string>("myProperty2") == "myProperty2_value");
     REQUIRE(tile.getProp("myProperty2") != nullptr);
     REQUIRE(tile.getProp("dummy") == nullptr);
+}
 
+TEST_CASE( "Json11 - Parse a newer Tile with extended data based on Tiled v1.9 documentation - read simple values", "[tiled][tile]" )
+{
+    std::string jstr = "{\n"
+                       "  \"id\":11,\n"
+                       "  \"x\":1,\n"
+                       "  \"y\":2,\n"
+                       "  \"width\":3,\n"
+                       "  \"height\":4,\n"
+                       "  \"properties\":[\n"
+                       "    {\n"
+                       "      \"name\":\"myProperty2\",\n"
+                       "      \"type\":\"string\",\n"
+                       "      \"value\":\"myProperty2_value\"\n"
+                       "    }],\n"
+                       "  \"terrain\":[0, 1, 0, 1]\n"
+                       "}";
+
+    std::string error;
+    json11::Json j = json11::Json::parse(jstr, error);
+    REQUIRE(error.empty());
+
+    tson::Tile tile;
+    std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);
+    bool parseOk = tile.parse(*json, nullptr, nullptr);
+    REQUIRE(parseOk);
+    REQUIRE(tile.getId() == 12);
+    REQUIRE(tile.getTerrain().size() == 4);
+    REQUIRE(tile.getTerrain()[2] == 0);
+    REQUIRE(tile.getProperties().getValue<std::string>("myProperty2") == "myProperty2_value");
+    REQUIRE(tile.get<std::string>("myProperty2") == "myProperty2_value");
+    REQUIRE(tile.getProp("myProperty2") != nullptr);
+    REQUIRE(tile.getProp("dummy") == nullptr);
+
+    //Tiled v1.9
+    REQUIRE(tile.getSubRectangle().x == 1);
+    REQUIRE(tile.getSubRectangle().y == 2);
+    REQUIRE(tile.getSubRectangle().width == 3);
+    REQUIRE(tile.getSubRectangle().height == 4);
 }
 
 TEST_CASE( "Json11 - Parse a Frame", "[tiled][frame]" )

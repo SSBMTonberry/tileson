@@ -4116,22 +4116,17 @@ namespace tson
 	{
 		public:
 
-			inline Rect();
+			inline Rect() = default;
 			inline Rect(int x_, int y_, int width_, int height_);
 
 			inline bool operator==(const Rect &rhs) const;
 			inline bool operator!=(const Rect &rhs) const;
 
-			int x;
-			int y;
-			int width;
-			int height;
+			int x{};
+			int y{};
+			int width{};
+			int height{};
 	};
-
-	Rect::Rect()
-	{
-
-	}
 
 	Rect::Rect(int x_, int y_, int width_, int height_)
 	{
@@ -5703,12 +5698,14 @@ namespace tson
 			//v1.2.0-stuff
 			inline void setProperties(const tson::PropertyCollection &properties);
 
-			inline tson::Tileset * getTileset() const;
-			inline tson::Map * getMap() const;
-			inline const tson::Rect &getDrawingRect() const;
+			[[nodiscard]] inline tson::Tileset * getTileset() const;
+			[[nodiscard]] inline tson::Map * getMap() const;
+			[[nodiscard]] inline const tson::Rect &getDrawingRect() const;
+			[[nodiscard]] inline const Rect &getSubRectangle() const;
+
 			inline const tson::Vector2f getPosition(const std::tuple<int, int> &tileDataPos);
 			inline const tson::Vector2i getPositionInTileUnits(const std::tuple<int, int> &tileDataPos);
-			inline const tson::Vector2i getTileSize() const;                       /*! Declared in tileson_forward.hpp */
+			[[nodiscard]] inline const tson::Vector2i getTileSize() const;                       /*! Declared in tileson_forward.hpp */
 
 			[[nodiscard]] inline TileFlipFlags getFlipFlags() const;
 			inline bool hasFlipFlags(TileFlipFlags flags);
@@ -5733,6 +5730,7 @@ namespace tson
 			tson::Tileset *             m_tileset;                                   /*! A pointer to the tileset where this Tile comes from */
 			tson::Map *                 m_map;                                       /*! A pointer to the map where this tile is contained */
 			tson::Rect                  m_drawingRect;                               /*! A rect that shows which part of the tileset that is used for this tile */
+			tson::Rect                  m_subRect;                                   /*! Tiled 1.9: Contains the newly added sub-rectangle variables: 'x', 'y', 'width' and 'height'*/
 			tson::TileFlipFlags         m_flipFlags = TileFlipFlags::None;           /*! Resolved using bit 32, 31 and 30 from gid */
 			inline void performDataCalculations();                                   /*! Declared in tileson_forward.hpp - Calculate all the values used in the tile class. */
 			inline void manageFlipFlagsByIdThenRemoveFlags(uint32_t &id);
@@ -5810,6 +5808,12 @@ bool tson::Tile::parse(IJson &json, tson::Tileset *tileset, tson::Map *map)
 
 	if(json.count("imagewidth") > 0 && json.count("imageheight") > 0)
 		m_imageSize = {json["imagewidth"].get<int>(), json["imageheight"].get<int>()}; //Optional
+
+	m_subRect = {0,0, m_imageSize.x, m_imageSize.y};
+	if(json.count("x") > 0) m_subRect.x = json["x"].get<int>(); //Optional
+	if(json.count("y") > 0) m_subRect.y = json["y"].get<int>(); //Optional
+	if(json.count("width") > 0) m_subRect.width = json["width"].get<int>(); //Optional
+	if(json.count("height") > 0) m_subRect.height = json["height"].get<int>(); //Optional
 
 	//More advanced data
 	if(json.count("animation") > 0 && json["animation"].isArray())
@@ -6010,6 +6014,15 @@ uint32_t tson::Tile::getGid() const
 void tson::Tile::setProperties(const tson::PropertyCollection &properties)
 {
 	m_properties = properties;
+}
+
+/*!
+ * Tiled 1.9: Contains the newly added sub-rectangle variables: 'x', 'y', 'width' and 'height'
+ * @return A tson::Rect with the 'x', 'y', 'width' and 'height' values
+ */
+const tson::Rect &tson::Tile::getSubRectangle() const
+{
+	return m_subRect;
 }
 
 #endif //TILESON_TILE_HPP

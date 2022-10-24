@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['tileflipflags_709',['TileFlipFlags',['../namespacetson.html#abcd37c33daaa7579bf76831bc470113d',1,'tson']]],
-  ['type_710',['Type',['../namespacetson.html#a072f9f86eaa4189282ed315ddfde0094',1,'tson']]]
+  ['objectalignment_0',['ObjectAlignment',['../namespacetson.html#ada2375f45be683cd0407a7b43ad8e5e7',1,'tson']]],
+  ['objecttype_1',['ObjectType',['../namespacetson.html#a7316610048678651b4f11a7319bee3f8',1,'tson']]]
 ];

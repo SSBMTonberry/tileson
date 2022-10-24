@@ -11,22 +11,17 @@ namespace tson
     {
         public:
 
-            inline Rect();
+            inline Rect() = default;
             inline Rect(int x_, int y_, int width_, int height_);
 
             inline bool operator==(const Rect &rhs) const;
             inline bool operator!=(const Rect &rhs) const;
 
-            int x;
-            int y;
-            int width;
-            int height;
+            int x{};
+            int y{};
+            int width{};
+            int height{};
     };
-
-    Rect::Rect()
-    {
-
-    }
 
     Rect::Rect(int x_, int y_, int width_, int height_)
     {
