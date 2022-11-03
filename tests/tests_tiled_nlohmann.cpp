@@ -876,3 +876,19 @@ TEST_CASE( "Tileset - Set object alignment by string - expect right value", "[ti
     REQUIRE(tson::Tileset::StringToAlignment("bottom") == tson::ObjectAlignment::Bottom);
     REQUIRE(tson::Tileset::StringToAlignment("bottomright") == tson::ObjectAlignment::BottomRight);
 }
+
+TEST_CASE( "Nlohmann: Parse world - Expect 4 maps and parsed data", "[project][world]" )
+{
+    fs::path pathLocal {"../../content/test-maps/project/world/test.world"};
+    fs::path pathTravis {"../content/test-maps/project/world/test.world"};
+    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+
+    tson::World world {pathToUse, std::make_unique<tson::NlohmannJson>()};
+    REQUIRE(world.getMapData().size() == 4);
+    REQUIRE(world.get("not_exists") == nullptr);
+    REQUIRE(world.get("w1.json") != nullptr);
+    REQUIRE(world.get("w1.json")->size == tson::Vector2i (256, 128));
+    REQUIRE(world.get("w1.json")->position == tson::Vector2i (-256, -128));
+    REQUIRE(!world.onlyShowAdjacentMaps());
+    REQUIRE(world.getType() == "world");
+}
