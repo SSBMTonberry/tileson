@@ -1,10 +1,8 @@
 var searchData=
 [
-  ['vector2_0',['Vector2',['../classtson_1_1Vector2.html',1,'tson::Vector2&lt; T &gt;'],['../classtson_1_1Vector2.html#abc9453580237e6790341456459c294d4',1,'tson::Vector2::Vector2(T xPos, T yPos)'],['../classtson_1_1Vector2.html#a38e61ea4b374c0e044d7272a11dd554c',1,'tson::Vector2::Vector2()']]],
-  ['vector2_2ehpp_1',['Vector2.hpp',['../Vector2_8hpp.html',1,'']]],
-  ['vector2_3c_20float_20_3e_2',['Vector2&lt; float &gt;',['../classtson_1_1Vector2.html',1,'tson']]],
-  ['vector2_3c_20int_20_3e_3',['Vector2&lt; int &gt;',['../classtson_1_1Vector2.html',1,'tson']]],
-  ['vector2f_4',['Vector2f',['../namespacetson.html#aaf0c9e1b0dfd2e23c10a3c881ea784e9',1,'tson']]],
-  ['vector2i_5',['Vector2i',['../namespacetson.html#ad9b8bc05e1220a920f03acae32e72245',1,'tson']]],
-  ['vertically_6',['Vertically',['../namespacetson.html#abcd37c33daaa7579bf76831bc470113da2f956b64560e7307c699c3492cb37607',1,'tson']]]
+  ['undefined_0',['Undefined',['../namespacetson.html#a072f9f86eaa4189282ed315ddfde0094aec0fc0100c4fc1ce4eea230c3dc10360',1,'tson::Undefined()'],['../namespacetson.html#ac06ac2288d940483c17a83daf587780daec0fc0100c4fc1ce4eea230c3dc10360',1,'tson::Undefined()'],['../namespacetson.html#a7316610048678651b4f11a7319bee3f8aec0fc0100c4fc1ce4eea230c3dc10360',1,'tson::Undefined()'],['../namespacetson.html#a5282509070c3562fa7ef130aac91e855aec0fc0100c4fc1ce4eea230c3dc10360',1,'tson::Undefined()'],['../namespacetson.html#a8c26ef43379a9259d34f20d5b81be6d6aec0fc0100c4fc1ce4eea230c3dc10360',1,'tson::Undefined()']]],
+  ['underline_1',['underline',['../classtson_1_1Text.html#a98d4f25806247c7eb4effc7bde007a13',1,'tson::Text']]],
+  ['unresolved_2',['Unresolved',['../namespacetson.html#a571d9114ee278e2a21a441a2a4983405a4a3b76ab214699973b85cc072788ff7d',1,'tson']]],
+  ['unspecified_3',['Unspecified',['../namespacetson.html#ada2375f45be683cd0407a7b43ad8e5e7a6fcdc090caeade09d0efd6253932b6f5',1,'tson::Unspecified()'],['../namespacetson.html#ab497a88afd065dacadea7954a9111d36a6fcdc090caeade09d0efd6253932b6f5',1,'tson::Unspecified()']]],
+  ['update_4',['update',['../classtson_1_1Animation.html#aa0e9c5fe1e0a859af73ca7249de5b8e5',1,'tson::Animation::update()'],['../classtson_1_1TiledClass.html#aec83c6ef8f209f99e2c10834b6d60965',1,'tson::TiledClass::update()']]]
 ];

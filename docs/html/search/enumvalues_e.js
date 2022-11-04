@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['stretch_0',['Stretch',['../namespacetson.html#a8c26ef43379a9259d34f20d5b81be6d6afbb09a82eafab60150d0996e8fe46560',1,'tson']]],
-  ['string_1',['String',['../namespacetson.html#a072f9f86eaa4189282ed315ddfde0094a27118326006d3829667a400ad23d5d98',1,'tson::String()'],['../namespacetson.html#ab497a88afd065dacadea7954a9111d36a27118326006d3829667a400ad23d5d98',1,'tson::String()']]]
+  ['rectangle_0',['Rectangle',['../namespacetson.html#a7316610048678651b4f11a7319bee3f8ace9291906a4c3b042650b70d7f3b152e',1,'tson']]],
+  ['right_1',['Right',['../namespacetson.html#ada2375f45be683cd0407a7b43ad8e5e7a92b09c7c48c520c3c55e497875da437c',1,'tson::Right()'],['../namespacetson.html#a571d9114ee278e2a21a441a2a4983405a92b09c7c48c520c3c55e497875da437c',1,'tson::Right()']]]
 ];

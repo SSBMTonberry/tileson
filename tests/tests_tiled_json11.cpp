@@ -493,8 +493,8 @@ TEST_CASE( "Json11 - Parse an Object from Tiled's documentation - read simple va
                            "  \"y\":136\n"
                            "}";
         std::string error;
-    json11::Json j = json11::Json::parse(jstr, error);
-    REQUIRE(error.empty());
+        json11::Json j = json11::Json::parse(jstr, error);
+        REQUIRE(error.empty());
 
         tson::Object obj;
         std::unique_ptr<tson::IJson> json = std::make_unique<tson::Json11>(j);

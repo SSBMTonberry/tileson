@@ -157,9 +157,13 @@ bool tson::Object::parse(IJson &json, tson::Map *map)
 
     if(json.count("text") > 0)
     {
-        bool hasColor = json["text"].count("color") > 0;
-        tson::Color c = (hasColor) ? tson::Colori(json["text"]["color"].get<std::string>()) : tson::Colori();
-        m_text = {json["text"]["text"].get<std::string>(), json["text"]["wrap"].get<bool>(), c}; //Optional
+        //Old logic
+        //bool hasColor = json["text"].count("color") > 0;
+        //tson::Color c = (hasColor) ? tson::Colori(json["text"]["color"].get<std::string>()) : tson::Colori();
+        //m_text = {json["text"]["text"].get<std::string>(), json["text"]["wrap"].get<bool>(), c}; //Optional
+        m_text = tson::Text(json["text"]);
+        //
+
     }
 
     setObjectTypeByJson(json);

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['text_0',['text',['../classtson_1_1Text.html#af3d6a5e6b34ce9a422b2ae9b968215ad',1,'tson::Text']]],
-  ['tileid_1',['tileId',['../classtson_1_1FlaggedTile.html#a494b1a394d58de25cf65e4761adb7477',1,'tson::FlaggedTile']]]
+  ['size_0',['size',['../classtson_1_1WorldMapData.html#af4097829b2f300d7f3fdebb2bfb10472',1,'tson::WorldMapData']]],
+  ['strikeout_1',['strikeout',['../classtson_1_1Text.html#aadf56906c0cad21d82bb23c46c99b107',1,'tson::Text']]]
 ];

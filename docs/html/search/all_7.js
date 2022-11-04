@@ -14,5 +14,6 @@ var searchData=
   ['hasvflip_11',['hasVFlip',['../classtson_1_1WangTile.html#add4f356ec08dd3cc7c839c79b29391d6',1,'tson::WangTile']]],
   ['hasworldfile_12',['hasWorldFile',['../classtson_1_1ProjectFolder.html#ae813e2a28195bda9e38ea9250b6c3576',1,'tson::ProjectFolder']]],
   ['height_13',['height',['../classtson_1_1Rect.html#a06e642a98248c43b80ac04b05a1a5fc4',1,'tson::Rect']]],
-  ['horizontally_14',['Horizontally',['../namespacetson.html#abcd37c33daaa7579bf76831bc470113da82d96265a801bd741cb308aea729e587',1,'tson']]]
+  ['horizontalalignment_14',['horizontalAlignment',['../classtson_1_1Text.html#a0300b63044cf5ea6f8b9eaceb80b379d',1,'tson::Text']]],
+  ['horizontally_15',['Horizontally',['../namespacetson.html#abcd37c33daaa7579bf76831bc470113da82d96265a801bd741cb308aea729e587',1,'tson']]]
 ];

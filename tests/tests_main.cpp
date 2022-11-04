@@ -171,6 +171,28 @@ void performAssertsOnTiled19Changes(tson::Map *map)
     tson::Tile *tile = tileset->getTile(1); //First
     REQUIRE(tile->getType() == "DummyClass");
     REQUIRE(tile->getClassType() == "DummyClass");
+
+    //Perform detailed text asserts after fix with missing text properties
+    tson::Text text = map->getLayer("Object Layer")->firstObj("text")->getText();
+    REQUIRE(text.bold);
+    REQUIRE(text.fontFamily == "Courier");
+    REQUIRE(text.horizontalAlignment == tson::TextAlignment::Center);
+    REQUIRE(text.italic);
+    REQUIRE(!text.kerning);
+    REQUIRE(text.pixelSize == 20);
+    REQUIRE(text.strikeout);
+    REQUIRE(text.text == "Tileson - Demo Map");
+    REQUIRE(text.underline);
+    REQUIRE(text.verticalAlignment == tson::TextAlignment::Bottom);
+    REQUIRE(text.wrap);
+
+    tson::Colori color = text.color;
+    REQUIRE(color.r == 254);
+    REQUIRE(color.g == 254);
+    REQUIRE(color.b == 254);
+    REQUIRE(color.a == 255);
+
+
 }
 
 void checkChangesAfterTiledVersion124(tson::Map *map)
