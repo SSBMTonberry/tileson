@@ -99,6 +99,20 @@ namespace tson
     };
 
     /*!
+     * Text.hpp - TextAlignment
+     */
+    enum class TextAlignment : uint8_t
+    {
+        Unresolved = 0,
+        Left = 1,           //left
+        Center = 2,         //center
+        Right = 3,          //right
+        Justify = 4,        //justify
+        Top = 5,            //top
+        Bottom = 6          //bottom
+    };
+
+    /*!
      * Tileset.hpp - TileRenderSize - From Tiled v1.9
      */
     enum class TileRenderSize : uint8_t

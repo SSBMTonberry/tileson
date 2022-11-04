@@ -291,8 +291,17 @@
                  "rotation":0,
                  "text":
                     {
+                     "bold":true,
                      "color":"#fefefe",
+                     "fontfamily":"Courier",
+                     "halign":"center",
+                     "italic":true,
+                     "kerning":false,
+                     "pixelsize":20,
+                     "strikeout":true,
                      "text":"Tileson - Demo Map",
+                     "underline":true,
+                     "valign":"bottom",
                      "wrap":true
                     },
                  "visible":true,
