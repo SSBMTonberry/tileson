@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['size_0',['size',['../classtson_1_1WorldMapData.html#af4097829b2f300d7f3fdebb2bfb10472',1,'tson::WorldMapData']]]
+  ['r_0',['r',['../classtson_1_1Color.html#af3fcb996a66d8c0301eca603d3710a95',1,'tson::Color']]]
 ];

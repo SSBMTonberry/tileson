@@ -11,6 +11,7 @@ var searchData=
   ['folder_8',['folder',['../classtson_1_1WorldMapData.html#acd173e8cc5f4ee4379306a38bd38a582',1,'tson::WorldMapData']]],
   ['folderpaths_9',['folderPaths',['../classtson_1_1ProjectData.html#ac6c9bf1185eb59e17d8b8c7b9212b992',1,'tson::ProjectData']]],
   ['folders_10',['folders',['../classtson_1_1ProjectData.html#a21567e1bc681563fafbc4fe481ad91d5',1,'tson::ProjectData']]],
-  ['frame_11',['Frame',['../classtson_1_1Frame.html#aa8e93bfe317bbbdd7e96765c1e8be270',1,'tson::Frame::Frame(int duration, uint32_t tileId)'],['../classtson_1_1Frame.html#a87cf6f486a74e6c05a606068b6420e00',1,'tson::Frame::Frame(IJson &amp;json)'],['../classtson_1_1Frame.html#ad9ca20e025d3370501a64a2f7ef0b5e0',1,'tson::Frame::Frame()=default'],['../classtson_1_1Frame.html',1,'tson::Frame']]],
-  ['frame_2ehpp_12',['Frame.hpp',['../Frame_8hpp.html',1,'']]]
+  ['fontfamily_11',['fontFamily',['../classtson_1_1Text.html#a5b6bacce869ed45bbaff9f0a1e86c670',1,'tson::Text']]],
+  ['frame_12',['Frame',['../classtson_1_1Frame.html#aa8e93bfe317bbbdd7e96765c1e8be270',1,'tson::Frame::Frame(int duration, uint32_t tileId)'],['../classtson_1_1Frame.html#a87cf6f486a74e6c05a606068b6420e00',1,'tson::Frame::Frame(IJson &amp;json)'],['../classtson_1_1Frame.html#ad9ca20e025d3370501a64a2f7ef0b5e0',1,'tson::Frame::Frame()=default'],['../classtson_1_1Frame.html',1,'tson::Frame']]],
+  ['frame_2ehpp_13',['Frame.hpp',['../Frame_8hpp.html',1,'']]]
 ];

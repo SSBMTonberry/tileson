@@ -16,5 +16,6 @@ var searchData=
   ['isobject_13',['isObject',['../classtson_1_1IJson.html#ada9c28cb45525cc600eae1b6dc59e886',1,'tson::IJson::isObject()'],['../classtson_1_1Gason.html#a55740d8644d7e0fe2a10c3587edcd59d',1,'tson::Gason::isObject()'],['../classtson_1_1Json11.html#a77384c8ee5dfa0d8e75325871f1ebce3',1,'tson::Json11::isObject()']]],
   ['ispoint_14',['isPoint',['../classtson_1_1Object.html#afda3ed8a906aef01e4b834ece6965e50',1,'tson::Object']]],
   ['isunhandledcontentfound_15',['isUnhandledContentFound',['../classtson_1_1ProjectPropertyTypes.html#ad24834dbe8c3c2bb98e0e6c857bc278d',1,'tson::ProjectPropertyTypes']]],
-  ['isvisible_16',['isVisible',['../classtson_1_1Layer.html#a9f15627018a6cd843babcd177c910bce',1,'tson::Layer::isVisible()'],['../classtson_1_1Object.html#ab2c504d55d8ddadd40cef0ca3711d49d',1,'tson::Object::isVisible()']]]
+  ['isvisible_16',['isVisible',['../classtson_1_1Layer.html#a9f15627018a6cd843babcd177c910bce',1,'tson::Layer::isVisible()'],['../classtson_1_1Object.html#ab2c504d55d8ddadd40cef0ca3711d49d',1,'tson::Object::isVisible()']]],
+  ['italic_17',['italic',['../classtson_1_1Text.html#a587ae2a9fcf0871c3917bb64b38b12d6',1,'tson::Text']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['left_0',['Left',['../namespacetson.html#ada2375f45be683cd0407a7b43ad8e5e7a945d5e233cf7d6240f6b783b36a374ff',1,'tson']]]
+  ['justify_0',['Justify',['../namespacetson.html#a571d9114ee278e2a21a441a2a4983405a4b425d212a2e7b36c38703bfdcd57823',1,'tson']]]
 ];
