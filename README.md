@@ -51,6 +51,7 @@ If you want to contribute in the development of `Tileson`, make sure you read th
 before you start doing anything.
 
 # Unreleased features available in the master-branch
+- Added missing properties to `tson::Text` ([#75](https://github.com/SSBMTonberry/tileson/issues/75))
 - Tiled 1.9 support ([#68](https://github.com/SSBMTonberry/tileson/issues/68))
 - Tiled 1.8 support ([#60](https://github.com/SSBMTonberry/tileson/issues/60))
 - C++20 support ([#53](https://github.com/SSBMTonberry/tileson/issues/53)) - Thanks to [gamecoder-nz](https://github.com/gamecoder-nz)
