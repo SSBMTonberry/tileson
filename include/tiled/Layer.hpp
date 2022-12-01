@@ -508,7 +508,7 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
     {
         std::for_each(m_data.begin(), m_data.end(), [&](uint32_t tileId)
         {
-            if (x == mapSize.x)
+            if (static_cast<int>(x) == mapSize.x)
             {
                 ++y;
                 x = 0;

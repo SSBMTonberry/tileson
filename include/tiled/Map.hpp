@@ -89,7 +89,7 @@ namespace tson
             Vector2i                               m_tileSize;          /*! 'tilewidth': and 'tileheight' of a map */
             std::vector<tson::Tileset>             m_tilesets;          /*! 'tilesets': Array of Tilesets */
             std::string                            m_type;              /*! 'type': map (since 1.0) */
-            tson::Vector2f                         m_parallaxOrigin;    /*! Tiled v1.8: parallax origin in pixels. Defaults to 0.
+            tson::Vector2f                         m_parallaxOrigin;    /*! Tiled v1.8: parallax origin in pixels. Defaults to 0. */
             //int                                    m_version{};       /*! 'version': The JSON format version - Removed in Tileson v1.3.0*/
 
             ParseStatus                            m_status {ParseStatus::OK};
@@ -221,7 +221,7 @@ bool tson::Map::createTilesetData(IJson &json)
     {
         //First created tileset objects
         auto &tilesets = json.array("tilesets");
-        std::for_each(tilesets.begin(), tilesets.end(), [&](std::unique_ptr<IJson> &item)
+        std::for_each(tilesets.begin(), tilesets.end(), [&](std::unique_ptr<IJson> &)
         {
             m_tilesets.emplace_back();
         });
