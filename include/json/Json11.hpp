@@ -316,7 +316,6 @@ namespace tson
             }
 
             //Owner values
-            char *m_endptr;
             std::unique_ptr<json11::Json> m_data = nullptr; //Only used if this is the owner json!
 
             const json11::Json *m_json = nullptr;

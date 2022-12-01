@@ -92,7 +92,7 @@ namespace tson
      * @param path
      * @return
      */
-    std::string Base64Decompressor::decompressFile(const fs::path &path)
+    std::string Base64Decompressor::decompressFile(const fs::path &)
     {
         return std::string();
     }
@@ -102,7 +102,7 @@ namespace tson
      * @param path
      * @return
      */
-    std::string Base64Decompressor::decompress(const void *data, size_t size)
+    std::string Base64Decompressor::decompress(const void *, size_t)
     {
         return std::string();
     }
