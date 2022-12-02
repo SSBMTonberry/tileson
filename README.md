@@ -51,9 +51,11 @@ If you want to contribute in the development of `Tileson`, make sure you read th
 before you start doing anything.
 
 # Unreleased features available in the master-branch
+- Fixed some Apple Clang 13 compile warnings ([#84](https://github.com/SSBMTonberry/tileson/issues/84)) - Thanks to [dmlary](https://github.com/dmlary)
+- Added `quom` as amalgamate tool for `OSX` ([#82](https://github.com/SSBMTonberry/tileson/issues/82)) - Thanks to [dmlary](https://github.com/dmlary)
 - Added missing properties to `tson::Text` ([#75](https://github.com/SSBMTonberry/tileson/issues/75))
 - Tiled 1.9 support ([#68](https://github.com/SSBMTonberry/tileson/issues/68))
-- Tiled 1.8 support ([#60](https://github.com/SSBMTonberry/tileson/issues/60))
+- Tiled 1.8 support (**Partial!** See issue for more details) ([#60](https://github.com/SSBMTonberry/tileson/issues/60))
 - C++20 support ([#53](https://github.com/SSBMTonberry/tileson/issues/53)) - Thanks to [gamecoder-nz](https://github.com/gamecoder-nz)
 - Updated Catch2 to support `GCC 11.2` ([#59](https://github.com/SSBMTonberry/tileson/issues/59))
 - Tile properties should now be properly loaded when using multiple tilesets. ([#54](https://github.com/SSBMTonberry/tileson/issues/54)) - Thanks to [Laguna1989](https://github.com/Laguna1989)
