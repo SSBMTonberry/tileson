@@ -55,6 +55,7 @@ If you want to contribute in the development of `Tileson`, make sure you read th
 before you start doing anything.
 
 # Unreleased features available in the master-branch
+- CI improvements: Added `MacOS`, separated CI by system and added Clang 12 and 13 support on Linux ([#88](https://github.com/SSBMTonberry/tileson/pull/88))
 - Fixed some Apple Clang 13 compile warnings ([#84](https://github.com/SSBMTonberry/tileson/issues/84)) - Thanks to [dmlary](https://github.com/dmlary)
 - Added `quom` as amalgamate tool for `OSX` ([#82](https://github.com/SSBMTonberry/tileson/issues/82)) - Thanks to [dmlary](https://github.com/dmlary)
 - Added missing properties to `tson::Text` ([#75](https://github.com/SSBMTonberry/tileson/issues/75))
