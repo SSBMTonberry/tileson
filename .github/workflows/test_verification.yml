@@ -8,16 +8,15 @@ on:
 
 jobs:
   Linux_gcc:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
-
-        gccver: [ 7, 8, 9, 10 ]
+        gccver: [ 7, 8, 9, 10, 11 ]
     steps:
       - name: Set up cmake
-        uses: jwlawson/actions-setup-cmake@v1.11
+        uses: jwlawson/actions-setup-cmake@v1.13
         with:
-          cmake-version: '3.11.x'
+          cmake-version: '3.16.x'
 
       - name: Set up gcc
         uses: egor-tensin/setup-gcc@v1
@@ -44,15 +43,15 @@ jobs:
         run: ./tileson_tests --order rand
 
   Linux_clang:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         clangver: [ 8, 11 ]
     steps:
       - name: Set up cmake
-        uses: jwlawson/actions-setup-cmake@v1.11
+        uses: jwlawson/actions-setup-cmake@v1.13
         with:
-          cmake-version: '3.11.x'
+          cmake-version: '3.16.x'
 
       - name: Set up clang
         uses: egor-tensin/setup-clang@v1
@@ -91,9 +90,9 @@ jobs:
         uses: microsoft/setup-msbuild@v1.1
 
       - name: Set up cmake
-        uses: jwlawson/actions-setup-cmake@v1.11
+        uses: jwlawson/actions-setup-cmake@v1.13
         with:
-          cmake-version: '3.11.x'
+          cmake-version: '3.16.x'
 
       - uses: actions/checkout@v2
 
@@ -117,9 +116,9 @@ jobs:
 #    runs-on: macos-latest
 #    steps:
 #      - name: Set up cmake
-#        uses: jwlawson/actions-setup-cmake@v1.11
+#        uses: jwlawson/actions-setup-cmake@v1.13
 #        with:
-#          cmake-version: '3.11.x'
+#          cmake-version: '3.16.x'
 #
 #      - name: Install dependencies
 #        run: |
