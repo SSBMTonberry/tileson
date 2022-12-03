@@ -20,8 +20,8 @@
 TEST_CASE( "Run benchmarks on all supported json-backends", "[json][benchmarks]" )
 {
 
-    fs::path pathToUse = fs::path("test-maps/ultimate_test.json");
-    fs::path pathLzmaToUse = fs::path("test-maps/ultimate_test.lzma");
+    fs::path pathToUse = fs::path("./test-maps/ultimate_test.json");
+    fs::path pathLzmaToUse = fs::path("./test-maps/ultimate_test.lzma");
 
     if(fs::exists(pathToUse) && fs::exists(pathLzmaToUse))
     {
