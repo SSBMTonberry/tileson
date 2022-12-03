@@ -11,12 +11,13 @@
 
 #include "tson_files_mapper.h"
 #include "../TilesonConfig.h"
+#include "TestTools.hpp"
 
 TEST_CASE( "Nullptr error on getposition when parsing json (Issue #17)", "[help][issue]")
 {
     tson::Tileson t;
 
-    fs::path path {"../../content/test-maps/issues/issue_17.json"};
+    fs::path path = GetPathWithBase(fs::path("test-maps/issues/issue_17.json"));
 
     std::unique_ptr<tson::Map> map = t.parse(path); // <== this is where I get the nullptr error
 
@@ -46,9 +47,7 @@ TEST_CASE( "Tile ObjectGroup's not set properly if one or more tiles have no pro
 {
     tson::Tileson t;
 
-    fs::path pathLocal {"../../content/test-maps/issues/issue_46_map.json"};
-    fs::path pathTravis {"../content/test-maps/issues/issue_46_map.json"};
-    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    fs::path pathToUse = GetPathWithBase(fs::path("test-maps/issues/issue_46_map.json"));
 
     std::unique_ptr<tson::Map> map = t.parse(pathToUse); // <== this is where I get the nullptr error
     if (map->getStatus() == tson::ParseStatus::OK)
@@ -100,7 +99,8 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
     tson::Layer* tileLayer;
     tson::Tileset* tileset;
 
-    fs::path pathCarte {"../../content/test-maps/issues/Preluda3.json"};
+    fs::path pathCarte = GetPathWithBase(fs::path("test-maps/issues/Preluda3.json"));
+
     jsCarte = jsTileson.parse(pathCarte);
 
     if (jsCarte->getStatus() == tson::ParseStatus::OK)
@@ -117,9 +117,6 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
     tileLayer = jsCarte->getLayer("WL");
     ////On met en mémoire le tileset
     tileset = jsCarte->getTileset("ground_tiles");
-
-    //sfText.loadFromFile("C:/Users/remy/source/repos/PROJET JEU/PRO2/Tiles/TS/ground_tiles.png");
-
 
     //On récupère le premier ID de la tile du Tileset
     int firstId = tileset->getFirstgid(); //First tile id of the tileset
@@ -140,7 +137,6 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
 
             std::string pathStr;
             //With this, I know that it's related to the tileset above (though I only have one tileset)
-            //Si l'ID de la tile est compris entre le premier et le dernier ID inclus
             if (tile->getId() >= firstId && tile->getId() <= lastId)
             {
                 imagePath = tileset->getImagePath();
@@ -155,15 +151,6 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
             int offsetY = (tileId / columns) * jsCarte->getTileSize().y;
 
             REQUIRE(tile != nullptr);
-            //Now you can use your library of choice to load the image (like SFML), then set the offset
-            //to get the right image representation of the tile.
-
-            //Removed due to be unrelated to the parsing itself
-            //sfSprite.setTexture(sfText);
-            //sfSprite.setTextureRect(sf::IntRect(offsetX - 16, offsetY, 16, 16));
-            //sfSprite.setPosition(position.x, position.y);
-            //ns_Fenst::fPrinc.draw(sfSprite);
         }
-        //ns_Fenst::fPrinc.display();
     }
 }

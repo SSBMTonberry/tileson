@@ -1,0 +1,43 @@
+name: Linux (GCC)
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  Linux_gcc:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        gccver: [ 7, 8, 9, 10, 11 ]
+    steps:
+      - name: Set up cmake
+        uses: jwlawson/actions-setup-cmake@v1.13
+        with:
+          cmake-version: '3.21.x'
+
+      - name: Set up gcc
+        uses: egor-tensin/setup-gcc@v1
+        with:
+          version: ${{ matrix.gccver }}
+          platform: x64
+
+      - uses: actions/checkout@v2
+
+      - name: Make build folder
+        working-directory: ${{github.workspace}}
+        run: mkdir build
+
+      - name: CMake
+        working-directory: ${{github.workspace}}/build
+        run: cmake ../
+
+      - name: Build
+        working-directory: ${{github.workspace}}/build
+        run: cmake --build . -- -j4
+
+      - name: Test
+        working-directory: ${{github.workspace}}/build/tests/
+        run: ./tileson_tests --order rand

@@ -9,13 +9,13 @@
     #include "../tileson.hpp"
 #else
     #include "../include/tileson.h"
+#include "TestTools.hpp"
+
 #endif
 
 TEST_CASE( "Parse world - Expect 4 maps and parsed data", "[project][world]" )
 {
-    fs::path pathLocal {"../../content/test-maps/project/world/test.world"};
-    fs::path pathTravis {"../content/test-maps/project/world/test.world"};
-    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    fs::path pathToUse = GetPathWithBase(fs::path("test-maps/project/world/test.world"));
 
     tson::World world {pathToUse};
     REQUIRE(world.getMapData().size() == 4);
@@ -29,9 +29,8 @@ TEST_CASE( "Parse world - Expect 4 maps and parsed data", "[project][world]" )
 
 TEST_CASE( "Parse project - expect right number of files and folders", "[project][world]" )
 {
-    fs::path pathLocal {"../../content/test-maps/project/test.tiled-project"};
-    fs::path pathTravis {"../content/test-maps/project/test.tiled-project"};
-    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+
+    fs::path pathToUse = GetPathWithBase(fs::path("test-maps/project/test.tiled-project"));
 
     tson::Project project {pathToUse};
     auto files = project.getFolders().at(0).getSubFolders().at(0).getFiles();
@@ -102,9 +101,7 @@ void tiledProjectEnumAndClassBaseTest(tson::Map *m)
 
 TEST_CASE( "Parse project with class and enum info in maps - expect right values", "[project][map]" )
 {
-    fs::path pathLocal {"../../content/test-maps/project/test.tiled-project"};
-    fs::path pathTravis {"../content/test-maps/project/test.tiled-project"};
-    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    fs::path pathToUse = GetPathWithBase(fs::path("test-maps/project/test.tiled-project"));
 
     tson::Project project {pathToUse};
     auto files = project.getFolders().at(0).getSubFolders().at(0).getFiles();
@@ -146,9 +143,7 @@ static void assertDummy(tson::TiledClass *c)
 
 TEST_CASE( "Parse Tiled v1.9 project with class and enum info in maps - expect right values", "[project][map]" )
 {
-    fs::path pathLocal {"../../content/test-maps/project-v1.9/test.tiled-project"};
-    fs::path pathTravis {"../content/test-maps/project-v1.9/test.tiled-project"};
-    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    fs::path pathToUse = GetPathWithBase(fs::path("test-maps/project-v1.9/test.tiled-project"));
 
     tson::Project project {pathToUse};
     auto files = project.getFolders().at(0).getSubFolders().at(0).getFiles();

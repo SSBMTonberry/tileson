@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.16)
 project(tileson-sfml-example)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS -DSFML_STATIC) #required to build SFML statically with Windows
@@ -34,11 +34,10 @@ elseif(APPLE)
     #set_source_files_properties(${PROJECT_SOURCE_DIR}../logo/AppIcon.icns PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 
     add_executable(TilesonSfmlExample MACOSX_BUNDLE ${SOURCE_FILES})
-    #stdc++
     if(SFML_BUILD_STATIC)
-        target_link_libraries(TilesonSfmlExample stdc++ -ObjC /usr/local/opt/llvm/lib/libc++experimental.a /usr/local/opt/llvm/lib/libc++fs.a ${MY_SFML_LIBS} ${FRAMEWORK_LIBS_BASE} )
+        target_link_libraries(TilesonSfmlExample c++ ${MY_SFML_LIBS} ${FRAMEWORK_LIBS_BASE} )
     else()
-        target_link_libraries(TilesonSfmlExample stdc++ -ObjC /usr/local/opt/llvm/lib/libc++experimental.a /usr/local/opt/llvm/lib/libc++fs.a ${MY_SFML_LIBS} ${FRAMEWORK_LIBS_BASE} )
+        target_link_libraries(TilesonSfmlExample c++ ${MY_SFML_LIBS} ${FRAMEWORK_LIBS_BASE} )
         set_target_properties(TilesonSfmlExample PROPERTIES
                 MACOSX_BUNDLE TRUE
                 MACOSX_FRAMEWORK_IDENTIFIER org.cmake.ExecutableTarget
