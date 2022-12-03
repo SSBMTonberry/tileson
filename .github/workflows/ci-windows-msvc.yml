@@ -20,20 +20,16 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - name: Make build folder
-        working-directory: ${{github.workspace}}
-        run: mkdir build
-
       - name: CMake - Visual Studio 2019
-        working-directory: ${{github.workspace}}/build
+        working-directory: ${{github.workspace}}
         run: cmake ../ -G "Visual Studio 16 2019"
 
       - name: Build
-        working-directory: ${{github.workspace}}/build
+        working-directory: ${{github.workspace}}
         run: cmake --build .
 
       - name: Test
-        working-directory: ${{github.workspace}}/build
+        working-directory: ${{github.workspace}}
         run: tests/Debug/tileson_tests.exe --order rand
 
   Windows_2022:

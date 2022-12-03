@@ -1,4 +1,8 @@
-[![Tests](https://github.com/SSBMTonberry/tileson/actions/workflows/test_verification.yml/badge.svg)](https://github.com/SSBMTonberry/tileson/actions/workflows/test_verification.yml) [![pages-build-deployment](https://github.com/SSBMTonberry/tileson/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/SSBMTonberry/tileson/actions/workflows/pages/pages-build-deployment)
+[![Windows (MSVC)](https://github.com/SSBMTonberry/tileson/actions/workflows/ci-windows-msvc.yml/badge.svg)](https://github.com/SSBMTonberry/tileson/actions/workflows/ci-windows-msvc.yml)
+[![Linux (GCC)](https://github.com/SSBMTonberry/tileson/actions/workflows/ci-linux-gcc.yml/badge.svg)](https://github.com/SSBMTonberry/tileson/actions/workflows/ci-linux-gcc.yml)
+[![Linux (Clang)](https://github.com/SSBMTonberry/tileson/actions/workflows/ci-linux-clang.yml/badge.svg)](https://github.com/SSBMTonberry/tileson/actions/workflows/ci-linux-clang.yml)
+[![MacOS (Clang)](https://github.com/SSBMTonberry/tileson/actions/workflows/ci-macos-clang.yml/badge.svg)](https://github.com/SSBMTonberry/tileson/actions/workflows/ci-macos-clang.yml)
+[![pages-build-deployment](https://github.com/SSBMTonberry/tileson/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/SSBMTonberry/tileson/actions/workflows/pages/pages-build-deployment)
 
 # Tileson
 Tileson is a modern and helpful cross-platform json-parser for C++, used for parsing Tiled maps.
