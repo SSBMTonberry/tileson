@@ -220,8 +220,8 @@ TEST_CASE( "Nlohmann - Parse a whole map by file", "[complete][parse][file]" )
     }
     else
     {
-        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
-        REQUIRE(true);
+        std::cout << "Parsing failed! Base path: " << std::filesystem::current_path().generic_string() << "Status: " << map->getStatusMessage() << std::endl;
+        REQUIRE(false);
     }
 }
 
@@ -245,8 +245,8 @@ TEST_CASE( "PicoJson - Parse a whole map by file", "[complete][parse][file]" )
     }
     else
     {
-        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
-        REQUIRE(true);
+        std::cout << "Parsing failed! Base path: " << std::filesystem::current_path().generic_string() << "Status: " << map->getStatusMessage() << std::endl;
+        REQUIRE(false);
     }
 }
 
@@ -297,8 +297,8 @@ TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" )
     }
     else
     {
-        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
-        REQUIRE(true);
+        std::cout << "Parsing failed! Base path: " << std::filesystem::current_path().generic_string() << "Status: " << map->getStatusMessage() << std::endl;
+        REQUIRE(false);
     }
 }
 
@@ -329,8 +329,8 @@ TEST_CASE("Parse tileset properties", "[parse]")
     }
     else
     {
-      std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
-      REQUIRE(true);
+        std::cout << "Parsing failed! Base path: " << std::filesystem::current_path().generic_string() << "Status: " << map->getStatusMessage() << std::endl;
+        REQUIRE(false);
     }
 }
 
@@ -358,8 +358,8 @@ TEST_CASE( "Parse a Tiled v1.5 map with external tileset by file - Expect no err
     }
     else
     {
-        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
-        REQUIRE(true);
+        std::cout << "Parsing failed! Base path: " << std::filesystem::current_path().generic_string() << "Status: " << map->getStatusMessage() << std::endl;
+        REQUIRE(false);
     }
 }
 
@@ -389,8 +389,8 @@ TEST_CASE( "Parse a Tiled v1.9 map with external tileset by file - Expect no err
     }
     else
     {
-        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
-        REQUIRE(true);
+        std::cout << "Parsing failed! Base path: " << std::filesystem::current_path().generic_string() << "Status: " << map->getStatusMessage() << std::endl;
+        REQUIRE(false);
     }
 }
 
@@ -415,8 +415,8 @@ TEST_CASE( "Parse a whole COMPRESSED map by file", "[complete][parse][file][comp
     }
     else
     {
-        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
-        REQUIRE(true);
+        std::cout << "Parsing failed! Base path: " << std::filesystem::current_path().generic_string() << "Status: " << map->getStatusMessage() << std::endl;
+        REQUIRE(false);
     }
 }
 
@@ -464,8 +464,8 @@ TEST_CASE( "Parse a whole map by file - minimal", "[complete][parse][file]" )
     }
     else
     {
-        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
-        REQUIRE(true);
+        std::cout << "Parsing failed! Base path: " << std::filesystem::current_path().generic_string() << "Status: " << map->getStatusMessage() << std::endl;
+        REQUIRE(false);
     }
 }
 
@@ -551,8 +551,8 @@ TEST_CASE( "Parse map - expect correct flip flags", "[parse][file][flip]" )
     }
     else
     {
-        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
-        REQUIRE(true);
+        std::cout << "Parsing failed! Base path: " << std::filesystem::current_path().generic_string() << "Status: " << map->getStatusMessage() << std::endl;
+        REQUIRE(false);
     }
 }
 
@@ -570,8 +570,8 @@ TEST_CASE( "Parse a whole map with base64 data by file", "[complete][parse][file
     }
     else
     {
-        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
-        REQUIRE(true);
+        std::cout << "Parsing failed! Base path: " << std::filesystem::current_path().generic_string() << "Status: " << map->getStatusMessage() << std::endl;
+        REQUIRE(false);
     }
 
 
@@ -640,7 +640,6 @@ TEST_CASE( "Parse a simple map by memory - tiles without any properties (issue #
     else
     {
         std::cout << "Memory parse error - " << map->getStatusMessage() << std::endl;
-        //REQUIRE(true);
         FAIL("Unexpected memory read failure!");
     }
 }
@@ -656,7 +655,6 @@ TEST_CASE( "Parse a minimal version of whole map by memory", "[complete][parse][
     else
     {
         std::cout << "Memory parse error - " << map->getStatusMessage() << std::endl;
-        //REQUIRE(true);
         FAIL("Unexpected memory read failure!");
     }
 }
@@ -698,8 +696,8 @@ TEST_CASE( "Parse map3.json - expect correct tileset data for all TileObjects", 
     }
     else
     {
-        std::cout << "Ignored - " << map->getStatusMessage() << std::endl;
-        REQUIRE(true);
+        std::cout << "Parsing failed! Base path: " << std::filesystem::current_path().generic_string() << "Status: " << map->getStatusMessage() << std::endl;
+        REQUIRE(false);
     }
 
     REQUIRE(numberOfEmptyTilesets == 0);
