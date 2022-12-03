@@ -19,7 +19,7 @@
  */
 inline static fs::path GetPathWithBase(const fs::path &p)
 {
-    return std::filesystem::current_path() / p;
+    return fs::current_path() / p;
 }
 
 #endif //TILESON_TESTTOOLS_HPP
