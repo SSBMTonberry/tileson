@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 # Uses the single header file when defined - comment out when creating PR: The cmake version in github doesn't seem to support it.
 # add_compile_definitions(TILESON_UNIT_TEST_USE_SINGLE_HEADER)
 
+message("Copying content from ${CMAKE_SOURCE_DIR}/content/test-maps to ${CMAKE_CURRENT_BINARY_DIR}")
 file(COPY ${CMAKE_SOURCE_DIR}/content/test-maps DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 include_directories(${PROJECT_SOURCE_DIR}/../external_libs/ ${PROJECT_SOURCE_DIR}/../include)
