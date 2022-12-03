@@ -8,7 +8,7 @@ on:
 
 jobs:
   Windows:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1

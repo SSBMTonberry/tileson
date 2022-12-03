@@ -43,3 +43,5 @@ cmake-build-debug-x64/
 cmake-build-relwithdebinfo/
 
 .idea_old/
+
+cmake-build-debug---clang/
