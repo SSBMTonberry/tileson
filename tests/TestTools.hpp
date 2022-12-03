@@ -19,7 +19,13 @@
  */
 inline static fs::path GetPathWithBase(const fs::path &p)
 {
-    return fs::current_path() / p;
+    fs::path path = fs::current_path() / p;
+
+    //A stupid hack to make MSVC work when using GitHub Actions. Not a problem when done on a local system...
+    if(!fs::exists(path))
+        return fs::current_path() / fs::path("tests") / p;
+
+    return path;
 }
 
 #endif //TILESON_TESTTOOLS_HPP
