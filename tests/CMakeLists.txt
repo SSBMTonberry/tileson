@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.16)
 project(tileson_tests)
 
 set(CMAKE_CXX_STANDARD 17)
