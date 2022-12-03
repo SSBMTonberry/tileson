@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 # Uses the single header file when defined - comment out when creating PR: The cmake version in github doesn't seem to support it.
 # add_compile_definitions(TILESON_UNIT_TEST_USE_SINGLE_HEADER)
 
+file(COPY ${CMAKE_SOURCE_DIR}/content/test-maps DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 include_directories(${PROJECT_SOURCE_DIR}/../external_libs/ ${PROJECT_SOURCE_DIR}/../include)
 
 add_executable(tileson_tests tests_main.cpp tests_objects.cpp tests_tiled_nlohmann.cpp tests_reported_issues.cpp
@@ -20,10 +22,15 @@ if(LINUX)
     #target_link_libraries(tileson_tests tileson stdc++fs)
 elseif(APPLE)
     message("OSX!")
-    if(CLEAR_TSON_CMAKE_CACHE)
-        message("Using legacy filesystem for tests!")
-        target_link_libraries(tileson_tests /usr/local/opt/llvm/lib/libc++experimental.a /usr/local/opt/llvm/lib/libc++fs.a)
-    endif()
+#    if(CLEAR_TSON_CMAKE_CACHE)
+#        message("Using legacy filesystem for tests!")
+#        #target_link_libraries(tileson_tests /usr/local/opt/llvm/lib/libc++experimental.a /usr/local/opt/llvm/lib/libc++fs.a)
+#        target_link_libraries(tileson_tests c++ c++experimental libc++fs)
+#    else()
+#        message("Using regular Clang for tests!")
+#        target_link_libraries(tileson_tests c++ c++experimental libc++fs)
+#    endif()
+    target_link_libraries(tileson_tests c++ c++experimental libc++fs)
 elseif(WINDOWS)
     message("WINDOWS!")
     if(MSVC)

@@ -204,9 +204,7 @@ TEST_CASE( "Nlohmann - Parse a whole map by file", "[complete][parse][file]" )
 {
     tson::Tileson t{std::make_unique<tson::NlohmannJson>()};
 
-    fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
-    fs::path pathTravis {"../content/test-maps/ultimate_test.json"};
-    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    fs::path pathToUse = fs::path("test-maps/ultimate_test.json");
 
     std::unique_ptr<tson::Map> map = t.parse({pathToUse});
     if(map->getStatus() == tson::ParseStatus::OK)
@@ -231,9 +229,7 @@ TEST_CASE( "PicoJson - Parse a whole map by file", "[complete][parse][file]" )
 {
     tson::Tileson t{std::make_unique<tson::PicoJson>()};
 
-    fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
-    fs::path pathTravis {"../content/test-maps/ultimate_test.json"};
-    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    fs::path pathToUse = fs::path("test-maps/ultimate_test.json");
 
     std::unique_ptr<tson::Map> map = t.parse({pathToUse});
     if(map->getStatus() == tson::ParseStatus::OK)
@@ -285,9 +281,7 @@ TEST_CASE( "Parse a whole map by file", "[complete][parse][file]" )
 {
     tson::Tileson t;
 
-    fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
-    fs::path pathTravis {"../content/test-maps/ultimate_test.json"};
-    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    fs::path pathToUse = fs::path("test-maps/ultimate_test.json");
 
     std::unique_ptr<tson::Map> map = t.parse({pathToUse});
     if(map->getStatus() == tson::ParseStatus::OK)
@@ -312,9 +306,8 @@ TEST_CASE("Parse tileset properties", "[parse]")
 {
     tson::Tileson t;
     fs::path path {};
-    fs::path pathLocal {"../../content/test-maps/tileset_properties.json"};
-    fs::path pathTravis {"../content/test-maps/tileset_properties.json"};
-    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+
+    fs::path pathToUse = fs::path("test-maps/tileset_properties.json");
 
     std::unique_ptr<tson::Map> map = t.parse({pathToUse});
     if(map->getStatus() == tson::ParseStatus::OK)
@@ -345,9 +338,7 @@ TEST_CASE( "Parse a Tiled v1.5 map with external tileset by file - Expect no err
 {
     tson::Tileson t;
 
-    fs::path pathLocal {"../../content/test-maps/ultimate_test_v1.5.json"};
-    fs::path pathTravis {"../content/test-maps/ultimate_test_v1.5.json"};
-    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    fs::path pathToUse = fs::path("test-maps/ultimate_test_v1.5.json");
 
     std::unique_ptr<tson::Map> map = t.parse({pathToUse});
     if(map->getStatus() == tson::ParseStatus::OK)
@@ -376,9 +367,7 @@ TEST_CASE( "Parse a Tiled v1.9 map with external tileset by file - Expect no err
 {
     tson::Tileson t;
 
-    fs::path pathLocal {"../../content/test-maps/ultimate_test_v1.9.json"};
-    fs::path pathTravis {"../content/test-maps/ultimate_test_v1.9.json"};
-    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    fs::path pathToUse = fs::path("test-maps/ultimate_test_v1.9.json");
 
     std::unique_ptr<tson::Map> map = t.parse({pathToUse});
     if(map->getStatus() == tson::ParseStatus::OK)
@@ -409,9 +398,7 @@ TEST_CASE( "Parse a whole COMPRESSED map by file", "[complete][parse][file][comp
 {
     tson::Tileson t;
 
-    fs::path pathLocal {"../../content/test-maps/ultimate_test.lzma"};
-    fs::path pathTravis {"../content/test-maps/ultimate_test.lzma"};
-    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    fs::path pathToUse = fs::path("test-maps/ultimate_test.lzma");
 
     std::unique_ptr<tson::Map> map = t.parse({pathToUse}, std::make_unique<tson::Lzma>());
     if(map->getStatus() == tson::ParseStatus::OK)
@@ -454,9 +441,7 @@ TEST_CASE( "Parse a whole map by file - minimal", "[complete][parse][file]" )
 {
     tson::Tileson t;
 
-    fs::path pathLocal {"../../content/test-maps/ultimate_test_min.json"};
-    fs::path pathTravis {"../content/test-maps/ultimate_test_min.json"};
-    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    fs::path pathToUse = fs::path("test-maps/ultimate_test_min.json");
 
     std::unique_ptr<tson::Map> map = t.parse({pathToUse});
     if(map->getStatus() == tson::ParseStatus::OK)
@@ -486,9 +471,7 @@ TEST_CASE( "Parse map - expect correct flip flags", "[parse][file][flip]" )
 {
     tson::Tileson t;
 
-    fs::path pathLocal {"../../content/test-maps/ultimate_test.json"};
-    fs::path pathTravis {"../content/test-maps/ultimate_test.json"};
-    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    fs::path pathToUse = fs::path("test-maps/ultimate_test.json");
 
     std::unique_ptr<tson::Map> map = t.parse({pathToUse});
     if(map->getStatus() == tson::ParseStatus::OK)
@@ -564,9 +547,7 @@ TEST_CASE( "Parse a whole map with base64 data by file", "[complete][parse][file
 
     tson::Tileson t;
 
-    fs::path pathLocal {"../../content/test-maps/ultimate_test_base64.json"};
-    fs::path pathTravis {"../content/test-maps/ultimate_test_base64.json"};
-    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    fs::path pathToUse = fs::path("test-maps/ultimate_test_base64.json");
 
     std::unique_ptr<tson::Map> map = t.parse({pathToUse});
     if(map->getStatus() == tson::ParseStatus::OK)
@@ -670,9 +651,7 @@ TEST_CASE( "Parse map3.json - expect correct tileset data for all TileObjects", 
 {
     tson::Tileson t;
 
-    fs::path pathLocal {"../../content/test-maps/project/maps/map3.json"};
-    fs::path pathTravis {"../content/test-maps/project/maps/map3.json"};
-    fs::path pathToUse = (fs::exists(pathLocal)) ? pathLocal : pathTravis;
+    fs::path pathToUse = fs::path("test-maps/project/maps/map3.json");
 
     std::unique_ptr<tson::Map> map = t.parse({pathToUse});
     size_t numberOfEmptyTilesets = 0;
