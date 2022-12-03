@@ -1,4 +1,4 @@
-name: Windows (MSVC)
+name: MacOS (Clang)
 
 on:
   push:
@@ -7,16 +7,22 @@ on:
     branches: [ master ]
 
 jobs:
-  Windows:
-    runs-on: windows-2019
+  Linux_clang:
+    runs-on: macos-11
+    strategy:
+      matrix:
+        clangver: [ 11, 12, 13 ]
     steps:
-      - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1.1
-
       - name: Set up cmake
         uses: jwlawson/actions-setup-cmake@v1.13
         with:
           cmake-version: '3.16.x'
+
+      - name: Set up clang
+        uses: egor-tensin/setup-clang@v1
+        with:
+          version: ${{ matrix.clangver }}
+          platform: x64
 
       - uses: actions/checkout@v2
 
@@ -24,14 +30,14 @@ jobs:
         working-directory: ${{github.workspace}}
         run: mkdir build
 
-      - name: CMake - Visual Studio 2019
+      - name: CMake
         working-directory: ${{github.workspace}}/build
-        run: cmake ../ -G "Visual Studio 16 2019"
+        run: cmake ../
 
       - name: Build
         working-directory: ${{github.workspace}}/build
-        run: cmake --build .
+        run: cmake --build . -- -j4
 
       - name: Test
-        working-directory: ${{github.workspace}}/build
-        run: tests/Debug/tileson_tests.exe --order rand
+        working-directory: ${{github.workspace}}/build/tests/
+        run: ./tileson_tests --order rand
