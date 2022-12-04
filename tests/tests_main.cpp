@@ -797,12 +797,12 @@ TEST_CASE( "Go through demo code - get success", "[demo]" )
                 tileobj1->getDrawingRect();
 
                 //You can of course also loop through every tile!
-                for ([[maybe_unused]] const auto &[id, tile] : tileData)
+                for ([[maybe_unused]] const auto &[id, tileValue] : tileData)
                 {
                     //Must check for nullptr, due to how we got the first invalid tile (pos: 0, 4)
                     //Would be unnecessary otherwise.
-                    if(tile != nullptr)
-                        [[maybe_unused]] int tileId = tile->getId(); //A bit verbose, as this is the same as id from the key, but you get the idea.
+                    if(tileValue != nullptr)
+                        [[maybe_unused]] int tileId = tileValue->getId(); //A bit verbose, as this is the same as id from the key, but you get the idea.
                 }
             }
         }
@@ -916,8 +916,8 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
             //pos = position in tile units
             for([[maybe_unused]] auto &[pos, tileObject] : tileLayer->getTileObjects()) //Loops through absolutely all existing tileObjects
             {
-                tson::Tileset *tileset = tileObject.getTile()->getTileset();
-                REQUIRE(tileset != nullptr);
+                tson::Tileset *tilesetPtr = tileObject.getTile()->getTileset();
+                REQUIRE(tilesetPtr != nullptr);
                 tileObject.getDrawingRect();
                 tileObject.getPosition();
 

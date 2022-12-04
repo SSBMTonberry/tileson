@@ -65,20 +65,20 @@ namespace tson
                         a = 1.f;
                     }
                 }
-                else
+                else if constexpr (std::is_same<T, uint8_t>::value)
                 {
                     if (color.size() == 9)
                     {
-                        a = std::stoi(color.substr(1, 2), nullptr, 16);
-                        r = std::stoi(color.substr(3, 2), nullptr, 16);
-                        g = std::stoi(color.substr(5, 2), nullptr, 16);
-                        b = std::stoi(color.substr(7, 2), nullptr, 16);
+                        a = static_cast<uint8_t>(std::stoi(color.substr(1, 2), nullptr, 16));
+                        r = static_cast<uint8_t>(std::stoi(color.substr(3, 2), nullptr, 16));
+                        g = static_cast<uint8_t>(std::stoi(color.substr(5, 2), nullptr, 16));
+                        b = static_cast<uint8_t>(std::stoi(color.substr(7, 2), nullptr, 16));
                     }
                     else if (color.size() == 7)
                     {
-                        r = std::stoi(color.substr(1, 2), nullptr, 16);
-                        g = std::stoi(color.substr(3, 2), nullptr, 16);
-                        b = std::stoi(color.substr(5, 2), nullptr, 16);
+                        r = static_cast<uint8_t>(std::stoi(color.substr(1, 2), nullptr, 16));
+                        g = static_cast<uint8_t>(std::stoi(color.substr(3, 2), nullptr, 16));
+                        b = static_cast<uint8_t>(std::stoi(color.substr(5, 2), nullptr, 16));
                         a = 255;
                     }
                 }
