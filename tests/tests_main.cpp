@@ -29,7 +29,6 @@
 #include <map>
 #include <functional>
 
-
 //#include "../include/json/NlohmannJson.hpp"
 
 /*!
@@ -127,9 +126,6 @@ void performMainAsserts(tson::Map *map, bool isOldMap = true)
         REQUIRE(hasRepeatX);
         REQUIRE(hasRepeatY);
     }
-
-
-
 }
 
 /*!
@@ -675,6 +671,9 @@ TEST_CASE( "Parse map3.json - expect correct tileset data for all TileObjects", 
             {
                 for ([[maybe_unused]] auto& [pos, tileObject] : layer.getTileObjects())
                 {
+                    #if __GNUC__ == 7 //[[maybe_unused]] is not implemented for structured bindings for GCC7, so do this hack to make GCC7 happy
+                    (void) pos;
+                    #endif
                     tson::Tileset *tileset = tileObject.getTile()->getTileset();
                     REQUIRE(tileset != nullptr);
                     //fs::path p = pathToUse.parent_path() / tileset->getImage();
@@ -919,9 +918,6 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
             //pos = position in tile units
             for([[maybe_unused]] auto &[pos, tileObject] : tileLayer->getTileObjects()) //Loops through absolutely all existing tileObjects
             {
-                #if __GNUC__ == 7 //[[maybe_unused]] is not implemented for structured bindings for GCC7, so do this hack to make GCC7 happy
-                (void) pos;
-                #endif
                 tson::Tileset *tilesetPtr = tileObject.getTile()->getTileset();
                 REQUIRE(tilesetPtr != nullptr);
                 tileObject.getDrawingRect();
