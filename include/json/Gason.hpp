@@ -46,7 +46,7 @@ namespace tson
             {
                 if(m_arrayPosCache.count(pos) == 0)
                 {
-                    int i = 0;
+                    size_t i = 0;
                     for (auto item : m_json)
                     {
                         if(i == pos)

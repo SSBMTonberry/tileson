@@ -6122,6 +6122,7 @@ static void SkipMatchesSpec(UInt32 lenLimit, UInt32 curMatch, UInt32 pos, const 
   }
 }
 
+#undef MOVE_POS
 #define MOVE_POS \
   ++p->cyclicBufferPos; \
   p->buffer++; \
@@ -7464,7 +7465,7 @@ namespace plz
 		unsigned char header[LZMA_PROPS_SIZE + 8]; //MSVC requires this fully constant...
 
 		//Read header data
-		for(int i = 0; i < propsSize; ++i)
+		for(size_t i = 0; i < propsSize; ++i)
 			header[i] = input[i];
 
 		LzmaDec_Construct(&state);

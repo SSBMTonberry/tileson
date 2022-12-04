@@ -29,17 +29,17 @@ class DummyDecompressor : public tson::IDecompressor<std::string_view, std::stri
             return m_name;
         }
 
-        std::string decompress(const std::string_view &s) override
+        std::string decompress(const std::string_view &) override
         {
             return m_result;
         }
 
-        std::string decompressFile(const fs::path &path) override
+        std::string decompressFile(const fs::path &) override
         {
             return std::string();
         }
 
-        std::string decompress(const void *data, size_t size) override
+        std::string decompress(const void *, size_t) override
         {
             return std::string();
         }

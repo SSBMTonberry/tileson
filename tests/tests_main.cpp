@@ -42,7 +42,6 @@ void performMainAsserts(tson::Map *map, bool isOldMap = true)
     std::map<int, bool> tests;
     auto main = map->getLayer("Main Layer");
     auto tileData = main->getTileData();
-    tson::Rect rect = main->getTileData(8,14)->getDrawingRect();
 
     REQUIRE(map->getLayers().size() == 6);
     REQUIRE(!map->isInfinite());
@@ -536,7 +535,6 @@ TEST_CASE( "Parse map - expect correct flip flags", "[parse][file][flip]" )
         REQUIRE(tile_no_flip->hasFlipFlags(tson::TileFlipFlags::None));
 
         //TileObjects
-        auto rect = tileobj_hor_flip->getDrawingRect();
         REQUIRE(tileobj_hor_flip != nullptr);
         REQUIRE(tileobj_hor_flip->getTile() != nullptr);
         REQUIRE(tileobj_hor_flip->getPositionInTileUnits() == tson::Vector2i(28, 14));
@@ -678,8 +676,6 @@ TEST_CASE( "Parse map3.json - expect correct tileset data for all TileObjects", 
                 for (auto& [pos, tileObject] : layer.getTileObjects())
                 {
                     tson::Tileset *tileset = tileObject.getTile()->getTileset();
-                    tson::Rect drawingRect = tileObject.getDrawingRect();
-                    tson::Vector2f position = tileObject.getPosition();
                     REQUIRE(tileset != nullptr);
                     //fs::path p = pathToUse.parent_path() / tileset->getImage();
                     //if (!fs::is_regular_file(p))
@@ -729,30 +725,30 @@ TEST_CASE( "Go through demo code - get success", "[demo]" )
         tson::Colorf bgColorFloat = bgColor.asFloat();
 
         //Or the other way around
-        tson::Colori newBg = bgColorFloat.asInt();
+        bgColorFloat.asInt();
 
         //You can loop through every container of objects
         for (auto &layer : map->getLayers())
         {
             if (layer.getType() == tson::LayerType::ObjectGroup)
             {
-                for (auto &obj : layer.getObjects())
+                for ([[maybe_unused]] auto &obj : layer.getObjects())
                 {
                     //Just iterate through all the objects
                 }
                 //Or use these queries:
 
                 //Gets the first object it finds with the name specified
-                tson::Object *player = layer.firstObj("player"); //Does not exist in demo map->..
+                layer.firstObj("player"); //Does not exist in demo map->..
 
                 //Gets all objects with a matching name
-                std::vector<tson::Object> enemies = layer.getObjectsByName("goomba"); //But we got two of those
+                layer.getObjectsByName("goomba"); //But we got two of those
 
                 //Gets all objects of a specific type
-                std::vector<tson::Object> objects = layer.getObjectsByType(tson::ObjectType::Object);
+                layer.getObjectsByType(tson::ObjectType::Object);
 
                 //Gets an unique object by its name.
-                tson::Object *uniqueObj = layer.getObj(2);
+                layer.getObj(2);
             }
         }
 
@@ -760,6 +756,7 @@ TEST_CASE( "Go through demo code - get success", "[demo]" )
         tson::Layer *layer = map->getLayer("Main Layer");
         tson::Tileset *tileset = map->getTileset("demo-tileset");
         tson::Tile *tile = tileset->getTile(1); //Tileson tile-IDs starts with 1, to be consistent
+        REQUIRE(tile != nullptr);
         // with IDs in data lists. This is in other words the
         //first tile.
 
@@ -776,22 +773,28 @@ TEST_CASE( "Go through demo code - get success", "[demo]" )
                 tson::Tile *invalidTile = tileData[{0, 4}]; // x:0,  y:4  - There is no tile here, so this will be nullptr.
                                                                    // Be careful with this, as it expands the map with an ID of {0,4} pointing
                                                                    // to a nullptr...
+                REQUIRE(invalidTile == nullptr);
 
                 //Individual tiles should be retrieved by calling the safe version:
                 tson::Tile *safeInvalid = layer->getTileData(0, 5); //Another non-existent tile, but with safety check.
                                                                          //Will not expand the map with a nullptr
+                REQUIRE(safeInvalid == nullptr);
 
                 tson::Tile *tile1 = layer->getTileData(4, 4);       //x:4,  y:4  - Points to tile with ID 1 (Tiled internal ID: 0)
+                REQUIRE(tile1 != nullptr);
                 tson::Tile *tile2 = layer->getTileData(5, 4);       //x:5,  y:4  - Points to tile with ID 3 (Tiled internal ID: 2)
+                REQUIRE(tile2 != nullptr);
                 tson::Tile *tile3 = layer->getTileData(8, 14);      //x:8,  y:14 - Points to tile with ID 2 (Tiled internal ID: 1)
+                REQUIRE(tile3 != nullptr);
                 tson::Tile *tile4 = layer->getTileData(17, 5);      //x:17, y:5  - Points to tile with ID 5 (Tiled internal ID: 4)
+                REQUIRE(tile4 != nullptr);
 
                 //New in v1.2.0
                 //You can now get tiles with positions and drawing rect via tson::TileObject
                 //Drawing rects are also accessible through tson::Tile.
                 tson::TileObject *tileobj1 = layer->getTileObject(4, 4);
-                tson::Vector2f position = tileobj1->getPosition();
-                tson::Rect drawingRect = tileobj1->getDrawingRect();
+                tileobj1->getPosition();
+                tileobj1->getDrawingRect();
 
                 //You can of course also loop through every tile!
                 for (const auto &[id, tile] : tileData)
@@ -799,21 +802,21 @@ TEST_CASE( "Go through demo code - get success", "[demo]" )
                     //Must check for nullptr, due to how we got the first invalid tile (pos: 0, 4)
                     //Would be unnecessary otherwise.
                     if(tile != nullptr)
-                        int tileId = tile->getId(); //A bit verbose, as this is the same as id from the key, but you get the idea.
+                        [[maybe_unused]] int tileId = tile->getId(); //A bit verbose, as this is the same as id from the key, but you get the idea.
                 }
             }
         }
 
         //If an object supports properties, you can easily get a property value by calling get<T>() or the property itself with getProp()
-        int myInt = layer->get<int>("my_int");
-        float myFloat = layer->get<float>("my_float");
-        bool myBool = layer->get<bool>("my_bool");
-        std::string myString = layer->get<std::string>("my_string");
-        tson::Colori myColor = layer->get<tson::Colori>("my_color");
+        layer->get<int>("my_int");
+        layer->get<float>("my_float");
+        layer->get<bool>("my_bool");
+        layer->get<std::string>("my_string");
+        layer->get<tson::Colori>("my_color");
 
         fs::path file = layer->get<fs::path>("my_file");
 
-        tson::Property *prop = layer->getProp("my_property");
+        layer->getProp("my_property");
     }
     else //Error occured
     {
@@ -840,9 +843,9 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
             //If you want to just go through every existing object in the layer:
             for(auto &obj : objectLayer->getObjects())
             {
-                tson::Vector2i position = obj.getPosition();
-                tson::Vector2i size = obj.getSize();
-                tson::ObjectType objType = obj.getObjectType();
+                [[maybe_unused]] tson::Vector2i position = obj.getPosition();
+                [[maybe_unused]] tson::Vector2i size = obj.getSize();
+                [[maybe_unused]] tson::ObjectType objType = obj.getObjectType();
 
                 //You may want to check the object type to make sure you use the data right.
             }
@@ -868,11 +871,11 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
 
             if (objType == tson::ObjectType::Rectangle)
             {
-                tson::Vector2i size = goomba->getSize();
-                tson::Vector2i position = goomba->getPosition();
+                [[maybe_unused]] tson::Vector2i size = goomba->getSize();
+                [[maybe_unused]] tson::Vector2i position = goomba->getPosition();
 
                 //If you have set a custom property, you can also get this
-                int hp = goomba->get<int>("hp");
+                goomba->get<int>("hp");
 
                 //Using size and position you can can create a Rectangle object by your library of choice.
                 //An example if you were about to use SFML for drawing:
@@ -882,20 +885,20 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
             }
             else if (objType == tson::ObjectType::Polygon)
             {
-                for(auto const &poly : goomba->getPolygons())
+                for([[maybe_unused]] auto const &poly : goomba->getPolygons())
                 {
                     //Set a point on a shape taking polygons
                 }
-                tson::Vector2i position = goomba->getPosition();
+                [[maybe_unused]] tson::Vector2i position = goomba->getPosition();
             }
             else if (objType == tson::ObjectType::Polyline)
             {
                 std::vector<tson::Vector2i> polys = goomba->getPolylines();
-                for(auto const &poly : goomba->getPolylines())
+                for([[maybe_unused]] auto const &poly : goomba->getPolylines())
                 {
 
                 }
-                tson::Vector2i position = goomba->getPosition();
+                [[maybe_unused]] tson::Vector2i position = goomba->getPosition();
             }
         }
 
@@ -904,6 +907,7 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
         //You can get your tileset like this, but in v1.2.0
         //The tiles themselves holds a pointer to their related tileset.
         tson::Tileset *tileset = map->getTileset("demo-tileset");
+        REQUIRE(tileset != nullptr);
 
         //Example from a Tile Layer
         //I know for a fact that this is a Tile Layer, but you can check it this way to be sure.
@@ -913,8 +917,9 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
             for(auto &[pos, tileObject] : tileLayer->getTileObjects()) //Loops through absolutely all existing tileObjects
             {
                 tson::Tileset *tileset = tileObject.getTile()->getTileset();
-                tson::Rect drawingRect = tileObject.getDrawingRect();
-                tson::Vector2f position = tileObject.getPosition();
+                REQUIRE(tileset != nullptr);
+                tileObject.getDrawingRect();
+                tileObject.getPosition();
 
                 //Here you can determine the offset that should be set on a sprite
                 //Example on how it would be done using SFML (where sprite presumably is a member of a generated game object):
