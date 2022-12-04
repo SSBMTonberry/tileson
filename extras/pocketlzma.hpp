@@ -36,6 +36,9 @@
 
  */
 
+#pragma warning(push)
+#pragma warning(disable : 4244)
+
 #ifndef POCKETLZMA_POCKETLZMA_H
 #define POCKETLZMA_POCKETLZMA_H
 
@@ -7523,3 +7526,4 @@ namespace plz
 
 #endif //POCKETLZMA_POCKETLZMA_H
 
+#pragma warning(pop)
