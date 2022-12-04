@@ -44,7 +44,9 @@
 
 #else //Linux
     #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wdangling-pointer"
+    #if __GNUC__ > 11
+        #pragma GCC diagnostic ignored "-Wdangling-pointer"
+    #endif
 #endif
 
 #ifndef POCKETLZMA_POCKETLZMA_H
