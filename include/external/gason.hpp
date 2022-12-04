@@ -25,6 +25,13 @@
 #if _MSC_VER && !__INTEL_COMPILER
 #pragma warning(push)
 #pragma warning(disable : 4244)
+#elif __MINGW64__
+
+#elif __clang__
+
+#else //Linux
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wimplicit-fallthrough="
 #endif
 
 #pragma once
@@ -505,4 +512,10 @@ namespace gason
 
 #if _MSC_VER && !__INTEL_COMPILER
 #pragma warning(pop)
+#elif __MINGW64__
+
+#elif __clang__
+
+#else //Linux
+    #pragma GCC diagnostic pop
 #endif

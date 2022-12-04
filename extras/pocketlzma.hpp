@@ -38,6 +38,13 @@
 #if _MSC_VER && !__INTEL_COMPILER
 #pragma warning(push)
 #pragma warning(disable : 4244)
+#elif __MINGW64__
+
+#elif __clang__
+
+#else //Linux
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wdangling-pointer="
 #endif
 
 #ifndef POCKETLZMA_POCKETLZMA_H
@@ -7529,4 +7536,10 @@ namespace plz
 
 #if _MSC_VER && !__INTEL_COMPILER
 #pragma warning(pop)
+#elif __MINGW64__
+
+#elif __clang__
+
+#else //Linux
+    #pragma GCC diagnostic pop
 #endif
