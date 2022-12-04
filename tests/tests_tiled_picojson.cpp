@@ -386,6 +386,7 @@ TEST_CASE( "PicoJson - Parse an Object from Tiled's documentation - read simple 
                 obj.getPolygons().size() == 5 &&
                 obj.getPolygons()[2] == tson::Vector2i(136, -128)
         );
+        REQUIRE((parseOk && hasCorrectValues));
     }
     SECTION("Object - polyline")
     {

@@ -46,7 +46,7 @@ namespace tson
             {
                 if(m_arrayPosCache.count(pos) == 0)
                 {
-                    int i = 0;
+                    size_t i = 0;
                     for (auto item : m_json)
                     {
                         if(i == pos)
@@ -115,7 +115,7 @@ namespace tson
                     m_path = path.parent_path();
 
                     file.seekg(0, std::ios::end);
-                    str.reserve(file.tellg());
+                    str.reserve(static_cast<size_t>(file.tellg()));
                     file.seekg(0, std::ios::beg);
 
                     str.assign((std::istreambuf_iterator<char>(file)),

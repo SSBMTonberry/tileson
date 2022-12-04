@@ -22,6 +22,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#if _MSC_VER && !__INTEL_COMPILER
+#pragma warning(push)
+#pragma warning(disable : 4244)
+#elif __MINGW64__
+
+#elif __clang__
+
+#else //Linux
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
+#endif
+
 #pragma once
 
 #include <cstdint>
@@ -497,3 +509,13 @@ namespace gason
             return JSON_BREAKING_BAD;
         }
 }
+
+#if _MSC_VER && !__INTEL_COMPILER
+#pragma warning(pop)
+#elif __MINGW64__
+
+#elif __clang__
+
+#else //Linux
+    #pragma GCC diagnostic pop
+#endif

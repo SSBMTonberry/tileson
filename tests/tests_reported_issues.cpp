@@ -27,10 +27,13 @@ TEST_CASE( "Nullptr error on getposition when parsing json (Issue #17)", "[help]
         {
             if(layer.getType() == tson::LayerType::TileLayer)
             {
-                for (auto &[id, obj] : layer.getTileObjects())
+                for ([[maybe_unused]] auto &[id, obj] : layer.getTileObjects())
                 {
-                    tson::Vector2f groundPos = tson::Vector2f(obj.getPosition().x, obj.getPosition().y);
-                    tson::Vector2f groundSize = tson::Vector2f(static_cast<float>(obj.getTile()->getTileSize().x), static_cast<float>(obj.getTile()->getTileSize().y));
+                    #if __GNUC__ == 7 //[[maybe_unused]] is not implemented for structured bindings for GCC7, so do this hack to make GCC7 happy
+                    (void) id;
+                    #endif
+                    tson::Vector2f(obj.getPosition().x, obj.getPosition().y);
+                    tson::Vector2f(static_cast<float>(obj.getTile()->getTileSize().x), static_cast<float>(obj.getTile()->getTileSize().y));
 
                     //platforms.push_back(Platform(&groundtexture, groundSize, groundPos));
                 }
@@ -97,7 +100,6 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
     //std::string pathCarte;
     tson::Tileson jsTileson;
     tson::Layer* tileLayer;
-    tson::Tileset* tileset;
 
     fs::path pathCarte = GetPathWithBase(fs::path("test-maps/issues/Preluda3.json"));
 
@@ -116,40 +118,17 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
     //On met en variable la layer et le tileset correspondant
     tileLayer = jsCarte->getLayer("WL");
     ////On met en mémoire le tileset
-    tileset = jsCarte->getTileset("ground_tiles");
-
-    //On récupère le premier ID de la tile du Tileset
-    int firstId = tileset->getFirstgid(); //First tile id of the tileset
-
-    //On récupère le nombre de colonne
-    int columns = tileset->getColumns(); //For the demo map it is 8.
-    //On récupère le dernier ID (=premier ID + nombre de tile -1)
-    int lastId = (tileset->getFirstgid() + tileset->getTileCount()) - 1;
+    jsCarte->getTileset("ground_tiles");
 
     //On vérifie que le layer est bien un tileLayer
     if (tileLayer->getType() == tson::LayerType::TileLayer)
     {
         //pos = position in tile units
-        for (auto& [pos, tile] : tileLayer->getTileData()) //Loops through absolutely all existing tiles
+        for ([[maybe_unused]] auto& [pos, tile] : tileLayer->getTileData()) //Loops through absolutely all existing tiles
         {
-
-            fs::path imagePath;
-
-            std::string pathStr;
-            //With this, I know that it's related to the tileset above (though I only have one tileset)
-            if (tile->getId() >= firstId && tile->getId() <= lastId)
-            {
-                imagePath = tileset->getImagePath();
-                pathStr = imagePath.generic_string();
-            }
-
-            //Get position in pixel units --> Position de la Tile
-            tson::Vector2i position = { std::get<0>(pos) * jsCarte->getTileSize().x,std::get<1>(pos) * jsCarte->getTileSize().y };
-            int tileId = tile->getId();
-            //The ID can be used to calculate offset on its related tileset image.
-            int offsetX = (tileId % columns) * jsCarte->getTileSize().x;
-            int offsetY = (tileId / columns) * jsCarte->getTileSize().y;
-
+            #if __GNUC__ == 7 //[[maybe_unused]] is not implemented for structured bindings for GCC7, so do this hack to make GCC7 happy
+            (void) pos;
+            #endif
             REQUIRE(tile != nullptr);
         }
     }
