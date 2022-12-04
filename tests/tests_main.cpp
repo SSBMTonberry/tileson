@@ -673,7 +673,7 @@ TEST_CASE( "Parse map3.json - expect correct tileset data for all TileObjects", 
         {
             if(layer.getType() == tson::LayerType::TileLayer)
             {
-                for (auto& [pos, tileObject] : layer.getTileObjects())
+                for ([[maybe_unused]] auto& [pos, tileObject] : layer.getTileObjects())
                 {
                     tson::Tileset *tileset = tileObject.getTile()->getTileset();
                     REQUIRE(tileset != nullptr);
@@ -797,7 +797,7 @@ TEST_CASE( "Go through demo code - get success", "[demo]" )
                 tileobj1->getDrawingRect();
 
                 //You can of course also loop through every tile!
-                for (const auto &[id, tile] : tileData)
+                for ([[maybe_unused]] const auto &[id, tile] : tileData)
                 {
                     //Must check for nullptr, due to how we got the first invalid tile (pos: 0, 4)
                     //Would be unnecessary otherwise.
@@ -914,7 +914,7 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
         if(tileLayer->getType() == tson::LayerType::TileLayer)
         {
             //pos = position in tile units
-            for(auto &[pos, tileObject] : tileLayer->getTileObjects()) //Loops through absolutely all existing tileObjects
+            for([[maybe_unused]] auto &[pos, tileObject] : tileLayer->getTileObjects()) //Loops through absolutely all existing tileObjects
             {
                 tson::Tileset *tileset = tileObject.getTile()->getTileset();
                 REQUIRE(tileset != nullptr);

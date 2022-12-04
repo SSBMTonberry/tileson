@@ -27,10 +27,10 @@ TEST_CASE( "Nullptr error on getposition when parsing json (Issue #17)", "[help]
         {
             if(layer.getType() == tson::LayerType::TileLayer)
             {
-                for (auto &[id, obj] : layer.getTileObjects())
+                for ([[maybe_unused]] auto &[id, obj] : layer.getTileObjects())
                 {
-                    tson::Vector2f groundPos = tson::Vector2f(obj.getPosition().x, obj.getPosition().y);
-                    tson::Vector2f groundSize = tson::Vector2f(static_cast<float>(obj.getTile()->getTileSize().x), static_cast<float>(obj.getTile()->getTileSize().y));
+                    tson::Vector2f(obj.getPosition().x, obj.getPosition().y);
+                    tson::Vector2f(static_cast<float>(obj.getTile()->getTileSize().x), static_cast<float>(obj.getTile()->getTileSize().y));
 
                     //platforms.push_back(Platform(&groundtexture, groundSize, groundPos));
                 }
@@ -97,7 +97,6 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
     //std::string pathCarte;
     tson::Tileson jsTileson;
     tson::Layer* tileLayer;
-    tson::Tileset* tileset;
 
     fs::path pathCarte = GetPathWithBase(fs::path("test-maps/issues/Preluda3.json"));
 
@@ -116,13 +115,13 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
     //On met en variable la layer et le tileset correspondant
     tileLayer = jsCarte->getLayer("WL");
     ////On met en mémoire le tileset
-    tileset = jsCarte->getTileset("ground_tiles");
+    jsCarte->getTileset("ground_tiles");
 
     //On vérifie que le layer est bien un tileLayer
     if (tileLayer->getType() == tson::LayerType::TileLayer)
     {
         //pos = position in tile units
-        for (auto& [pos, tile] : tileLayer->getTileData()) //Loops through absolutely all existing tiles
+        for ([[maybe_unused]] auto& [pos, tile] : tileLayer->getTileData()) //Loops through absolutely all existing tiles
         {
             REQUIRE(tile != nullptr);
         }
