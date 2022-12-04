@@ -35,9 +35,10 @@
 	#include "pocketlzma.hpp"
 
  */
-
+#if _MSC_VER && !__INTEL_COMPILER
 #pragma warning(push)
 #pragma warning(disable : 4244)
+#endif
 
 #ifndef POCKETLZMA_POCKETLZMA_H
 #define POCKETLZMA_POCKETLZMA_H
@@ -7526,4 +7527,6 @@ namespace plz
 
 #endif //POCKETLZMA_POCKETLZMA_H
 
+#if _MSC_VER && !__INTEL_COMPILER
 #pragma warning(pop)
+#endif
