@@ -29,6 +29,9 @@ TEST_CASE( "Nullptr error on getposition when parsing json (Issue #17)", "[help]
             {
                 for ([[maybe_unused]] auto &[id, obj] : layer.getTileObjects())
                 {
+                    #if __GNUC__ == 7 //[[maybe_unused]] is not implemented for structured bindings for GCC7, so do this hack to make GCC7 happy
+                    (void) id;
+                    #endif
                     tson::Vector2f(obj.getPosition().x, obj.getPosition().y);
                     tson::Vector2f(static_cast<float>(obj.getTile()->getTileSize().x), static_cast<float>(obj.getTile()->getTileSize().y));
 
@@ -123,6 +126,9 @@ TEST_CASE( "Help a fellow programmer in need - expect solution (Issue #4)", "[he
         //pos = position in tile units
         for ([[maybe_unused]] auto& [pos, tile] : tileLayer->getTileData()) //Loops through absolutely all existing tiles
         {
+            #if __GNUC__ == 7 //[[maybe_unused]] is not implemented for structured bindings for GCC7, so do this hack to make GCC7 happy
+            (void) pos;
+            #endif
             REQUIRE(tile != nullptr);
         }
     }

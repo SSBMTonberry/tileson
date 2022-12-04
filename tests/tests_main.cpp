@@ -799,6 +799,9 @@ TEST_CASE( "Go through demo code - get success", "[demo]" )
                 //You can of course also loop through every tile!
                 for ([[maybe_unused]] const auto &[id, tileValue] : tileData)
                 {
+                    #if __GNUC__ == 7 //[[maybe_unused]] is not implemented for structured bindings for GCC7, so do this hack to make GCC7 happy
+                    (void) id;
+                    #endif
                     //Must check for nullptr, due to how we got the first invalid tile (pos: 0, 4)
                     //Would be unnecessary otherwise.
                     if(tileValue != nullptr)
@@ -916,6 +919,9 @@ TEST_CASE( "A simple example on how to use data of objects and tiles", "[demo]" 
             //pos = position in tile units
             for([[maybe_unused]] auto &[pos, tileObject] : tileLayer->getTileObjects()) //Loops through absolutely all existing tileObjects
             {
+                #if __GNUC__ == 7 //[[maybe_unused]] is not implemented for structured bindings for GCC7, so do this hack to make GCC7 happy
+                (void) pos;
+                #endif
                 tson::Tileset *tilesetPtr = tileObject.getTile()->getTileset();
                 REQUIRE(tilesetPtr != nullptr);
                 tileObject.getDrawingRect();
