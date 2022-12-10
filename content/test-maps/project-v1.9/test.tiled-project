@@ -32,7 +32,7 @@
                 {
                     "name": "isDummy",
                     "type": "bool",
-                    "value": true
+                    "value": false
                 }
             ],
             "name": "DummyClass",

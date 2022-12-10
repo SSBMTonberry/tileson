@@ -19,7 +19,16 @@
 
 tson::TiledClass *tson::Map::getClass()
 {
-    return (m_project != nullptr) ? m_project->getClass(m_classType) : nullptr;
+    if(m_class == nullptr)
+    {
+        TiledClass* baseClass = (m_project != nullptr) ? m_project->getClass(m_classType) : nullptr;
+        if(baseClass != nullptr)
+        {
+            m_class = std::make_shared<TiledClass>(*baseClass);
+            m_class->update(m_properties);
+        }
+    }
+    return (m_class != nullptr) ? m_class.get() : nullptr;
 }
 
 // T i l e . h p p
@@ -99,7 +108,16 @@ const tson::Vector2f tson::Tile::getPosition(const std::tuple<int, int> &tileDat
  */
 tson::TiledClass *tson::Tile::getClass()
 {
-    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_type) : nullptr;
+    if(m_class == nullptr)
+    {
+        TiledClass* baseClass = (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_type) : nullptr;
+        if(baseClass != nullptr)
+        {
+            m_class = std::make_shared<TiledClass>(*baseClass);
+            m_class->update(m_properties);
+        }
+    }
+    return (m_class != nullptr) ? m_class.get() : nullptr;
 }
 
 // T i l e s e t . h p p
@@ -107,7 +125,16 @@ tson::TiledClass *tson::Tile::getClass()
 
 tson::TiledClass *tson::Tileset::getClass()
 {
-    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
+    if(m_class == nullptr)
+    {
+        TiledClass* baseClass = (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
+        if(baseClass != nullptr)
+        {
+            m_class = std::make_shared<TiledClass>(*baseClass);
+            m_class->update(m_properties);
+        }
+    }
+    return (m_class != nullptr) ? m_class.get() : nullptr;
 }
 
 // T i l e O b j e c t . h p p
@@ -251,7 +278,16 @@ bool tson::Layer::parse(IJson &json, tson::Map *map)
 
 tson::TiledClass *tson::Layer::getClass()
 {
-    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
+    if(m_class == nullptr)
+    {
+        TiledClass* baseClass = (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
+        if(baseClass != nullptr)
+        {
+            m_class = std::make_shared<TiledClass>(*baseClass);
+            m_class->update(m_properties);
+        }
+    }
+    return (m_class != nullptr) ? m_class.get() : nullptr;
 }
 
 // O b j e c t . h p p
@@ -261,14 +297,32 @@ tson::TiledClass *tson::Layer::getClass()
 // ----------------------
 tson::TiledClass *tson::WangSet::getClass()
 {
-    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
+    if(m_class == nullptr)
+    {
+        TiledClass* baseClass = (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
+        if(baseClass != nullptr)
+        {
+            m_class = std::make_shared<TiledClass>(*baseClass);
+            m_class->update(m_properties);
+        }
+    }
+    return (m_class != nullptr) ? m_class.get() : nullptr;
 }
 
 // W a n g c o l o r . h p p
 // ----------------------
 tson::TiledClass *tson::WangColor::getClass()
 {
-    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
+    if(m_class == nullptr)
+    {
+        TiledClass* baseClass = (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_classType) : nullptr;
+        if(baseClass != nullptr)
+        {
+            m_class = std::make_shared<TiledClass>(*baseClass);
+            m_class->update(m_properties);
+        }
+    }
+    return (m_class != nullptr) ? m_class.get() : nullptr;
 }
 
 /*!
@@ -278,7 +332,16 @@ tson::TiledClass *tson::WangColor::getClass()
  */
 tson::TiledClass *tson::Object::getClass()
 {
-    return (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_type) : nullptr;
+    if(m_class == nullptr)
+    {
+        TiledClass* baseClass = (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_type) : nullptr;
+        if(baseClass != nullptr)
+        {
+            m_class = std::make_shared<TiledClass>(*baseClass);
+            m_class->update(m_properties);
+        }
+    }
+    return (m_class != nullptr) ? m_class.get() : nullptr;
 }
 
 // W o r l d . h p p

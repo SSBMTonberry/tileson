@@ -41,6 +41,7 @@ namespace tson
             tson::PropertyCollection     m_properties; 	  /*! 'properties': A list of properties (name, value, type). */
             tson::Map *                  m_map;
             std::string                  m_classType {};              /*! 'class': The class of this map (since 1.9, defaults to “”). */
+            std::shared_ptr<tson::TiledClass> m_class {};
 
     };
 }

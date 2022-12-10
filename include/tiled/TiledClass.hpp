@@ -7,7 +7,6 @@
 
 namespace tson
 {
-    //class Project;
     class TiledClass
     {
         public:
@@ -19,6 +18,7 @@ namespace tson
             [[nodiscard]] inline const std::string &getType() const;
             [[nodiscard]] inline const PropertyCollection &getMembers() const;
             inline void update(IJson &json);
+            inline void update(PropertyCollection &properties);
 
             template <typename T>
             inline T get(const std::string &name);
@@ -91,13 +91,34 @@ namespace tson
      */
     void TiledClass::update(IJson &json)
     {
-        for(auto property : m_members.get())
+        for(Property *property : m_members.get())
         {
             if(json.any(property->getName()))
             {
                 property->setValueByType(json[property->getName()]);
             }
         }
+    }
+
+    void TiledClass::update(PropertyCollection &properties)
+    {
+        std::vector<Property *> toUpdate;
+        for(Property *member : m_members.get())
+        {
+            if(properties.hasProperty(member->getName()))
+            {
+                Property *property = properties.getProperty(member->getName());
+                if(member->getType() == property->getType())
+                {
+                    toUpdate.push_back(property);
+                }
+            }
+        }
+
+        std::for_each(toUpdate.begin(), toUpdate.end(), [&](Property *p)
+        {
+           m_members.setProperty(p->getName(), *p);
+        });
     }
 }
 

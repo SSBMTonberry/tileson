@@ -7,8 +7,6 @@
 
 #include "../TilesonConfig.h"
 
-//#define TILESON_UNIT_TEST_USE_SINGLE_HEADER
-
 #include "../include/external/nlohmann.hpp"
 #include "../include/external/picojson.hpp"
 

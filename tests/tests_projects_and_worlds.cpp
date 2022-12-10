@@ -9,9 +9,9 @@
     #include "../tileson.hpp"
 #else
     #include "../include/tileson.h"
-#include "TestTools.hpp"
-
 #endif
+
+#include "TestTools.hpp"
 
 TEST_CASE( "Parse world - Expect 4 maps and parsed data", "[project][world]" )
 {
@@ -134,12 +134,7 @@ TEST_CASE( "Parse project with class and enum info in maps - expect right values
         }
     }
 }
-static void assertDummy(tson::TiledClass *c)
-{
-    REQUIRE(c != nullptr);
-    REQUIRE(c->getName() == "DummyClass");
-    REQUIRE(c->get<bool>("isDummy"));
-}
+
 
 TEST_CASE( "Parse Tiled v1.9 project with class and enum info in maps - expect right values", "[project][map]" )
 {
@@ -189,20 +184,44 @@ TEST_CASE( "Parse Tiled v1.9 project with class and enum info in maps - expect r
             tson::TiledClass *c7 = wangset->getClass();
             tson::TiledClass *c8 = wangcolor->getClass();
 
-            assertDummy(c1);
-            assertDummy(c2);
-            assertDummy(c3);
-            assertDummy(c4);
-            assertDummy(c5);
-            assertDummy(c6);
-            assertDummy(c7);
-            assertDummy(c8);
+            REQUIRE(c1 != nullptr);
+            REQUIRE(c1->getName() == "DummyClass");
+            REQUIRE(c1->get<bool>("isDummy"));
+            REQUIRE(c2 != nullptr);
+            REQUIRE(c2->getName() == "DummyClass");
+            REQUIRE(c2->get<bool>("isDummy"));
+            REQUIRE(c3 != nullptr);
+            REQUIRE(c3->getName() == "DummyClass");
+            REQUIRE(c3->get<bool>("isDummy"));
+            REQUIRE(c4 != nullptr);
+            REQUIRE(c4->getName() == "DummyClass");
+            REQUIRE(c4->get<bool>("isDummy"));
+            REQUIRE(c5 != nullptr);
+            REQUIRE(c5->getName() == "DummyClass");
+            REQUIRE(c5->get<bool>("isDummy"));
+            REQUIRE(c6 != nullptr);
+            REQUIRE(c6->getName() == "DummyClass");
+            REQUIRE(c6->get<bool>("isDummy"));
+            REQUIRE(c7 != nullptr);
+            REQUIRE(c7->getName() == "DummyClass");
+            REQUIRE(c7->get<bool>("isDummy"));
+            REQUIRE(c8 != nullptr);
+            REQUIRE(c8->getName() == "DummyClass");
+            REQUIRE(c8->get<bool>("isDummy"));
 
-            tson::TiledClass *objectClass = objectLayer->getObj(1)->getClass();
+            tson::TiledClass *objectClass = objectLayer->firstObj("TestObject")->getClass(); //Object is changed from default values
 
             REQUIRE(objectClass != nullptr);
             REQUIRE(objectClass->getName() == "Enemy");
-            REQUIRE(objectClass->get<int>("hp") == 1);
+            REQUIRE(objectClass->get<int>("hp") == 10);
+            REQUIRE(objectClass->get<std::string>("name") == "Galderino");
+
+            tson::TiledClass *objectClass2 = objectLayer->firstObj("TestObject2")->getClass(); //Object is unchanged
+            REQUIRE(objectClass2 != nullptr);
+            REQUIRE(objectClass2->getName() == "Enemy");
+            REQUIRE(objectClass2->get<int>("hp") == 1);
+            REQUIRE(objectClass2->get<std::string>("name").empty());
+
         }
     }
 }

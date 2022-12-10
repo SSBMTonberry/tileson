@@ -11,6 +11,7 @@
 #include "Text.hpp"
 
 #include "../common/Enums.hpp"
+#include <optional>
 
 namespace tson
 {
@@ -90,6 +91,7 @@ namespace tson
             tson::TileFlipFlags               m_flipFlags = TileFlipFlags::None;       /*! Resolved using bit 32, 31 and 30 from gid */
 
             tson::Map *m_map {nullptr};
+            std::shared_ptr<tson::TiledClass> m_class {};
     };
 
     /*!

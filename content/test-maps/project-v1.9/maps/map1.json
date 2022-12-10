@@ -26,6 +26,12 @@
          "id":1,
          "name":"Main Layer",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"isDummy",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"tilelayer",
          "visible":true,
          "width":32,
@@ -47,6 +53,28 @@
                         {
                          "name":"hp",
                          "type":"int",
+                         "value":10
+                        }, 
+                        {
+                         "name":"name",
+                         "type":"string",
+                         "value":"Galderino"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":64,
+                 "x":238.995438269485,
+                 "y":29.9908765389709
+                }, 
+                {
+                 "class":"Enemy",
+                 "height":64,
+                 "id":3,
+                 "name":"TestObject2",
+                 "properties":[
+                        {
+                         "name":"hp",
+                         "type":"int",
                          "value":1
                         }, 
                         {
@@ -57,10 +85,16 @@
                  "rotation":0,
                  "visible":true,
                  "width":64,
-                 "x":240,
-                 "y":32
+                 "x":327.633099524207,
+                 "y":24.2554569088144
                 }],
          "opacity":1,
+         "properties":[
+                {
+                 "name":"isDummy",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"objectgroup",
          "visible":true,
          "x":0,
@@ -72,13 +106,19 @@
          "image":"",
          "name":"Da Image Layer",
          "opacity":1,
+         "properties":[
+                {
+                 "name":"isDummy",
+                 "type":"bool",
+                 "value":true
+                }],
          "type":"imagelayer",
          "visible":true,
          "x":0,
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":3,
+ "nextobjectid":4,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -123,6 +163,11 @@
          "value":45.699
         }, 
         {
+         "name":"isDummy",
+         "type":"bool",
+         "value":true
+        }, 
+        {
          "name":"number",
          "type":"int",
          "value":42
@@ -140,13 +185,25 @@
          "imagewidth":128,
          "margin":0,
          "name":"demo-tileset",
+         "properties":[
+                {
+                 "name":"isDummy",
+                 "type":"bool",
+                 "value":true
+                }],
          "spacing":0,
          "tilecount":48,
          "tileheight":16,
          "tiles":[
                 {
                  "class":"DummyClass",
-                 "id":0
+                 "id":0,
+                 "properties":[
+                        {
+                         "name":"isDummy",
+                         "type":"bool",
+                         "value":true
+                        }]
                 }],
          "tilewidth":16,
          "wangsets":[
@@ -158,9 +215,21 @@
                          "color":"#ff0000",
                          "name":"Britt",
                          "probability":1,
+                         "properties":[
+                                {
+                                 "name":"isDummy",
+                                 "type":"bool",
+                                 "value":true
+                                }],
                          "tile":-1
                         }],
                  "name":"wang-1",
+                 "properties":[
+                        {
+                         "name":"isDummy",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "tile":-1,
                  "type":"corner",
                  "wangtiles":[]
