@@ -87,6 +87,7 @@ namespace tson
             inline void performDataCalculations();                                   /*! Declared in tileson_forward.hpp - Calculate all the values used in the tile class. */
             inline void manageFlipFlagsByIdThenRemoveFlags(uint32_t &id);
             friend class Layer;
+            std::shared_ptr<tson::TiledClass> m_class {};
     };
 
     /*!

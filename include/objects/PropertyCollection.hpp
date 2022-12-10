@@ -25,6 +25,7 @@ namespace tson
             inline void remove(const std::string &name);
 
             inline void setValue(const std::string &name, const std::any &value);
+            inline void setProperty(const std::string &name, const tson::Property &value);
             inline void setId(const std::string &id);
 
             inline bool hasProperty(const std::string &name);
@@ -89,6 +90,16 @@ void tson::PropertyCollection::setValue(const std::string &name, const std::any 
 {
     if(m_properties.count(name) > 0)
         m_properties[name].setValue(value);
+}
+
+/*!
+ * Overwrites the current property if it exists, or adds it if it doesn't.
+ * @param name
+ * @param value
+ */
+void tson::PropertyCollection::setProperty(const std::string &name, const tson::Property &value)
+{
+    m_properties[name] = value;
 }
 
 void tson::PropertyCollection::setId(const std::string &id)

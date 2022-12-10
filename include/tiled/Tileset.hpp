@@ -115,7 +115,7 @@ namespace tson
  *                                                                    Only relevant when the tiles are not rendered at their native size, so this applies to resized tile objects or in combination with 'tilerendersize' set to 'grid'. (since 1.9)*/
 
             std::string                   m_classType {};              /*! 'class': The class of this map (since 1.9, defaults to “”). */
-
+            std::shared_ptr<tson::TiledClass> m_class {};
     };
 
     /*!

@@ -106,6 +106,7 @@ namespace tson
             std::map<uint32_t, tson::Tile>         m_flaggedTileMap{};    /*! key: Tile ID. Value: Tile*/
 
             std::string                            m_classType{};              /*! 'class': The class of this map (since 1.9, defaults to “”). */
+            std::shared_ptr<tson::TiledClass>      m_class {};
     };
 
     /*!
