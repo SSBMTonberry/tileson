@@ -16,7 +16,7 @@ namespace tson
             [[nodiscard]] inline uint32_t getId() const;
             [[nodiscard]] inline const std::string &getName() const;
             [[nodiscard]] inline const std::string &getType() const;
-            [[nodiscard]] inline const PropertyCollection &getMembers() const;
+            [[nodiscard]] inline PropertyCollection &getMembers();
             inline void update(IJson &json);
             inline void update(PropertyCollection &properties);
 
@@ -67,7 +67,7 @@ namespace tson
         return m_type;
     }
 
-    const PropertyCollection &TiledClass::getMembers() const
+    PropertyCollection &TiledClass::getMembers()
     {
         return m_members;
     }

@@ -225,3 +225,79 @@ TEST_CASE( "Parse Tiled v1.9 project with class and enum info in maps - expect r
         }
     }
 }
+
+TEST_CASE( "Parse Tiled v1.9 - expect changed enum values in classes, objects and tiles (with EnumDefinition)", "[project][map][enum]" )
+{
+    fs::path pathToUse = GetPathWithBase(fs::path("test-maps/project-v1.9/test.tiled-project"));
+
+    tson::Project project {pathToUse};
+    auto files = project.getFolders().at(0).getSubFolders().at(0).getFiles();
+    std::string str;
+    std::for_each(files.begin(), files.end(), [&](const auto &item) { str.append(item.generic_string()); });
+
+    auto folderFiles = project.getFolders().at(0).getFiles();
+    for(fs::path &f : folderFiles)
+    {
+        fs::path path = project.getFolders().at(0).getPath() / f.filename();
+        std::string filename = f.filename().generic_string();
+        if(filename == "map1.json")
+        {
+            tson::Tileson t {&project};
+            REQUIRE(fs::exists(path));
+            std::unique_ptr<tson::Map> m = t.parse(path);
+            tiledProjectEnumAndClassBaseTest(m.get());
+
+            tson::Layer *objectLayer = m->getLayer("Da Object Layer");
+
+            tson::TiledClass *objectClass = objectLayer->firstObj("TestObject")->getClass(); //Object is changed from default values
+
+            REQUIRE(objectClass != nullptr);
+            REQUIRE(objectClass->getName() == "Enemy");
+            REQUIRE(objectClass->get<int>("hp") == 10);
+            REQUIRE(objectClass->get<std::string>("name") == "Galderino");
+
+            tson::TiledClass *objectClass2 = objectLayer->firstObj("TestObject2")->getClass(); //Object is unchanged
+            REQUIRE(objectClass2 != nullptr);
+            REQUIRE(objectClass2->getName() == "Enemy");
+            REQUIRE(objectClass2->get<int>("hp") == 1);
+            REQUIRE(objectClass2->get<std::string>("name").empty());
+
+            tson::Object *enumObj = objectLayer->firstObj("TestObjectEnum");
+            tson::TiledClass *objectClassEnum = enumObj->getClass(); //Object is changed from default values
+
+            REQUIRE(enumObj->getProp("num_enum") != nullptr);
+            tson::EnumValue objPropNumEnum = enumObj->get<tson::EnumValue>("num_enum");
+            REQUIRE(enumObj->getProp("num_enum_flags") != nullptr);
+            tson::EnumValue objPropNumEnumFlags = enumObj->get<tson::EnumValue>("num_enum_flags");
+            REQUIRE(enumObj->getProp("str_enum") != nullptr);
+            tson::EnumValue objPropStrEnum = enumObj->get<tson::EnumValue>("str_enum");
+            REQUIRE(enumObj->getProp("str_enum_flags") != nullptr);
+            tson::EnumValue objPropStrEnumFlags = enumObj->get<tson::EnumValue>("str_enum_flags");
+
+            REQUIRE(objectClassEnum->getMembers().hasProperty("num_enum"));
+            tson::EnumValue objClassNumEnum = objectClassEnum->get<tson::EnumValue>("num_enum");
+            REQUIRE(objectClassEnum->getMembers().hasProperty("num_enum_flags"));
+            tson::EnumValue objClassNumEnumFlags = objectClassEnum->get<tson::EnumValue>("num_enum_flags");
+            REQUIRE(objectClassEnum->getMembers().hasProperty("str_enum"));
+            tson::EnumValue objClassStrEnum = objectClassEnum->get<tson::EnumValue>("str_enum");
+            REQUIRE(objectClassEnum->getMembers().hasProperty("str_enum_flags"));
+            tson::EnumValue objClassStrEnumFlags = objectClassEnum->get<tson::EnumValue>("str_enum_flags");
+
+            REQUIRE(objPropNumEnum.getDefinition() != nullptr);
+            REQUIRE(objPropNumEnumFlags.getDefinition() != nullptr);
+            REQUIRE(objPropStrEnum.getDefinition() != nullptr);
+            REQUIRE(objPropStrEnumFlags.getDefinition() != nullptr);
+
+            REQUIRE(objClassNumEnum.getDefinition() != nullptr);
+            REQUIRE(objClassNumEnumFlags.getDefinition() != nullptr);
+            REQUIRE(objClassStrEnum.getDefinition() != nullptr);
+            REQUIRE(objClassStrEnumFlags.getDefinition() != nullptr);
+
+
+            //tson::Tile *tile = m->getTileset("demo-tileset")->getTile(1);
+
+
+
+        }
+    }
+}
