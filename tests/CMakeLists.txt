@@ -3,8 +3,8 @@ project(tileson_tests)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DTILESON_UNIT_TEST_USE_SINGLE_HEADER")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTILESON_UNIT_TEST_USE_SINGLE_HEADER")
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DTILESON_UNIT_TEST_USE_SINGLE_HEADER")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTILESON_UNIT_TEST_USE_SINGLE_HEADER")
 
 # Uses the single header file when defined - comment out when creating PR: The cmake version in github doesn't seem to support it.
 # add_compile_definitions(TILESON_UNIT_TEST_USE_SINGLE_HEADER)
