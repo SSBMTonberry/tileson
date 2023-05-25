@@ -200,7 +200,7 @@ bool tson::Object::parse(IJson &json, tson::Map *map)
         auto &properties = json.array("properties");
         std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item)
         {
-            m_properties.add(*item);
+            m_properties.add(*item, m_map->getProject());
         });
     }
 
