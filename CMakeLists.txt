@@ -66,8 +66,6 @@ configure_file (
         "${PROJECT_SOURCE_DIR}/TilesonConfig.h"
 )
 
-include_directories(${PROJECT_SOURCE_DIR}/external_libs/)
-
 #set(SOURCE_FILES src/objects/Vector2.hpp src/Tileson.cpp src/Tileson.h src/tiled/Map.cpp src/tiled/Map.h src/tiled/Layer.cpp src/tiled/Layer.h src/tiled/Chunk.cpp src/tiled/Chunk.h src/tiled/Object.cpp src/tiled/Object.h src/objects/Property.cpp src/objects/Property.h src/objects/PropertyCollection.cpp src/objects/PropertyCollection.h src/tiled/Tileset.cpp src/tiled/Tileset.h src/tiled/Tile.cpp src/tiled/Tile.h src/tiled/Frame.cpp src/tiled/Frame.h src/tiled/Terrain.cpp src/tiled/Terrain.h src/tiled/WangSet.cpp src/tiled/WangSet.h src/tiled/WangColor.cpp src/tiled/WangColor.h src/tiled/WangTile.cpp src/tiled/WangTile.h src/tiled/Text.hpp src/tiled/Grid.cpp src/tiled/Grid.h src/objects/Color.hpp src/misc/MemoryBuffer.cpp src/misc/MemoryBuffer.h src/misc/MemoryStream.cpp src/misc/MemoryStream.h include/tileson_parser.hpp)
 set(INCLUDE_FILES include/tileson.h include/tileson_parser.hpp include/misc/MemoryBuffer.hpp include/misc/MemoryStream.hpp include/objects/Color.hpp
         include/objects/Property.hpp include/objects/PropertyCollection.hpp include/objects/Vector2.hpp include/tiled/Chunk.hpp include/tiled/Frame.hpp
@@ -81,10 +79,12 @@ set(INCLUDE_FILES include/tileson.h include/tileson_parser.hpp include/misc/Memo
 # add_library(tileson ${SOURCE_FILES} ${INCLUDE_FILES})
 
 if(BUILD_TESTS)
+    include_directories(${PROJECT_SOURCE_DIR}/external_libs/)
     add_subdirectory(tests)
 endif()
 
 if(BUILD_EXAMPLES)
+    include_directories(${PROJECT_SOURCE_DIR}/external_libs/)
     set(BUILD_SHARED_LIBS OFF) #build SFML with static libs
     #set(SFML_BUILD_AUDIO OFF)
 
