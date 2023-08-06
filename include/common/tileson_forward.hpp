@@ -293,6 +293,97 @@ tson::TiledClass *tson::Layer::getClass()
 // O b j e c t . h p p
 // --------------------
 
+/*!
+ * Parses a json Tiled object and autoamtically determines the object type based on the data presented.
+ * Call getObjectType() to see what object type it is.
+ * @param json
+ * @return true if all mandatory fields was found. false otherwise.
+ */
+bool tson::Object::parse(IJson &json, tson::Map *map)
+{
+    m_map = map;
+    bool allFound = true;
+    
+    if(json.count("ellipse") > 0) m_ellipse = json["ellipse"].get<bool>(); //Optional
+    if(json.count("gid") > 0)
+    {
+        uint32_t gid = json["gid"].get<uint32_t>(); //Optional
+        if (gid & FLIPPED_HORIZONTALLY_FLAG) m_flipFlags |= TileFlipFlags::Horizontally;
+        if (gid & FLIPPED_VERTICALLY_FLAG) m_flipFlags |= TileFlipFlags::Vertically;
+        if (gid & FLIPPED_DIAGONALLY_FLAG) m_flipFlags |= TileFlipFlags::Diagonally;
+        
+        // Clear flags
+        gid &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
+        
+        m_gid = gid;
+    }
+    if(json.count("id") > 0) m_id = json["id"].get<int>(); else allFound = false;
+    if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
+    if(json.count("point") > 0) m_point = json["point"].get<bool>(); //Optional
+    if(json.count("rotation") > 0) m_rotation = json["rotation"].get<float>(); else allFound = false;
+    if(json.count("template") > 0) m_template = json["template"].get<std::string>(); //Optional
+    
+    if(json.count("type") > 0) m_type = json["type"].get<std::string>();
+    else if(json.count("class") > 0) m_type = json["class"].get<std::string>(); //Tiled v1.9 renamed 'type' to 'class'
+    else allFound = false;
+    
+    if(json.count("visible") > 0) m_visible = json["visible"].get<bool>(); else allFound = false;
+    
+    if(json.count("width") > 0 && json.count("height") > 0)
+        m_size = {json["width"].get<int>(), json["height"].get<int>()}; else allFound = false;
+    if(json.count("x") > 0 && json.count("y") > 0)
+        m_position = {json["x"].get<int>(), json["y"].get<int>()}; else allFound = false;
+    
+    if(json.count("text") > 0)
+    {
+        //Old logic
+        //bool hasColor = json["text"].count("color") > 0;
+        //tson::Color c = (hasColor) ? tson::Colori(json["text"]["color"].get<std::string>()) : tson::Colori();
+        //m_text = {json["text"]["text"].get<std::string>(), json["text"]["wrap"].get<bool>(), c}; //Optional
+        m_text = tson::Text(json["text"]);
+        //
+        
+    }
+    
+    setObjectTypeByJson(json);
+    
+    if(m_objectType == ObjectType::Template)
+        allFound = true; //Just accept anything with this type
+    
+    //More advanced data
+    if(json.count("polygon") > 0 && json["polygon"].isArray())
+    {
+        auto &polygon = json.array("polygon");
+        std::for_each(polygon.begin(), polygon.end(),[&](std::unique_ptr<IJson> &item)
+        {
+            IJson &j = *item;
+            m_polygon.emplace_back(j["x"].get<int>(), j["y"].get<int>());
+        });
+        
+    }
+    
+    if(json.count("polyline") > 0 && json["polyline"].isArray())
+    {
+        auto &polyline = json.array("polyline");
+        std::for_each(polyline.begin(), polyline.end(),[&](std::unique_ptr<IJson> &item)
+        {
+            IJson &j = *item;
+            m_polyline.emplace_back(j["x"].get<int>(), j["y"].get<int>());
+        });
+    }
+    
+    if(json.count("properties") > 0 && json["properties"].isArray())
+    {
+        auto &properties = json.array("properties");
+        std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item)
+        {
+            m_properties.add(*item, m_map->getProject());
+        });
+    }
+    
+    return allFound;
+}
+
 // W a n g s e t . h p p
 // ----------------------
 tson::TiledClass *tson::WangSet::getClass()
@@ -337,7 +428,7 @@ tson::TiledClass *tson::Object::getClass()
         TiledClass* baseClass = (m_map != nullptr && m_map->getProject() != nullptr) ? m_map->getProject()->getClass(m_type) : nullptr;
         if(baseClass != nullptr)
         {
-            m_class = std::make_shared<TiledClass>(*baseClass);
+            m_class = std::make_shared<TiledClass>(*baseClass);//, m_map->getProject());
             m_class->update(m_properties);
         }
     }

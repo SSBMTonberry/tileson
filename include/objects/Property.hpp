@@ -99,7 +99,7 @@ tson::Property::Property(IJson &json, tson::Project *project) : m_project {proje
     setValueByType(json["value"]);
 }
 
-tson::Property::Property(std::string name, std::any value, Type type) : m_type {type}, m_name { move(name) }, m_value { move(value) }
+tson::Property::Property(std::string name, std::any value, Type type) : m_type {type}, m_name { std::move(name) }, m_value { std::move(value) }
 {
 
 }

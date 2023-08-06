@@ -3,11 +3,13 @@
 //
 
 #include "../external_libs/catch.hpp"
-//#include "../src/Tileson.h"
-//#include "../include/tileson.hpp"
 #include "../TilesonConfig.h"
-#include "../tileson.hpp"
-//#include "../include/tileson.h"
+
+#ifdef TILESON_UNIT_TEST_USE_SINGLE_HEADER
+    #include "../tileson.hpp"
+#else
+    #include "../include/tileson.h"
+#endif
 
 #include "tson_files_mapper.h"
 #include "../TilesonConfig.h"
