@@ -35,6 +35,62 @@ tson::TiledClass *tson::Map::getClass()
 // ---------------------
 
 /*!
+ * Parses a tile from a Tiled json. id on tile is store as id + 1 to match the references in data containers.
+ * @param json
+ * @return
+ */
+bool tson::Tile::parse(IJson &json, tson::Tileset *tileset, tson::Map *map)
+{
+    m_tileset = tileset;
+    m_map = map;
+    
+    if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); //Optional
+    
+    bool allFound = parseId(json);
+    
+    if(json.count("type") > 0) m_type = json["type"].get<std::string>(); //Optional
+    else if(json.count("class") > 0) m_type = json["class"].get<std::string>(); //Tiled v1.9 renamed 'type' to 'class'
+    
+    if(json.count("objectgroup") > 0) m_objectgroup = tson::Layer(json["objectgroup"], m_map); //Optional
+    
+    if(json.count("imagewidth") > 0 && json.count("imageheight") > 0)
+        m_imageSize = {json["imagewidth"].get<int>(), json["imageheight"].get<int>()}; //Optional
+    
+    m_subRect = {0,0, m_imageSize.x, m_imageSize.y};
+    if(json.count("x") > 0) m_subRect.x = json["x"].get<int>(); //Optional
+    if(json.count("y") > 0) m_subRect.y = json["y"].get<int>(); //Optional
+    if(json.count("width") > 0) m_subRect.width = json["width"].get<int>(); //Optional
+    if(json.count("height") > 0) m_subRect.height = json["height"].get<int>(); //Optional
+    
+    //More advanced data
+    if(json.count("animation") > 0 && json["animation"].isArray())
+    {
+        auto &animation = json.array("animation");
+        std::vector<tson::Frame> frames;
+        std::for_each(animation.begin(), animation.end(), [&](std::unique_ptr<IJson> &item) { frames.emplace_back(*item); });
+        if(frames.size() > 0)
+        {
+            m_animation.setFrames(frames);
+        }
+    }
+    if(json.count("terrain") > 0 && json["terrain"].isArray())
+    {
+        auto &terrain = json.array("terrain");
+        std::for_each(terrain.begin(), terrain.end(), [&](std::unique_ptr<IJson> &item) { m_terrain.emplace_back(item->get<int>()); });
+    }
+    
+    if(json.count("properties") > 0 && json["properties"].isArray())
+    {
+        auto &properties = json.array("properties");
+        std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item, m_map->getProject()); });
+    }
+    
+    performDataCalculations();
+    
+    return allFound;
+}
+
+/*!
  * Really just a shortcut to retrieve the tile size from the map.
  * @return TileSize based on the map property for tile size.
  */
