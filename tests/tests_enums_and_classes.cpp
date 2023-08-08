@@ -10,32 +10,7 @@
     #include "../include/tileson.h"
 #endif
 
-
-namespace tson
-{
-    enum class TestEnumNumberFlags : uint32_t
-    {
-        None = 0,
-        HasCalculatorFlag = 1 << 0,
-        HasBombFlag = 1 << 1,
-        HasHumorFlag = 1 << 2,
-        HasInvisibilityFlag = 1 << 3,
-        All = HasCalculatorFlag | HasBombFlag | HasHumorFlag | HasInvisibilityFlag
-    };
-
-    enum class TestEnumStringFlags : uint32_t
-    {
-        None = 0,
-        HasCarFlag = 1 << 0,
-        HasJobFlag = 1 << 1,
-        HasHouseFlag = 1 << 2,
-        HasMoneyFlag = 1 << 3,
-        All = HasCarFlag | HasJobFlag | HasHouseFlag | HasMoneyFlag
-    };
-}
-
-TILESON_ENABLE_BITMASK_OPERATORS(TestEnumNumberFlags)
-TILESON_ENABLE_BITMASK_OPERATORS(TestEnumStringFlags)
+#include "TestEnums.h"
 
 TEST_CASE( "Parse an int enum definition without flags - expect correct enum value checks", "[enum][int]" )
 {

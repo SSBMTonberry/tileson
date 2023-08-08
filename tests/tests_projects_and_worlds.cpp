@@ -14,6 +14,8 @@
 #endif
 
 #include "TestTools.hpp"
+#include "TestEnums.h"
+
 
 TEST_CASE("Parse world - Expect 4 maps and parsed data", "[project][world]")
 {
@@ -283,6 +285,20 @@ TEST_CASE("Parse Tiled v1.9 - expect changed enum values in classes, objects and
             REQUIRE(enumObj->getProp("str_enum_flags") != nullptr);
             tson::EnumValue objPropStrEnumFlags = enumObj->get<tson::EnumValue>("str_enum_flags");
             
+            REQUIRE(objPropNumEnum.getDefinition() != nullptr);
+            REQUIRE(objPropNumEnumFlags.getDefinition() != nullptr);
+            REQUIRE(objPropStrEnum.getDefinition() != nullptr);
+            REQUIRE(objPropStrEnumFlags.getDefinition() != nullptr);
+            
+            REQUIRE(objPropNumEnum.getValue() == 3); //1337 = value not set to correct assert
+            REQUIRE(objPropNumEnum.getValueName() == "UpdateNumber"); //1337 = value not set to correct assert
+            REQUIRE(objPropNumEnumFlags.getValue() == 9); //1337 = value not set to correct assert
+            REQUIRE(objPropNumEnumFlags.hasFlag(tson::TestEnumNumberFlags::HasCalculatorFlag | tson::TestEnumNumberFlags::HasInvisibilityFlag)); //1337 = value not set to correct assert
+            REQUIRE(objPropStrEnum.getValue() == 3); //1337 = value not set to correct assert
+            REQUIRE(objPropStrEnum.getValueName() == "DeletePlayer"); //1337 = value not set to correct assert
+            REQUIRE(objPropStrEnumFlags.getValue() == 6); //1337 = value not set to correct assert
+            REQUIRE(objPropStrEnumFlags.hasFlag(tson::TestEnumStringFlags::HasJobFlag | tson::TestEnumStringFlags::HasHouseFlag)); //1337 = value not set to correct assert
+            
             REQUIRE(objectClassEnum->getMembers().hasProperty("num_enum"));
             tson::EnumValue objClassNumEnum = objectClassEnum->get<tson::EnumValue>("num_enum");
             REQUIRE(objectClassEnum->getMembers().hasProperty("num_enum_flags"));
@@ -291,6 +307,20 @@ TEST_CASE("Parse Tiled v1.9 - expect changed enum values in classes, objects and
             tson::EnumValue objClassStrEnum = objectClassEnum->get<tson::EnumValue>("str_enum");
             REQUIRE(objectClassEnum->getMembers().hasProperty("str_enum_flags"));
             tson::EnumValue objClassStrEnumFlags = objectClassEnum->get<tson::EnumValue>("str_enum_flags");
+            
+            REQUIRE(objClassNumEnum.getDefinition() != nullptr);
+            REQUIRE(objClassNumEnumFlags.getDefinition() != nullptr);
+            REQUIRE(objClassStrEnum.getDefinition() != nullptr);
+            REQUIRE(objClassStrEnumFlags.getDefinition() != nullptr);
+            
+            REQUIRE(objClassNumEnum.getValue() == 3); //1337 = value not set to correct assert
+            REQUIRE(objClassNumEnum.getValueName() == "UpdateNumber"); //1337 = value not set to correct assert
+            REQUIRE(objClassNumEnumFlags.getValue() == 9); //1337 = value not set to correct assert
+            REQUIRE(objClassNumEnumFlags.hasFlag(tson::TestEnumNumberFlags::HasCalculatorFlag | tson::TestEnumNumberFlags::HasInvisibilityFlag)); //1337 = value not set to correct assert
+            REQUIRE(objClassStrEnum.getValue() == 3); //1337 = value not set to correct assert
+            REQUIRE(objClassStrEnum.getValueName() == "DeletePlayer"); //1337 = value not set to correct assert
+            REQUIRE(objClassStrEnumFlags.getValue() == 6); //1337 = value not set to correct assert
+            REQUIRE(objClassStrEnumFlags.hasFlag(tson::TestEnumStringFlags::HasJobFlag | tson::TestEnumStringFlags::HasHouseFlag)); //1337 = value not set to correct assert
             
             REQUIRE(tileClassEnum->getMembers().hasProperty("num_enum"));
             tson::EnumValue tileClassNumEnum = tileClassEnum->get<tson::EnumValue>("num_enum");
@@ -301,26 +331,19 @@ TEST_CASE("Parse Tiled v1.9 - expect changed enum values in classes, objects and
             REQUIRE(tileClassEnum->getMembers().hasProperty("str_enum_flags"));
             tson::EnumValue tileClassStrEnumFlags = tileClassEnum->get<tson::EnumValue>("str_enum_flags");
             
-            REQUIRE(objPropNumEnum.getDefinition() != nullptr);
-            REQUIRE(objPropNumEnumFlags.getDefinition() != nullptr);
-            REQUIRE(objPropStrEnum.getDefinition() != nullptr);
-            REQUIRE(objPropStrEnumFlags.getDefinition() != nullptr);
-            
-            REQUIRE(objClassNumEnum.getDefinition() != nullptr);
-            REQUIRE(objClassNumEnumFlags.getDefinition() != nullptr);
-            REQUIRE(objClassStrEnum.getDefinition() != nullptr);
-            REQUIRE(objClassStrEnumFlags.getDefinition() != nullptr);
-            
             REQUIRE(tileClassNumEnum.getDefinition() != nullptr);
             REQUIRE(tileClassNumEnumFlags.getDefinition() != nullptr);
             REQUIRE(tileClassStrEnum.getDefinition() != nullptr);
             REQUIRE(tileClassStrEnumFlags.getDefinition() != nullptr);
             
-            
-            //tson::Tile *tile = m->getTileset("demo-tileset")->getTile(1);
-            
-            
-            
+            REQUIRE(tileClassNumEnum.getValue() == 3); //1337 = value not set to correct assert
+            REQUIRE(tileClassNumEnum.getValueName() == "UpdateNumber"); //1337 = value not set to correct assert
+            REQUIRE(tileClassNumEnumFlags.getValue() == 9); //1337 = value not set to correct assert
+            REQUIRE(tileClassNumEnumFlags.hasFlag(tson::TestEnumNumberFlags::HasCalculatorFlag | tson::TestEnumNumberFlags::HasInvisibilityFlag)); //1337 = value not set to correct assert
+            REQUIRE(tileClassStrEnum.getValue() == 3); //1337 = value not set to correct assert
+            REQUIRE(tileClassStrEnum.getValueName() == "DeletePlayer"); //1337 = value not set to correct assert
+            REQUIRE(tileClassStrEnumFlags.getValue() == 6); //1337 = value not set to correct assert
+            REQUIRE(tileClassStrEnumFlags.hasFlag(tson::TestEnumStringFlags::HasJobFlag | tson::TestEnumStringFlags::HasHouseFlag)); //1337 = value not set to correct assert
         }
     }
 }
