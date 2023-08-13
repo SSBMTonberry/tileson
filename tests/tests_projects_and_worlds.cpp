@@ -291,10 +291,10 @@ TEST_CASE("Parse Tiled v1.9 - expect changed enum values in classes, objects and
             REQUIRE(objPropStrEnumFlags.getDefinition() != nullptr);
             
             REQUIRE(objPropNumEnum.getValue() == 3); //1337 = value not set to correct assert
-            REQUIRE(objPropNumEnum.getValueName() == "UpdateNumber"); //1337 = value not set to correct assert
+            REQUIRE(objPropNumEnum.getValueName() == "GetNumber"); //1337 = value not set to correct assert
             REQUIRE(objPropNumEnumFlags.getValue() == 9); //1337 = value not set to correct assert
             REQUIRE(objPropNumEnumFlags.hasFlag(tson::TestEnumNumberFlags::HasCalculatorFlag | tson::TestEnumNumberFlags::HasInvisibilityFlag)); //1337 = value not set to correct assert
-            REQUIRE(objPropStrEnum.getValue() == 3); //1337 = value not set to correct assert
+            REQUIRE(objPropStrEnum.getValue() == 2); //1337 = value not set to correct assert
             REQUIRE(objPropStrEnum.getValueName() == "DeletePlayer"); //1337 = value not set to correct assert
             REQUIRE(objPropStrEnumFlags.getValue() == 6); //1337 = value not set to correct assert
             REQUIRE(objPropStrEnumFlags.hasFlag(tson::TestEnumStringFlags::HasJobFlag | tson::TestEnumStringFlags::HasHouseFlag)); //1337 = value not set to correct assert
@@ -314,10 +314,10 @@ TEST_CASE("Parse Tiled v1.9 - expect changed enum values in classes, objects and
             REQUIRE(objClassStrEnumFlags.getDefinition() != nullptr);
             
             REQUIRE(objClassNumEnum.getValue() == 3); //1337 = value not set to correct assert
-            REQUIRE(objClassNumEnum.getValueName() == "UpdateNumber"); //1337 = value not set to correct assert
+            REQUIRE(objClassNumEnum.getValueName() == "GetNumber"); //1337 = value not set to correct assert
             REQUIRE(objClassNumEnumFlags.getValue() == 9); //1337 = value not set to correct assert
             REQUIRE(objClassNumEnumFlags.hasFlag(tson::TestEnumNumberFlags::HasCalculatorFlag | tson::TestEnumNumberFlags::HasInvisibilityFlag)); //1337 = value not set to correct assert
-            REQUIRE(objClassStrEnum.getValue() == 3); //1337 = value not set to correct assert
+            REQUIRE(objClassStrEnum.getValue() == 2); //1337 = value not set to correct assert
             REQUIRE(objClassStrEnum.getValueName() == "DeletePlayer"); //1337 = value not set to correct assert
             REQUIRE(objClassStrEnumFlags.getValue() == 6); //1337 = value not set to correct assert
             REQUIRE(objClassStrEnumFlags.hasFlag(tson::TestEnumStringFlags::HasJobFlag | tson::TestEnumStringFlags::HasHouseFlag)); //1337 = value not set to correct assert
@@ -337,10 +337,10 @@ TEST_CASE("Parse Tiled v1.9 - expect changed enum values in classes, objects and
             REQUIRE(tileClassStrEnumFlags.getDefinition() != nullptr);
             
             REQUIRE(tileClassNumEnum.getValue() == 3); //1337 = value not set to correct assert
-            REQUIRE(tileClassNumEnum.getValueName() == "UpdateNumber"); //1337 = value not set to correct assert
+            REQUIRE(tileClassNumEnum.getValueName() == "GetNumber"); //1337 = value not set to correct assert
             REQUIRE(tileClassNumEnumFlags.getValue() == 9); //1337 = value not set to correct assert
             REQUIRE(tileClassNumEnumFlags.hasFlag(tson::TestEnumNumberFlags::HasCalculatorFlag | tson::TestEnumNumberFlags::HasInvisibilityFlag)); //1337 = value not set to correct assert
-            REQUIRE(tileClassStrEnum.getValue() == 3); //1337 = value not set to correct assert
+            REQUIRE(tileClassStrEnum.getValue() == 2); //1337 = value not set to correct assert
             REQUIRE(tileClassStrEnum.getValueName() == "DeletePlayer"); //1337 = value not set to correct assert
             REQUIRE(tileClassStrEnumFlags.getValue() == 6); //1337 = value not set to correct assert
             REQUIRE(tileClassStrEnumFlags.hasFlag(tson::TestEnumStringFlags::HasJobFlag | tson::TestEnumStringFlags::HasHouseFlag)); //1337 = value not set to correct assert
