@@ -8460,7 +8460,8 @@ bool tson::Tile::parse(IJson &json, tson::Tileset *tileset, tson::Map *map)
 	if(json.count("properties") > 0 && json["properties"].isArray())
 	{
 		auto &properties = json.array("properties");
-		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item, m_map->getProject()); });
+		tson::Project *project = (m_map != nullptr) ? m_map->getProject() : nullptr;
+		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item, project); });
 	}
 
 	performDataCalculations();
@@ -8702,10 +8703,7 @@ bool tson::Layer::parse(IJson &json, tson::Map *map)
 	{
 		auto &properties = json.array("properties");
 		tson::Project *project = (m_map != nullptr) ? m_map->getProject() : nullptr;
-		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item)
-		{
-			m_properties.add(*item, project);
-		});
+		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item, project); });
 	}
 
 	setTypeByString();
@@ -8812,9 +8810,10 @@ bool tson::Object::parse(IJson &json, tson::Map *map)
 	if(json.count("properties") > 0 && json["properties"].isArray())
 	{
 		auto &properties = json.array("properties");
+		tson::Project *project = (m_map != nullptr) ? m_map->getProject() : nullptr;
 		std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item)
 		{
-			m_properties.add(*item, m_map->getProject());
+			m_properties.add(*item, project);
 		});
 	}
 
