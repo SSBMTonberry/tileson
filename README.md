@@ -57,13 +57,14 @@ before you start doing anything.
 https://github.com/SSBMTonberry/tileson/pull/90
 
 # Unreleased features available in the master-branch
+- Fixed bugs related to not being able to resolve `TiledEnum`s in certain contexts ([#98](https://github.com/SSBMTonberry/tileson/pull/98))
 - Tests are now stricter and treats warnings as errors ([#90](https://github.com/SSBMTonberry/tileson/pull/90)) - Thanks to [dmlary](https://github.com/dmlary)
 - CI improvements: Added `MacOS`, separated CI by system and added Clang 12 and 13 support on Linux ([#88](https://github.com/SSBMTonberry/tileson/pull/88))
 - Fixed some Apple Clang 13 compile warnings ([#84](https://github.com/SSBMTonberry/tileson/issues/84)) - Thanks to [dmlary](https://github.com/dmlary)
 - Added `quom` as amalgamate tool for `OSX` ([#82](https://github.com/SSBMTonberry/tileson/issues/82)) - Thanks to [dmlary](https://github.com/dmlary)
 - Added missing properties to `tson::Text` ([#75](https://github.com/SSBMTonberry/tileson/issues/75))
 - Tiled 1.9 support ([#68](https://github.com/SSBMTonberry/tileson/issues/68))
-- Tiled 1.8 support (**Partial!** See issue for more details) ([#60](https://github.com/SSBMTonberry/tileson/issues/60))
+- Tiled 1.8 support ([#60](https://github.com/SSBMTonberry/tileson/issues/60))
 - C++20 support ([#53](https://github.com/SSBMTonberry/tileson/issues/53)) - Thanks to [gamecoder-nz](https://github.com/gamecoder-nz)
 - Updated Catch2 to support `GCC 11.2` ([#59](https://github.com/SSBMTonberry/tileson/issues/59))
 - Tile properties should now be properly loaded when using multiple tilesets. ([#54](https://github.com/SSBMTonberry/tileson/issues/54)) - Thanks to [Laguna1989](https://github.com/Laguna1989)
