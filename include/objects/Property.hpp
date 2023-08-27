@@ -22,18 +22,6 @@ namespace tson
     class Property
     {
         public:
-
-            //enum class Type : uint8_t
-            //{
-            //        Undefined = 0,
-            //        Color = 1, /*! color */
-            //        File = 2, /*! file */
-            //        Int = 3, /*! int */
-            //        Boolean = 4, /*! bool */
-            //        Float = 5, /*! float */
-            //        String = 6 /*! string */
-            //};
-
             inline Property();
             inline explicit Property(IJson &json, tson::Project *project = nullptr);
             inline Property(std::string name, std::any value, Type type);

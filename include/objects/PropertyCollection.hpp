@@ -64,7 +64,7 @@ tson::Property *tson::PropertyCollection::add(const tson::Property &property)
 tson::Property *tson::PropertyCollection::add(IJson &json, tson::Project *project)
 {
     tson::Property property = tson::Property(json, project);
-    const std::string &name = property.getName();
+    const std::string name = property.getName();
     m_properties[name] = std::move(property);
     return &m_properties[name];
 }
