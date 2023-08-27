@@ -58,6 +58,7 @@ https://github.com/SSBMTonberry/tileson/pull/90
 
 # Unreleased features available in the master-branch
 - Fixed bugs related to not being able to resolve `TiledEnum`s in certain contexts ([#98](https://github.com/SSBMTonberry/tileson/pull/98))
+- Fix: Only include `external_libs` folder if examples or tests are required ([#96](https://github.com/SSBMTonberry/tileson/pull/96)) - Thanks to [Laguna1989](https://github.com/Laguna1989)
 - Tests are now stricter and treats warnings as errors ([#90](https://github.com/SSBMTonberry/tileson/pull/90)) - Thanks to [dmlary](https://github.com/dmlary)
 - CI improvements: Added `MacOS`, separated CI by system and added Clang 12 and 13 support on Linux ([#88](https://github.com/SSBMTonberry/tileson/pull/88))
 - Fixed some Apple Clang 13 compile warnings ([#84](https://github.com/SSBMTonberry/tileson/issues/84)) - Thanks to [dmlary](https://github.com/dmlary)
