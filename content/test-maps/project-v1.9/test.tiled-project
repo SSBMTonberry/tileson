@@ -33,6 +33,30 @@
                     "name": "isDummy",
                     "type": "bool",
                     "value": false
+                },
+                {
+                    "name": "num_enum",
+                    "propertyType": "TestEnumNumber",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "num_enum_flags",
+                    "propertyType": "TestEnumNumberFlags",
+                    "type": "int",
+                    "value": 0
+                },
+                {
+                    "name": "str_enum",
+                    "propertyType": "TestEnumString",
+                    "type": "string",
+                    "value": "CreatePlayer"
+                },
+                {
+                    "name": "str_enum_flags",
+                    "propertyType": "TestEnumStringFlags",
+                    "type": "string",
+                    "value": ""
                 }
             ],
             "name": "DummyClass",

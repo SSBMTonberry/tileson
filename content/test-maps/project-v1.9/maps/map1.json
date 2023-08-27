@@ -87,6 +87,47 @@
                  "width":64,
                  "x":327.633099524207,
                  "y":24.2554569088144
+                }, 
+                {
+                 "class":"DummyClass",
+                 "height":27.3334968362192,
+                 "id":4,
+                 "name":"TestObjectEnum",
+                 "properties":[
+                        {
+                         "name":"isDummy",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"num_enum",
+                         "propertytype":"TestEnumNumber",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"num_enum_flags",
+                         "propertytype":"TestEnumNumberFlags",
+                         "type":"int",
+                         "value":9
+                        }, 
+                        {
+                         "name":"str_enum",
+                         "propertytype":"TestEnumString",
+                         "type":"string",
+                         "value":"DeletePlayer"
+                        }, 
+                        {
+                         "name":"str_enum_flags",
+                         "propertytype":"TestEnumStringFlags",
+                         "type":"string",
+                         "value":"HasJobFlag,HasHouseFlag"
+                        }],
+                 "rotation":0,
+                 "visible":true,
+                 "width":35.3699906803355,
+                 "x":159.871290528278,
+                 "y":9.18703095109629
                 }],
          "opacity":1,
          "properties":[
@@ -118,7 +159,7 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":4,
+ "nextobjectid":5,
  "orientation":"orthogonal",
  "properties":[
         {
@@ -203,6 +244,30 @@
                          "name":"isDummy",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"num_enum",
+                         "propertytype":"TestEnumNumber",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"num_enum_flags",
+                         "propertytype":"TestEnumNumberFlags",
+                         "type":"int",
+                         "value":9
+                        }, 
+                        {
+                         "name":"str_enum",
+                         "propertytype":"TestEnumString",
+                         "type":"string",
+                         "value":"DeletePlayer"
+                        }, 
+                        {
+                         "name":"str_enum_flags",
+                         "propertytype":"TestEnumStringFlags",
+                         "type":"string",
+                         "value":"HasJobFlag,HasHouseFlag"
                         }]
                 }],
          "tilewidth":16,

@@ -3,8 +3,8 @@ project(tileson_tests)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DTILESON_UNIT_TEST_USE_SINGLE_HEADER")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTILESON_UNIT_TEST_USE_SINGLE_HEADER")
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DTILESON_UNIT_TEST_USE_SINGLE_HEADER")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTILESON_UNIT_TEST_USE_SINGLE_HEADER")
 
 # Uses the single header file when defined - comment out when creating PR: The cmake version in github doesn't seem to support it.
 # add_compile_definitions(TILESON_UNIT_TEST_USE_SINGLE_HEADER)
@@ -16,7 +16,8 @@ include_directories(${PROJECT_SOURCE_DIR}/../external_libs/ ${PROJECT_SOURCE_DIR
 
 add_executable(tileson_tests tests_main.cpp tests_objects.cpp tests_tiled_nlohmann.cpp tests_reported_issues.cpp
         tests_compression_or_encoding.cpp tests_projects_and_worlds.cpp tests_interfaces.cpp tests_tiled_picojson.cpp
-        tests_benchmarks.cpp tests_tiled_gason.cpp tests_tiled_json11.cpp tests_animation.cpp tests_enums_and_classes.cpp TestTools.hpp)
+        tests_benchmarks.cpp tests_tiled_gason.cpp tests_tiled_json11.cpp tests_animation.cpp tests_enums_and_classes.cpp TestTools.hpp
+        TestEnums.h)
 
 #add_executable(tileson_tests tests_main.cpp tests_tiled_picojson.cpp)
 
