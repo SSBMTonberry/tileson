@@ -964,10 +964,11 @@ TEST_CASE( "Parse a class definition and copy it - expect same properties", "[cl
 
     REQUIRE(c2.getMember("NumFlag")->getType() == tson::Type::Enum);
     REQUIRE(numEnumC2.getValue() == 10);
-    REQUIRE(numEnumC2.hasFlag(tson::TestEnumNumberFlags::HasBombFlag | tson::TestEnumNumberFlags::HasInvisibilityFlag));
-    REQUIRE(numEnumC2.hasFlag(tson::TestEnumNumberFlags::HasBombFlag));
-    REQUIRE(numEnumC2.hasFlag(tson::TestEnumNumberFlags::HasInvisibilityFlag));
-    REQUIRE(!numEnumC2.hasFlag(tson::TestEnumNumberFlags::HasHumorFlag));
+    REQUIRE(numEnumC2.hasFlag(tson::TestEnumNumberFlags::HasBombFlag | tson::TestEnumNumberFlags::HasInvisibilityFlag)); //Has both these flags - OK
+    REQUIRE(numEnumC2.hasFlag(tson::TestEnumNumberFlags::HasBombFlag)); // Has this flag - OK
+    REQUIRE(numEnumC2.hasFlag(tson::TestEnumNumberFlags::HasInvisibilityFlag)); // Has this flag - OK
+    REQUIRE(numEnumC2.hasAnyFlag(tson::TestEnumNumberFlags::HasBombFlag | tson::TestEnumNumberFlags::HasHumorFlag)); //hasAnyFlag is okay as long as one of the flags here are set
+    REQUIRE(!numEnumC2.hasFlag(tson::TestEnumNumberFlags::HasHumorFlag)); //Doesn't have this flag - OK
 
     REQUIRE(c2.getMember("StrFlag")->getType() == tson::Type::Enum);
     REQUIRE(strEnumC2.getValue() == 6);
