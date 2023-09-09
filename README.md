@@ -9,7 +9,7 @@ Tileson is a modern and helpful cross-platform json-parser for C++, used for par
 
 Tileson utilizes modern C++ (C++17) to create a stable, safe and helpful, but fast, parser for Tiled maps.
 Including classes and functions to make it easier to use the Tiled data in your game. 
-Tileson supports Tiled maps up to version `1.6.0`, but will probably be able to parse
+Tileson supports Tiled maps up to version `1.10.2`, but will probably be able to parse
 maps made with newer versions of Tiled just as well.
 
 Be sure to take a look at the release notes to see what's new!
@@ -22,25 +22,34 @@ You may alternatively copy the `include` directory and all its contents if you
 want to have every component in their own file. This will probably be less heavy on your IDE, but you will still only need to include the `tileson.h` file in the top level.
 
 **Content:**
+- [Tileson](#tileson)
+    - [Tileson is header-only](#tileson-is-header-only)
 - [Documentation](#documentation)
+    - [IMPORTANT: Tileson requires that everything it needs in a map is embedded into it, to be able to resolve their related objects (with the exception of external Tilesets, which is supported in json format since v1.3.0). Maps having dependencies to external objects etc. will not work properly.](#important-tileson-requires-that-everything-it-needs-in-a-map-is-embedded-into-it-to-be-able-to-resolve-their-related-objects-with-the-exception-of-external-tilesets-which-is-supported-in-json-format-since-v130-maps-having-dependencies-to-external-objects-etc-will-not-work-properly)
 - [How to contribute](#how-to-contribute)
 - [Unreleased features available in the master-branch](#unreleased-features-available-in-the-master-branch)
-- [What is new in v1.3.0](#what-is-new-in-v1.3.0)
+- [What is new in v1.3.0](#what-is-new-in-v130)
+    - [From the v1.3.0 alpha release:](#from-the-v130-alpha-release)
 - [Tiled features not yet supported](#tiled-features-not-yet-supported)
-- **Parsing:**
-  - [How to parse Tiled maps](#how-to-parse-tiled-maps)
-  - [Parsing worlds](#parsing-worlds)
-  - [Parsing Tiled-projects](#parsing-tiled-projects)
-  - [Parsing LZMA compressed maps](#parsing-lzma-compressed-maps)
-  - [Using an alternative Json parser](#using-an-alternative-json-parser)
+- [What is Tiled?](#what-is-tiled)
+- [How to parse Tiled maps](#how-to-parse-tiled-maps)
+    - [Another quick example to showcase how to get data that can be used to produce drawable objects:](#another-quick-example-to-showcase-how-to-get-data-that-can-be-used-to-produce-drawable-objects)
+    - [Parsing worlds](#parsing-worlds)
+    - [Parsing Tiled-projects](#parsing-tiled-projects)
+    - [Parsing LZMA compressed maps](#parsing-lzma-compressed-maps)
+    - [Using an alternative Json parser](#using-an-alternative-json-parser)
 - [Compiling](#compiling)
   - [Windows](#windows)
+      - [Locate the CMakeLists.txt in the root of this project](#locate-the-cmakeliststxt-in-the-root-of-this-project)
+      - [Configure build to be x86 or x64](#configure-build-to-be-x86-or-x64)
+      - [And then](#and-then)
+      - [Output after full build](#output-after-full-build)
   - [Linux](#linux)
   - [OSX](#osx)
 - [Examples](#examples)
 - [Generating the single-header](#generating-the-single-header)
 - [Libraries used by Tileson](#libraries-used-by-tileson)
-- [Optional Json parsers supported by Tileson](#optional-json-parsers-supported-by-tileson)
+  - [Optional Json parsers supported by Tileson](#optional-json-parsers-supported-by-tileson)
 - [Libraries used in examples](#libraries-used-in-examples)
 
 # Documentation
@@ -53,8 +62,6 @@ There is a `Doxygen` generated documentation of Tileson that can be found [HERE]
 You are free to post any issue requesting new features, reporting bugs or asking questions at any time.
 If you want to contribute in the development of `Tileson`, make sure you read the [CONTRIBUTION GUIDELINES](CONTRIBUTION.md)
 before you start doing anything.
-
-https://github.com/SSBMTonberry/tileson/pull/90
 
 # Unreleased features available in the master-branch
 - Fixed bugs related to not being able to resolve `TiledEnum`s in certain contexts ([#98](https://github.com/SSBMTonberry/tileson/pull/98))
