@@ -248,7 +248,6 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors, t
  */
 tson::IJson* tson::Map::parseLinkedFile(const std::string& relativePath) 
 {
-    IJson* json;
     auto it = m_linkedFiles.find(relativePath);
     if(it == m_linkedFiles.end())
     {

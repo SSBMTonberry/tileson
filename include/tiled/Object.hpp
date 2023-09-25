@@ -113,18 +113,7 @@ namespace tson
     * @param templ The template file json, if present, nullptr otherwise.
     * @return the requested json object if found in the main json file, otherwise if it is found in the template and nullptr if not found anywhere
     */
-        IJson* getField(const std::string& fieldName,  IJson* main, IJson* templ)
-    {
-        if(main->count(fieldName) > 0) 
-        {
-            return &(*main)[fieldName];
-        } else if (templ && templ->count(fieldName) > 0)
-        {
-            return  &(*templ)[fieldName];
-        }
-
-        return nullptr;
-    }
+    inline IJson* getField(const std::string& fieldName,  IJson* main, IJson* templ);
 
 
     /*!
@@ -134,15 +123,7 @@ namespace tson
     * @param templ The template file json, if present, nullptr otherwise.
     * @return true if the field was found and parsed in any of the objects, false otherwise
     */
-    bool getField(Text& field, const std::string& fieldName,  IJson* main, IJson* templ) 
-    {
-        IJson* fieldJson = getField(fieldName, main, templ);
-        if(fieldJson){
-            field = tson::Text(*fieldJson);
-            return true;
-        }
-        return false;
-    }
+   inline bool getField(Text& field, const std::string& fieldName,  IJson* main, IJson* templ);
 
     /*!
     * Attempts to read a series of coordinates from main file or the template if not overriden
@@ -151,21 +132,7 @@ namespace tson
     * @param templ The template file json, if present, nullptr otherwise.
     * @return true if the field was found and parsed in any of the objects, false otherwise
     */
-    bool getField(std::vector<Vector2i>& field, const std::string& fieldName, IJson* main, IJson* templ)
-    {
-        IJson* fieldJson = getField(fieldName, main, templ);
-        if(fieldJson && fieldJson->isArray())
-        {
-            auto &polyline = fieldJson->array(fieldName);
-            std::for_each(polyline.begin(), polyline.end(),[&field](std::unique_ptr<IJson> &item)
-            {
-                IJson &j = *item;
-                field.emplace_back(j["x"].get<int>(), j["y"].get<int>());
-            });
-            return true;
-        }
-        return false;
-    }
+    inline bool getField(std::vector<Vector2i>& field, const std::string& fieldName, IJson* main, IJson* templ);
 
     /*!
     * Attempts to read a field from main file or the template if not overriden

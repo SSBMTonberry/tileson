@@ -350,6 +350,69 @@ tson::TiledClass *tson::Layer::getClass()
 // O b j e c t . h p p
 // --------------------
 
+
+    /*!
+    * Returns the requested IJson object if it exists in the map file or in a related template file
+    * @param fieldName The name of the field to check
+    * @param main The main json file being parsed
+    * @param templ The template file json, if present, nullptr otherwise.
+    * @return the requested json object if found in the main json file, otherwise if it is found in the template and nullptr if not found anywhere
+    */
+        tson::IJson* tson::getField(const std::string& fieldName,  IJson* main, IJson* templ)
+    {
+        if(main->count(fieldName) > 0) 
+        {
+            return &(*main)[fieldName];
+        } else if (templ && templ->count(fieldName) > 0)
+        {
+            return  &(*templ)[fieldName];
+        }
+
+        return nullptr;
+    }
+
+
+    /*!
+    * Attempts to read a text field from main file or the template if not overriden
+    * @param fieldName The name of the field to check
+    * @param main The main json file being parsed
+    * @param templ The template file json, if present, nullptr otherwise.
+    * @return true if the field was found and parsed in any of the objects, false otherwise
+    */
+    bool tson::getField(Text& field, const std::string& fieldName,  IJson* main, IJson* templ) 
+    {
+        IJson* fieldJson = getField(fieldName, main, templ);
+        if(fieldJson){
+            field = tson::Text(*fieldJson);
+            return true;
+        }
+        return false;
+    }
+
+    /*!
+    * Attempts to read a series of coordinates from main file or the template if not overriden
+    * @param fieldName The name of the field to check
+    * @param main The main json file being parsed
+    * @param templ The template file json, if present, nullptr otherwise.
+    * @return true if the field was found and parsed in any of the objects, false otherwise
+    */
+    bool tson::getField(std::vector<Vector2i>& field, const std::string& fieldName, IJson* main, IJson* templ)
+    {
+        IJson* fieldJson = getField(fieldName, main, templ);
+        if(fieldJson && fieldJson->isArray())
+        {
+            auto &polyline = fieldJson->array(fieldName);
+            std::for_each(polyline.begin(), polyline.end(),[&field](std::unique_ptr<IJson> &item)
+            {
+                IJson &j = *item;
+                field.emplace_back(j["x"].get<int>(), j["y"].get<int>());
+            });
+            return true;
+        }
+        return false;
+    }
+
+
 /*!
  * Parses a json Tiled object and automatically determines the object type based on the data presented.
  * Call getObjectType() to see what object type it is.
