@@ -251,6 +251,7 @@ tson::IJson* tson::Map::parseLinkedFile(const std::string& relativePath)
     auto it = m_linkedFiles.find(relativePath);
     if(it == m_linkedFiles.end())
     {
+        if (!m_linkedFileParser) return nullptr;
         std::unique_ptr<IJson> linkedFileJson = m_linkedFileParser(relativePath);
         if(!linkedFileJson)
             return nullptr;

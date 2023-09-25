@@ -401,7 +401,7 @@ tson::TiledClass *tson::Layer::getClass()
         IJson* fieldJson = getField(fieldName, main, templ);
         if(fieldJson && fieldJson->isArray())
         {
-            auto &polyline = fieldJson->array(fieldName);
+            auto polyline = fieldJson->array();
             std::for_each(polyline.begin(), polyline.end(),[&field](std::unique_ptr<IJson> &item)
             {
                 IJson &j = *item;
