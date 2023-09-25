@@ -68,7 +68,7 @@ namespace tson
 
 
         private:
-            inline void setObjectTypeByJson(IJson &json);
+            inline void setObjectTypeByJson(IJson &json, IJson* templ);
 
             ObjectType                        m_objectType = ObjectType::Undefined;    /*! Says with object type this is */
             bool                              m_ellipse {};                            /*! 'ellipse': Used to mark an object as an ellipse */
@@ -105,6 +105,85 @@ namespace tson
     {
         return m_properties.getValue<T>(name);
     }
+
+    /*!
+    * Returns the requested IJson object if it exists in the map file or in a related template file
+    * @param fieldName The name of the field to check
+    * @param main The main json file being parsed
+    * @param templ The template file json, if present, nullptr otherwise.
+    * @return the requested json object if found in the main json file, otherwise if it is found in the template and nullptr if not found anywhere
+    */
+        IJson* getField(const std::string& fieldName,  IJson* main, IJson* templ)
+    {
+        if(main->count(fieldName) > 0) 
+        {
+            return &(*main)[fieldName];
+        } else if (templ && templ->count(fieldName) > 0)
+        {
+            return  &(*templ)[fieldName];
+        }
+
+        return nullptr;
+    }
+
+
+    /*!
+    * Attempts to read a text field from main file or the template if not overriden
+    * @param fieldName The name of the field to check
+    * @param main The main json file being parsed
+    * @param templ The template file json, if present, nullptr otherwise.
+    * @return true if the field was found and parsed in any of the objects, false otherwise
+    */
+    bool getField(Text& field, const std::string& fieldName,  IJson* main, IJson* templ) 
+    {
+        IJson* fieldJson = getField(fieldName, main, templ);
+        if(fieldJson){
+            field = tson::Text(*fieldJson);
+            return true;
+        }
+        return false;
+    }
+
+    /*!
+    * Attempts to read a series of coordinates from main file or the template if not overriden
+    * @param fieldName The name of the field to check
+    * @param main The main json file being parsed
+    * @param templ The template file json, if present, nullptr otherwise.
+    * @return true if the field was found and parsed in any of the objects, false otherwise
+    */
+    bool getField(std::vector<Vector2i>& field, const std::string& fieldName, IJson* main, IJson* templ)
+    {
+        IJson* fieldJson = getField(fieldName, main, templ);
+        if(fieldJson && fieldJson->isArray())
+        {
+            auto &polyline = fieldJson->array(fieldName);
+            std::for_each(polyline.begin(), polyline.end(),[&field](std::unique_ptr<IJson> &item)
+            {
+                IJson &j = *item;
+                field.emplace_back(j["x"].get<int>(), j["y"].get<int>());
+            });
+            return true;
+        }
+        return false;
+    }
+
+    /*!
+    * Attempts to read a field from main file or the template if not overriden
+    * @param fieldName The name of the field to check
+    * @param main The main json file being parsed
+    * @param templ The template file json, if present, nullptr otherwise.
+    * @return true if the field was found and parsed in any of the objects, false otherwise
+    */
+    template <typename T> bool getField(T& field, const std::string& fieldName,  IJson* main, IJson* templ) 
+    {
+        IJson* fieldJson = getField(fieldName, main, templ);
+        if(fieldJson){
+            field = fieldJson->get<T>();
+            return true;
+        }
+        return false;
+    }
+
 }
 
 /*!
@@ -121,20 +200,20 @@ tson::Object::Object(IJson &json, tson::Map *map)
  * Sets an object type based on json data.
  * @param json
  */
-void tson::Object::setObjectTypeByJson(IJson &json)
+void tson::Object::setObjectTypeByJson(IJson &json, IJson* templ)
 {
     m_objectType = ObjectType::Undefined;
     if(m_ellipse)
         m_objectType = ObjectType::Ellipse;
     else if(m_point)
         m_objectType = ObjectType::Point;
-    else if(json.count("polygon") > 0)
+    else if(getField("polygon", &json, templ))
         m_objectType = ObjectType::Polygon;
-    else if(json.count("polyline") > 0)
+    else if(getField("polyline", &json, templ))
         m_objectType = ObjectType::Polyline;
-    else if(json.count("text") > 0)
+    else if(getField("text", &json, templ))
         m_objectType = ObjectType::Text;
-    else if(json.count("gid") > 0)
+    else if(getField("gid", &json, templ))
         m_objectType = ObjectType::Object;
     else if(json.count("template") > 0)
         m_objectType = ObjectType::Template;

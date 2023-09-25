@@ -351,7 +351,7 @@ tson::TiledClass *tson::Layer::getClass()
 // --------------------
 
 /*!
- * Parses a json Tiled object and autoamtically determines the object type based on the data presented.
+ * Parses a json Tiled object and automatically determines the object type based on the data presented.
  * Call getObjectType() to see what object type it is.
  * @param json
  * @return true if all mandatory fields was found. false otherwise.
@@ -360,11 +360,27 @@ bool tson::Object::parse(IJson &json, tson::Map *map)
 {
     m_map = map;
     bool allFound = true;
+    IJson* templateJson = nullptr;
     
-    if(json.count("ellipse") > 0) m_ellipse = json["ellipse"].get<bool>(); //Optional
-    if(json.count("gid") > 0)
+    if(json.count("template") > 0) //Optional
     {
-        uint32_t gid = json["gid"].get<uint32_t>(); //Optional
+        m_template = json["template"].get<std::string>();
+        if(m_template != "" && map != nullptr)
+        {
+            IJson* tobjJsonFile = map->parseLinkedFile(m_template);
+            if(tobjJsonFile && tobjJsonFile->count("object") > 0) {
+                templateJson = &tobjJsonFile->at("object");
+            }
+        }
+    }
+
+    getField(m_ellipse, "ellipse", &json, templateJson);; //Optional
+    getField(m_point, "point", &json, templateJson); // Optional
+    getField(m_text, "text", &json, templateJson);
+    
+    uint32_t gid;
+    if(getField(gid, "gid", &json, templateJson))
+    {
         if (gid & FLIPPED_HORIZONTALLY_FLAG) m_flipFlags |= TileFlipFlags::Horizontally;
         if (gid & FLIPPED_VERTICALLY_FLAG) m_flipFlags |= TileFlipFlags::Vertically;
         if (gid & FLIPPED_DIAGONALLY_FLAG) m_flipFlags |= TileFlipFlags::Diagonally;
@@ -374,70 +390,47 @@ bool tson::Object::parse(IJson &json, tson::Map *map)
         
         m_gid = gid;
     }
-    if(json.count("id") > 0) m_id = json["id"].get<int>(); else allFound = false;
-    if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
-    if(json.count("point") > 0) m_point = json["point"].get<bool>(); //Optional
-    if(json.count("rotation") > 0) m_rotation = json["rotation"].get<float>(); else allFound = false;
-    if(json.count("template") > 0) m_template = json["template"].get<std::string>(); //Optional
     
-    if(json.count("type") > 0) m_type = json["type"].get<std::string>();
-    else if(json.count("class") > 0) m_type = json["class"].get<std::string>(); //Tiled v1.9 renamed 'type' to 'class'
+    allFound &= getField(m_id, "id", &json, templateJson);
+    allFound &= getField(m_name, "name", &json, templateJson);
+    allFound &= getField(m_rotation, "rotation", &json, templateJson);
+    allFound &= getField(m_type, "type", &json, templateJson) || getField(m_type, "class", &json, templateJson); //Tiled v1.9 renamed 'type' to 'class'
+    allFound &= getField(m_visible, "visible", &json, templateJson);
+    
+    int width = 0, height = 0;
+    if(getField(width, "width", &json, templateJson) && getField(height, "height", &json, templateJson))
+        m_size = {width, height};
     else allFound = false;
-    
-    if(json.count("visible") > 0) m_visible = json["visible"].get<bool>(); else allFound = false;
-    
-    if(json.count("width") > 0 && json.count("height") > 0)
-        m_size = {json["width"].get<int>(), json["height"].get<int>()}; else allFound = false;
+
     if(json.count("x") > 0 && json.count("y") > 0)
         m_position = {json["x"].get<int>(), json["y"].get<int>()}; else allFound = false;
     
-    if(json.count("text") > 0)
-    {
-        //Old logic
-        //bool hasColor = json["text"].count("color") > 0;
-        //tson::Color c = (hasColor) ? tson::Colori(json["text"]["color"].get<std::string>()) : tson::Colori();
-        //m_text = {json["text"]["text"].get<std::string>(), json["text"]["wrap"].get<bool>(), c}; //Optional
-        m_text = tson::Text(json["text"]);
-        //
-        
-    }
+
     
-    setObjectTypeByJson(json);
+    setObjectTypeByJson(json, templateJson); 
     
     if(m_objectType == ObjectType::Template)
         allFound = true; //Just accept anything with this type
     
     //More advanced data
-    if(json.count("polygon") > 0 && json["polygon"].isArray())
-    {
-        auto &polygon = json.array("polygon");
-        std::for_each(polygon.begin(), polygon.end(),[&](std::unique_ptr<IJson> &item)
+    getField(m_polygon, "polygon", &json, templateJson);
+    getField(m_polyline, "polyline", &json, templateJson);
+
+    auto readProperties = [&](IJson* j){
+        if(j->count("properties") > 0 && (*j)["properties"].isArray())
         {
-            IJson &j = *item;
-            m_polygon.emplace_back(j["x"].get<int>(), j["y"].get<int>());
-        });
-        
-    }
-    
-    if(json.count("polyline") > 0 && json["polyline"].isArray())
-    {
-        auto &polyline = json.array("polyline");
-        std::for_each(polyline.begin(), polyline.end(),[&](std::unique_ptr<IJson> &item)
-        {
-            IJson &j = *item;
-            m_polyline.emplace_back(j["x"].get<int>(), j["y"].get<int>());
-        });
-    }
-    
-    if(json.count("properties") > 0 && json["properties"].isArray())
-    {
-        auto &properties = json.array("properties");
-        tson::Project *project = (m_map != nullptr) ? m_map->getProject() : nullptr;
-        std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item)
-        {
-            m_properties.add(*item, project);
-        });
-    }
+            auto &properties = j->array("properties");
+            tson::Project *project = (m_map != nullptr) ? m_map->getProject() : nullptr;
+            std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item)
+            {
+                m_properties.add(*item, project);
+            });
+        }        
+    };
+
+    // merge properties with template's.
+    if(templateJson) readProperties(templateJson);
+    readProperties(&json);
     
     return allFound;
 }
