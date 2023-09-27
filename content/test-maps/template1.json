@@ -1,0 +1,24 @@
+{ "object":
+    {
+     "ellipse":true,
+     "height":100,
+     "id":1,
+     "name":"Some Ellipse",
+     "properties":[
+            {
+             "name":"armor",
+             "type":"int",
+             "value":50
+            }, 
+            {
+             "name":"hit points",
+             "type":"int",
+             "value":100
+            }],
+     "rotation":0,
+     "type":"CIRCLE",
+     "visible":true,
+     "width":100
+    },
+ "type":"template"
+}

@@ -238,6 +238,8 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors, t
 
     processData();
 
+    m_linkedFiles.clear(); // close all open linked json files
+
     return allFound;
 }
 
