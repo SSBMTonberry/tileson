@@ -50,13 +50,14 @@ If the parameters speaks for themselves, you are free to leave these blank, if y
 This means that any changes in the `.hpp` files will be overwritten, eventually, 
 so make sure you do your changes in the right place.
 
-### 6. Make sure the examples still works before you do a pull request.
+### 6. Make sure the examples still works before you do a pull request, and the singleheaders are up to date
 The examples use the generated `tileson.hpp` file, so you need to make sure this file 
 is up to date and compiles when adding new features. This can be done by simply going
-to the `tools` folder and run the `amalgamate_script.bat` if you're on Windows, or
-`amalgamate_script.sh` if you're on Linux. There will be added a MAC/OSX version of 
-this script as well. If you are a MAC user and this script is not available, 
-you can skip this step and leave it to me.
+to the `tools` folder and run the `amalgamate` script fitting your system in a `terminal` or `command prompt`:
+
+- **On Windows**: `amalgamate_script.bat`
+- **On Linux**: `amalgamate_script.sh`
+- **On Mac**: `amalgamate_osx.sh`
 
 To build examples in a local environment, you'll have to set the CMake flags for 
 `BUILD_EXAMPLES` and `CLEAR_TSON_CMAKE_CACHE` to `ON`. You might also need to reload 

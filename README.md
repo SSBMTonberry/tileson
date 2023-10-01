@@ -9,7 +9,7 @@ Tileson is a modern and helpful cross-platform json-parser for C++, used for par
 
 Tileson utilizes modern C++ (C++17) to create a stable, safe and helpful, but fast, parser for Tiled maps.
 Including classes and functions to make it easier to use the Tiled data in your game. 
-Tileson supports Tiled maps up to version `1.6.0`, but will probably be able to parse
+Tileson supports Tiled maps up to version `1.10.2`, but will probably be able to parse
 maps made with newer versions of Tiled just as well.
 
 Be sure to take a look at the release notes to see what's new!
@@ -22,25 +22,34 @@ You may alternatively copy the `include` directory and all its contents if you
 want to have every component in their own file. This will probably be less heavy on your IDE, but you will still only need to include the `tileson.h` file in the top level.
 
 **Content:**
+- [Tileson](#tileson)
+    - [Tileson is header-only](#tileson-is-header-only)
 - [Documentation](#documentation)
+    - [IMPORTANT: Tileson requires that everything it needs in a map is embedded into it, to be able to resolve their related objects (with the exception of external Tilesets, which is supported in json format since v1.3.0). Maps having dependencies to external objects etc. will not work properly.](#important-tileson-requires-that-everything-it-needs-in-a-map-is-embedded-into-it-to-be-able-to-resolve-their-related-objects-with-the-exception-of-external-tilesets-which-is-supported-in-json-format-since-v130-maps-having-dependencies-to-external-objects-etc-will-not-work-properly)
 - [How to contribute](#how-to-contribute)
 - [Unreleased features available in the master-branch](#unreleased-features-available-in-the-master-branch)
-- [What is new in v1.3.0](#what-is-new-in-v1.3.0)
+- [What is new in v1.4.0](#what-is-new-in-v140)
 - [Tiled features not yet supported](#tiled-features-not-yet-supported)
-- **Parsing:**
-  - [How to parse Tiled maps](#how-to-parse-tiled-maps)
-  - [Parsing worlds](#parsing-worlds)
-  - [Parsing Tiled-projects](#parsing-tiled-projects)
-  - [Parsing LZMA compressed maps](#parsing-lzma-compressed-maps)
-  - [Using an alternative Json parser](#using-an-alternative-json-parser)
+- [What is Tiled?](#what-is-tiled)
+- [How to parse Tiled maps](#how-to-parse-tiled-maps)
+    - [Another quick example to showcase how to get data that can be used to produce drawable objects:](#another-quick-example-to-showcase-how-to-get-data-that-can-be-used-to-produce-drawable-objects)
+    - [Parsing worlds](#parsing-worlds)
+    - [Parsing Tiled-projects](#parsing-tiled-projects)
+    - [Using Tiled's class and enum types in Tiled-projects](#using-tileds-class-and-enum-types-in-tiled-projects)
+    - [Parsing LZMA compressed maps](#parsing-lzma-compressed-maps)
+    - [Using an alternative Json parser](#using-an-alternative-json-parser)
 - [Compiling](#compiling)
   - [Windows](#windows)
+      - [Locate the CMakeLists.txt in the root of this project](#locate-the-cmakeliststxt-in-the-root-of-this-project)
+      - [Configure build to be x86 or x64](#configure-build-to-be-x86-or-x64)
+      - [And then](#and-then)
+      - [Output after full build](#output-after-full-build)
   - [Linux](#linux)
   - [OSX](#osx)
 - [Examples](#examples)
 - [Generating the single-header](#generating-the-single-header)
 - [Libraries used by Tileson](#libraries-used-by-tileson)
-- [Optional Json parsers supported by Tileson](#optional-json-parsers-supported-by-tileson)
+  - [Optional Json parsers supported by Tileson](#optional-json-parsers-supported-by-tileson)
 - [Libraries used in examples](#libraries-used-in-examples)
 
 # Documentation
@@ -51,10 +60,12 @@ There is a `Doxygen` generated documentation of Tileson that can be found [HERE]
 
 # How to contribute
 You are free to post any issue requesting new features, reporting bugs or asking questions at any time.
-If you want to contribute in the development of `Tileson`, make sure you read the [CONTRIBUTION GUIDELINES](CONTRIBUTION.md)
-before you start doing anything.
+If you want to contribute in the development of `Tileson`, make sure you read the [CONTRIBUTION GUIDELINES](CONTRIBUTION.md) before you start doing anything.
 
 # Unreleased features available in the master-branch
+- Nothing
+
+# What is new in v1.4.0
 - Fixed bug where template objects did not correctly override properties ([#100](https://github.com/SSBMTonberry/tileson/pull/100)) - Thanks to [jpeletier](https://github.com/jpeletier)
 - Fixed bugs related to not being able to resolve `TiledEnum`s in certain contexts ([#98](https://github.com/SSBMTonberry/tileson/pull/98))
 - Fix: Only include `external_libs` folder if examples or tests are required ([#96](https://github.com/SSBMTonberry/tileson/pull/96)) - Thanks to [Laguna1989](https://github.com/Laguna1989)
@@ -70,20 +81,6 @@ before you start doing anything.
 - Tile properties should now be properly loaded when using multiple tilesets. ([#54](https://github.com/SSBMTonberry/tileson/issues/54)) - Thanks to [Laguna1989](https://github.com/Laguna1989)
 - Now using `Github Actions` instead of `Travis` for CI ([#50](https://github.com/SSBMTonberry/tileson/issues/50)) - Thanks to [Laguna1989](https://github.com/Laguna1989)
 - Added missing virtual destructor to IJson and IDecompressor. ([#47](https://github.com/SSBMTonberry/tileson/issues/47)) - Thanks to [matthew-nagy](https://github.com/matthew-nagy)
-
-# What is new in v1.3.0
-- Animations are now handled by an own `tson::Animation` object, which is also now showcased with a working animation in the example program ([#40](https://github.com/SSBMTonberry/tileson/issues/40), [#32](https://github.com/SSBMTonberry/tileson/issues/32))
-- Fixed a bug in `tson::Frame` where you would get the wrong tile ID stored. ([#41](https://github.com/SSBMTonberry/tileson/issues/41))
-- `tson::Layer`: Function `getTransparentcolor()`renamed to `getTransparentColor()` ([#38](https://github.com/SSBMTonberry/tileson/issues/38)) - Thanks to [RobLoach](https://github.com/RobLoach)
-- Tiled v1.6 support. ([#37](https://github.com/SSBMTonberry/tileson/issues/37))
-- Tiled v1.5 support. ([#34](https://github.com/SSBMTonberry/tileson/issues/34))
-- Support for external tilesets ([#33](https://github.com/SSBMTonberry/tileson/issues/33))
-- `tileson.hpp` and `tileson_min.hpp` is now located in root folder. ([#36](https://github.com/SSBMTonberry/tileson/issues/36))
-- See release notes for more details!
-  ### From the v1.3.0 alpha release:
-- Tileson now uses a `tson::IJson` abstraction layer, which means the user is no longer restricted to use one Json parser. In fact, there are now three parsers with default implementations: `Json11`, `Nlohmann` and `Picojson`. You may even create your own!
-- The code base of Tileson is reduced from ~26000 to ~7000 lines of code. In addition Tileson is slightly faster due to switching default/main backend from `Nlohmann` to `Json11`.
-- Tileson now has support for reading `LZMA` compressed maps using [PocketLzma](https://github.com/SSBMTonberry/pocketlzma).  Example: The `ultimate_test.json` map gets reduced from `68,6 KiB` to `2,4 KiB` when LZMA compressed.
 
 # Tiled features not yet supported
 - Support for collection of images ([#30](https://github.com/SSBMTonberry/tileson/issues/30))
@@ -372,6 +369,117 @@ for(const auto &folder : m_project.getFolders())
 }
 ```
 
+### Using Tiled's class and enum types in Tiled-projects
+```c++
+fs::path pathToUse = fs::path("path/to/project.tiled-project");
+tson::Project project{pathToUse};
+auto folderFiles = project.getFolders().at(0).getFiles();
+
+for(fs::path &f: folderFiles)
+{
+    fs::path path = project.getFolders().at(0).getPath() / f.filename();
+    std::string filename = f.filename().generic_string();
+    if(filename == "map1.json")
+    {
+        tson::Tileson t{&project};
+        std::unique_ptr<tson::Map> m = t.parse(path);
+        tson::Layer *objectLayer = m->getLayer("Da Object Layer");
+
+        //Get class from object
+        tson::TiledClass *objectClass = objectLayer->firstObj("TestObject")->getClass(); 
+        
+        //Asserts as example how to use members
+        REQUIRE(objectClass != nullptr);
+        REQUIRE(objectClass->getName() == "Enemy");
+        REQUIRE(objectClass->get<int>("hp") == 10);
+        REQUIRE(objectClass->get<std::string>("name") == "Galderino");
+
+        //Get class from tile
+        tson::Tile *tile = m->getTileset("demo-tileset")->getTile(1);
+        tson::TiledClass *tileClass = tile->getClass();
+
+        //Example how to get member of different types with asserts
+        REQUIRE(objectClass->getMember("Age")->getType() == tson::Type::Int);
+        REQUIRE(objectClass->getMember("Age")->getValue<int>() == 49);
+        REQUIRE(objectClass->get<int>("Age") == 49);
+        REQUIRE(objectClass->getMember("CanDestroy")->getType() == tson::Type::Boolean);
+        REQUIRE(objectClass->get<bool>("CanDestroy"));
+        REQUIRE(objectClass->getMember("ExtraFile")->getType() == tson::Type::File);
+        REQUIRE(objectClass->get<fs::path>("ExtraFile") == fs::path("../ultimate_test.json"));
+        REQUIRE(objectClass->getMember("MoneyInBag")->getType() == tson::Type::Float);
+        REQUIRE(tson::Tools::Equal(objectClass->get<float>("MoneyInBag"), 16.9344f));
+        REQUIRE(objectClass->getMember("MyObject")->getType() == tson::Type::Object);
+        REQUIRE(objectClass->get<uint32_t>("MyObject") == 39);
+        REQUIRE(objectClass->getMember("Name")->getType() == tson::Type::String);
+        REQUIRE(objectClass->get<std::string>("Name") == "James Testolini");
+        REQUIRE(objectClass->getMember("ShoeColor")->getType() == tson::Type::Color);
+        tson::Colori color = objectClass->get<tson::Colori>("ShoeColor");
+        REQUIRE(color == "#ff069504");
+        REQUIRE(color.a == 0xff);
+        REQUIRE(color.r == 0x06);
+        REQUIRE(color.g == 0x95);
+        REQUIRE(color.b == 0x04);
+
+        //Example of different enum properties stored within objects
+        //Numeric and string based enums with and without flag properties
+        tson::Object *enumObj = objectLayer->firstObj("TestObjectEnum");
+        tson::TiledClass *objectClassEnum = enumObj->getClass(); //Object is changed from default values
+        tson::TiledClass *tileClassEnum = tileClass;
+        
+        REQUIRE(enumObj->getProp("num_enum") != nullptr);
+        tson::EnumValue objPropNumEnum = enumObj->get<tson::EnumValue>("num_enum");
+        REQUIRE(enumObj->getProp("num_enum_flags") != nullptr);
+        tson::EnumValue objPropNumEnumFlags = enumObj->get<tson::EnumValue>("num_enum_flags");
+        REQUIRE(enumObj->getProp("str_enum") != nullptr);
+        tson::EnumValue objPropStrEnum = enumObj->get<tson::EnumValue>("str_enum");
+        REQUIRE(enumObj->getProp("str_enum_flags") != nullptr);
+        tson::EnumValue objPropStrEnumFlags = enumObj->get<tson::EnumValue>("str_enum_flags");
+
+
+        REQUIRE(objPropNumEnum.getValue() == 3); 
+        REQUIRE(objPropNumEnum.getValueName() == "GetNumber"); 
+        REQUIRE(objPropNumEnumFlags.getValue() == 9); 
+        //Flags enums (numeric and string) may use custom enum classes, as long as they have applied flags logic applied to them. See details how this can be achieved below this code example
+        REQUIRE(objPropNumEnumFlags.hasFlag(tson::TestEnumNumberFlags::HasCalculatorFlag | tson::TestEnumNumberFlags::HasInvisibilityFlag)); 
+        REQUIRE(objPropStrEnum.getValue() == 2); 
+        REQUIRE(objPropStrEnum.getValueName() == "DeletePlayer"); 
+        REQUIRE(objPropStrEnumFlags.getValue() == 6); 
+        REQUIRE(objPropStrEnumFlags.hasFlag(tson::TestEnumStringFlags::HasJobFlag | tson::TestEnumStringFlags::HasHouseFlag));
+
+        //Another example with flags more in depth
+        tson::EnumValue numEnumC2 = someClass.getMember("NumFlag")->getValue<tson::EnumValue>();
+        tson::EnumValue strEnumC2 = someClass.getMember("StrFlag")->getValue<tson::EnumValue>(); //Not used here, but will work in the same way
+
+        REQUIRE(someClass.getMember("NumFlag")->getType() == tson::Type::Enum);
+        REQUIRE(numEnumC2.getValue() == 10);
+        REQUIRE(numEnumC2.hasFlag(tson::TestEnumNumberFlags::HasBombFlag | tson::TestEnumNumberFlags::HasInvisibilityFlag)); //Has both these flags - OK
+        REQUIRE(numEnumC2.hasFlag(tson::TestEnumNumberFlags::HasBombFlag)); // Has this flag - OK
+        REQUIRE(numEnumC2.hasFlag(tson::TestEnumNumberFlags::HasInvisibilityFlag)); // Has this flag - OK
+        REQUIRE(numEnumC2.hasAnyFlag(tson::TestEnumNumberFlags::HasBombFlag | tson::TestEnumNumberFlags::HasHumorFlag)); //hasAnyFlag is okay as long as one of the flags here are set
+        REQUIRE(!numEnumC2.hasFlag(tson::TestEnumNumberFlags::HasHumorFlag)); //Doesn't have this flag - OK
+    }
+}
+```
+
+The enum bitflags used in the examples above, uses a macro defined in [include/common/EnumBitflags.hpp](https://github.com/SSBMTonberry/tileson/blob/master/include/common/EnumBitflags.hpp) to be able to use them for bitflag checks. The only restriction this macro has, it's that it requires the `tson` namespace of any enums using it. With that in mind, here is an example how to create a flags enum:
+```c++
+namespace tson
+{
+    enum class ExampleFlags : uint32_t
+    {
+        None = 0,
+        Big = 1 << 0,
+        Slippery = 1 << 1,
+        Funny = 1 << 2,
+        Lazy = 1 << 3,
+        All = Big | Slippery | Funny | Lazy
+    };
+}
+
+TILESON_ENABLE_BITMASK_OPERATORS(ExampleFlags)
+```
+If you need the flags to be another namespace: Feel free to just steal the code and modify it for you own use.
+
 ### Parsing LZMA compressed maps
 Tileson supports reading fully LZMA compressed Tiled-maps. 
 LZMA compression can greatly reduce your file size, and does not take much longer to load 
@@ -468,11 +576,11 @@ You can find examples on how to draw the `demo maps`/`projects` using frameworks
 To build this, you will have to enable the CMake flag `BUILD_EXAMPLES`. All examples requires `C++17 std::filesystem` to work, and will fail to build on compilers not supporting this feature.
 
 # Generating the single-header
-
-If Linux is used, a single-header version of Tileson can be generated by calling the 
-`amalgamate_script.sh` in the `tools/`folder.
-Simply call it like this: `sh amalgamate_script.sh`. There is also a .bat-version of this script for Windows.
-
+A single-header version of Tileson can be generated by calling the an `amalgamate` script in the `tools/` folder.
+Depending on your system, you'd like to run one of the following scripts from a `terminal` or `command prompt`:
+- **On Windows**: `amalgamate_script.bat`
+- **On Linux**: `amalgamate_script.sh`
+- **On Mac**: `amalgamate_osx.sh`
 
 # Libraries used by Tileson
 
