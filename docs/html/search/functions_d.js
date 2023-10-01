@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['object_0',['Object',['../classtson_1_1Object.html#ad1fde9d6453d6540e059464c602a9fa3',1,'tson::Object::Object(IJson &amp;json, tson::Map *map)'],['../classtson_1_1Object.html#a21457f0596184e36e69852a730bda829',1,'tson::Object::Object()=default']]],
+  ['object_0',['object',['../classtson_1_1Object.html#ad1fde9d6453d6540e059464c602a9fa3',1,'tson::Object::Object(IJson &amp;json, tson::Map *map)'],['../classtson_1_1Object.html#a21457f0596184e36e69852a730bda829',1,'tson::Object::Object()=default']]],
   ['onlyshowadjacentmaps_1',['onlyShowAdjacentMaps',['../classtson_1_1World.html#a11323f68497548bfe1eb29ed5d2f05c9',1,'tson::World']]],
   ['operator_21_3d_2',['operator!=',['../classtson_1_1Color.html#ab5fbaa7f56a3f0caa42fe806ca300b0a',1,'tson::Color::operator!=()'],['../classtson_1_1Rect.html#af6040ebc88b27fe17533c501faa6c178',1,'tson::Rect::operator!=()'],['../classtson_1_1Vector2.html#ad55b3afcdce7473fb3a5c25e76952848',1,'tson::Vector2::operator!=()']]],
   ['operator_26_3',['operator&amp;',['../namespacetson.html#ac7e9fbc53b72a5fb5075b8bd769da776',1,'tson']]],

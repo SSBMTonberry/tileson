@@ -60,8 +60,7 @@ There is a `Doxygen` generated documentation of Tileson that can be found [HERE]
 
 # How to contribute
 You are free to post any issue requesting new features, reporting bugs or asking questions at any time.
-If you want to contribute in the development of `Tileson`, make sure you read the [CONTRIBUTION GUIDELINES](CONTRIBUTION.md)
-before you start doing anything.
+If you want to contribute in the development of `Tileson`, make sure you read the [CONTRIBUTION GUIDELINES](CONTRIBUTION.md) before you start doing anything.
 
 # Unreleased features available in the master-branch
 - Nothing

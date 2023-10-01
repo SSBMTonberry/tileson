@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['object_0',['Object',['../classtson_1_1Object.html#a21457f0596184e36e69852a730bda829',1,'tson::Object::Object()=default'],['../classtson_1_1Object.html#ad1fde9d6453d6540e059464c602a9fa3',1,'tson::Object::Object(IJson &amp;json, tson::Map *map)'],['../namespacetson.html#a7316610048678651b4f11a7319bee3f8a497031794414a552435f90151ac3b54b',1,'tson::Object()'],['../namespacetson.html#a072f9f86eaa4189282ed315ddfde0094a497031794414a552435f90151ac3b54b',1,'tson::Object()'],['../classtson_1_1Object.html',1,'tson::Object']]],
+  ['object_0',['object',['../classtson_1_1Map.html#a0720b5f434e636e22a3ed34f847eec57',1,'tson::Map::Object'],['../classtson_1_1Object.html#a21457f0596184e36e69852a730bda829',1,'tson::Object::Object()=default'],['../classtson_1_1Object.html#ad1fde9d6453d6540e059464c602a9fa3',1,'tson::Object::Object(IJson &amp;json, tson::Map *map)'],['../namespacetson.html#a7316610048678651b4f11a7319bee3f8a497031794414a552435f90151ac3b54b',1,'tson::Object'],['../namespacetson.html#a072f9f86eaa4189282ed315ddfde0094a497031794414a552435f90151ac3b54b',1,'tson::Object'],['../classtson_1_1Object.html',1,'tson::Object']]],
   ['object_2ehpp_1',['Object.hpp',['../Object_8hpp.html',1,'']]],
   ['objectalignment_2',['ObjectAlignment',['../namespacetson.html#ada2375f45be683cd0407a7b43ad8e5e7',1,'tson']]],
   ['objectgroup_3',['ObjectGroup',['../namespacetson.html#ac06ac2288d940483c17a83daf587780da03d81c8b3dfdf88091a261d6a92f75a6',1,'tson']]],
