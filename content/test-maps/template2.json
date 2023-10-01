@@ -1,0 +1,18 @@
+{
+  "object": {
+    "height": 100,
+    "id": 5,
+    "name": "",
+    "rotation": 0,
+    "text": {
+      "fontfamily": "Sans Serif",
+      "pixelsize": 48,
+      "text": "Placeholder text",
+      "wrap": true
+    },
+    "type": "",
+    "visible": true,
+    "width": 330
+  },
+  "type": "template"
+}

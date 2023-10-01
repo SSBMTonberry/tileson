@@ -68,7 +68,7 @@ namespace tson
 
 
         private:
-            inline void setObjectTypeByJson(IJson &json);
+            inline void setObjectTypeByJson(IJson &json, IJson* templ);
 
             ObjectType                        m_objectType = ObjectType::Undefined;    /*! Says with object type this is */
             bool                              m_ellipse {};                            /*! 'ellipse': Used to mark an object as an ellipse */
@@ -105,6 +105,78 @@ namespace tson
     {
         return m_properties.getValue<T>(name);
     }
+
+    /*!
+    * Returns the requested IJson object if it exists in the map file or in a related template file
+    * @param fieldName The name of the field to check
+    * @param main The main json file being parsed
+    * @param templ The template file json, if present, nullptr otherwise.
+    * @return the requested json object if found in the main json file, otherwise if it is found in the template and nullptr if not found anywhere
+    */
+    inline IJson* readField(const std::string& fieldName,  IJson& main, IJson* templ = nullptr);
+
+
+    /*!
+    * Attempts to read a text field from main file or the template if not overriden
+    * @param fieldName The name of the field to check
+    * @param main The main json file being parsed
+    * @param templ The template file json, if present, nullptr otherwise.
+    * @return true if the field was found and parsed in any of the objects, false otherwise
+    */
+   inline bool readField(Text& field, const std::string& fieldName,  IJson& main, IJson* templ = nullptr);
+
+    /*!
+    * Attempts to read a series of coordinates from main file or the template if not overriden
+    * @param fieldName The name of the field to check
+    * @param main The main json file being parsed
+    * @param templ The template file json, if present, nullptr otherwise.
+    * @return true if the field was found and parsed in any of the objects, false otherwise
+    */
+    inline bool readField(std::vector<Vector2i>& field, const std::string& fieldName, IJson& main, IJson* templ = nullptr);
+
+    /*!
+    * Attempts to read a field from main file or the template if not overriden
+    * @param fieldName The name of the field to check
+    * @param main The main json file being parsed
+    * @param templ The template file json, if present, nullptr otherwise.
+    * @return true if the field was found and parsed in any of the objects, false otherwise
+    */
+    template <typename T> bool readField(T& field, const std::string& fieldName,  IJson& main, IJson* templ = nullptr) 
+    {
+        IJson* fieldJson = readField(fieldName, main, templ);
+        if(fieldJson){
+            field = fieldJson->get<T>();
+            return true;
+        }
+        return false;
+    }
+
+    /*!
+    * Attempts to read a vector from main file or the template if not overriden
+    * @param field Target variable to fill
+    * @param fieldNameX The name of the field to check for the x part of the vector
+    * @param fieldNameY The name of the field to check for the y part of the vector
+    * @param main The main json file being parsed
+    * @param templ The template file json, if present, nullptr otherwise.
+    * @return true if the field was found and parsed in any of the objects, false otherwise
+    */
+    inline bool readVector(Vector2i& field, const std::string& fieldNameX, const std::string& fieldNameY, IJson& main, IJson* templ = nullptr);
+
+    /*!
+    * Reads all custom properties from the given json node
+    * @param properties Target Properties collection to fill
+    * @param json json node representing the map object
+    * @param map Pointer to current map being parsed
+    */
+    inline void readProperties(tson::PropertyCollection& properties, IJson& json, tson::Map* map);
+
+    /*!
+    * Reads a gid, parsing flip-flags
+    * @param properties Target Properties collection to fill
+    * @param json json node representing the map object
+    * @param map Pointer to current map being parsed
+    */
+    inline void readGid(uint32_t& gid, TileFlipFlags& flags, IJson& main, IJson* templ = nullptr);
 }
 
 /*!
@@ -121,20 +193,20 @@ tson::Object::Object(IJson &json, tson::Map *map)
  * Sets an object type based on json data.
  * @param json
  */
-void tson::Object::setObjectTypeByJson(IJson &json)
+void tson::Object::setObjectTypeByJson(IJson &json, IJson* templ)
 {
     m_objectType = ObjectType::Undefined;
     if(m_ellipse)
         m_objectType = ObjectType::Ellipse;
     else if(m_point)
         m_objectType = ObjectType::Point;
-    else if(json.count("polygon") > 0)
+    else if(readField("polygon", json, templ))
         m_objectType = ObjectType::Polygon;
-    else if(json.count("polyline") > 0)
+    else if(readField("polyline", json, templ))
         m_objectType = ObjectType::Polyline;
-    else if(json.count("text") > 0)
+    else if(readField("text", json, templ))
         m_objectType = ObjectType::Text;
-    else if(json.count("gid") > 0)
+    else if(readField("gid", json, templ))
         m_objectType = ObjectType::Object;
     else if(json.count("template") > 0)
         m_objectType = ObjectType::Template;

@@ -48,6 +48,11 @@ namespace tson
             virtual void directory(const fs::path &directory) = 0;
 
             /*!
+             * Create a new empty instance using the same engine
+            */
+             virtual std::unique_ptr<IJson> create() = 0;
+
+            /*!
 			 * Pure virtual class needs virtual destructor so derived classes can call their own destructors
 			*/
 			virtual ~IJson() = default;

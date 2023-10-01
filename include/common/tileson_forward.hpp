@@ -350,8 +350,133 @@ tson::TiledClass *tson::Layer::getClass()
 // O b j e c t . h p p
 // --------------------
 
+
 /*!
- * Parses a json Tiled object and autoamtically determines the object type based on the data presented.
+* Returns the requested IJson object if it exists in the map file or in a related template file
+* @param fieldName The name of the field to check
+* @param main The main json file being parsed
+* @param templ The template file json, if present, nullptr otherwise.
+* @return the requested json object if found in the main json file, otherwise if it is found in the template and nullptr if not found anywhere
+*/
+    tson::IJson* tson::readField(const std::string& fieldName,  IJson& main, IJson* templ)
+{
+    if(main.count(fieldName) > 0) 
+    {
+        return &main[fieldName];
+    } else if (templ && templ->count(fieldName) > 0)
+    {
+        return  &(*templ)[fieldName];
+    }
+
+    return nullptr;
+}
+
+
+/*!
+* Attempts to read a text field from main file or the template if not overriden
+* @param fieldName The name of the field to check
+* @param main The main json file being parsed
+* @param templ The template file json, if present, nullptr otherwise.
+* @return true if the field was found and parsed in any of the objects, false otherwise
+*/
+bool tson::readField(Text& field, const std::string& fieldName,  IJson& main, IJson* templ) 
+{
+    IJson* fieldJson = readField(fieldName, main, templ);
+    if(fieldJson){
+        field = tson::Text(*fieldJson);
+        return true;
+    }
+    return false;
+}
+
+/*!
+* Attempts to read a series of coordinates from main file or the template if not overriden
+* @param fieldName The name of the field to check
+* @param main The main json file being parsed
+* @param templ The template file json, if present, nullptr otherwise.
+* @return true if the field was found and parsed in any of the objects, false otherwise
+*/
+bool tson::readField(std::vector<Vector2i>& field, const std::string& fieldName, IJson& main, IJson* templ)
+{
+    IJson* fieldJson = readField(fieldName, main, templ);
+    if(fieldJson && fieldJson->isArray())
+    {
+        auto polyline = fieldJson->array();
+        std::for_each(polyline.begin(), polyline.end(),[&field](std::unique_ptr<IJson> &item)
+        {
+            IJson &j = *item;
+            field.emplace_back(j["x"].get<int>(), j["y"].get<int>());
+        });
+        return true;
+    }
+    return false;
+}
+
+/*!
+* Attempts to read a vector from main file or the template if not overriden
+* @param field Target variable to fill
+* @param fieldNameX The name of the field to check for the x part of the vector
+* @param fieldNameY The name of the field to check for the y part of the vector
+* @param main The main json file being parsed
+* @param templ The template file json, if present, nullptr otherwise.
+* @return true if the field was found and parsed in any of the objects, false otherwise
+*/
+bool tson::readVector(Vector2i& field, const std::string& fieldNameX, const std::string& fieldNameY, IJson& main, IJson* templ) 
+{
+    int x = 0, y = 0;
+    if(readField(x, fieldNameX, main, templ) && readField(y, fieldNameY, main, templ))
+    {
+        field = {x, y};
+        return true;
+    }   
+    return false;
+}
+
+/*!
+* Reads all custom properties from the given json node
+* @param properties Target Properties collection to fill
+* @param json json node representing the map object
+* @param map Pointer to current map being parsed
+*/
+void tson::readProperties(tson::PropertyCollection& properties, IJson& json, tson::Map* map) 
+{
+    if(json.count("properties") > 0 && json["properties"].isArray())
+    {
+        auto &props = json.array("properties");
+        tson::Project *project = (map != nullptr) ? map->getProject() : nullptr;
+        std::for_each(props.begin(), props.end(), [&](std::unique_ptr<IJson> &item)
+        {
+            properties.add(*item, project);
+        });
+    }        
+}
+
+/*!
+* Reads a gid, parsing flip-flags
+* @param gid Target gid to fill
+* @param flags Target flip flags to fill
+* @param main The main json file being parsed
+* @param templ The template file json, if present, nullptr otherwise.
+*/
+void tson::readGid(uint32_t& gid, TileFlipFlags& flags, IJson& main, IJson* templ)
+{
+    uint32_t g;
+    if(readField(g, "gid", main, templ))
+    {
+        if (g & FLIPPED_HORIZONTALLY_FLAG) flags |= TileFlipFlags::Horizontally;
+        if (g & FLIPPED_VERTICALLY_FLAG) flags |= TileFlipFlags::Vertically;
+        if (g & FLIPPED_DIAGONALLY_FLAG) flags |= TileFlipFlags::Diagonally;
+        
+        // Clear flags
+        g &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
+        
+        gid = g;
+    }
+}
+
+
+/*!
+ * Parses a json Tiled object and automatically determines the object type based on the data presented.
  * Call getObjectType() to see what object type it is.
  * @param json
  * @return true if all mandatory fields was found. false otherwise.
@@ -360,84 +485,40 @@ bool tson::Object::parse(IJson &json, tson::Map *map)
 {
     m_map = map;
     bool allFound = true;
+    IJson* templateJson = nullptr;
     
-    if(json.count("ellipse") > 0) m_ellipse = json["ellipse"].get<bool>(); //Optional
-    if(json.count("gid") > 0)
+    if(readField(m_template, "template", json) && map != nullptr)
     {
-        uint32_t gid = json["gid"].get<uint32_t>(); //Optional
-        if (gid & FLIPPED_HORIZONTALLY_FLAG) m_flipFlags |= TileFlipFlags::Horizontally;
-        if (gid & FLIPPED_VERTICALLY_FLAG) m_flipFlags |= TileFlipFlags::Vertically;
-        if (gid & FLIPPED_DIAGONALLY_FLAG) m_flipFlags |= TileFlipFlags::Diagonally;
-        
-        // Clear flags
-        gid &= ~(FLIPPED_HORIZONTALLY_FLAG | FLIPPED_VERTICALLY_FLAG | FLIPPED_DIAGONALLY_FLAG);
-        
-        m_gid = gid;
+        IJson* tobjJsonFile = map->parseLinkedFile(m_template);
+        if(tobjJsonFile) 
+            templateJson = readField("object", *tobjJsonFile);
     }
-    if(json.count("id") > 0) m_id = json["id"].get<int>(); else allFound = false;
-    if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
-    if(json.count("point") > 0) m_point = json["point"].get<bool>(); //Optional
-    if(json.count("rotation") > 0) m_rotation = json["rotation"].get<float>(); else allFound = false;
-    if(json.count("template") > 0) m_template = json["template"].get<std::string>(); //Optional
+
+    readField(m_ellipse, "ellipse", json, templateJson); //Optional
+    readField(m_point, "point", json, templateJson); // Optional
+    readField(m_text, "text", json, templateJson);
+    readGid(m_gid, m_flipFlags, json, templateJson);
     
-    if(json.count("type") > 0) m_type = json["type"].get<std::string>();
-    else if(json.count("class") > 0) m_type = json["class"].get<std::string>(); //Tiled v1.9 renamed 'type' to 'class'
-    else allFound = false;
+    allFound &= readField(m_id, "id", json, templateJson);
+    allFound &= readField(m_name, "name", json, templateJson);
+    allFound &= readField(m_rotation, "rotation", json, templateJson);
+    allFound &= readField(m_type, "type", json, templateJson) || readField(m_type, "class", json, templateJson); //Tiled v1.9 renamed 'type' to 'class'
+    allFound &= readField(m_visible, "visible", json, templateJson);
+    allFound &= readVector(m_size, "width", "height", json, templateJson);
+    allFound &= readVector(m_position, "x", "y", json, templateJson);
     
-    if(json.count("visible") > 0) m_visible = json["visible"].get<bool>(); else allFound = false;
-    
-    if(json.count("width") > 0 && json.count("height") > 0)
-        m_size = {json["width"].get<int>(), json["height"].get<int>()}; else allFound = false;
-    if(json.count("x") > 0 && json.count("y") > 0)
-        m_position = {json["x"].get<int>(), json["y"].get<int>()}; else allFound = false;
-    
-    if(json.count("text") > 0)
-    {
-        //Old logic
-        //bool hasColor = json["text"].count("color") > 0;
-        //tson::Color c = (hasColor) ? tson::Colori(json["text"]["color"].get<std::string>()) : tson::Colori();
-        //m_text = {json["text"]["text"].get<std::string>(), json["text"]["wrap"].get<bool>(), c}; //Optional
-        m_text = tson::Text(json["text"]);
-        //
-        
-    }
-    
-    setObjectTypeByJson(json);
+    setObjectTypeByJson(json, templateJson); 
     
     if(m_objectType == ObjectType::Template)
         allFound = true; //Just accept anything with this type
     
     //More advanced data
-    if(json.count("polygon") > 0 && json["polygon"].isArray())
-    {
-        auto &polygon = json.array("polygon");
-        std::for_each(polygon.begin(), polygon.end(),[&](std::unique_ptr<IJson> &item)
-        {
-            IJson &j = *item;
-            m_polygon.emplace_back(j["x"].get<int>(), j["y"].get<int>());
-        });
-        
-    }
-    
-    if(json.count("polyline") > 0 && json["polyline"].isArray())
-    {
-        auto &polyline = json.array("polyline");
-        std::for_each(polyline.begin(), polyline.end(),[&](std::unique_ptr<IJson> &item)
-        {
-            IJson &j = *item;
-            m_polyline.emplace_back(j["x"].get<int>(), j["y"].get<int>());
-        });
-    }
-    
-    if(json.count("properties") > 0 && json["properties"].isArray())
-    {
-        auto &properties = json.array("properties");
-        tson::Project *project = (m_map != nullptr) ? m_map->getProject() : nullptr;
-        std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item)
-        {
-            m_properties.add(*item, project);
-        });
-    }
+    readField(m_polygon, "polygon", json, templateJson);
+    readField(m_polyline, "polyline", json, templateJson);
+
+    // merge properties with template's.
+    if(templateJson) readProperties(m_properties, *templateJson, m_map);
+    readProperties(m_properties, json, m_map);
     
     return allFound;
 }

@@ -328,6 +328,56 @@ TEST_CASE("Parse tileset properties", "[parse]")
     }
 }
 
+TEST_CASE("Parse objects with templates", "[parse]")
+{
+    tson::Tileson t;
+    fs::path pathToUse = GetPathWithBase(fs::path("test-maps/withtemplates.json"));
+
+    std::unique_ptr<tson::Map> map = t.parse({pathToUse});
+    if(map->getStatus() == tson::ParseStatus::OK)
+    {
+        tson::Layer* objectLayer = map->getLayer("Object Layer");
+        REQUIRE(objectLayer != nullptr);
+        tson::Object* obj1 = objectLayer->getObj(1);
+        REQUIRE(obj1 != nullptr);
+        REQUIRE(obj1->getSize() == tson::Vector2i(200,200)); //overriden
+        REQUIRE(obj1->getClassType() == "CIRCLE"); //inherited
+        REQUIRE(obj1->getObjectType() == tson::ObjectType::Ellipse); //inherited
+        REQUIRE(obj1->getName() == "Some Ellipse"); //inherited
+        REQUIRE(obj1->get<int>("armor") == 75); //overriden
+        REQUIRE(obj1->get<int>("hit points") == 100); //inherited
+        REQUIRE(obj1->get<int>("cost") == 33); //added
+
+        tson::Object* obj5 = objectLayer->getObj(5);
+        REQUIRE(obj5 != nullptr);
+        REQUIRE(obj5->getSize() == tson::Vector2i(330,100)); //inherited
+        REQUIRE(obj5->getText().text == "Hello"); // overriden
+        REQUIRE(obj5->getObjectType() == tson::ObjectType::Text); //inherited
+
+        tson::Object* obj6 = objectLayer->getObj(6);
+        REQUIRE(obj6 != nullptr);
+        REQUIRE(obj6->getPolygons() == std::vector<tson::Vector2i>({{0,0},{250,-140}, {270,53}})); // inherited
+        REQUIRE(obj6->get<std::string>("sharpness") == "low"); //overriden
+        REQUIRE(obj6->getObjectType() == tson::ObjectType::Polygon); //inherited
+
+        tson::Object* obj7 = objectLayer->getObj(7);
+        REQUIRE(obj7 != nullptr);
+        REQUIRE(obj7->getSize() == tson::Vector2i(100,100)); //inherited
+        REQUIRE(obj7->getClassType() == "CIRCLE"); //inherited
+        REQUIRE(obj7->getObjectType() == tson::ObjectType::Ellipse); //inherited
+        REQUIRE(obj7->getName() == "Default"); //overriden
+        REQUIRE(obj7->get<int>("armor") == 50); //inherited
+        REQUIRE(obj7->get<int>("hit points") == 100); //inherited
+        REQUIRE(obj7->getObjectType() == tson::ObjectType::Ellipse); //inherited
+    }
+    else
+    {
+        std::cout << "Parsing failed! Path: " << pathToUse.generic_string() << " Status: " << map->getStatusMessage() << std::endl;
+        REQUIRE(false);
+    }
+}
+
+
 TEST_CASE( "Parse a Tiled v1.5 map with external tileset by file - Expect no errors and correct data", "[complete][parse][file]" )
 {
     tson::Tileson t;
