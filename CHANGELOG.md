@@ -95,7 +95,26 @@ for(fs::path &f: folderFiles)
     }
 }
 ```
-  
+
+The enum bitflags used in the examples above, uses a macro defined in [include/common/EnumBitflags.hpp](https://github.com/SSBMTonberry/tileson/blob/master/include/common/EnumBitflags.hpp) to be able to use them for bitflag checks. The only restriction this macro has, it's that it requires the `tson` namespace of any enums using it. With that in mind, here is an example how to create a flags enum:
+```c++
+namespace tson
+{
+    enum class ExampleFlags : uint32_t
+    {
+        None = 0,
+        Big = 1 << 0,
+        Slippery = 1 << 1,
+        Funny = 1 << 2,
+        Lazy = 1 << 3,
+        All = Big | Slippery | Funny | Lazy
+    };
+}
+
+TILESON_ENABLE_BITMASK_OPERATORS(ExampleFlags)
+```
+If you need the flags to be another namespace: Feel free to just steal the code and modify it for you own use.
+
 
 - Added `quom` as amalgamate tool for `OSX` ([#82](https://github.com/SSBMTonberry/tileson/issues/82)) - Thanks to [dmlary](https://github.com/dmlary)
 - Now using `Github Actions` instead of `Travis` for CI ([#50](https://github.com/SSBMTonberry/tileson/issues/50)) - Thanks to [Laguna1989](https://github.com/Laguna1989)
@@ -115,17 +134,7 @@ for(fs::path &f: folderFiles)
 - Should be none.
 
 ## Bug-fixes
+- Fixed bug where template objects did not correctly override properties ([#100](https://github.com/SSBMTonberry/tileson/pull/100)) - Thanks to [jpeletier](https://github.com/jpeletier)
 - Fixed bugs related to not being able to resolve `TiledEnum`s in certain contexts ([#98](https://github.com/SSBMTonberry/tileson/pull/98))
 - Tile properties should now be properly loaded when using multiple tilesets. ([#54](https://github.com/SSBMTonberry/tileson/issues/54)) - Thanks to [Laguna1989](https://github.com/Laguna1989)
 - Added missing virtual destructor to IJson and IDecompressor. ([#47](https://github.com/SSBMTonberry/tileson/issues/47)) - Thanks to [matthew-nagy](https://github.com/matthew-nagy)
-
-## Misc
-
-
-
-
-
-
-
-
-
