@@ -1,0 +1,33 @@
+{
+  "object": {
+    "height": 0,
+    "id": 6,
+    "name": "",
+    "polygon": [
+      {
+        "x": 0,
+        "y": 0
+      },
+      {
+        "x": 250,
+        "y": -140
+      },
+      {
+        "x": 270,
+        "y": 53
+      }
+    ],
+    "properties": [
+      {
+        "name": "sharpness",
+        "type": "string",
+        "value": "high"
+      }
+    ],
+    "rotation": 0,
+    "type": "TRIANGLE",
+    "visible": true,
+    "width": 0
+  },
+  "type": "template"
+}

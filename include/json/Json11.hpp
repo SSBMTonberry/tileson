@@ -225,6 +225,10 @@ namespace tson
                 m_path = directory;
             }
 
+            std::unique_ptr<IJson> create() override
+            {
+                return std::make_unique<Json11>();
+            }
         protected:
             [[nodiscard]] inline int32_t getInt32(std::string_view key) override
             {

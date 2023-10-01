@@ -64,6 +64,7 @@ If you want to contribute in the development of `Tileson`, make sure you read th
 before you start doing anything.
 
 # Unreleased features available in the master-branch
+- Fixed bug where template objects did not correctly override properties ([#100](https://github.com/SSBMTonberry/tileson/pull/100)) - Thanks to [jpeletier](https://github.com/jpeletier)
 - Fixed bugs related to not being able to resolve `TiledEnum`s in certain contexts ([#98](https://github.com/SSBMTonberry/tileson/pull/98))
 - Fix: Only include `external_libs` folder if examples or tests are required ([#96](https://github.com/SSBMTonberry/tileson/pull/96)) - Thanks to [Laguna1989](https://github.com/Laguna1989)
 - Tests are now stricter and treats warnings as errors ([#90](https://github.com/SSBMTonberry/tileson/pull/90)) - Thanks to [dmlary](https://github.com/dmlary)

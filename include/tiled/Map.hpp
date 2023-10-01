@@ -5,6 +5,8 @@
 #ifndef TILESON_MAP_HPP
 #define TILESON_MAP_HPP
 
+#include <functional>
+
 #include "../objects/Color.hpp"
 #include "../objects/Vector2.hpp"
 //#include "../external/json.hpp"
@@ -21,13 +23,16 @@
 
 namespace tson
 {
+    using LinkedFileParser = std::function<std::unique_ptr<IJson>(std::string relativePath)>;
+    class Object;
     class Map
     {
+        friend class Object;
         public:
             inline Map() = default;
             inline Map(ParseStatus status, std::string description);
-            inline explicit Map(IJson &json, tson::DecompressorContainer *decompressors, tson::Project *project);
-            inline bool parse(IJson &json, tson::DecompressorContainer *decompressors, tson::Project *project);
+            inline explicit Map(IJson &json, tson::DecompressorContainer *decompressors, tson::Project *project, tson::LinkedFileParser linkedFileParser = nullptr);
+            inline bool parse(IJson &json, tson::DecompressorContainer *decompressors, tson::Project *project, tson::LinkedFileParser linkedFileParser = nullptr);
 
             [[nodiscard]] inline const Colori &getBackgroundColor() const;
             [[nodiscard]] inline const Vector2i &getSize() const;
@@ -70,6 +75,7 @@ namespace tson
 
 
         private:
+            inline IJson* parseLinkedFile(const std::string& path);
             inline bool createTilesetData(IJson &json);
             inline void processData();
 
@@ -107,6 +113,9 @@ namespace tson
 
             std::string                            m_classType{};              /*! 'class': The class of this map (since 1.9, defaults to “”). */
             std::shared_ptr<tson::TiledClass>      m_class {};
+
+            tson::LinkedFileParser                 m_linkedFileParser;     /*! callback function to parse linked files */
+            std::map<std::string, std::unique_ptr<IJson>> m_linkedFiles;  /*! key: relative path to linked file. Value: Pointer to loaded JSON */
     };
 
     /*!
@@ -135,22 +144,42 @@ tson::Map::Map(tson::ParseStatus status, std::string description) : m_status {st
 /*!
  * Parses a json of a Tiled map.
  * @param json A json object with the format of Map
+ * @param linkedFileParser A callback function that must return a IJson object when a linked file is found in the map
  * @return true if all mandatory fields was found. false otherwise.
  */
-tson::Map::Map(IJson &json, tson::DecompressorContainer *decompressors, tson::Project *project)
+tson::Map::Map(IJson &json, tson::DecompressorContainer *decompressors, tson::Project *project, tson::LinkedFileParser linkedFileParser)
 {
-    parse(json, decompressors, project);
+    parse(json, decompressors, project, linkedFileParser);
 }
 
 /*!
  * Parses a json of a Tiled map.
  * @param json A json object with the format of Map
+ * @param linkedFileParser A callback function that must return a IJson object when a linked file is found in the map
  * @return true if all mandatory fields was found. false otherwise.
  */
-bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors, tson::Project *project)
+bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors, tson::Project *project, tson::LinkedFileParser linkedFileParser)
 {
     m_decompressors = decompressors;
     m_project = project;
+    m_linkedFileParser = linkedFileParser;
+
+    if(!m_linkedFileParser)
+    {  // build a default linked file parser out of processing relative paths to
+       // the main json's location.
+        m_linkedFileParser = [&json](std::string relativePath) -> std::unique_ptr<IJson>
+        {
+            if(json.directory().empty())
+                return nullptr;
+            
+            std::unique_ptr<IJson> linkedFileJson = json.create();
+            bool parseOk = linkedFileJson->parse(json.directory() / relativePath);
+            if(parseOk)
+                return linkedFileJson;
+            else
+                return nullptr;
+        };
+    }
 
     bool allFound = true;
     if(json.count("compressionlevel") > 0)
@@ -209,7 +238,30 @@ bool tson::Map::parse(IJson &json, tson::DecompressorContainer *decompressors, t
 
     processData();
 
+    m_linkedFiles.clear(); // close all open linked json files
+
     return allFound;
+}
+
+/*!
+ * Attempts to parse a linked file found in the map.
+ * @param relativePath Path to the linked file, relative to the map file.
+ * @return a IJson pointer to the parsed file.
+ */
+tson::IJson* tson::Map::parseLinkedFile(const std::string& relativePath) 
+{
+    auto it = m_linkedFiles.find(relativePath);
+    if(it == m_linkedFiles.end())
+    {
+        if (!m_linkedFileParser) return nullptr;
+        std::unique_ptr<IJson> linkedFileJson = m_linkedFileParser(relativePath);
+        if(!linkedFileJson)
+            return nullptr;
+
+        auto result = m_linkedFiles.emplace(relativePath, std::move(linkedFileJson));
+        return result.first->second.get();
+    }
+    else return it->second.get();
 }
 
 /*!

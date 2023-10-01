@@ -7,6 +7,8 @@
 #ifndef TILESON_NLOHMANNJSON_HPP
 #define TILESON_NLOHMANNJSON_HPP
 
+#include <memory>
+
 namespace tson
 {
     class NlohmannJson : public tson::IJson
@@ -162,6 +164,11 @@ namespace tson
             void directory(const fs::path &directory) override
             {
                 m_path = directory;
+            }
+
+            std::unique_ptr<IJson> create() override
+            {
+                return std::make_unique<NlohmannJson>();
             }
 
         protected:
