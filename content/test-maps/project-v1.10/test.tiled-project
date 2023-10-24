@@ -1,0 +1,72 @@
+{
+    "automappingRulesFile": "",
+    "commands": [
+    ],
+    "compatibilityVersion": 1100,
+    "extensionsPath": "extensions",
+    "folders": [
+        "maps",
+        "tilesets"
+    ],
+    "properties": [
+    ],
+    "propertyTypes": [
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 1,
+            "members": [
+                {
+                    "name": "Health",
+                    "type": "float",
+                    "value": 100
+                },
+                {
+                    "name": "Mana",
+                    "type": "float",
+                    "value": 200
+                },
+                {
+                    "name": "Transform",
+                    "propertyType": "Transform",
+                    "type": "class",
+                    "value": {
+                    }
+                }
+            ],
+            "name": "Player",
+            "type": "class",
+            "useAs": [
+                "tileset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffa0a0a4",
+            "drawFill": true,
+            "id": 2,
+            "members": [
+                {
+                    "name": "Rotation",
+                    "type": "float",
+                    "value": 30
+                },
+                {
+                    "name": "X",
+                    "type": "float",
+                    "value": 20
+                },
+                {
+                    "name": "Y",
+                    "type": "float",
+                    "value": 10
+                }
+            ],
+            "name": "Transform",
+            "type": "class",
+            "useAs": [
+                "property"
+            ]
+        }
+    ]
+}
