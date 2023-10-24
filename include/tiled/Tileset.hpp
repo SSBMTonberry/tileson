@@ -20,6 +20,7 @@
 namespace tson
 {
     class Map;
+    class Project;
     class Tileset
     {
         public:
@@ -73,6 +74,9 @@ namespace tson
             #ifndef TSON_TEST_ENABLED
         private:
             #endif
+
+            [[nodiscard]] inline tson::Project *getProject() const;
+
             inline void generateMissingTiles();
 
             int                           m_columns {};       /*! 'columns': The number of tile columns in the tileset */
@@ -212,7 +216,7 @@ bool tson::Tileset::parse(IJson &json, tson::Map *map)
     if(json.count("properties") > 0 && json["properties"].isArray())
     {
         auto &properties = json.array("properties");
-        std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item); });
+        std::for_each(properties.begin(), properties.end(), [&](std::unique_ptr<IJson> &item) { m_properties.add(*item, getProject()); });
     }
 
     if(json.count("objectalignment") > 0)

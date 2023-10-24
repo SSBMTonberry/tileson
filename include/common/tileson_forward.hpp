@@ -180,6 +180,10 @@ tson::TiledClass *tson::Tile::getClass()
 // T i l e s e t . h p p
 // ------------------------
 
+tson::Project *tson::Tileset::getProject() const {
+    return m_map ? m_map->getProject() : nullptr;
+}
+
 tson::TiledClass *tson::Tileset::getClass()
 {
     if(m_class == nullptr)

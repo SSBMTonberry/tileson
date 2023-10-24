@@ -347,3 +347,32 @@ TEST_CASE("Parse Tiled v1.9 - expect changed enum values in classes, objects and
         }
     }
 }
+
+TEST_CASE("Parse Tiled v1.10 - classes used as property values",
+          "[project][map][tileset][class]")
+{
+    fs::path pathToProject = GetPathWithBase(fs::path("test-maps/project-v1.10/test.tiled-project"));
+    REQUIRE(fs::exists(pathToProject));
+
+    tson::Project project{pathToProject};
+    tson::Tileson tileson{&project};
+
+    fs::path pathToMap = GetPathWithBase(fs::path("test-maps/project-v1.10/maps/map1.json"));
+    REQUIRE(fs::exists(pathToMap));
+
+    std::unique_ptr<tson::Map> map = tileson.parse(pathToMap);
+    REQUIRE(map != nullptr);
+
+    tson::Tileset *tileset = map->getTileset("tileset1");
+    REQUIRE(tileset != nullptr);
+
+    tson::TiledClass *tilesetClass = tileset->getClass();
+    REQUIRE(tilesetClass != nullptr);
+
+    REQUIRE(tilesetClass->get<float>("Health") == 200.);
+    REQUIRE(tilesetClass->get<float>("Mana") == 200.);
+
+    REQUIRE(tilesetClass->get<tson::TiledClass>("Transform").get<float>("Rotation") == 40.);
+    REQUIRE(tilesetClass->get<tson::TiledClass>("Transform").get<float>("X") == 20.);
+    REQUIRE(tilesetClass->get<tson::TiledClass>("Transform").get<float>("Y") == 10.);
+}
