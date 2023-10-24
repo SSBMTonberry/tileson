@@ -63,7 +63,7 @@ You are free to post any issue requesting new features, reporting bugs or asking
 If you want to contribute in the development of `Tileson`, make sure you read the [CONTRIBUTION GUIDELINES](CONTRIBUTION.md) before you start doing anything.
 
 # Unreleased features available in the master-branch
-- Nothing
+- Attributes of classes set as properties return zero where overridden ([#105](https://github.com/SSBMTonberry/tileson/pull/105)) - Thanks to [tmpsantos](https://github.com/tmpsantos)
 
 # What is new in v1.4.0
 - Fixed bug where template objects did not correctly override properties ([#100](https://github.com/SSBMTonberry/tileson/pull/100)) - Thanks to [jpeletier](https://github.com/jpeletier)
