@@ -376,3 +376,25 @@ TEST_CASE("Parse Tiled v1.10 - classes used as property values",
     REQUIRE(tilesetClass->get<tson::TiledClass>("Transform").get<float>("X") == 20.);
     REQUIRE(tilesetClass->get<tson::TiledClass>("Transform").get<float>("Y") == 10.);
 }
+
+TEST_CASE("Parse Tiled v1.10 - tile DrawingRect is respected when different from the map tile grid",
+          "[project][map][tileset][tile]")
+{
+    fs::path pathToProject = GetPathWithBase(fs::path("test-maps/project-v1.10/test.tiled-project"));
+    REQUIRE(fs::exists(pathToProject));
+
+    tson::Project project{pathToProject};
+    tson::Tileson tileson{&project};
+
+    fs::path pathToMap = GetPathWithBase(fs::path("test-maps/project-v1.10/maps/map1.json"));
+    REQUIRE(fs::exists(pathToMap));
+
+    std::unique_ptr<tson::Map> map = tileson.parse(pathToMap);
+    REQUIRE(map != nullptr);
+    REQUIRE(map->getTileSize() == tson::Vector2<int>(32, 32));
+
+    tson::Tileset *tileset = map->getTileset("tileset1");
+    REQUIRE(tileset != nullptr);
+    REQUIRE(tileset->getTileSize() == tson::Vector2<int>(16, 16));
+    REQUIRE(tileset->getTile(1)->getDrawingRect() == tson::Rect(0, 0, 16, 16));
+}
