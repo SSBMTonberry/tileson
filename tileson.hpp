@@ -6255,6 +6255,7 @@ namespace tson
 			[[nodiscard]] inline int getFirstgid() const;
 
 			[[nodiscard]] inline const fs::path &getImagePath() const;
+			[[nodiscard]] inline const fs::path &getFullImagePath() const;
 			[[nodiscard]] inline const fs::path &getImage() const;
 			[[nodiscard]] inline const Vector2i &getImageSize() const;
 			[[nodiscard]] inline int getMargin() const;
@@ -6305,6 +6306,7 @@ namespace tson
 			int                           m_firstgid {};      /*! 'firstgid': GID corresponding to the first tile in the set */
 
 			fs::path                      m_image;            /*! 'image': Image used for tiles in this set */
+			fs::path                      m_imagePath;        /*!  Image path relative to the tileset json of this tileset */
 
 			tson::Vector2i                m_imageSize;        /*! x = 'imagewidth' and y = 'imageheight': in pixels */
 			int                           m_margin {};        /*! 'margin': Buffer between image edge and first tile (pixels)*/
@@ -6385,7 +6387,15 @@ bool tson::Tileset::parse(IJson &json, tson::Map *map)
 
 	if(json.count("columns") > 0) m_columns = json["columns"].get<int>(); else allFound = false;
 
-	if(json.count("image") > 0) m_image = fs::path(json["image"].get<std::string>()); else allFound = false;
+	if(json.count("image") > 0)
+	{
+		m_image = fs::path(json["image"].get<std::string>());
+		m_imagePath = m_path.parent_path() / m_image;
+	}
+	else
+	{
+		allFound = false;
+	}
 
 	if(json.count("margin") > 0) m_margin = json["margin"].get<int>(); else allFound = false;
 	if(json.count("name") > 0) m_name = json["name"].get<std::string>(); else allFound = false;
@@ -6478,8 +6488,14 @@ int tson::Tileset::getFirstgid() const
  * 'image': Image used for tiles in this set
  * @return
  */
-
 const fs::path &tson::Tileset::getImagePath() const { return m_image; }
+
+/*!
+ * Gets a path to the image used in this tileset relative to the JSON
+ * file defining this tileset.
+ * @return A path that can be used to open the image file of this tileset.
+ */
+const fs::path &tson::Tileset::getFullImagePath() const { return m_imagePath; }
 
 /*!
  * x = 'imagewidth' and y = 'imageheight': in pixels
