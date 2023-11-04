@@ -1,6 +1,6 @@
 { "class":"Player",
  "columns":8,
- "image":"..\/..\/..\/demo-tileset.png",
+ "image":"..\/images\/demo-tileset.png",
  "imageheight":96,
  "imagewidth":128,
  "margin":0,
