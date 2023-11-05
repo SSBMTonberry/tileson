@@ -7684,7 +7684,7 @@ void tson::Tile::performDataCalculations()
 		int const offsetY =  (currentRow < rows-1) ? (currentRow * m_map->getTileSize().y) : ((rows-1) * m_map->getTileSize().y);
 
 		tson::Vector2i spacing = m_tileset->getMarginSpacingOffset({tileModX, currentRow});
-		m_drawingRect = { offsetX + spacing.x, offsetY + spacing.y, m_map->getTileSize().x, m_map->getTileSize().y };
+		m_drawingRect = { offsetX + spacing.x, offsetY + spacing.y, m_tileset->getTileSize().x, m_tileset->getTileSize().y };
 	}
 	else
 		m_drawingRect = {0, 0, 0, 0};

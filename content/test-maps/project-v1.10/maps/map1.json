@@ -38,13 +38,13 @@
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
- "tileheight":16,
+ "tileheight":32,
  "tilesets":[
         {
          "firstgid":1,
          "source":"..\/tilesets\/tileset1.json"
         }],
- "tilewidth":16,
+ "tilewidth":32,
  "type":"map",
  "version":"1.10",
  "width":30
