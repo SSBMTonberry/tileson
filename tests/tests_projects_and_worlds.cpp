@@ -398,3 +398,24 @@ TEST_CASE("Parse Tiled v1.10 - tile DrawingRect is respected when different from
     REQUIRE(tileset->getTileSize() == tson::Vector2<int>(16, 16));
     REQUIRE(tileset->getTile(1)->getDrawingRect() == tson::Rect(0, 0, 16, 16));
 }
+
+TEST_CASE("Parse Tiled v1.10 - tileset full image path resolves to the image file",
+          "[project][map][tileset]")
+{
+    fs::path pathToProject = GetPathWithBase(fs::path("test-maps/project-v1.10/test.tiled-project"));
+    REQUIRE(fs::exists(pathToProject));
+
+    tson::Project project{pathToProject};
+    tson::Tileson tileson{&project};
+
+    fs::path pathToMap = GetPathWithBase(fs::path("test-maps/project-v1.10/maps/map1.json"));
+    REQUIRE(fs::exists(pathToMap));
+
+    std::unique_ptr<tson::Map> map = tileson.parse(pathToMap);
+    REQUIRE(map != nullptr);
+
+    tson::Tileset *tileset = map->getTileset("tileset1");
+    REQUIRE(tileset != nullptr);
+
+    REQUIRE(fs::exists(tileset->getFullImagePath()));
+}
