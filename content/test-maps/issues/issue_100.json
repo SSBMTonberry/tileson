@@ -1,0 +1,83 @@
+{ "compressionlevel":-1,
+ "height":1,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[0, 0],
+         "height":1,
+         "id":1,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":2,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.10.2",
+ "tileheight":64,
+ "tilesets":[
+    {
+        "columns": 2,
+        "firstgid": 1,
+        "image": "issue_100_tileset.png",
+        "imageheight": 64,
+        "imagewidth": 128,
+        "margin": 0,
+        "name": "tileset_1",
+        "spacing": 0,
+        "tilecount": 2,
+        "tileheight": 64,
+        "tilewidth": 64
+    }, 
+        {
+         "columns":2,
+         "firstgid":3,
+         "image":"issue_100_tileset.png",
+         "imageheight":64,
+         "imagewidth":128,
+         "margin":0,
+         "name":"tileset_2",
+         "spacing":0,
+         "tilecount":2,
+         "tileheight":64,
+         "tilewidth":64
+        },
+
+    {
+        "columns": 2,
+        "firstgid": 5,
+        "image": "issue_100_tileset.png",
+        "imageheight": 64,
+        "imagewidth": 128,
+        "margin": 0,
+        "name": "tileset_3",
+        "spacing": 0,
+        "tilecount": 2,
+        "tileheight": 64,
+        "tiles": [
+            {
+                "animation": [
+                    {
+                        "duration": 250,
+                        "tileid": 0
+                    },
+                    {
+                        "duration": 250,
+                        "tileid": 1
+                    }
+                ],
+                "id": 1
+            }
+        ],
+        "tilewidth": 64
+    }],
+ "tilewidth":64,
+ "type":"map",
+ "version":"1.10",
+ "width":2
+}
