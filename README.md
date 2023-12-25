@@ -63,6 +63,7 @@ You are free to post any issue requesting new features, reporting bugs or asking
 If you want to contribute in the development of `Tileson`, make sure you read the [CONTRIBUTION GUIDELINES](CONTRIBUTION.md) before you start doing anything.
 
 # Unreleased features available in the master-branch
+- Generated tiles are now considering local IDs ([#112](https://github.com/SSBMTonberry/tileson/pull/112)) - Thanks to [twje](https://github.com/twje)
 - `Tile::getDrawingRect()` is now based on tile grid size (previously map grid size) ([#109](https://github.com/SSBMTonberry/tileson/pull/109)) - Thanks to [tmpsantos](https://github.com/tmpsantos)
 - A new function `Tileset::getFullImagePath()` to retrieve a full path to an image based on the loaded map. `Tileset::getImagePath()` still returns a relative path. ([#107](https://github.com/SSBMTonberry/tileson/pull/107)) - Thanks to [tmpsantos](https://github.com/tmpsantos)
 - Attributes of classes set as properties return zero where overridden ([#105](https://github.com/SSBMTonberry/tileson/pull/105)) - Thanks to [tmpsantos](https://github.com/tmpsantos)
