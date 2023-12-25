@@ -24,8 +24,8 @@ namespace tson
         public:
             inline Tile() = default;
             inline Tile(IJson &json, tson::Tileset *tileset, tson::Map *map);
-            inline Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map);
             inline Tile(uint32_t id, tson::Map *map); //v1.2.0
+            inline static Tile CreateMissingTile(uint32_t id, tson::Tileset* tileset, tson::Map* map);
             inline bool parse(IJson &json, tson::Tileset *tileset, tson::Map *map);
             inline bool parseId(IJson &json);
 
@@ -106,18 +106,6 @@ namespace tson
 tson::Tile::Tile(IJson &json, tson::Tileset *tileset, tson::Map *map)
 {
     parse(json, tileset, map);
-}
-
-/*!
- * Used in cases where you have a tile without any property
- * @param id
- */
-tson::Tile::Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map) : m_id {id}, m_gid {id}
-{
-    m_tileset = tileset;
-    m_map = map;
-    manageFlipFlagsByIdThenRemoveFlags(m_gid);
-    performDataCalculations();
 }
 
 /*!

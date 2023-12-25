@@ -33,6 +33,21 @@ tson::TiledClass *tson::Map::getClass()
 
 // T i l e . h p p
 // ---------------------
+/*!
+ * Used in cases where you have a tile without any property
+ * @param id
+ */
+inline tson::Tile tson::Tile::CreateMissingTile(uint32_t id, tson::Tileset* tileset, tson::Map* map)
+{
+    Tile tile;
+    tile.m_tileset = tileset;
+    tile.m_map = map;
+    tile.m_id = id;
+    tile.m_gid = tileset->getFirstgid() + id - 1;
+    tile.performDataCalculations();
+
+    return tile;
+}
 
 /*!
  * Parses a tile from a Tiled json. id on tile is store as id + 1 to match the references in data containers.

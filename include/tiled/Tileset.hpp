@@ -461,11 +461,11 @@ void tson::Tileset::generateMissingTiles()
     for(auto &tile : m_tiles)
         tileIds.push_back(tile.getId());
 
-    for(uint32_t i = m_firstgid; i < m_firstgid + (uint32_t) m_tileCount; ++i)
+    for (uint32_t i = 1; i < (uint32_t)m_tileCount + 1; ++i)
     {
-        if(std::count(tileIds.begin(), tileIds.end(), i) == 0)
+        if (std::count(tileIds.begin(), tileIds.end(), i) == 0)
         {
-            m_tiles.emplace_back(Tile(i, this, m_map));
+            m_tiles.emplace_back(Tile::CreateMissingTile(i, this, m_map));
         }
     }
 }

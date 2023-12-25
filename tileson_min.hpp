@@ -4756,8 +4756,8 @@ namespace tson
 		public:
 			inline Tile() = default;
 			inline Tile(IJson &json, tson::Tileset *tileset, tson::Map *map);
-			inline Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map);
 			inline Tile(uint32_t id, tson::Map *map); //v1.2.0
+			inline static Tile CreateMissingTile(uint32_t id, tson::Tileset* tileset, tson::Map* map);
 			inline bool parse(IJson &json, tson::Tileset *tileset, tson::Map *map);
 			inline bool parseId(IJson &json);
 
@@ -4837,18 +4837,6 @@ namespace tson
 tson::Tile::Tile(IJson &json, tson::Tileset *tileset, tson::Map *map)
 {
 	parse(json, tileset, map);
-}
-
-/*!
- * Used in cases where you have a tile without any property
- * @param id
- */
-tson::Tile::Tile(uint32_t id, tson::Tileset *tileset, tson::Map *map) : m_id {id}, m_gid {id}
-{
-	m_tileset = tileset;
-	m_map = map;
-	manageFlipFlagsByIdThenRemoveFlags(m_gid);
-	performDataCalculations();
 }
 
 /*!
@@ -5698,11 +5686,11 @@ void tson::Tileset::generateMissingTiles()
 	for(auto &tile : m_tiles)
 		tileIds.push_back(tile.getId());
 
-	for(uint32_t i = m_firstgid; i < m_firstgid + (uint32_t) m_tileCount; ++i)
+	for (uint32_t i = 1; i < (uint32_t)m_tileCount + 1; ++i)
 	{
-		if(std::count(tileIds.begin(), tileIds.end(), i) == 0)
+		if (std::count(tileIds.begin(), tileIds.end(), i) == 0)
 		{
-			m_tiles.emplace_back(Tile(i, this, m_map));
+			m_tiles.emplace_back(Tile::CreateMissingTile(i, this, m_map));
 		}
 	}
 }
@@ -7590,6 +7578,21 @@ tson::TiledClass *tson::Map::getClass()
 
 // T i l e . h p p
 // ---------------------
+/*!
+ * Used in cases where you have a tile without any property
+ * @param id
+ */
+inline tson::Tile tson::Tile::CreateMissingTile(uint32_t id, tson::Tileset* tileset, tson::Map* map)
+{
+	Tile tile;
+	tile.m_tileset = tileset;
+	tile.m_map = map;
+	tile.m_id = id;
+	tile.m_gid = tileset->getFirstgid() + id - 1;
+	tile.performDataCalculations();
+
+	return tile;
+}
 
 /*!
  * Parses a tile from a Tiled json. id on tile is store as id + 1 to match the references in data containers.
