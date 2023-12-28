@@ -562,7 +562,7 @@ TEST_CASE( "Parse map - expect correct flip flags", "[parse][file][flip]" )
         REQUIRE(tile_ver_flip != nullptr);
         REQUIRE(tile_ver_flip->get<std::string>("name") == "cloudyboy");
         REQUIRE(tile_ver_flip->hasFlipFlags(tson::TileFlipFlags::Vertically));
-        REQUIRE(tile_ver_flip->getId() == 3221225484); //Id including the flags
+        REQUIRE(tile_ver_flip->getId() == 12); //Id including the flags
         REQUIRE(tile_ver_flip->getGid() == 12); //Id of the tile
 
         REQUIRE(tile_hor_flip != nullptr);

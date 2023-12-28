@@ -41,7 +41,7 @@ TEST_CASE("Parse map and verify that the local id is not being assigned the glob
 TEST_CASE("Parse map and verify that animation frames do not return a null pointer")
 {
     tson::Tileson t;
-    fs::path pathToUse = GetPathWithBase(fs::path("test-maps/issues/issue_100.json"));
+    fs::path pathToUse = GetPathWithBase(fs::path("test-maps/issues/issue_110.json"));
 
     std::unique_ptr<tson::Map> map = t.parse({ pathToUse });
     REQUIRE(map->getStatus() == tson::ParseStatus::OK);
