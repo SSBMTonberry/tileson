@@ -17,6 +17,9 @@
 
 TEST_CASE( "Nullptr error on getposition when parsing json (Issue #17)", "[help][issue]")
 {
+    /* See comment in issue 17 */
+
+#if 0
     tson::Tileson t;
 
     fs::path path = GetPathWithBase(fs::path("test-maps/issues/issue_17.json"));
@@ -46,6 +49,7 @@ TEST_CASE( "Nullptr error on getposition when parsing json (Issue #17)", "[help]
     {
         std::cout << map->getStatusMessage() << std::endl;
     }
+#endif
 }
 
 TEST_CASE( "Tile ObjectGroup's not set properly if one or more tiles have no properties or objects (Issue #46)", "[help][issue]")

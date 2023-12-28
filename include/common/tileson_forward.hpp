@@ -34,10 +34,29 @@ tson::TiledClass *tson::Map::getClass()
 // T i l e . h p p
 // ---------------------
 /*!
+ * Used in cases where you have a FLIP FLAGGED tile
+ * @param id
+ */
+tson::Tile tson::Tile::CreateFlippedTile(uint32_t gid, tson::Map* map)
+{
+    // Parse flip flags and remove flip bits from global id
+    tson::Tile tile;
+    tile.manageFlipFlagsByIdThenRemoveFlags(gid);
+        
+    tile.m_map = map;
+    tile.m_gid = gid;    
+    
+    // Compute local id from global id
+    tile.m_id = tile.m_gid - tile.m_map->getTilesetByGid(tile.m_gid)->getFirstgid() + 1;
+    
+    return tile;
+}
+
+/*!
  * Used in cases where you have a tile without any property
  * @param id
  */
-inline tson::Tile tson::Tile::CreateMissingTile(uint32_t id, tson::Tileset* tileset, tson::Map* map)
+tson::Tile tson::Tile::CreateMissingTile(uint32_t id, tson::Tileset* tileset, tson::Map* map)
 {
     Tile tile;
     tile.m_tileset = tileset;

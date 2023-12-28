@@ -4756,7 +4756,7 @@ namespace tson
 		public:
 			inline Tile() = default;
 			inline Tile(IJson &json, tson::Tileset *tileset, tson::Map *map);
-			inline Tile(uint32_t id, tson::Map *map); //v1.2.0
+			inline static Tile CreateFlippedTile(uint32_t gid, tson::Map *map); // v1.2.0
 			inline static Tile CreateMissingTile(uint32_t id, tson::Tileset* tileset, tson::Map* map);
 			inline bool parse(IJson &json, tson::Tileset *tileset, tson::Map *map);
 			inline bool parseId(IJson &json);
@@ -4837,16 +4837,6 @@ namespace tson
 tson::Tile::Tile(IJson &json, tson::Tileset *tileset, tson::Map *map)
 {
 	parse(json, tileset, map);
-}
-
-/*!
- * Used in cases where you have a FLIP FLAGGED tile
- * @param id
- */
-tson::Tile::Tile(uint32_t id, tson::Map *map) : m_id {id}, m_gid {id}
-{
-	m_map = map;
-	manageFlipFlagsByIdThenRemoveFlags(m_gid);
 }
 
 /*!
@@ -6087,7 +6077,7 @@ void tson::Map::processData()
 		const std::set<uint32_t> &flaggedTiles = layer.getUniqueFlaggedTiles();
 		for(uint32_t ftile : flaggedTiles)
 		{
-			tson::Tile tile {ftile, layer.getMap()};
+			tson::Tile tile = tson::Tile::CreateFlippedTile(ftile, layer.getMap());
 			if(m_tileMap.count(tile.getGid()))
 			{
 				tson::Tile *originalTile = m_tileMap[tile.getGid()];
@@ -7579,10 +7569,29 @@ tson::TiledClass *tson::Map::getClass()
 // T i l e . h p p
 // ---------------------
 /*!
+ * Used in cases where you have a FLIP FLAGGED tile
+ * @param id
+ */
+tson::Tile tson::Tile::CreateFlippedTile(uint32_t gid, tson::Map* map)
+{
+	// Parse flip flags and remove flip bits from global id
+	tson::Tile tile;
+	tile.manageFlipFlagsByIdThenRemoveFlags(gid);
+
+	tile.m_map = map;
+	tile.m_gid = gid;
+
+	// Compute local id from global id
+	tile.m_id = tile.m_gid - tile.m_map->getTilesetByGid(tile.m_gid)->getFirstgid() + 1;
+
+	return tile;
+}
+
+/*!
  * Used in cases where you have a tile without any property
  * @param id
  */
-inline tson::Tile tson::Tile::CreateMissingTile(uint32_t id, tson::Tileset* tileset, tson::Map* map)
+tson::Tile tson::Tile::CreateMissingTile(uint32_t id, tson::Tileset* tileset, tson::Map* map)
 {
 	Tile tile;
 	tile.m_tileset = tileset;

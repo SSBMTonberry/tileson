@@ -319,7 +319,7 @@ void tson::Map::processData()
         const std::set<uint32_t> &flaggedTiles = layer.getUniqueFlaggedTiles();
         for(uint32_t ftile : flaggedTiles)
         {
-            tson::Tile tile {ftile, layer.getMap()};
+            tson::Tile tile = tson::Tile::CreateFlippedTile(ftile, layer.getMap());
             if(m_tileMap.count(tile.getGid()))
             {
                 tson::Tile *originalTile = m_tileMap[tile.getGid()];

@@ -24,7 +24,7 @@
     {
         "columns": 2,
         "firstgid": 1,
-        "image": "issue_100_tileset.png",
+        "image": "issue_110_tileset.png",
         "imageheight": 64,
         "imagewidth": 128,
         "margin": 0,
@@ -37,7 +37,7 @@
         {
          "columns":2,
          "firstgid":3,
-         "image":"issue_100_tileset.png",
+         "image":"issue_110_tileset.png",
          "imageheight":64,
          "imagewidth":128,
          "margin":0,
@@ -51,7 +51,7 @@
     {
         "columns": 2,
         "firstgid": 5,
-        "image": "issue_100_tileset.png",
+        "image": "issue_110_tileset.png",
         "imageheight": 64,
         "imagewidth": 128,
         "margin": 0,
