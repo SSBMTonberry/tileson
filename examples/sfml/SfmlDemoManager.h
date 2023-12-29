@@ -54,6 +54,8 @@ class SfmlDemoManager
 
         sf::Vector2f getTileOffset(int tileId, tson::Map *map, tson::Tileset* tileset);
 
+
+        const sf::Texture* getTexture(const std::string& image);
         sf::Sprite * storeAndLoadImage(const std::string &image, const sf::Vector2f &position);
         fs::path getTilesetImagePath(const tson::Tileset &tileset);
         void updateAnimations();
