@@ -88,7 +88,7 @@ If you want to contribute in the development of `Tileson`, make sure you read th
 - Added missing virtual destructor to IJson and IDecompressor. ([#47](https://github.com/SSBMTonberry/tileson/issues/47)) - Thanks to [matthew-nagy](https://github.com/matthew-nagy)
 
 # Tiled features not yet supported
-- Nothing I know of. Please submit an issue if there is something missing
+- Isometric maps are untested, and most likely does not work 100% ([#97](https://github.com/SSBMTonberry/tileson/issues/97))
 
 # What is Tiled?
 Tiled is a general purpose map editor developed by `Thorbjørn Lindeijer`.
