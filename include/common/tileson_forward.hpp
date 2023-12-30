@@ -193,7 +193,6 @@ void tson::Tile::performDataCalculations()
         {
             uint32_t id = getGid() - m_tileset->getFirstgid() + 1;
             imageSize = m_tileset->getTile(id)->getImageSize();
-            int x = 10;
         }
 
         m_drawingRect = { 0, 0, imageSize.x, imageSize.y };

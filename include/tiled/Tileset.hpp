@@ -42,7 +42,7 @@ namespace tson
             [[nodiscard]] inline const Vector2i &getTileSize() const;
             [[nodiscard]] inline const Colori &getTransparentColor() const;
             [[nodiscard]] inline const std::string& getTypeStr() const;
-            [[nodiscard]] inline const TilesetType getType() const;
+            [[nodiscard]] inline TilesetType getType() const;
             [[nodiscard]] inline const std::string &getClassType() const;
             [[nodiscard]] inline tson::TiledClass *getClass(); /*! Declared in tileson_forward.hpp */
             [[nodiscard]] inline std::vector<tson::Tile> &getTiles();
@@ -380,7 +380,7 @@ const std::string& tson::Tileset::getTypeStr() const
  * 'type': Tileset type as enum
  * @return
 */
-const tson::TilesetType tson::Tileset::getType() const
+tson::TilesetType tson::Tileset::getType() const
 {
     return m_type;
 }
