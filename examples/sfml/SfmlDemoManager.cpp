@@ -308,39 +308,42 @@ void SfmlDemoManager::drawTileLayer(tson::Layer& layer)//, tson::Tileset* tilese
             uint32_t tileId = tileObject.getTile()->getAnimation().getCurrentTileId();
             tson::Tile *animatedTile = tileset->getTile(tileId);
             drawingRect = animatedTile->getDrawingRect();
-        }
-        tson::Vector2f position = tileObject.getPosition();
-        position = {position.x + (float)m_positionOffset.x, position.y + (float)m_positionOffset.y};
-        //sf::Vector2f position = {(float)obj.getPosition().x + (float)m_positionOffset.x, (float)obj.getPosition().y + (float)m_positionOffset.y};
+        }        
         fs::path tilesetPath = getTilesetImagePath(*tileset);
-        sf::Sprite *sprite = storeAndLoadImage(tilesetPath.generic_string(), {0, 0});
-        if (sprite != nullptr)
+
+        const sf::Texture *texture = getTexture(tilesetPath.generic_string());
+        if (texture != nullptr)
         {
-            sf::Vector2f scale = sprite->getScale();
-            sf::Vector2f originalScale = scale;
-            float rotation = sprite->getRotation();
-            float originalRotation = rotation;
-            sf::Vector2f origin {((float)drawingRect.width) / 2, ((float)drawingRect.height) / 2};
+            sf::Sprite sprite(*texture);
+            sprite.setTextureRect({ drawingRect.x, drawingRect.y, drawingRect.width, drawingRect.height });
+            
+            bool flippedHorizontally = tileObject.getTile()->hasFlipFlags(tson::TileFlipFlags::Horizontally);
+            bool flippedVertically = tileObject.getTile()->hasFlipFlags(tson::TileFlipFlags::Vertically);            
+            
+            // Center origin so scale and rotation does not dispalce sprite
+            sf::Vector2f halfSize = sf::Vector2f(drawingRect.width/2.0f, drawingRect.height/2.0f);
+            sprite.setOrigin(halfSize);
+            
+            if (tileObject.getTile()->hasFlipFlags(tson::TileFlipFlags::Diagonally))
+            {                
+                sprite.rotate(90);
+                
+                flippedHorizontally = flippedVertically;
+                flippedVertically = !tileObject.getTile()->hasFlipFlags(tson::TileFlipFlags::Horizontally);                
+            }
+            
+            // Scale
+            float scaleX = flippedHorizontally ? -1.0f : 1.0f;
+            float scaleY = flippedVertically ? -1.0f : 1.0f;                       
+            sprite.scale(scaleX, scaleY);
 
-            if(tileObject.getTile()->hasFlipFlags(tson::TileFlipFlags::Horizontally))
-                scale.x = -scale.x;
-            if(tileObject.getTile()->hasFlipFlags(tson::TileFlipFlags::Vertically))
-                scale.y = -scale.y;
-            if(tileObject.getTile()->hasFlipFlags(tson::TileFlipFlags::Diagonally))
-                rotation += 90.f;
+            // Position
+            tson::Vector2f position = tileObject.getPosition();
+            position = { position.x + (float)m_positionOffset.x, position.y + (float)m_positionOffset.y };
+            
+            sprite.setPosition(position.x + halfSize.x, position.y + halfSize.y);
 
-            position = {position.x + origin.x, position.y + origin.y};
-            sprite->setOrigin(origin);
-            sprite->setTextureRect({drawingRect.x, drawingRect.y, drawingRect.width, drawingRect.height});
-            sprite->setPosition({position.x, position.y});
-
-            sprite->setScale(scale);
-            sprite->setRotation(rotation);
-
-            m_window.draw(*sprite);
-
-            sprite->setScale(originalScale);       //Since we used a shared sprite for this example, we must reset the scale.
-            sprite->setRotation(originalRotation); //Since we used a shared sprite for this example, we must reset the rotation.
+            m_window.draw(sprite);            
         }
     }
 }
@@ -446,6 +449,24 @@ void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
                 break;
         }
     }
+}
+
+
+/*!
+ * Getter to return a cached texture keyed of the image filepath.
+ * @param image
+ * @return sf::Texture
+ */
+const sf::Texture* SfmlDemoManager::getTexture(const std::string& image)
+{
+    // Workaround: Using only texture data to avoid resetting sprite transform after each render.
+    // Note: sf::Sprite is lightweight and inexpensive to create.
+    sf::Sprite* sprite = storeAndLoadImage(image, { 0, 0 });
+    if (sprite)
+    {
+        return sprite->getTexture();
+    }
+    return nullptr;
 }
 
 /*!
