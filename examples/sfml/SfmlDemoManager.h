@@ -51,18 +51,22 @@ class SfmlDemoManager
         void drawTileLayer(tson::Layer& layer);//, tson::Tileset* tileset);
         void drawImageLayer(tson::Layer& layer);
         void drawObjectLayer(tson::Layer& layer);
+        void drawTexture(const sf::Texture& texture, const sf::IntRect& textureRegion, const sf::Vector2f& position, 
+                         int32_t tileHeight, bool hortFlip, bool vertFlip, bool diagonalFlip);
 
         sf::Vector2f getTileOffset(int tileId, tson::Map *map, tson::Tileset* tileset);
 
 
         const sf::Texture* getTexture(const std::string& image);
         sf::Sprite * storeAndLoadImage(const std::string &image, const sf::Vector2f &position);
-        fs::path getTilesetImagePath(const tson::Tileset &tileset);
+        template <typename T>
+        fs::path getImagePath(const T &tileset);
         void updateAnimations();
 
         fs::path m_basePath {};
         sf::RenderWindow m_window;
         std::unique_ptr<tson::Map> m_map;
+        std::unique_ptr<tson::Map> m_imageCollectionTilesetMap;
         std::unique_ptr<tson::Map> m_marginSpaceMap;
 
         std::map<std::string, std::unique_ptr<tson::Map>> m_projectMaps; //Non-world maps in project

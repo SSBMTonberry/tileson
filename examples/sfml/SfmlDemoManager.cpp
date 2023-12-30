@@ -21,10 +21,11 @@ bool SfmlDemoManager::initialize(const sf::Vector2i &windowSize, const sf::Vecto
 
     //Initialize maps
     m_map = parseMap("ultimate_test.json");
+    m_imageCollectionTilesetMap = parseMap("feature_111_demo_map.json");
     m_marginSpaceMap = parseMap("margin-space-map.lzma", std::make_unique<tson::Lzma>());
     bool projectOk = parseProject();
 
-    return (m_map != nullptr && m_marginSpaceMap != nullptr && projectOk);
+    return (m_map != nullptr && m_imageCollectionTilesetMap != nullptr && m_marginSpaceMap != nullptr && projectOk);
 }
 
 std::unique_ptr<tson::Map> SfmlDemoManager::parseMap(const std::string &filename, std::unique_ptr<tson::IDecompressor<std::vector<uint8_t>, std::vector<uint8_t>>> decompressor)
@@ -35,9 +36,21 @@ std::unique_ptr<tson::Map> SfmlDemoManager::parseMap(const std::string &filename
     if(map->getStatus() == tson::ParseStatus::OK)
     {
         for(auto &tileset : map->getTilesets())
-        {
-            fs::path tilesetPath = getTilesetImagePath(tileset); //tileset.getImage().u8string()
-            storeAndLoadImage(tilesetPath.string(), {0, 0});
+        {            
+            if (tileset.getType() == tson::TilesetType::ImageTileset)
+            {
+                fs::path tilesetPath = getImagePath(tileset); //tileset.getImage().u8string()
+
+            }
+            else if (tileset.getType() == tson::TilesetType::ImageCollectionTileset)
+            {
+                // Image is specific to each tile
+                for (const tson::Tile& tile : tileset.getTiles())
+                {
+                    fs::path tilesetPath = getImagePath(tile); //tile.getImage().u8string()
+                    storeAndLoadImage(tilesetPath.string(), { 0, 0 });
+                }
+            }
         }
 
         return std::move(map);
@@ -70,7 +83,7 @@ bool SfmlDemoManager::parseProject(const std::string &filename)
                         ++worldCount;
                         for(auto &tileset : map->getTilesets())
                         {
-                            fs::path tilesetPath = getTilesetImagePath(tileset); //fs::path(fs::path("../") / tileset.getImage().filename().u8string());
+                            fs::path tilesetPath = getImagePath(tileset); //fs::path(fs::path("../") / tileset.getImage().filename().u8string());
                             storeAndLoadImage(tilesetPath.string(), {0, 0});
                         }
 
@@ -98,7 +111,7 @@ bool SfmlDemoManager::parseProject(const std::string &filename)
 
                         for(auto &tileset : map->getTilesets())
                         {
-                            fs::path tilesetPath = getTilesetImagePath(tileset); //fs::path(fs::path("../") / tileset.getImage().filename().u8string());
+                            fs::path tilesetPath = getImagePath(tileset); //fs::path(fs::path("../") / tileset.getImage().filename().u8string());
                             storeAndLoadImage(tilesetPath.string(), {0, 0});
                         }
                         m_projectMaps[file.filename().string()] = std::move(map);
@@ -128,28 +141,33 @@ void SfmlDemoManager::drawMap()
     m_positionOffset = {0,0};
     m_currentInfo = (m_mapIndex == 0) ? "This is just a regular Tiled json-map" : "";
     if(m_mapIndex == 0) m_currentMap = m_map.get();
-    else if(m_mapIndex == 1)
+    else if (m_mapIndex == 1)
+    {
+        m_currentMap = m_imageCollectionTilesetMap.get();
+        m_currentInfo = "Image Collection Tileset demo";
+    }
+    else if(m_mapIndex == 2)
     {
         m_currentMap = m_projectMaps["map1.json"].get(); //Lazy way of getting the map by index
         m_currentInfo = m_projectMapInfo.at(0);
     }
-    else if(m_mapIndex == 2)
+    else if(m_mapIndex == 3)
     {
         m_currentMap = m_projectMaps["map2.json"].get(); //Lazy way of getting the map by index
         m_currentInfo = m_projectMapInfo.at(1);
     }
-    else if(m_mapIndex == 3)
+    else if(m_mapIndex == 4)
     {
         m_currentMap = m_projectMaps["map3.json"].get();
         m_currentInfo = m_projectMapInfo.at(2);
     }
-    else if(m_mapIndex == 4)
+    else if(m_mapIndex == 5)
     {
         m_currentMap = m_marginSpaceMap.get();
         m_currentInfo = "This map uses margin and spacing in tileset and is also LZMA-compressed!";
     }
 
-    if(m_mapIndex < 5)
+    if(m_mapIndex < 6)
     {
         if (m_currentMap != nullptr)
         {
@@ -219,7 +237,7 @@ void SfmlDemoManager::drawImgui()
         ImGui::SetTooltip("Next");
 
     //World related data
-    if(m_mapIndex > 4 && m_currentMap != nullptr)
+    if(m_mapIndex > 5 && m_currentMap != nullptr)
     {
         //RBP: Add info here
         for(int i = 0; i < m_worldVisibilityFlags.size(); ++i)
@@ -286,64 +304,99 @@ void SfmlDemoManager::run()
     }
 }
 
+void SfmlDemoManager::drawTexture(const sf::Texture& texture, const sf::IntRect& textureRegion, const sf::Vector2f& position,
+    int32_t tileHeight, bool hortFlip, bool vertFlip, bool diagonalFlip)
+{
+    sf::Sprite sprite(texture, textureRegion);
+
+    // Center origin so scale and rotation does not displace sprite
+    sf::Vector2f halfSize = sf::Vector2f(textureRegion.width / 2.0f, textureRegion.height / 2.0f);
+    sprite.setOrigin(halfSize);
+    sf::Vector2f originOffset{ halfSize.x, halfSize.y + tileHeight - textureRegion.height };
+
+    if (diagonalFlip)
+    {
+        sprite.rotate(90);
+
+        bool temp = hortFlip;
+        hortFlip = vertFlip;
+        vertFlip = !hortFlip;
+
+        // Compensate for the swap of image dimensions
+        float halfDiff = halfSize.y - halfSize.x;
+        originOffset.y += halfDiff;
+        originOffset.x += halfDiff;
+    }
+
+    // Scale
+    float scaleX = hortFlip ? -1.0f : 1.0f;
+    float scaleY = vertFlip ? -1.0f : 1.0f;
+    sprite.scale(scaleX, scaleY);
+
+    // Position
+    sprite.setPosition(originOffset.x + position.x, originOffset.y + position.y);
+
+    m_window.draw(sprite);
+}
+
 void SfmlDemoManager::drawTileLayer(tson::Layer& layer)//, tson::Tileset* tileset)
 {
+    float tileHeight = layer.getMap()->getTileSize().y;
+
     //pos = position in tile units
     for (auto& [pos, tileObject] : layer.getTileObjects()) //Loops through absolutely all existing tiles
     {
         //Set sprite data to draw the tile
-        tson::Tileset *tileset = tileObject.getTile()->getTileset();
+        tson::Tileset* tileset = tileObject.getTile()->getTileset();
         bool hasAnimation = tileObject.getTile()->getAnimation().any();
         tson::Rect drawingRect;
 
-        if(!hasAnimation)
+        if (!hasAnimation)
             drawingRect = tileObject.getDrawingRect();
         else
         {
             //tileObject.getTile()->getAnimation().update(m_timeDelta.asMilliseconds());
             uint32_t ownerId = tileObject.getTile()->getId();
-            if(m_animationUpdateQueue.count(ownerId) == 0) //This is only built once to track all tile IDs with animations
+            if (m_animationUpdateQueue.count(ownerId) == 0) //This is only built once to track all tile IDs with animations
                 m_animationUpdateQueue[ownerId] = &tileObject.getTile()->getAnimation();
 
             uint32_t tileId = tileObject.getTile()->getAnimation().getCurrentTileId();
-            tson::Tile *animatedTile = tileset->getTile(tileId);
+            tson::Tile* animatedTile = tileset->getTile(tileId);
             drawingRect = animatedTile->getDrawingRect();
-        }        
-        fs::path tilesetPath = getTilesetImagePath(*tileset);
+        }
 
-        const sf::Texture *texture = getTexture(tilesetPath.generic_string());
+        const sf::Texture* texture = nullptr;
+        if (tileset->getType() == tson::TilesetType::ImageCollectionTileset)
+        {
+            tson::Tile* tile = tileObject.getTile();
+            if (tile->getFlipFlags() != tson::TileFlipFlags::None)
+            {
+                // <add comment>
+                tile = tileset->getTile(tile->getId());
+            }
+            fs::path tilesetPath = getImagePath(*tile);
+            texture = getTexture(tilesetPath.generic_string());
+        }
+        else if (tileset->getType() == tson::TilesetType::ImageTileset)
+        {
+            fs::path tilesetPath = getImagePath(*tileset);
+            texture = getTexture(tilesetPath.generic_string());
+        }
+        
         if (texture != nullptr)
         {
-            sf::Sprite sprite(*texture);
-            sprite.setTextureRect({ drawingRect.x, drawingRect.y, drawingRect.width, drawingRect.height });
+            sf::Vector2f position{ tileObject.getPosition().x, tileObject.getPosition().y };
+            sf::Vector2f positionOffset { static_cast<float>(m_positionOffset.x), 
+                                          static_cast<float>(m_positionOffset.y) };
             
-            bool flippedHorizontally = tileObject.getTile()->hasFlipFlags(tson::TileFlipFlags::Horizontally);
-            bool flippedVertically = tileObject.getTile()->hasFlipFlags(tson::TileFlipFlags::Vertically);            
-            
-            // Center origin so scale and rotation does not dispalce sprite
-            sf::Vector2f halfSize = sf::Vector2f(drawingRect.width/2.0f, drawingRect.height/2.0f);
-            sprite.setOrigin(halfSize);
-            
-            if (tileObject.getTile()->hasFlipFlags(tson::TileFlipFlags::Diagonally))
-            {                
-                sprite.rotate(90);
-                
-                flippedHorizontally = flippedVertically;
-                flippedVertically = !tileObject.getTile()->hasFlipFlags(tson::TileFlipFlags::Horizontally);                
-            }
-            
-            // Scale
-            float scaleX = flippedHorizontally ? -1.0f : 1.0f;
-            float scaleY = flippedVertically ? -1.0f : 1.0f;                       
-            sprite.scale(scaleX, scaleY);
-
-            // Position
-            tson::Vector2f position = tileObject.getPosition();
-            position = { position.x + (float)m_positionOffset.x, position.y + (float)m_positionOffset.y };
-            
-            sprite.setPosition(position.x + halfSize.x, position.y + halfSize.y);
-
-            m_window.draw(sprite);            
+            tson::Tile* tile = tileObject.getTile();
+            drawTexture(*texture, 
+                        { drawingRect.x, drawingRect.y, drawingRect.width, drawingRect.height },
+                        position + positionOffset, 
+                        tileHeight, 
+                        tile->hasFlipFlags(tson::TileFlipFlags::Horizontally),
+                        tile->hasFlipFlags(tson::TileFlipFlags::Vertically),
+                        tile->hasFlipFlags(tson::TileFlipFlags::Diagonally));
         }
     }
 }
@@ -355,98 +408,119 @@ void SfmlDemoManager::drawImageLayer(tson::Layer &layer)
         m_window.draw(*sprite);
 }
 
-void SfmlDemoManager::drawObjectLayer(tson::Layer &layer)
+void SfmlDemoManager::drawObjectLayer(tson::Layer& layer)
 {
-    //tson::Tileset* tileset = m_map->getTileset("demo-tileset");
-    auto *map = layer.getMap();
-    for(auto &obj : layer.getObjects())
+    auto* map = layer.getMap();
+    for (auto& obj : layer.getObjects())
     {
-        switch(obj.getObjectType())
+        switch (obj.getObjectType())
         {
-            case tson::ObjectType::Object:
+        case tson::ObjectType::Object:
+        {
+            tson::Tileset* tileset = layer.getMap()->getTilesetByGid(obj.getGid());
+            
+            const sf::Texture* texture = nullptr;
+            sf::IntRect textureRegion;
+
+            if (tileset->getType() == tson::TilesetType::ImageCollectionTileset)
             {
-                tson::Tileset *tileset = layer.getMap()->getTilesetByGid(obj.getGid());
-                sf::Vector2f offset = getTileOffset(obj.getGid(), map, tileset);
+                // Look up tile via object global id
+                uint32_t id = obj.getGid() - tileset->getFirstgid() + 1;
+                tson::Tile* tile = tileset->getTile(id);
+                fs::path tilesetPath = getImagePath(*tile);
+                texture = getTexture(tilesetPath.generic_string());
 
-                sf::Sprite *sprite = storeAndLoadImage(getTilesetImagePath(*tileset).string(), {0,0});
-                std::string name = obj.getName();
-                sf::Vector2f position = {(float)obj.getPosition().x + (float)m_positionOffset.x, (float)obj.getPosition().y + (float)m_positionOffset.y};
-                if(sprite != nullptr)
-                {
-                    sf::Vector2f scale = sprite->getScale();
-                    sf::Vector2f originalScale = scale;
-                    float rotation = sprite->getRotation();
-                    float originalRotation = rotation;
-                    sf::Vector2f origin {((float)m_map->getTileSize().x) / 2, ((float)map->getTileSize().y) / 2};
-
-                    if(obj.hasFlipFlags(tson::TileFlipFlags::Horizontally))
-                        scale.x = -scale.x;
-                    if(obj.hasFlipFlags(tson::TileFlipFlags::Vertically))
-                        scale.y = -scale.y;
-                    if(obj.hasFlipFlags(tson::TileFlipFlags::Diagonally))
-                        rotation += 90.f;
-
-                    position = {position.x + origin.x, position.y + origin.y};
-                    sprite->setOrigin(origin);
-
-                    sprite->setTextureRect({(int)offset.x, (int)offset.y, map->getTileSize().x, map->getTileSize().y});
-                    sprite->setPosition({position.x, position.y - map->getTileSize().y});
-
-                    sprite->setScale(scale);
-                    sprite->setRotation(rotation);
-
-                    m_window.draw(*sprite);
-
-                    sprite->setScale(originalScale);       //Since we used a shared sprite for this example, we must reset the scale.
-                    sprite->setRotation(originalRotation); //Since we used a shared sprite for this example, we must reset the rotation.
-                }
+                textureRegion = { 0, 0, obj.getSize().x, obj.getSize().y };
             }
+            else if (tileset->getType() == tson::TilesetType::ImageTileset)
+            {
+                fs::path tilesetPath = getImagePath(*tileset);
+                texture = getTexture(tilesetPath.generic_string());
+
+                sf::Vector2f offset = getTileOffset(obj.getGid(), map, tileset);
+                textureRegion = { static_cast<int32_t>(offset.x),
+                                  static_cast<int32_t>(offset.y),
+                                  map->getTileSize().x,
+                                  map->getTileSize().y };
+            }
+            
+            std::string name = obj.getName();
+            sf::Vector2f position = { (float)obj.getPosition().x + (float)m_positionOffset.x, (float)obj.getPosition().y + (float)m_positionOffset.y };
+            if (texture != nullptr)
+            {
+                sf::Sprite sprite(*texture, textureRegion);
+
+                sf::Vector2f scale = sprite.getScale();
+                sf::Vector2f originalScale = scale;
+                float rotation = sprite.getRotation();
+                float originalRotation = rotation;
+                sf::Vector2f origin{ ((float)m_map->getTileSize().x) / 2, ((float)map->getTileSize().y) / 2 };
+
+                if(obj.hasFlipFlags(tson::TileFlipFlags::Horizontally))
+                    scale.x = -scale.x;
+                if(obj.hasFlipFlags(tson::TileFlipFlags::Vertically))
+                    scale.y = -scale.y;
+                if(obj.hasFlipFlags(tson::TileFlipFlags::Diagonally))
+                    rotation += 90.f;
+
+                position = {position.x + origin.x, position.y + origin.y };
+                sprite.setOrigin(origin);              
+                sprite.setPosition({ position.x, position.y - map->getTileSize().y });
+                sprite.setScale(scale);
+                sprite.setRotation(rotation);
+
+                m_window.draw(sprite);
+
+                sprite.setScale(originalScale);       //Since we used a shared sprite for this example, we must reset the scale.
+                sprite.setRotation(originalRotation); //Since we used a shared sprite for this example, we must reset the rotation.
+            }
+        }
+        break;
+
+        case tson::ObjectType::Ellipse:
+            //Not used by the demo map, but you could use the properties of obj for a sf::CircleShape
             break;
 
-            case tson::ObjectType::Ellipse:
-                //Not used by the demo map, but you could use the properties of obj for a sf::CircleShape
-                break;
+        case tson::ObjectType::Rectangle:
+            //Not used by the demo map, but you could use the properties of obj for a sf::RectangleShape
+            break;
 
-            case tson::ObjectType::Rectangle:
-                //Not used by the demo map, but you could use the properties of obj for a sf::RectangleShape
-                break;
+        case tson::ObjectType::Point:
+            //Not used by the demo map but one could use the points of obj (polygon or polyline)
+            //then pass them into logic like this:
+            //sf::Vertex line[] =
+            //        {
+            //                sf::Vertex(sf::Vector2f(obj.getPolylines()[0].x, obj.getPolylines()[0].y)),
+            //                sf::Vertex(sf::Vector2f(obj.getPolylines()[1].x, obj.getPolylines()[1].y))
+            //        };
+            //m_window.draw(line, 2, sf::Lines);
+            break;
 
-            case tson::ObjectType::Point:
-                //Not used by the demo map but one could use the points of obj (polygon or polyline)
-                //then pass them into logic like this:
-                //sf::Vertex line[] =
-                //        {
-                //                sf::Vertex(sf::Vector2f(obj.getPolylines()[0].x, obj.getPolylines()[0].y)),
-                //                sf::Vertex(sf::Vector2f(obj.getPolylines()[1].x, obj.getPolylines()[1].y))
-                //        };
-                //m_window.draw(line, 2, sf::Lines);
-                break;
+        case tson::ObjectType::Polygon:
+            //Not used by the demo map, but you could use the properties of obj for a sf::ConvexShape
+            break;
 
-            case tson::ObjectType::Polygon:
-                //Not used by the demo map, but you could use the properties of obj for a sf::ConvexShape
-                break;
+        case tson::ObjectType::Polyline:
+            //Not used by the demo map, but you could use the properties of obj for a sf::ConvexShape
+            break;
 
-            case tson::ObjectType::Polyline:
-                //Not used by the demo map, but you could use the properties of obj for a sf::ConvexShape
-                break;
+        case tson::ObjectType::Text:
+            m_demoText.setFont(m_font);
+            m_demoText.setPosition({ (float)obj.getPosition().x, (float)obj.getPosition().y });
+            m_demoText.setString(obj.getText().text);
+            m_demoText.setCharacterSize(32); //It is 16, but makes it double for a "sharp text hack"
+            m_demoText.setScale(0.5f, 0.5f); //Half scale for making a sharp text.
+            m_window.draw(m_demoText);
+            break;
 
-            case tson::ObjectType::Text:
-                m_demoText.setFont(m_font);
-                m_demoText.setPosition({(float)obj.getPosition().x, (float)obj.getPosition().y});
-                m_demoText.setString(obj.getText().text);
-                m_demoText.setCharacterSize(32); //It is 16, but makes it double for a "sharp text hack"
-                m_demoText.setScale(0.5f, 0.5f); //Half scale for making a sharp text.
-                m_window.draw(m_demoText);
-                break;
+        case tson::ObjectType::Template:
+            //use obj.getTemplate() to get the connected template. References an external file not covered by Tileson.
+            //obj.getPosition() and obj.getId() should also be related to the placement of the template.
 
-            case tson::ObjectType::Template:
-                //use obj.getTemplate() to get the connected template. References an external file not covered by Tileson.
-                //obj.getPosition() and obj.getId() should also be related to the placement of the template.
+            break;
 
-                break;
-
-            default:
-                break;
+        default:
+            break;
         }
     }
 }
@@ -562,7 +636,8 @@ void SfmlDemoManager::drawLayer(tson::Layer &layer)
  * @param tileset
  * @return
  */
-fs::path SfmlDemoManager::getTilesetImagePath(const tson::Tileset &tileset)
+template <typename T>
+fs::path SfmlDemoManager::getImagePath(const T &tileset)
 {
     fs::path path = fs::path(fs::path("../") / tileset.getImage().filename());
     return path;

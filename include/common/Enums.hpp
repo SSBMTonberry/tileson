@@ -40,6 +40,17 @@ namespace tson
     };
 
     /*!
+     * Tileset.hpp - TilesetType
+     * //'type': imagetileset, imagecollectiontileset
+     */
+    enum class TilesetType : uint8_t
+    {
+        Undefined = 0,
+        ImageTileset = 1,
+        ImageCollectionTileset = 2
+    };
+
+    /*!
      * Map.hpp - ParseStatus
      */
     enum class ParseStatus : uint8_t

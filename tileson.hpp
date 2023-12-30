@@ -3263,6 +3263,17 @@ namespace tson
 	};
 
 	/*!
+	 * Tileset.hpp - TilesetType
+	 * //'type': imagetileset, imagecollectiontileset
+	 */
+	enum class TilesetType : uint8_t
+	{
+		Undefined = 0,
+		ImageTileset = 1,
+		ImageCollectionTileset = 2
+	};
+
+	/*!
 	 * Map.hpp - ParseStatus
 	 */
 	enum class ParseStatus : uint8_t
@@ -6242,7 +6253,8 @@ namespace tson
 			[[nodiscard]] inline int getTileCount() const;
 			[[nodiscard]] inline const Vector2i &getTileSize() const;
 			[[nodiscard]] inline const Colori &getTransparentColor() const;
-			[[nodiscard]] inline const std::string &getType() const;
+			[[nodiscard]] inline const std::string& getTypeStr() const;
+			[[nodiscard]] inline TilesetType getType() const;
 			[[nodiscard]] inline const std::string &getClassType() const;
 			[[nodiscard]] inline tson::TiledClass *getClass(); /*! Declared in tileson_forward.hpp */
 			[[nodiscard]] inline std::vector<tson::Tile> &getTiles();
@@ -6293,7 +6305,8 @@ namespace tson
 			int                           m_tileCount {};     /*! 'tilecount': The number of tiles in this tileset */
 			tson::Vector2i                m_tileSize;         /*! x = 'tilewidth' and y = 'tileheight': Maximum size of tiles in this set */
 			tson::Colori                  m_transparentColor; /*! 'transparentcolor': Hex-formatted color (#RRGGBB) (optional) */
-			std::string                   m_type;             /*! 'type': tileset (for tileset files, since 1.0) */
+			std::string                   m_typeStr;          /*! 'type': tileset (for tileset files, since 1.0) */
+			TilesetType                   m_type{ TilesetType::Undefined }; /*! Tileset type as enum */
 
 			std::vector<tson::Tile>       m_tiles;            /*! 'tiles': Array of Tiles (optional) */
 			std::vector<tson::WangSet>    m_wangsets;         /*! 'wangsets':Array of Wang sets (since 1.1.5) */
@@ -6363,16 +6376,44 @@ bool tson::Tileset::parse(IJson &json, tson::Map *map)
 			return false;
 	}
 
-	if(json.count("columns") > 0) m_columns = json["columns"].get<int>(); else allFound = false;
-
-	if(json.count("image") > 0)
+	if (json.count("columns") > 0)
 	{
-		m_image = fs::path(json["image"].get<std::string>());
-		m_imagePath = m_path.parent_path() / m_image;
+		m_columns = json["columns"].get<int>();
+		if (m_columns == 0)
+		{
+			m_type = TilesetType::ImageCollectionTileset;
+		}
+		else if (m_columns > 0)
+		{
+			m_type = TilesetType::ImageTileset;
+		}
 	}
 	else
 	{
 		allFound = false;
+	}
+
+	// Image tileset specific properties
+	if (m_type == TilesetType::ImageTileset)
+	{
+		if (json.count("image") > 0)
+		{
+			m_image = fs::path(json["image"].get<std::string>());
+			m_imagePath = m_path.parent_path() / m_image;
+		}
+		else
+		{
+			allFound = false;
+		}
+
+		if (json.count("imagewidth") > 0 && json.count("imageheight") > 0)
+		{
+			m_imageSize = { json["imagewidth"].get<int>(), json["imageheight"].get<int>() };
+		}
+		else
+		{
+			allFound = false;
+		}
 	}
 
 	if(json.count("margin") > 0) m_margin = json["margin"].get<int>(); else allFound = false;
@@ -6380,12 +6421,10 @@ bool tson::Tileset::parse(IJson &json, tson::Map *map)
 	if(json.count("spacing") > 0) m_spacing = json["spacing"].get<int>(); else allFound = false;
 	if(json.count("tilecount") > 0) m_tileCount = json["tilecount"].get<int>(); else allFound = false;
 	if(json.count("transparentcolor") > 0) m_transparentColor = tson::Colori(json["transparentcolor"].get<std::string>()); //Optional
-	if(json.count("type") > 0) m_type = json["type"].get<std::string>();
+	if (json.count("type") > 0) m_typeStr = json["type"].get<std::string>();
 	if(json.count("grid") > 0) m_grid = tson::Grid(json["grid"]);
 	if(json.count("class") > 0) m_classType = json["class"].get<std::string>();                     //Optional
 
-	if(json.count("imagewidth") > 0 && json.count("imageheight") > 0)
-		m_imageSize = {json["imagewidth"].get<int>(), json["imageheight"].get<int>()}; else allFound = false;
 	if(json.count("tilewidth") > 0 && json.count("tileheight") > 0)
 		m_tileSize = {json["tilewidth"].get<int>(), json["tileheight"].get<int>()}; else allFound = false;
 	if(json.count("tileoffset") > 0)
@@ -6542,7 +6581,16 @@ const tson::Colori &tson::Tileset::getTransparentColor() const
  * 'type': tileset (for tileset files, since 1.0)
  * @return
  */
-const std::string &tson::Tileset::getType() const
+const std::string& tson::Tileset::getTypeStr() const
+{
+	return m_typeStr;
+}
+
+/*!
+ * 'type': Tileset type as enum
+ * @return
+*/
+tson::TilesetType tson::Tileset::getType() const
 {
 	return m_type;
 }
@@ -8677,29 +8725,45 @@ bool tson::Tile::parseId(IJson &json)
  */
 void tson::Tile::performDataCalculations()
 {
-	if(m_tileset == nullptr || m_map == nullptr)
+	if (m_tileset == nullptr || m_map == nullptr)
 		return;
 
-	int firstId = m_tileset->getFirstgid(); //First tile id of the tileset
-	int columns = m_tileset->getColumns();
-	int rows = m_tileset->getTileCount() / columns;
-	int lastId = (m_tileset->getFirstgid() + m_tileset->getTileCount()) - 1;
+	m_drawingRect = { 0, 0, 0, 0 };
 
-	int const gid = static_cast<int>(getGid());
-	if (gid >= firstId && gid <= lastId)
+	if (m_tileset->getType() == TilesetType::ImageTileset)
 	{
-		int const baseTilePosition = (gid - firstId);
+		int firstId = m_tileset->getFirstgid(); //First tile id of the tileset
+		int columns = m_tileset->getColumns();
+		int rows = m_tileset->getTileCount() / columns;
+		int lastId = (m_tileset->getFirstgid() + m_tileset->getTileCount()) - 1;
 
-		int const tileModX = (baseTilePosition % columns);
-		int const currentRow = (baseTilePosition / columns);
-		int const offsetX = (tileModX != 0) ? ((tileModX) * m_map->getTileSize().x) : (0 * m_map->getTileSize().x);
-		int const offsetY =  (currentRow < rows-1) ? (currentRow * m_map->getTileSize().y) : ((rows-1) * m_map->getTileSize().y);
+		int const gid = static_cast<int>(getGid());
+		if (gid >= firstId && gid <= lastId)
+		{
+			int const baseTilePosition = (gid - firstId);
 
-		tson::Vector2i spacing = m_tileset->getMarginSpacingOffset({tileModX, currentRow});
-		m_drawingRect = { offsetX + spacing.x, offsetY + spacing.y, m_tileset->getTileSize().x, m_tileset->getTileSize().y };
+			int const tileModX = (baseTilePosition % columns);
+			int const currentRow = (baseTilePosition / columns);
+			int const offsetX = (tileModX != 0) ? ((tileModX)*m_map->getTileSize().x) : (0 * m_map->getTileSize().x);
+			int const offsetY = (currentRow < rows - 1) ? (currentRow * m_map->getTileSize().y) : ((rows - 1) * m_map->getTileSize().y);
+
+			tson::Vector2i spacing = m_tileset->getMarginSpacingOffset({ tileModX, currentRow });
+			m_drawingRect = { offsetX + spacing.x, offsetY + spacing.y, m_tileset->getTileSize().x, m_tileset->getTileSize().y };
+		}
 	}
-	else
-		m_drawingRect = {0, 0, 0, 0};
+	else if (m_tileset->getType() == TilesetType::ImageCollectionTileset)
+	{
+		tson::Vector2i imageSize = m_imageSize;
+
+		// Tile in Image Collection Tileset contains image size
+		if (getFlipFlags() != tson::TileFlipFlags::None)
+		{
+			uint32_t id = getGid() - m_tileset->getFirstgid() + 1;
+			imageSize = m_tileset->getTile(id)->getImageSize();
+		}
+
+		m_drawingRect = { 0, 0, imageSize.x, imageSize.y };
+	}
 }
 
 /*!
@@ -8708,7 +8772,8 @@ void tson::Tile::performDataCalculations()
  */
 const tson::Vector2f tson::Tile::getPosition(const std::tuple<int, int> &tileDataPos)
 {
-	return {((float) std::get<0>(tileDataPos)) * m_drawingRect.width, ((float) std::get<1>(tileDataPos)) * m_drawingRect.height};
+	tson::Vector2i tileSize = m_map->getTileSize();
+	return {((float) std::get<0>(tileDataPos)) * tileSize.x, ((float) std::get<1>(tileDataPos)) * tileSize.y};
 }
 
 /*!

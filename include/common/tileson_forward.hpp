@@ -158,29 +158,45 @@ bool tson::Tile::parseId(IJson &json)
  */
 void tson::Tile::performDataCalculations()
 {
-    if(m_tileset == nullptr || m_map == nullptr)
+    if (m_tileset == nullptr || m_map == nullptr)
         return;
 
-    int firstId = m_tileset->getFirstgid(); //First tile id of the tileset
-    int columns = m_tileset->getColumns();
-    int rows = m_tileset->getTileCount() / columns;
-    int lastId = (m_tileset->getFirstgid() + m_tileset->getTileCount()) - 1;
+    m_drawingRect = { 0, 0, 0, 0 };
 
-    int const gid = static_cast<int>(getGid());
-    if (gid >= firstId && gid <= lastId)
+    if (m_tileset->getType() == TilesetType::ImageTileset)
     {
-        int const baseTilePosition = (gid - firstId);
+        int firstId = m_tileset->getFirstgid(); //First tile id of the tileset
+        int columns = m_tileset->getColumns();
+        int rows = m_tileset->getTileCount() / columns;
+        int lastId = (m_tileset->getFirstgid() + m_tileset->getTileCount()) - 1;
 
-        int const tileModX = (baseTilePosition % columns);
-        int const currentRow = (baseTilePosition / columns);
-        int const offsetX = (tileModX != 0) ? ((tileModX) * m_map->getTileSize().x) : (0 * m_map->getTileSize().x);
-        int const offsetY =  (currentRow < rows-1) ? (currentRow * m_map->getTileSize().y) : ((rows-1) * m_map->getTileSize().y);
+        int const gid = static_cast<int>(getGid());
+        if (gid >= firstId && gid <= lastId)
+        {
+            int const baseTilePosition = (gid - firstId);
 
-        tson::Vector2i spacing = m_tileset->getMarginSpacingOffset({tileModX, currentRow});
-        m_drawingRect = { offsetX + spacing.x, offsetY + spacing.y, m_tileset->getTileSize().x, m_tileset->getTileSize().y };
+            int const tileModX = (baseTilePosition % columns);
+            int const currentRow = (baseTilePosition / columns);
+            int const offsetX = (tileModX != 0) ? ((tileModX)*m_map->getTileSize().x) : (0 * m_map->getTileSize().x);
+            int const offsetY = (currentRow < rows - 1) ? (currentRow * m_map->getTileSize().y) : ((rows - 1) * m_map->getTileSize().y);
+
+            tson::Vector2i spacing = m_tileset->getMarginSpacingOffset({ tileModX, currentRow });
+            m_drawingRect = { offsetX + spacing.x, offsetY + spacing.y, m_tileset->getTileSize().x, m_tileset->getTileSize().y };
+        }
     }
-    else
-        m_drawingRect = {0, 0, 0, 0};
+    else if (m_tileset->getType() == TilesetType::ImageCollectionTileset)
+    {
+        tson::Vector2i imageSize = m_imageSize;
+
+        // Tile in Image Collection Tileset contains image size
+        if (getFlipFlags() != tson::TileFlipFlags::None)
+        {
+            uint32_t id = getGid() - m_tileset->getFirstgid() + 1;
+            imageSize = m_tileset->getTile(id)->getImageSize();
+        }
+
+        m_drawingRect = { 0, 0, imageSize.x, imageSize.y };
+    }
 }
 
 /*!
@@ -189,7 +205,8 @@ void tson::Tile::performDataCalculations()
  */
 const tson::Vector2f tson::Tile::getPosition(const std::tuple<int, int> &tileDataPos)
 {
-    return {((float) std::get<0>(tileDataPos)) * m_drawingRect.width, ((float) std::get<1>(tileDataPos)) * m_drawingRect.height};
+    tson::Vector2i tileSize = m_map->getTileSize();
+    return {((float) std::get<0>(tileDataPos)) * tileSize.x, ((float) std::get<1>(tileDataPos)) * tileSize.y};
 }
 
 /*!
