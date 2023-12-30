@@ -63,6 +63,8 @@ You are free to post any issue requesting new features, reporting bugs or asking
 If you want to contribute in the development of `Tileson`, make sure you read the [CONTRIBUTION GUIDELINES](CONTRIBUTION.md) before you start doing anything.
 
 # Unreleased features available in the master-branch
+- Added support for `Image Collection Tilesets` ([#117](https://github.com/SSBMTonberry/tileson/pull/117), [#30](https://github.com/SSBMTonberry/tileson/issues/30)) - Thanks to [twje](https://github.com/twje)
+- Fix: Demo - Tiles rotated to 90 and 270 degrees display incorrectly ([#116](https://github.com/SSBMTonberry/tileson/pull/116)) - Thanks to [twje](https://github.com/twje)
 - Generated tiles are now considering local IDs ([#112](https://github.com/SSBMTonberry/tileson/pull/112), [#114](https://github.com/SSBMTonberry/tileson/pull/114)) - Thanks to [twje](https://github.com/twje)
 - `Tile::getDrawingRect()` is now based on tile grid size (previously map grid size) ([#109](https://github.com/SSBMTonberry/tileson/pull/109)) - Thanks to [tmpsantos](https://github.com/tmpsantos)
 - A new function `Tileset::getFullImagePath()` to retrieve a full path to an image based on the loaded map. `Tileset::getImagePath()` still returns a relative path. ([#107](https://github.com/SSBMTonberry/tileson/pull/107)) - Thanks to [tmpsantos](https://github.com/tmpsantos)
